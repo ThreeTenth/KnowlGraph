@@ -24,6 +24,6 @@ func (Quote) Fields() []ent.Field {
 // Edges of the Response.
 func (Quote) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("content", Story.Type).Unique(),
+		edge.From("response", Story.Type).Ref("quote").Unique().Required(),
 	}
 }
