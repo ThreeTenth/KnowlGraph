@@ -4,6 +4,7 @@
 *.dll
 *.so
 *.dylib
+go.sum
 
 # Test binary, built with `go test -c`
 *.test
@@ -13,3 +14,19 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# vscode
+__debug_bin
+
+# debugger for chrome
+debug.log
+
+# facebook/ent
+ent/*
+!ent/schema
+!ent/generate.go
+
+# project
+config.json
+test.db
+curl.sh
