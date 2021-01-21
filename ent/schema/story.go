@@ -14,7 +14,7 @@ type Story struct {
 // Fields of the Story.
 func (Story) Fields() []ent.Field {
 	return []ent.Field{
-		field.Enum("status").Values("private", "protected", "public").Default("private"),
+		field.Enum("state").Values("private", "protected", "public").Default("private"),
 	}
 }
 
@@ -22,8 +22,9 @@ func (Story) Fields() []ent.Field {
 func (Story) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("versions", Content.Type),
-		edge.To("fork", Story.Type),
+		edge.To("fork", Story.Type).Unique(),
 		edge.To("reactions", Reaction.Type),
 		edge.To("quote", Quote.Type).Unique(),
+		edge.To("stars", Star.Type),
 	}
 }

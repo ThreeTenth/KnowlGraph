@@ -16,12 +16,12 @@ type Content struct {
 // Fields of the Content.
 func (Content) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("title"),
-		field.String("gist"),
+		field.String("title").Optional(),
+		field.String("gist").Optional(),
 		field.String("content"),
-		field.String("lang").Comment("The language version of the content"),
-		field.Int("version").Comment("The content version number"),
-		field.Enum("state").Values("auto", "save").Default("auto").Comment("auto means the version is automatically saved, save means manual save"),
+		field.String("lang").Default("EN").Comment("The language version of the content"),
+		field.Int("version").Default(1).Comment("The content version number"),
+		field.Enum("status").Values("auto", "save").Default("auto").Comment("auto means the version is automatically saved, save means manual save"),
 		field.Time("created_at").Default(time.Now),
 	}
 }

@@ -14,7 +14,7 @@ type Node struct {
 // Fields of the Node.
 func (Node) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("cover"),
+		field.String("cover").Optional(),
 	}
 }
 
@@ -28,5 +28,6 @@ func (Node) Edges() []ent.Edge {
 		edge.To("nodes", Node.Type).
 			From("root").
 			Unique(),
+		edge.To("stars", Star.Type),
 	}
 }
