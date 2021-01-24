@@ -30,3 +30,4 @@ ent/*
 config.json
 test.db
 curl.sh
+go_test.go
