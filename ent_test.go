@@ -2,7 +2,10 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"os"
 	"testing"
 
 	"knowlgraph.com/ent"
@@ -32,6 +35,14 @@ func TestTag(t *testing.T) {
 	t.Log(tags)
 }
 
+func TestQueryTag(t *testing.T) {
+	ctx, client := CreateClient(t)
+	defer client.Close()
+
+	_tag, err := client.Tag.Query().Where(tag.NameEqualFold("ios")).First(ctx)
+	t.Log(_tag, err)
+}
+
 func TestUser(t *testing.T) {
 	ctx, client := CreateClient(t)
 	defer client.Close()
@@ -51,11 +62,12 @@ func TestNode(t *testing.T) {
 	ctx, client := CreateClient(t)
 	defer client.Close()
 
-	softwareDevelopment := client.Node.Create().SetTag(client.Tag.Query().Where(tag.NameEQ("Software development")).FirstX(ctx)).SaveX(ctx)
+	softwareDevelopment := client.Node.Create().SetLevel(0).SetTag(client.Tag.Query().Where(tag.NameEQ("Software development")).FirstX(ctx)).SaveX(ctx)
 	t.Log(softwareDevelopment)
 
 	android := client.Node.Create().
 		SetTag(client.Tag.Query().Where(tag.NameEQ("Android")).FirstX(ctx)).
+		SetLevel(softwareDevelopment.Level + 1).
 		SetForm(softwareDevelopment).
 		SetRoot(softwareDevelopment).
 		SaveX(ctx)
@@ -63,6 +75,7 @@ func TestNode(t *testing.T) {
 
 	iOS := client.Node.Create().
 		SetTag(client.Tag.Query().Where(tag.NameEQ("iOS")).FirstX(ctx)).
+		SetLevel(softwareDevelopment.Level + 1).
 		SetForm(softwareDevelopment).
 		SetRoot(softwareDevelopment).
 		SaveX(ctx)
@@ -128,7 +141,7 @@ func TestQuote(t *testing.T) {
 	_content := client.Content.Query().Where(content.TitleContains("KnowlGraph")).FirstX(ctx)
 	_story := _content.QueryStory().FirstX(ctx)
 
-	_response := client.Story.Create().SetState(story.StatePublic).SaveX(ctx)
+	_response := client.Story.Create().SetStatus(story.StatusPublic).SaveX(ctx)
 	t.Log(_response)
 
 	_quote := client.Quote.Create().
@@ -156,32 +169,52 @@ func TestStory(t *testing.T) {
 	defer client.Close()
 
 	_tags := client.Tag.Query().Where(tag.NameIn("Web", "Software development")).AllX(ctx)
+	_story := client.Story.Create().SetStatus(story.StatusPublic).SaveX(ctx)
+	t.Log(_story)
 	_content := client.Content.Create().
-		SetTitle("What's KnowlGraph").
+		SetTitle("什么是知识图谱").
 		// SetGist("Download and install the Slice Viewer. Run the Slice Viewer.").
-		SetContent("A publishing platform where people can read professional and in-depth knowledge on the graph.").
-		SetLang("ZH").
-		SetVersion(1).
-		SetStatus(content.StatusSave).
+		SetContent("一个发布文章即可获取可持续收入的，可以阅读专业有深度的知识，建立丰富的知识图谱的一个地方").
+		SetVersion(5).
+		SetLangID("zh").
+		SetStoryID(_story.ID).
 		AddTags(_tags...).
 		SaveX(ctx)
 	t.Log(_content)
-	_story := client.Story.Create().SetState(story.StatePublic).AddVersions(_content).SaveX(ctx)
-	t.Log(_story)
 
-	_tags = client.Tag.Query().Where(tag.NameIn("ent", "Software development", "golang", "Web")).AllX(ctx)
-	_content = client.Content.Create().
-		SetTitle("What's Ent").
-		SetGist("quick introduction of ent").
-		SetContent("ent is a simple, yet powerful entity framework for Go, that makes it easy to build and maintain applications with large data-models.").
-		SetLang("EN").
-		SetVersion(1).
-		SetStatus(content.StatusSave).
-		AddTags(_tags...).
-		SaveX(ctx)
-	t.Log(_content)
-	_story = client.Story.Create().SetState(story.StatePublic).AddVersions(_content).SaveX(ctx)
-	t.Log(_story)
+	// en := client.Language.Query().Where(language.IDEQ("en")).FirstIDX(ctx)
+	// _tags = client.Tag.Query().Where(tag.NameIn("ent", "Software development", "golang", "Web")).AllX(ctx)
+	// _story = client.Story.Create().SetState(story.StatePublic).SaveX(ctx)
+	// t.Log(_story)
+	// _content = client.Content.Create().
+	// 	SetTitle("What's Ent").
+	// 	SetGist("quick introduction of ent").
+	// 	SetContent("ent is a simple, yet powerful entity framework for Go, that makes it easy to build and maintain applications with large data-models.").
+	// 	SetLangID(en).
+	// 	SetStory(_story).
+	// 	SetVersion(1).
+	// 	SetVersionName("v1.6.3").
+	// 	AddTags(_tags...).
+	// 	SaveX(ctx)
+	// t.Log(_content)
+}
+
+func TestQueryStory(t *testing.T) {
+	ctx, client := CreateClient(t)
+	defer client.Close()
+
+	var columns []struct {
+		Lang string `json:"content_lang"`
+		Max  int    `json:"max"`
+	}
+
+	client.Story.GetX(ctx, 25769803777).
+		QueryVersions().
+		// Where(content.ID(25769803777)).
+		GroupBy(content.LangColumn).
+		Aggregate(ent.Max(content.FieldVersion)).
+		ScanX(ctx, &columns)
+	t.Log(columns)
 }
 
 func CreateClient(t *testing.T) (context.Context, *ent.Client) {
@@ -197,5 +230,31 @@ func CreateClient(t *testing.T) (context.Context, *ent.Client) {
 	if err := client.Schema.Create(context.Background()); err != nil {
 		return nil, nil
 	}
-	return context.Background(), client
+	ctx := context.Background()
+
+	jsonFile, err := os.Open("./res/languages.json")
+	if err != nil {
+		panic(err)
+	}
+	defer jsonFile.Close()
+
+	byteValue, err := ioutil.ReadAll(jsonFile)
+	if err != nil {
+		panic(err)
+	}
+
+	var values []*ent.Language
+	err = json.Unmarshal(byteValue, &values)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, v := range values {
+		_, err := client.Language.UpdateOneID(v.ID).SetName(v.Name).SetDirection(v.Direction).Save(ctx)
+		if err != nil {
+			client.Language.Create().SetID(v.ID).SetName(v.Name).SetDirection(v.Direction).SaveX(ctx)
+		}
+	}
+
+	return ctx, client
 }
