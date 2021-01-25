@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -10,14 +11,15 @@ import (
 
 	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/content"
-	"knowlgraph.com/ent/enttest"
-	"knowlgraph.com/ent/migrate"
 	"knowlgraph.com/ent/star"
 	"knowlgraph.com/ent/story"
 	"knowlgraph.com/ent/tag"
 	"knowlgraph.com/ent/user"
 
-	_ "github.com/mattn/go-sqlite3"
+	"github.com/facebook/ent/dialect"
+	entsql "github.com/facebook/ent/dialect/sql"
+	_ "github.com/jackc/pgx/v4/stdlib"
+	// _ "github.com/mattn/go-sqlite3"
 )
 
 func TestTag(t *testing.T) {
@@ -218,19 +220,19 @@ func TestQueryStory(t *testing.T) {
 }
 
 func CreateClient(t *testing.T) (context.Context, *ent.Client) {
-	opts := []enttest.Option{
-		enttest.WithOptions(ent.Log(t.Log)),
-		enttest.WithMigrateOptions(migrate.WithGlobalUniqueID(true)),
+	db, err := sql.Open("pgx", "postgresql://postgres:123456@127.0.0.1:5432/knowlgraph")
+	if err != nil {
+		panic("open postgresql failed: " + err.Error())
 	}
 
-	// https://godoc.org/github.com/mattn/go-sqlite3#SQLiteDriver.Open
-	// client := enttest.Open(t, "sqlite3", "file:ent?mode=memory&cache=shared&_fk=1", opts...)
-	client := enttest.Open(t, "sqlite3", "file:test.db?_fk=1", opts...)
+	drv := entsql.OpenDB(dialect.Postgres, db)
 
-	if err := client.Schema.Create(context.Background()); err != nil {
-		return nil, nil
-	}
+	client := ent.NewClient(ent.Driver(drv))
+
 	ctx := context.Background()
+	if err = client.Schema.Create(ctx); err != nil {
+		panic("failed to create schema: " + err.Error())
+	}
 
 	jsonFile, err := os.Open("./res/languages.json")
 	if err != nil {

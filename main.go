@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -11,15 +12,17 @@ import (
 	"github.com/excing/goflag"
 	"github.com/gin-gonic/gin"
 	"knowlgraph.com/ent"
-	"knowlgraph.com/ent/migrate"
 
-	_ "github.com/mattn/go-sqlite3"
+	"github.com/facebook/ent/dialect"
+
+	entsql "github.com/facebook/ent/dialect/sql"
+	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
 // Config is KnowlGraph server config info
 type Config struct {
 	Port  int    `flag:"server port"`
-	Db    string `flag:"database path"`
+	Pg    string `flag:"postgresql database source name, Please enter in the format: user:password@127.0.0.1:5432/database"`
 	Debug bool   `flag:"Is debug mode"`
 }
 
@@ -33,34 +36,27 @@ var config *Config
 func init() {
 	time.FixedZone("CST", 8*3600) // China Standard Timzone
 
-	config = &Config{8080, "", false}
+	config = &Config{Port: 8080}
 	goflag.Var(config)
 }
 
-func main() {
-	goflag.Parse("config", "Configuration file path")
-
-	var err error
-
-	opts := []ent.Option{}
-	if config.Debug {
-		opts = append(opts, ent.Debug())
-	}
-	if "" == config.Db {
-		client, err = ent.Open("sqlite3", "file:ent?mode=memory&cache=shared&_fk=1", opts...)
-	} else {
-		client, err = ent.Open("sqlite3", "file:"+config.Db+"?_fk=1", opts...)
-	}
+func openPostgreSQL() {
+	db, err := sql.Open("pgx", "postgresql://"+config.Pg)
 	if err != nil {
-		panic("failed to open database: " + err.Error())
+		panic("open postgresql failed: " + err.Error())
 	}
-	defer client.Close()
+
+	drv := entsql.OpenDB(dialect.Postgres, db)
+
+	client = ent.NewClient(ent.Driver(drv))
 
 	ctx = context.Background()
-	if err = client.Schema.Create(ctx, migrate.WithGlobalUniqueID(true)); err != nil {
+	if err = client.Schema.Create(ctx); err != nil {
 		panic("failed to create schema: " + err.Error())
 	}
+}
 
+func loadLauguages() {
 	//////////// load languages.json resource //////////////
 	//
 	//
@@ -88,11 +84,18 @@ func main() {
 	for _, v := range values {
 		_, err := client.Language.UpdateOneID(v.ID).SetName(v.Name).SetDirection(v.Direction).Save(ctx)
 		if err != nil {
-			_langCreates[i] = client.Language.Create().SetID(v.ID).SetName(v.Name).SetDirection(v.Direction)
+			_langCreates = append(_langCreates, client.Language.Create().SetID(v.ID).SetName(v.Name).SetDirection(v.Direction))
 			i++
 		}
 	}
 	client.Language.CreateBulk(_langCreates...).SaveX(ctx)
+}
+
+func main() {
+	goflag.Parse("config", "Configuration file path")
+
+	openPostgreSQL()
+	loadLauguages()
 
 	/////////////////////// router code ////////////////////
 	//
