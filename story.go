@@ -36,12 +36,12 @@ func PutStoryContent(c *Context) error {
 	////////////////////////////////////////////////////////
 
 	var _body struct {
-		Title       string   `json:"title,omitempty"`
-		Gist        string   `json:"gist,omitempty"`
-		Content     string   `json:"content"`
-		VersionName string   `json:"versionName,omitempty"`
-		StoryID     int      `json:"storyID"`
-		Tags        []string `json:"tags,omitempty" comment:"5 at most"`
+		Title       string   `json:"title"`
+		Gist        string   `json:"gist"`
+		Content     string   `json:"content" binding:"required"`
+		VersionName string   `json:"versionName"`
+		StoryID     int      `json:"storyID" binding:"required,gt=0,storyExist"`
+		Tags        []string `json:"tags" binding:"max=5" comment:"5 at most"`
 	}
 	err := c.ShouldBindJSON(&_body)
 	if err != nil {
@@ -113,8 +113,8 @@ func PutStoryContent(c *Context) error {
 // PublishStory pushes a personal story content to a public channel
 func PublishStory(c *Context) error {
 	var _body struct {
-		StoryID   int `json:"storyID"`
-		ContentID int `json:"ContentID"`
+		StoryID   int `json:"storyID" binding:"required,gt=0,storyExist"`
+		ContentID int `json:"ContentID" binding:"required,gt=0"`
 	}
 	err := c.ShouldBindJSON(&_body)
 	if err != nil {

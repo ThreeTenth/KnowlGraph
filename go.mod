@@ -6,14 +6,13 @@ require (
 	github.com/excing/goflag v1.0.1
 	github.com/facebook/ent v0.5.4
 	github.com/gin-gonic/gin v1.6.3
-	github.com/go-playground/validator/v10 v10.4.1 // indirect
+	github.com/go-playground/validator/v10 v10.4.1
 	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/google/go-cmp v0.5.4 // indirect
 	github.com/google/uuid v1.1.5 // indirect
 	github.com/jackc/pgx/v4 v4.10.1
 	github.com/kr/text v0.2.0 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
-	github.com/mattn/go-sqlite3 v1.14.6
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.7.0 // indirect
 	github.com/ugorji/go v1.2.3 // indirect

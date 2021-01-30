@@ -5,13 +5,17 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"time"
 
 	"github.com/excing/goflag"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/go-playground/validator/v10"
 	"knowlgraph.com/ent"
+	"knowlgraph.com/ent/story"
 
 	"github.com/facebook/ent/dialect"
 
@@ -23,6 +27,7 @@ import (
 type Config struct {
 	Port  int    `flag:"server port"`
 	Pg    string `flag:"postgresql database source name, Please enter in the format: user:password@127.0.0.1:5432/database"`
+	Log   string `flag:"logcat file path"`
 	Debug bool   `flag:"Is debug mode"`
 }
 
@@ -91,6 +96,17 @@ func loadLauguages() {
 	client.Language.CreateBulk(_langCreates...).SaveX(ctx)
 }
 
+var storyExist validator.Func = func(fl validator.FieldLevel) bool {
+	date, ok := fl.Field().Interface().(int)
+	if ok {
+		ok, err := client.Story.Query().Where(story.IDEQ(date)).Exist(ctx)
+		if !ok || err != nil {
+			return false
+		}
+	}
+	return true
+}
+
 func main() {
 	goflag.Parse("config", "Configuration file path")
 
@@ -103,6 +119,17 @@ func main() {
 	////////////////////////////////////////////////////////
 
 	router := gin.Default()
+
+	// write the logs to file and console at the same time
+	if f, err := os.Create(config.Log); err == nil {
+		gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
+	}
+
+	// Custom Validators
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		v.RegisterValidation("storyExist", storyExist)
+	}
+
 	v1 := router.Group("/api/v1")
 
 	v1.PUT("/story", handle(NewStory))
