@@ -1,0 +1,10 @@
+<script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script>
+<button onclick="onGitHubOAuth()">使用 GitHub 授权登录</button>
+<script>
+	function onGitHubOAuth() {
+		const state = Math.random().toString(36).slice(2)
+		const githubOAuthAPI = "https://github.com/login/oauth/authorize?client_id={{.}}&state=" + state
+		Cookies.set('github_oauth_state', state)
+		window.open(githubOAuthAPI, "_self")
+	}
+</script>

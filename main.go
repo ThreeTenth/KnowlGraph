@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io"
-	"io/ioutil"
 	"os"
 	"time"
 
@@ -14,6 +14,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
+	"github.com/gobuffalo/packr/v2"
 	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/story"
 
@@ -29,10 +30,9 @@ type Config struct {
 	Pg    string `flag:"postgresql database source name, Please enter in the format: user:password@127.0.0.1:5432/database"`
 	Log   string `flag:"logcat file path"`
 	Debug bool   `flag:"Is debug mode"`
+	Gci   string `flag:"GitHub client ID, see https://docs.github.com/en/developers/apps/creating-an-oauth-app"`
+	Gcs   string `flag:"GitHub client secrets"`
 }
-
-// DefaultLanguage is story default language
-const DefaultLanguage = "en"
 
 var ctx context.Context
 var client *ent.Client
@@ -67,19 +67,14 @@ func loadLauguages() {
 	//
 	////////////////////////////////////////////////////////
 
-	jsonFile, err := os.Open("res/languages.json")
-	if err != nil {
-		panic(err)
-	}
-	defer jsonFile.Close()
-
-	byteValue, err := ioutil.ReadAll(jsonFile)
+	box := packr.NewBox("./res")
+	bs, err := box.Find("languages.json")
 	if err != nil {
 		panic(err)
 	}
 
 	var values []*ent.Language
-	err = json.Unmarshal(byteValue, &values)
+	err = json.Unmarshal(bs, &values)
 	if err != nil {
 		panic(err)
 	}
@@ -94,6 +89,19 @@ func loadLauguages() {
 		}
 	}
 	client.Language.CreateBulk(_langCreates...).SaveX(ctx)
+}
+
+func loadTemplates(router *gin.Engine) {
+	tmpl := template.New("user")
+	box := packr.NewBox("./tpl")
+
+	for _, v := range box.List() {
+		fgm := tmpl.New(v)
+		data, _ := box.FindString(v)
+		fgm.Parse(data)
+	}
+
+	router.SetHTMLTemplate(tmpl)
 }
 
 var storyExist validator.Func = func(fl validator.FieldLevel) bool {
@@ -128,6 +136,16 @@ func main() {
 	// Custom Validators
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		v.RegisterValidation("storyExist", storyExist)
+	}
+
+	web := router.Group("/")
+	{
+		loadTemplates(router)
+
+		web.GET("/", handle(index))
+
+		join := web.Group("/user/join")
+		join.GET("/github", handle(joinGithub))
 	}
 
 	v1 := router.Group("/api/v1")

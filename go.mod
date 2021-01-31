@@ -7,6 +7,7 @@ require (
 	github.com/facebook/ent v0.5.4
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.4.1
+	github.com/gobuffalo/packr/v2 v2.8.1
 	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/google/go-cmp v0.5.4 // indirect
 	github.com/google/uuid v1.1.5 // indirect
