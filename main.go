@@ -148,6 +148,8 @@ func main() {
 		join.GET("/github", handle(joinGithub))
 	}
 
+	web.StaticFS("/favicon", packr.NewBox("./res/favicon"))
+
 	v1 := router.Group("/api/v1")
 
 	v1.PUT("/story", handle(NewStory))
