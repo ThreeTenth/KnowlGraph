@@ -20,7 +20,10 @@ type Context struct {
 
 func handle(fn func(p *Context) error) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		fn(&Context{c})
+		if err := fn(&Context{c}); err != nil {
+			panic(err)
+		}
+		c.Abort()
 	}
 }
 
@@ -43,16 +46,32 @@ func (p *Context) QueryInt(key string) int {
 //     GET /path?id=1234&name=Manu&value=
 // 	   c.Query("id") == 1234, nil
 // 	   c.Query("name") == 0, errors.New("the wrong type of name")
-// 	   c.Query("value") == 0, errors.New("the wrong type of value")
-// 	   c.Query("wtf") == 0, errors.New("wtf not found")
+// 	   c.Query("value") == 0, errors.New("the wrong type of 'value'")
+// 	   c.Query("wtf") == 0, errors.New("Missing 'wtf' parameter")
 func (p *Context) GetQueryInt(key string) (int, error) {
 	if values, ok := p.GetQueryArray(key); ok {
 		if i, err := strconv.Atoi(values[0]); err == nil {
 			return i, nil
 		}
-		return 0, errors.New("the wrong type of " + key)
+		return 0, errors.Errorf("the wrong type of '%v'", key)
 	}
-	return 0, errors.New(key + " not found")
+	return 0, errors.Errorf("Missing '%v' parameter", key)
+}
+
+// GetQueryString is the same as GetQuery, except that the return value is changed to `error`
+func (p *Context) GetQueryString(key string) (string, error) {
+	if values, ok := p.GetQueryArray(key); ok {
+		return values[0], nil
+	}
+	return "", errors.Errorf("Missing '%v' parameter", key)
+}
+
+// GetFormString is the same as GetPostForm, except that the return value is changed to `error`
+func (p *Context) GetFormString(key string) (string, error) {
+	if values, ok := p.GetPostFormArray(key); ok {
+		return values[0], nil
+	}
+	return "", errors.Errorf("The form is missing the '%v' parameter", key)
 }
 
 // Render writes the response headers and calls render.Render to render data.
@@ -68,11 +87,38 @@ func (p *Context) Render(code int, r render.Render) error {
 	return r.Render(p.Writer)
 }
 
-// MovedPermanently 301 MovedPermanently
+// MovedPermanently 301 MovedPermanently, a HTTP redirect
 func (p *Context) MovedPermanently(location string) error {
-	p.Redirect(http.StatusMovedPermanently, location)
-	return nil
+	return p.Render(-1, render.Redirect{
+		Code:     http.StatusMovedPermanently,
+		Location: location,
+		Request:  p.Request,
+	})
 }
+
+// Found 302 Found, a HTTP redirect from POST
+func (p *Context) Found(location string) error {
+	return p.Render(-1, render.Redirect{
+		Code:     http.StatusFound,
+		Location: location,
+		Request:  p.Request,
+	})
+}
+
+// TemporaryRedirect 307 TemporaryRedirect, a HTTP redirect
+func (p *Context) TemporaryRedirect(location string) error {
+	return p.Render(-1, render.Redirect{
+		Code:     http.StatusTemporaryRedirect,
+		Location: location,
+		Request:  p.Request,
+	})
+}
+
+// RouterRedirect is a Router redirect
+// func (p *Context) RouterRedirect(location string) error {
+// 	p.Request.URL.Path = "/test2"
+// 	r.HandleContext(c)
+// }
 
 // BadRequest writes a BadRequest code(400) with the given string into the response body.
 // Bad input parameter. Error message should indicate which one and why.

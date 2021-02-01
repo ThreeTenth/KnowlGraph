@@ -14,7 +14,10 @@ type User struct {
 // Fields of the User.
 func (User) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("name"),
+		field.String("name").Optional(),
+		field.String("email").Optional(),
+		field.String("avatar").Optional(),
+		field.Int("github_id").Optional(),
 	}
 }
 

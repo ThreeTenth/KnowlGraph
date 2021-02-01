@@ -142,7 +142,8 @@ func main() {
 	{
 		loadTemplates(router)
 
-		web.GET("/", handle(index))
+		web.GET("/", authentication, handle(index))
+		web.GET("/signout", deauthorize, handle(signout))
 
 		join := web.Group("/user/join")
 		join.GET("/github", handle(joinGithub))
