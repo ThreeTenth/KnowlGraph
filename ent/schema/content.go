@@ -18,8 +18,8 @@ func (Content) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("title").Optional(),
 		field.String("gist").Optional(),
-		field.String("content"),
-		field.Int("version"),
+		field.String("content").Default(""),
+		field.Int("version").Default(1),
 		field.String("versionName").Optional().Unique(),
 		field.Time("created_at").Default(time.Now),
 	}
@@ -30,7 +30,7 @@ func (Content) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.From("tags", Tag.Type).Ref("contents"),
 		edge.From("story", Story.Type).Ref("versions").Unique().Required(),
-		edge.To("lang", Language.Type).Unique(),
+		edge.To("lang", Language.Type).Unique().Required(),
 		edge.To("main", Content.Type).Unique().Comment("Main is a copy of the main branch of the current copy."),
 	}
 }

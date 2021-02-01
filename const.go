@@ -27,6 +27,8 @@ const (
 	HeaderContentType = "Content-Type"
 	// HeaderAuthorization means http header `Authorization` field
 	HeaderAuthorization = "Authorization"
+	// HeaderAcceptLanguage means http header `Accept-Language`field
+	HeaderAcceptLanguage = "Accept-Language"
 )
 
 // HTTP cookies key

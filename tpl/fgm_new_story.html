@@ -2,16 +2,67 @@
 <div>
   <button onclick="onNewStory()">New Story</button>
 </div>
+<div id="content_layout" style="margin-top: 20px; display: none;">
+  <textarea id="content" style="width: 480px; height: 260px;" onkeyup="onPostChanged()"
+    onblur="onPostChanged()"></textarea>
+</div>
 <script>
+  var storyID;
   function onNewStory() {
     axios({
       method: "PUT",
       url: "/api/v1/story",
     }).then(function (resp) {
       console.log(resp.status, resp.data)
+      storyID = resp.data
+      document.getElementById("content_layout").style.display = "block"
     }).catch(function (resp) {
       console.log(resp.status, resp.data)
     })
   }
+
+  var contentTextarea = document.getElementById("content")
+  var lastContent = contentTextarea.value
+  var timeoutID;
+  function onPostChanged() {
+    window.clearTimeout(timeoutID);
+    timeoutID = window.setTimeout(postStoryContent, 2000);
+  }
+
+  function postStoryContent() {
+    if (contentTextarea.value != lastContent) {
+      axios({
+        method: "PUT",
+        url: "/api/v1/story/content?lang=" + getLang(),
+        data: {
+          content: contentTextarea.value,
+          storyID: storyID,
+        },
+      }).then(function (resp) {
+        console.log(resp.status, resp.data)
+        document.getElementById("content_layout").style.display = "block"
+      }).catch(function (resp) {
+        console.log(resp.status, resp.data)
+      })
+    }
+    lastContent = contentTextarea.value
+  }
+
+  function getLang() {
+    var language;
+    if (navigator.languages != undefined)
+      language = navigator.languages[0];
+    else
+      language = navigator.language || window.navigator.userLanguage;
+
+    var localLang = language.split("-")
+    if (2 == localLang.length)
+      language = localLang[0]
+
+    return language
+  }
+
+  console.log(getLang())
+
 </script>
 {{end}}

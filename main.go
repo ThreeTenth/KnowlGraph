@@ -56,7 +56,13 @@ func openPostgreSQL() {
 
 	drv := entsql.OpenDB(dialect.Postgres, db)
 
-	client = ent.NewClient(ent.Driver(drv))
+	opts := []ent.Option{
+		ent.Driver(drv),
+	}
+	if config.Debug {
+		opts = append(opts, ent.Debug())
+	}
+	client = ent.NewClient(opts...)
 
 	ctx = context.Background()
 	if err = client.Schema.Create(ctx); err != nil {
