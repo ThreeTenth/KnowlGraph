@@ -3,28 +3,29 @@ package main
 import (
 	"math/rand"
 	"net/http"
-	"sync"
 	"time"
 	"unsafe"
 
 	"github.com/gin-gonic/gin"
 )
 
-var _tokens sync.Map
-
-func setAuthorization(c *gin.Context, userID int) {
+func setAuthorization(c *gin.Context, userID int) error {
 	_token := New64BitID()
 
-	_tokens.Store(_token, userID)
+	err := rdb.Set(ctx, _token, userID, ExpireTimeToken).Err()
+	if err != nil {
+		return err
+	}
 
 	c.SetCookie(CookieToken, _token, int(30*24*3600), "/", "", !config.Debug, !config.Debug)
+	return nil
 }
 
 func authentication(c *gin.Context) {
 	_token := getRequestToken(c)
 
 	if _token != "" {
-		if userID, ok := _tokens.Load(_token); ok {
+		if userID, err := rdb.Get(ctx, _token).Int(); err == nil && 0 < userID {
 			c.Set(GinKeyUserID, userID)
 		}
 	}
@@ -36,7 +37,10 @@ func deauthorize(c *gin.Context) {
 	_token := getRequestToken(c)
 
 	if _token != "" {
-		_tokens.Delete(_token)
+		if rdb.Del(ctx, _token).Err() != nil {
+			c.AbortWithStatus(http.StatusInternalServerError)
+			return
+		}
 	}
 
 	c.SetCookie(CookieToken, "", -1, "/", "", !config.Debug, !config.Debug)
@@ -47,7 +51,7 @@ func authorizeRequired(c *gin.Context) {
 	_token := getRequestToken(c)
 
 	if _token != "" {
-		if userID, ok := _tokens.Load(_token); ok {
+		if userID, err := rdb.Get(ctx, _token).Int(); err == nil && 0 < userID {
 			c.Set(GinKeyUserID, userID)
 			c.Next()
 			return

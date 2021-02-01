@@ -129,7 +129,9 @@ func joinGithub(c *Context) error {
 		_userID = _user.ID
 	}
 
-	setAuthorization(c.Context, _userID)
+	if setAuthorization(c.Context, _userID) != nil {
+		return c.InternalServerError(err.Error())
+	}
 
 	return c.MovedPermanently("/")
 }

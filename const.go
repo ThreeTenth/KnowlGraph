@@ -1,5 +1,12 @@
 package main
 
+import "time"
+
+const (
+	// ExpireTimeToken is token expire time
+	ExpireTimeToken = 30 * 24 * time.Hour
+)
+
 // HTML template
 const (
 	// TplIndexHTML is index html template

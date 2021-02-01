@@ -14,6 +14,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
+	"github.com/go-redis/redis/v8"
 	"github.com/gobuffalo/packr/v2"
 	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/story"
@@ -28,6 +29,7 @@ import (
 type Config struct {
 	Port  int    `flag:"server port"`
 	Pg    string `flag:"postgresql database source name, Please enter in the format: user:password@127.0.0.1:5432/database"`
+	Redis string `flag:"redis source name, Please enter in the format: redis://localhost:6379/<db>"`
 	Log   string `flag:"logcat file path"`
 	Debug bool   `flag:"Is debug mode"`
 	Gci   string `flag:"GitHub client ID, see https://docs.github.com/en/developers/apps/creating-an-oauth-app"`
@@ -36,6 +38,7 @@ type Config struct {
 
 var ctx context.Context
 var client *ent.Client
+var rdb *redis.Client
 var config *Config
 
 func init() {
@@ -59,6 +62,15 @@ func openPostgreSQL() {
 	if err = client.Schema.Create(ctx); err != nil {
 		panic("failed to create schema: " + err.Error())
 	}
+}
+
+func openRedis() {
+	opt, err := redis.ParseURL(config.Redis)
+	if err != nil {
+		panic(err)
+	}
+
+	rdb = redis.NewClient(opt)
 }
 
 func loadLauguages() {
@@ -119,6 +131,7 @@ func main() {
 	goflag.Parse("config", "Configuration file path")
 
 	openPostgreSQL()
+	openRedis()
 	loadLauguages()
 
 	/////////////////////// router code ////////////////////

@@ -11,7 +11,6 @@ require (
 	github.com/gobuffalo/packr/v2 v2.8.1
 	github.com/gofrs/uuid v4.0.0+incompatible // indirect
 	github.com/golang/protobuf v1.4.3 // indirect
-	github.com/google/go-cmp v0.5.4 // indirect
 	github.com/google/uuid v1.2.0 // indirect
 	github.com/jackc/pgmock v0.0.0-20201204152224-4fe30f7445fd // indirect
 	github.com/jackc/pgproto3/v2 v2.0.7 // indirect
