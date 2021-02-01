@@ -129,7 +129,7 @@ func joinGithub(c *Context) error {
 		_userID = _user.ID
 	}
 
-	authorization(c.Context, _userID)
+	setAuthorization(c.Context, _userID)
 
 	return c.MovedPermanently("/")
 }

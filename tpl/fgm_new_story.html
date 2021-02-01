@@ -1,0 +1,17 @@
+{{define "fgm_new_story"}}
+<div>
+  <button onclick="onNewStory()">New Story</button>
+</div>
+<script>
+  function onNewStory() {
+    axios({
+      method: "PUT",
+      url: "/api/v1/story",
+    }).then(function (resp) {
+      console.log(resp.status, resp.data)
+    }).catch(function (resp) {
+      console.log(resp.status, resp.data)
+    })
+  }
+</script>
+{{end}}

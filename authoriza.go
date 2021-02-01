@@ -2,6 +2,7 @@ package main
 
 import (
 	"math/rand"
+	"net/http"
 	"sync"
 	"time"
 	"unsafe"
@@ -11,7 +12,7 @@ import (
 
 var _tokens sync.Map
 
-func authorization(c *gin.Context, userID int) {
+func setAuthorization(c *gin.Context, userID int) {
 	_token := New64BitID()
 
 	_tokens.Store(_token, userID)
@@ -20,10 +21,7 @@ func authorization(c *gin.Context, userID int) {
 }
 
 func authentication(c *gin.Context) {
-	_token := c.GetHeader(HeaderAuthorization)
-	if _token == "" {
-		_token, _ = c.Cookie(CookieToken)
-	}
+	_token := getRequestToken(c)
 
 	if _token != "" {
 		if userID, ok := _tokens.Load(_token); ok {
@@ -35,10 +33,7 @@ func authentication(c *gin.Context) {
 }
 
 func deauthorize(c *gin.Context) {
-	_token := c.GetHeader(HeaderAuthorization)
-	if _token == "" {
-		_token, _ = c.Cookie(CookieToken)
-	}
+	_token := getRequestToken(c)
 
 	if _token != "" {
 		_tokens.Delete(_token)
@@ -46,6 +41,28 @@ func deauthorize(c *gin.Context) {
 
 	c.SetCookie(CookieToken, "", -1, "/", "", !config.Debug, !config.Debug)
 	c.Next()
+}
+
+func authorizeRequired(c *gin.Context) {
+	_token := getRequestToken(c)
+
+	if _token != "" {
+		if userID, ok := _tokens.Load(_token); ok {
+			c.Set(GinKeyUserID, userID)
+			c.Next()
+			return
+		}
+	}
+
+	c.AbortWithStatus(http.StatusUnauthorized)
+}
+
+func getRequestToken(c *gin.Context) (_token string) {
+	_token = c.GetHeader(HeaderAuthorization)
+	if _token == "" {
+		_token, _ = c.Cookie(CookieToken)
+	}
+	return
 }
 
 const digits = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz_."

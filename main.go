@@ -153,8 +153,8 @@ func main() {
 
 	v1 := router.Group("/api/v1")
 
-	v1.PUT("/story", handle(NewStory))
-	v1.PUT("/story/content", handle(PutStoryContent))
+	v1.PUT("/story", authorizeRequired, handle(newStory))
+	v1.PUT("/story/content", authorizeRequired, handle(putStoryContent))
 	v1.PUT("/response")
 	v1.PUT("/response/content")
 
@@ -163,9 +163,9 @@ func main() {
 	v1.POST("/node")
 	v1.POST("/fork")
 	v1.POST("/recover")
-	v1.POST("/publish", handle(PublishStory))
+	v1.POST("/publish", authorizeRequired, handle(publishStory))
 
-	v1.GET("/story", handle(GetStory))
+	v1.GET("/story", handle(getStory))
 	v1.GET("/story/responses")
 	v1.GET("/story/versions")
 	v1.GET("/story/reactions")
@@ -181,6 +181,7 @@ func main() {
 	v1.GET("/star/storis")
 	v1.GET("/star/nodes")
 
+	v1.GET("/stories", authorizeRequired, handle(getUserStories))
 	v1.GET("/recent")
 	v1.GET("/search")
 

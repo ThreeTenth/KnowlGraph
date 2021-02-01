@@ -10,25 +10,29 @@ import (
 	"knowlgraph.com/ent/tag"
 )
 
-// NewStory creates a new story, the default language is en
-func NewStory(c *Context) error {
+// newStory creates a new story, the default language is en
+func newStory(c *Context) error {
+	_userID, _ := c.Get(GinKeyUserID)
 
-	///////////////// Story authentication //////////////////
-	//
-	//
-	////////////////////////////////////////////////////////
+	return WithTx(ctx, client, func(tx *ent.Tx) error {
+		_storyCreater := tx.Story.Create().SetStatus(story.StatusPrivate)
 
-	_storyCreater := client.Story.Create().SetStatus(story.StatusPrivate)
+		_story, err := _storyCreater.Save(ctx)
+		if err != nil {
+			return c.InternalServerError(err.Error())
+		}
 
-	_story, err := _storyCreater.Save(ctx)
-	if err != nil {
-		return c.InternalServerError(err.Error())
-	}
-	return c.Ok(&_story.ID)
+		_userID, err = tx.User.UpdateOneID(_userID.(int)).AddStories(_story).Save(ctx)
+		if err != nil {
+			return c.InternalServerError(err.Error())
+		}
+
+		return c.Ok(&_story.ID)
+	})
 }
 
-// PutStoryContent creates a content version for the specified story
-func PutStoryContent(c *Context) error {
+// putStoryContent creates a content version for the specified story
+func putStoryContent(c *Context) error {
 
 	///////////////// Story authentication //////////////////
 	//
@@ -110,8 +114,8 @@ func PutStoryContent(c *Context) error {
 	})
 }
 
-// PublishStory pushes a personal story content to a public channel
-func PublishStory(c *Context) error {
+// publishStory pushes a personal story content to a public channel
+func publishStory(c *Context) error {
 	var _body struct {
 		StoryID   int `json:"storyID" binding:"required,gt=0,storyExist"`
 		ContentID int `json:"ContentID" binding:"required,gt=0"`
@@ -202,8 +206,8 @@ func PublishStory(c *Context) error {
 	})
 }
 
-// GetStory returns 200 and if an story is found, if the request fails, it returns a non-200 code
-func GetStory(c *Context) error {
+// getStory returns 200 and if an story is found, if the request fails, it returns a non-200 code
+func getStory(c *Context) error {
 	storyID, err := c.GetQueryInt("id")
 	if err != nil {
 		return c.BadRequest(err.Error())
@@ -255,4 +259,19 @@ func GetStory(c *Context) error {
 	}
 
 	return c.Ok(_version)
+}
+
+func getUserStories(c *Context) error {
+	_userID, _ := c.Get(GinKeyUserID)
+	_user, err := client.User.Get(ctx, _userID.(int))
+	if err != nil {
+		return c.Forbidden(err.Error())
+	}
+
+	_stories, err := _user.QueryStars().All(ctx)
+	if err != nil {
+		return c.NotFound(err.Error())
+	}
+
+	return c.Ok(&_stories)
 }
