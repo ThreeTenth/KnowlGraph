@@ -15,6 +15,17 @@ func newStory(c *Context) error {
 	_userID, _ := c.Get(GinKeyUserID)
 
 	return WithTx(ctx, client, func(tx *ent.Tx) error {
+		_user, err := tx.User.Get(ctx, _userID.(int))
+		if err != nil {
+			return c.Forbidden(err.Error())
+		}
+
+		// Return articles without any content first
+		_storyID, err := _user.QueryStories().Where(story.Not(story.HasVersions())).FirstID(ctx)
+		if err == nil {
+			return c.Ok(&_storyID)
+		}
+
 		_storyCreater := tx.Story.Create().SetStatus(story.StatusPrivate)
 
 		_story, err := _storyCreater.Save(ctx)
@@ -61,7 +72,7 @@ func putStoryContent(c *Context) error {
 		return c.NotFound(err.Error())
 	}
 
-	_lang := c.DefaultQuery("lang", DefaultLanguage)
+	_lang := c.Query("lang")
 
 	var columns []struct {
 		Lang string `json:"content_lang"`
@@ -268,10 +279,51 @@ func getUserStories(c *Context) error {
 		return c.Forbidden(err.Error())
 	}
 
-	_stories, err := _user.QueryStars().All(ctx)
+	_stories, err := _user.QueryStories().Where(story.HasVersions()).All(ctx)
 	if err != nil {
-		return c.NotFound(err.Error())
+		return c.InternalServerError(err.Error())
+	}
+	if len(_stories) == 0 {
+		return c.Ok(&_stories)
 	}
 
-	return c.Ok(&_stories)
+	type ContentResult struct {
+		ID      int    `json:"id"`
+		Lang    string `json:"content_lang"`
+		Content string `json:"content"`
+	}
+
+	type StoryResult struct {
+		ID       int
+		Versions []*ContentResult
+	}
+
+	_storiesResult := make([]*StoryResult, len(_stories))
+
+	for i, _story := range _stories {
+		_storiesResult[i] = &StoryResult{
+			ID: _story.ID,
+		}
+
+		var _aggs []*ContentResult
+		err = _story.QueryVersions().GroupBy(content.LangColumn).Aggregate(ent.As(ent.Max(content.FieldID), "id")).Scan(ctx, &_aggs)
+		if err != nil {
+			return c.InternalServerError(err.Error())
+		}
+
+		for _, _agg := range _aggs {
+			_content, err := client.Content.Get(ctx, _agg.ID)
+			if err != nil {
+				return c.InternalServerError(err.Error())
+			}
+			_agg.Content = _content.Content
+		}
+		_storiesResult[i].Versions = _aggs
+	}
+
+	if err != nil {
+		return c.InternalServerError(err.Error())
+	}
+
+	return c.Ok(&_storiesResult)
 }
