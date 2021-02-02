@@ -19,7 +19,7 @@ func joinGithub(c *Context) error {
 	// See https://docs.github.com/en/developers/apps/authorizing-oauth-apps#2-users-are-redirected-back-to-your-site-by-github
 	////////////////////////////////////////////////////////
 
-	githubOAuthCode := c.Query("code")
+	githubOAuthCode := c.Query(QueryCode)
 
 	githubOAuthRequestBody := struct {
 		ClientID     string `json:"client_id"`

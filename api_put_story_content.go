@@ -37,7 +37,7 @@ func putStoryContent(c *Context) error {
 		return c.NotFound(err.Error())
 	}
 
-	_lang := c.Query("lang")
+	_lang := c.Query(QueryLang)
 
 	var columns []struct {
 		Lang string `json:"content_lang"`

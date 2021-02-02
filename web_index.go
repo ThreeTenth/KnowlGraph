@@ -1,9 +1,5 @@
 package main
 
-func signout(c *Context) error {
-	return c.TemporaryRedirect("/")
-}
-
 func index(c *Context) error {
 	_userID, ok := c.Get(GinKeyUserID)
 	if ok {

@@ -38,7 +38,7 @@ func getStory(c *Context) error {
 
 	if !ok {
 		_versionsCreate := _story.QueryVersions()
-		_lang, ok := c.GetQuery("lang")
+		_lang, ok := c.GetQuery(QueryLang)
 		if ok {
 			_versionsCreate.Where(content.HasLangWith(language.IDEQ(_lang)))
 		}

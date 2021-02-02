@@ -27,7 +27,7 @@ func getUserStories(c *Context) error {
 		Where(story.HasVersions()).
 		QueryVersions()
 
-	if _lang := c.Query("lang"); _lang != "" {
+	if _lang := c.Query(QueryLang); _lang != "" {
 		_query.Where(content.HasLangWith(language.IDEQ(_lang)))
 	}
 

@@ -23,6 +23,8 @@ const (
 const (
 	// QueryLang is http url query `lang` key
 	QueryLang = "lang"
+	// QueryCode is http url query `code` key
+	QueryCode = "code"
 )
 
 // HTTP Header key
