@@ -1,4 +1,8 @@
 /* main.css */
+body {
+  width: 640px;
+  margin: auto;
+}
 
 .rtl {
   direction: rtl

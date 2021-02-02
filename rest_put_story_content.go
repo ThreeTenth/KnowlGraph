@@ -10,6 +10,8 @@ import (
 	"knowlgraph.com/ent/story"
 	"knowlgraph.com/ent/tag"
 	"knowlgraph.com/ent/user"
+
+	stripmd "github.com/writeas/go-strip-markdown"
 )
 
 // putStoryContent creates a content version for the specified story
@@ -109,15 +111,16 @@ func seo(title string, gist string, content string) string {
 	// such as Chinese characters, when substring the string,
 	// invalid character encoding will appear. We need to convert string to []rune type.
 	// Rune is stored in unicode encoding, it supports characters with long byte encoding.
-	_rune := []rune(content)
+	_rune := []rune(stripmd.Strip(content))
 
 	_seo := title
 	if len(_seo) < MaxSeoLen {
 		i := MaxSeoLen - len(_seo)
 		if len(_rune) <= i {
-			i = len(_rune) - 1
+			_seo = _seo + " " + string(_rune[:len(_rune)-1])
+		} else {
+			_seo = _seo + " " + string(_rune[:i]) + "..."
 		}
-		_seo = _seo + " " + string(_rune[:i])
 	}
 
 	re := regexp.MustCompile(`\r?\n`)

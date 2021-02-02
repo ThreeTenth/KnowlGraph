@@ -4,11 +4,13 @@
 {{ template "fgm_html_header" .Header }}
 
 <body>
-  {{ .Body.User.Name }}
-  <button onclick="onSignout()">退出</button>
+  <div style="text-align: right;">
+    {{ .Body.User.Name }}
+    <button onclick="onSignout()">退出</button>
+  </div>
   {{ template "fgm_new_story" .Body }}
   {{ template "fgm_user_stories" }}
-  
+
   {{ template "fgm_html_footer" }}
 </body>
 

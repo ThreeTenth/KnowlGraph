@@ -90,7 +90,7 @@ function onGetStories() {
     for (let index = 0; index < stories.length; index++) {
       const content = stories[index];
       const content_a = document.createElement("a")
-      content_a.innerHTML = content.seo.substring(0, 48) + "..."
+      content_a.innerHTML = content.seo.substring(0, 48)
       content_a.href = "#" + content.id
       content_a.onclick = function () {
         editStoryContent(content.story_versions, content.id)
