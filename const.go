@@ -19,6 +19,12 @@ const (
 	DefaultLanguage = "en"
 )
 
+// HTTP URL query key
+const (
+	// QueryLang is http url query `lang` key
+	QueryLang = "lang"
+)
+
 // HTTP Header key
 const (
 	// HeaderAccept means http header `accept` field
