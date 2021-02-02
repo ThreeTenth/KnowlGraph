@@ -19,7 +19,7 @@ func getUserStories(c *Context) error {
 	var _versions []*struct {
 		ID        int       `json:"id"`
 		Story     int       `json:"story_versions"`
-		Content   string    `json:"content"`
+		Seo       string    `json:"seo"`
 		CreatedAt time.Time `json:"created_at"`
 	}
 
@@ -48,7 +48,7 @@ func getUserStories(c *Context) error {
 		if err != nil {
 			return c.InternalServerError(err.Error())
 		}
-		_version.Content = _content.Content
+		_version.Seo = _content.Seo
 		_version.CreatedAt = _content.CreatedAt
 	}
 

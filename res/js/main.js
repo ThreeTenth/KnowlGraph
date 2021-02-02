@@ -90,10 +90,10 @@ function onGetStories() {
     for (let index = 0; index < stories.length; index++) {
       const content = stories[index];
       content_div = document.createElement("a")
-      content_div.innerHTML = content.content.substring(0, 48) + "..."
-      content_div.href = "#" + content.ID
+      content_div.innerHTML = content.seo.substring(0, 48) + "..."
+      content_div.href = "#" + content.id
       content_div.onclick = function () {
-        editStoryContent(content.story_versions, content.ID)
+        editStoryContent(content.story_versions, content.id)
       }
       stories_layout.appendChild(content_div)
     }

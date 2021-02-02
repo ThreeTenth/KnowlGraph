@@ -1,6 +1,9 @@
 package main
 
 import (
+	"regexp"
+	"strings"
+
 	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/content"
 	"knowlgraph.com/ent/language"
@@ -58,6 +61,8 @@ func putStoryContent(c *Context) error {
 		maxVersion = columns[0].Max
 	}
 
+	seo := seo(_body.Title, _body.Gist, _body.Content)
+
 	return WithTx(ctx, client, func(tx *ent.Tx) error {
 		_contentCreate := tx.Content.Create().
 			SetTitle(_body.Title).
@@ -65,6 +70,7 @@ func putStoryContent(c *Context) error {
 			SetContent(_body.Content).
 			SetStory(_story).
 			SetVersion(maxVersion).
+			SetSeo(seo).
 			SetLangID(_lang)
 
 		if nil != _body.Tags && 0 < len(_body.Tags) {
@@ -91,4 +97,22 @@ func putStoryContent(c *Context) error {
 
 		return c.Ok(_content.ID)
 	})
+}
+
+func seo(title string, gist string, content string) string {
+	_seo := gist
+	if len(_seo) < MaxSeoLen {
+		_seo = title + " " + _seo
+	}
+	if len(_seo) < MaxSeoLen {
+		i := MaxSeoLen - len(_seo)
+		if len(content) <= i {
+			i = len(content) - 1
+		}
+		_seo = _seo + " " + content[:i]
+	}
+
+	re := regexp.MustCompile(`\r?\n`)
+	_seo = re.ReplaceAllString(_seo, " ")
+	return strings.Trim(_seo, " ")
 }

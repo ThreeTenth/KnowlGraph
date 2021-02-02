@@ -21,6 +21,7 @@ func (Content) Fields() []ent.Field {
 		field.String("content").Default(""),
 		field.Int("version").Default(1),
 		field.String("versionName").Optional().Unique(),
+		field.String("seo").Optional(),
 		field.Time("created_at").Default(time.Now),
 	}
 }
