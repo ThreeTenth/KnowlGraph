@@ -23,6 +23,6 @@ func (Reaction) Fields() []ent.Field {
 // Edges of the Reaction.
 func (Reaction) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("storise", Story.Type).Ref("reactions"),
+		edge.From("articles", Article.Type).Ref("reactions"),
 	}
 }

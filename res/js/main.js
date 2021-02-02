@@ -1,14 +1,14 @@
 // main.js
 // Created at 2021-02-02
 
-var storyID;
-function onNewStory() {
+var articleID;
+function onNewArticle() {
   axios({
     method: "PUT",
-    url: "/api/v1/story",
+    url: "/api/v1/article",
   }).then(function (resp) {
     console.log(resp.status, resp.data)
-    storyID = resp.data
+    articleID = resp.data
     document.getElementById("content_layout").style.display = "block"
     document.querySelector("#langs_select").value = getLang()
     registerLangSelect(document.querySelector("#langs_select"))
@@ -31,20 +31,20 @@ var lastContent = contentTextarea.value
 var timeoutID;
 function onPostChanged() {
   window.clearTimeout(timeoutID);
-  timeoutID = window.setTimeout(postStoryContent, 2000);
+  timeoutID = window.setTimeout(postArticleContent, 2000);
 
   var tagString = tagInput.value
   console.log(tagString)
 }
 
-function postStoryContent() {
+function postArticleContent() {
   if (contentTextarea.value != lastContent) {
     axios({
       method: "PUT",
-      url: "/api/v1/story/content?lang=" + getLang(),
+      url: "/api/v1/article/content?lang=" + getLang(),
       data: {
         content: contentTextarea.value,
-        storyID: storyID,
+        articleID: articleID,
       },
     }).then(function (resp) {
       console.log(resp.status, resp.data)
@@ -84,43 +84,43 @@ function getMeta(metaName) {
   return '';
 }
 
-function onGetStories() {
+function onGetArticles() {
   axios({
     method: "GET",
-    url: "/api/v1/stories",
+    url: "/api/v1/articles",
   }).then(function (resp) {
-    var stories_layout = document.getElementById("stories_layout")
-    var stories = resp.data
+    var articles_layout = document.getElementById("articles_layout")
+    var articles = resp.data
 
-    stories_layout.innerHTML = ""
-    for (let index = 0; index < stories.length; index++) {
-      const content = stories[index];
+    articles_layout.innerHTML = ""
+    for (let index = 0; index < articles.length; index++) {
+      const content = articles[index];
       const content_a = document.createElement("a")
       content_a.innerHTML = content.seo.substring(0, 48)
       content_a.href = "#" + content.id
       content_a.onclick = function () {
-        editStoryContent(content.story_versions, content.id)
+        editArticleContent(content.article_versions, content.id)
       }
       const content_div = document.createElement("div")
       content_div.appendChild(content_a)
-      stories_layout.appendChild(content_div)
+      articles_layout.appendChild(content_div)
     }
   }).catch(function (resp) {
     console.log(resp.status, resp.data)
   })
 }
 
-function editStoryContent(_storyID, _contentID) {
+function editArticleContent(_articleID, _contentID) {
   axios({
     method: "GET",
-    url: "/api/v1/story?id=" + _storyID + "&content_id=" + _contentID,
+    url: "/api/v1/article?id=" + _articleID + "&content_id=" + _contentID,
   }).then(function (resp) {
     const content = resp.data
     document.getElementById("content_layout").style.display = "block"
     document.querySelector("#langs_select").value = content.edges.Lang.id
     registerLangSelect(document.querySelector("#langs_select"))
     setContentValue(content.content)
-    storyID = _storyID
+    articleID = _articleID
   }).catch(function (resp) {
 
   })

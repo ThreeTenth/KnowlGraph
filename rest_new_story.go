@@ -2,11 +2,11 @@ package main
 
 import (
 	"knowlgraph.com/ent"
-	"knowlgraph.com/ent/story"
+	"knowlgraph.com/ent/article"
 )
 
-// newStory creates a new story, the default language is en
-func newStory(c *Context) error {
+// newArticle creates a new article, the default language is en
+func newArticle(c *Context) error {
 	_userID, _ := c.Get(GinKeyUserID)
 
 	return WithTx(ctx, client, func(tx *ent.Tx) error {
@@ -16,23 +16,23 @@ func newStory(c *Context) error {
 		}
 
 		// Return articles without any content first
-		_storyID, err := _user.QueryStories().Where(story.Not(story.HasVersions())).FirstID(ctx)
+		_articleID, err := _user.QueryArticles().Where(article.Not(article.HasVersions())).FirstID(ctx)
 		if err == nil {
-			return c.Ok(&_storyID)
+			return c.Ok(&_articleID)
 		}
 
-		_storyCreater := tx.Story.Create().SetStatus(story.StatusPrivate)
+		_articleCreater := tx.Article.Create().SetStatus(article.StatusPrivate)
 
-		_story, err := _storyCreater.Save(ctx)
+		_article, err := _articleCreater.Save(ctx)
 		if err != nil {
 			return c.InternalServerError(err.Error())
 		}
 
-		_userID, err = tx.User.UpdateOneID(_userID.(int)).AddStories(_story).Save(ctx)
+		_userID, err = tx.User.UpdateOneID(_userID.(int)).AddArticles(_article).Save(ctx)
 		if err != nil {
 			return c.InternalServerError(err.Error())
 		}
 
-		return c.Ok(&_story.ID)
+		return c.Ok(&_article.ID)
 	})
 }

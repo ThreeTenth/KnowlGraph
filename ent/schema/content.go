@@ -30,7 +30,7 @@ func (Content) Fields() []ent.Field {
 func (Content) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.From("tags", Tag.Type).Ref("contents"),
-		edge.From("story", Story.Type).Ref("versions").Unique().Required(),
+		edge.From("article", Article.Type).Ref("versions").Unique().Required(),
 		edge.To("lang", Language.Type).Unique().Required(),
 		edge.To("main", Content.Type).Unique().Comment("Main is a copy of the main branch of the current copy."),
 	}

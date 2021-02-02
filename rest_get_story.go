@@ -2,34 +2,34 @@ package main
 
 import (
 	"knowlgraph.com/ent"
+	"knowlgraph.com/ent/article"
 	"knowlgraph.com/ent/content"
 	"knowlgraph.com/ent/language"
-	"knowlgraph.com/ent/story"
 	"knowlgraph.com/ent/user"
 )
 
-// getStory returns 200 and if an story is found, if the request fails, it returns a non-200 code
-func getStory(c *Context) error {
+// getArticle returns 200 and if an article is found, if the request fails, it returns a non-200 code
+func getArticle(c *Context) error {
 	var _query struct {
 		ID        int `form:"id" binding:"required"`
 		ContentID int `form:"content_id"`
 	}
 	err := c.ShouldBindQuery(&_query)
 
-	_story, err := client.Story.Get(ctx, _query.ID)
+	_article, err := client.Article.Get(ctx, _query.ID)
 	if err != nil {
 		return c.NotFound(err.Error())
 	}
 
-	if story.StatusPrivate == _story.Status {
+	if article.StatusPrivate == _article.Status {
 		_userID, ok := c.Get(GinKeyUserID)
 		if !ok {
 			return c.Unauthorized("No access")
 		}
 		ok, err = client.User.Query().
 			Where(user.IDEQ(_userID.(int))).
-			QueryStories().
-			Where(story.IDEQ(_story.ID)).
+			QueryArticles().
+			Where(article.IDEQ(_article.ID)).
 			Exist(ctx)
 		if !ok || err != nil {
 			return c.Unauthorized("No access")
@@ -42,14 +42,14 @@ func getStory(c *Context) error {
 	if 0 == _query.ContentID {
 		ok = false
 	} else {
-		_version, err = _story.QueryVersions().Where(content.IDEQ(_query.ContentID)).First(ctx)
+		_version, err = _article.QueryVersions().Where(content.IDEQ(_query.ContentID)).First(ctx)
 		if err != nil {
 			ok = false
 		}
 	}
 
 	if !ok {
-		_versionsCreate := _story.QueryVersions()
+		_versionsCreate := _article.QueryVersions()
 		_lang, ok := c.GetQuery(QueryLang)
 		if ok {
 			_versionsCreate.Where(content.HasLangWith(language.IDEQ(_lang)))

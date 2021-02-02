@@ -20,7 +20,7 @@ const (
 )
 
 const (
-	// DefaultLanguage is story default language
+	// DefaultLanguage is article default language
 	DefaultLanguage = "en"
 )
 

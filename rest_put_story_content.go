@@ -5,17 +5,17 @@ import (
 	"strings"
 
 	"knowlgraph.com/ent"
+	"knowlgraph.com/ent/article"
 	"knowlgraph.com/ent/content"
 	"knowlgraph.com/ent/language"
-	"knowlgraph.com/ent/story"
 	"knowlgraph.com/ent/tag"
 	"knowlgraph.com/ent/user"
 
 	stripmd "github.com/writeas/go-strip-markdown"
 )
 
-// putStoryContent creates a content version for the specified story
-func putStoryContent(c *Context) error {
+// putArticleContent creates a content version for the specified article
+func putArticleContent(c *Context) error {
 	_userID, _ := c.Get(GinKeyUserID)
 
 	var _body struct {
@@ -23,7 +23,7 @@ func putStoryContent(c *Context) error {
 		Gist        string   `json:"gist"`
 		Content     string   `json:"content" binding:"required"`
 		VersionName string   `json:"versionName"`
-		StoryID     int      `json:"storyID" binding:"required,gt=0,storyExist"`
+		ArticleID   int      `json:"articleID" binding:"required,gt=0,articleExist"`
 		Tags        []string `json:"tags" binding:"max=5" comment:"5 at most"`
 	}
 	err := c.ShouldBindJSON(&_body)
@@ -35,11 +35,11 @@ func putStoryContent(c *Context) error {
 		return c.BadRequest("Up to 5 tags")
 	}
 
-	_story, err := client.User.
+	_article, err := client.User.
 		Query().
 		Where(user.IDEQ(_userID.(int))).
-		QueryStories().
-		Where(story.IDEQ(_body.StoryID)).
+		QueryArticles().
+		Where(article.IDEQ(_body.ArticleID)).
 		First(ctx)
 	if err != nil {
 		return c.NotFound(err.Error())
@@ -52,7 +52,7 @@ func putStoryContent(c *Context) error {
 		Max  int    `json:"max"`
 	}
 
-	_story.QueryVersions().
+	_article.QueryVersions().
 		Where(content.HasLangWith(language.ID(_lang))).
 		GroupBy(content.LangColumn).
 		Aggregate(ent.Max(content.FieldVersion)).
@@ -70,7 +70,7 @@ func putStoryContent(c *Context) error {
 			SetTitle(_body.Title).
 			SetGist(_body.Gist).
 			SetContent(_body.Content).
-			SetStory(_story).
+			SetArticle(_article).
 			SetVersion(maxVersion).
 			SetSeo(seo).
 			SetLangID(_lang)

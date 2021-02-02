@@ -17,7 +17,7 @@ import (
 	"github.com/go-redis/redis/v8"
 	"github.com/gobuffalo/packr/v2"
 	"knowlgraph.com/ent"
-	"knowlgraph.com/ent/story"
+	"knowlgraph.com/ent/article"
 
 	"github.com/facebook/ent/dialect"
 
@@ -122,10 +122,10 @@ func loadTemplates(router *gin.Engine) {
 	router.SetHTMLTemplate(tmpl)
 }
 
-var storyExist validator.Func = func(fl validator.FieldLevel) bool {
+var articleExist validator.Func = func(fl validator.FieldLevel) bool {
 	date, ok := fl.Field().Interface().(int)
 	if ok {
-		ok, err := client.Story.Query().Where(story.IDEQ(date)).Exist(ctx)
+		ok, err := client.Article.Query().Where(article.IDEQ(date)).Exist(ctx)
 		if !ok || err != nil {
 			return false
 		}
@@ -154,7 +154,7 @@ func main() {
 
 	// Custom Validators
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
-		v.RegisterValidation("storyExist", storyExist)
+		v.RegisterValidation("articleExist", articleExist)
 	}
 
 	web := router.Group("/")
@@ -174,8 +174,8 @@ func main() {
 
 	v1 := router.Group("/api/v1")
 
-	v1.PUT("/story", authorizeRequired, handle(newStory))
-	v1.PUT("/story/content", authorizeRequired, handle(putStoryContent))
+	v1.PUT("/article", authorizeRequired, handle(newArticle))
+	v1.PUT("/article/content", authorizeRequired, handle(putArticleContent))
 	v1.PUT("/response")
 	v1.PUT("/response/content")
 
@@ -184,25 +184,25 @@ func main() {
 	v1.POST("/node")
 	v1.POST("/fork")
 	v1.POST("/recover")
-	v1.POST("/publish", authorizeRequired, handle(publishStory))
+	v1.POST("/publish", authorizeRequired, handle(publishArticle))
 
-	v1.GET("/story", authentication, handle(getStory))
-	v1.GET("/story/responses")
-	v1.GET("/story/versions")
-	v1.GET("/story/reactions")
-	v1.GET("/story/fork")
+	v1.GET("/article", authentication, handle(getArticle))
+	v1.GET("/article/responses")
+	v1.GET("/article/versions")
+	v1.GET("/article/reactions")
+	v1.GET("/article/fork")
 
 	v1.GET("/tags")
-	v1.GET("/tag/stories")
+	v1.GET("/tag/articles")
 	v1.GET("/tag/nodes")
 
-	v1.GET("/node/stories")
+	v1.GET("/node/articles")
 	v1.GET("/node")
 
 	v1.GET("/star/storis")
 	v1.GET("/star/nodes")
 
-	v1.GET("/stories", authorizeRequired, handle(getUserStories))
+	v1.GET("/articles", authorizeRequired, handle(getUserArticles))
 	v1.GET("/recent")
 	v1.GET("/search")
 

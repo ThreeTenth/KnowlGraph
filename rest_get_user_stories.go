@@ -4,12 +4,12 @@ import (
 	"time"
 
 	"knowlgraph.com/ent"
+	"knowlgraph.com/ent/article"
 	"knowlgraph.com/ent/content"
 	"knowlgraph.com/ent/language"
-	"knowlgraph.com/ent/story"
 )
 
-func getUserStories(c *Context) error {
+func getUserArticles(c *Context) error {
 	_userID, _ := c.Get(GinKeyUserID)
 	_user, err := client.User.Get(ctx, _userID.(int))
 	if err != nil {
@@ -18,13 +18,13 @@ func getUserStories(c *Context) error {
 
 	var _versions []*struct {
 		ID        int       `json:"id"`
-		Story     int       `json:"story_versions"`
+		Article   int       `json:"article_versions"`
 		Seo       string    `json:"seo"`
 		CreatedAt time.Time `json:"created_at"`
 	}
 
-	_query := _user.QueryStories().
-		Where(story.HasVersions()).
+	_query := _user.QueryArticles().
+		Where(article.HasVersions()).
 		QueryVersions()
 
 	if _lang := c.Query(QueryLang); _lang != "" {
@@ -32,7 +32,7 @@ func getUserStories(c *Context) error {
 	}
 
 	err = _query.Order(ent.Desc(content.FieldID)).
-		GroupBy(content.StoryColumn).
+		GroupBy(content.ArticleColumn).
 		Aggregate(
 			ent.As(ent.Max(content.FieldID), content.FieldID)).
 		Scan(ctx, &_versions)

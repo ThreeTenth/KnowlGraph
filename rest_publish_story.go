@@ -4,15 +4,15 @@ import (
 	"fmt"
 
 	"knowlgraph.com/ent"
+	"knowlgraph.com/ent/article"
 	"knowlgraph.com/ent/content"
 	"knowlgraph.com/ent/language"
-	"knowlgraph.com/ent/story"
 )
 
-// publishStory pushes a personal story content to a public channel
-func publishStory(c *Context) error {
+// publishArticle pushes a personal article content to a public channel
+func publishArticle(c *Context) error {
 	var _body struct {
-		StoryID   int `json:"storyID" binding:"required,gt=0,storyExist"`
+		ArticleID int `json:"articleID" binding:"required,gt=0,articleExist"`
 		ContentID int `json:"ContentID" binding:"required,gt=0"`
 	}
 	err := c.ShouldBindJSON(&_body)
@@ -25,26 +25,26 @@ func publishStory(c *Context) error {
 	//
 	////////////////////////////////////////////////////////
 
-	_story, err := client.Story.Get(ctx, _body.StoryID)
+	_article, err := client.Article.Get(ctx, _body.ArticleID)
 	if err != nil {
 		return c.BadRequest(err.Error())
 	}
 
-	if _story.Status != story.StatusPrivate {
+	if _article.Status != article.StatusPrivate {
 		return c.Forbidden("The operation was blocked because the content is not private")
 	}
 
-	//////////////// Story authentication //////////////////
+	//////////////// Article authentication //////////////////
 	//
 	//
 	////////////////////////////////////////////////////////
 
-	_content, err := _story.QueryVersions().Where(content.ID(_body.ContentID)).First(ctx)
+	_content, err := _article.QueryVersions().Where(content.ID(_body.ContentID)).First(ctx)
 	if err != nil {
-		return c.Forbidden("The operation was blocked because the content does not belong to the story")
+		return c.Forbidden("The operation was blocked because the content does not belong to the article")
 	}
 
-	_published, _ := _story.QueryMain().First(ctx)
+	_published, _ := _article.QueryMain().First(ctx)
 
 	_lang, _ := _content.QueryLang().FirstID(ctx)
 
@@ -60,14 +60,14 @@ func publishStory(c *Context) error {
 		}
 	}
 
-	_count, err := _story.QueryVersions().Count(ctx)
+	_count, err := _article.QueryVersions().Count(ctx)
 	if err != nil {
 		_count = 1
 	}
 
 	return WithTx(ctx, client, func(tx *ent.Tx) error {
 		if _published == nil {
-			if _, err := tx.Story.UpdateOneID(_body.StoryID).SetMain(_published).Save(ctx); err != nil {
+			if _, err := tx.Article.UpdateOneID(_body.ArticleID).SetMain(_published).Save(ctx); err != nil {
 				return c.InternalServerError(err.Error())
 			}
 		}
@@ -80,7 +80,7 @@ func publishStory(c *Context) error {
 			SetContent(_content.Content).
 			SetVersion(_content.Version + 1).
 			SetVersionName(fmt.Sprintf("v%v.%v.%v", (_content.Version + 1), _count, _lang)).
-			SetStory(_published).
+			SetArticle(_published).
 			SetLangID(_lang).
 			AddTagIDs(_tags...).
 			Save(ctx)

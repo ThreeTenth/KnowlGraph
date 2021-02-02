@@ -25,13 +25,13 @@ func (Star) Fields() []ent.Field {
 func (Star) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.From("owner", User.Type).Ref("stars").Unique().Required(),
-		edge.From("story", Story.Type).
+		edge.From("article", Article.Type).
 			Ref("stars").
 			Unique(),
 		edge.From("node", Node.Type).
 			Ref("stars").
 			Unique(),
 		edge.To("nodes", Star.Type).
-			From("stories"),
+			From("articles"),
 	}
 }

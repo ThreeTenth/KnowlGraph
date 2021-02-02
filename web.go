@@ -26,5 +26,6 @@ func header() interface{} {
 		GithubClientID string
 	}
 
+	header.GithubClientID = config.Gci
 	return header
 }
