@@ -7,11 +7,19 @@ function onNewStory() {
     console.log(resp.status, resp.data)
     storyID = resp.data
     document.getElementById("content_layout").style.display = "block"
-    document.getElementById("langs_select").value = getLang()
+    registerLangSelect(document.querySelector("#langs_select"))
     contentTextarea.value = ""
   }).catch(function (resp) {
     console.log(resp.status, resp.data)
   })
+}
+
+function registerLangSelect(selectElement) {
+  selectElement.value = getLang()
+
+  selectElement.addEventListener('change', (event) => {
+    Cookies.set("user-lang", event.target.value)
+  });
 }
 
 var contentTextarea = document.getElementById("content")
@@ -41,7 +49,10 @@ function postStoryContent() {
 }
 
 function getLang() {
-  var language;
+  var language = Cookies.get("user-lang");
+  if (language != undefined)
+    return language
+
   if (navigator.languages != undefined)
     language = navigator.languages[0];
   else
