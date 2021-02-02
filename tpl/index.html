@@ -4,7 +4,9 @@
 {{ template "fgm_html_header" .Header }}
 
 <body>
-	<button style="text-align: right;" onclick="onGitHubOAuth()">Login with GitHub OAuth</button>
+	<div style="text-align: right;">
+		<button onclick="onGitHubOAuth()">Login with GitHub OAuth</button>
+	</div>
 	{{ template "fgm_new_story" }}
 	{{ template "fgm_user_stories" }}
 

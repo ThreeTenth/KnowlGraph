@@ -25,12 +25,16 @@ function registerLangSelect(selectElement) {
   });
 }
 
+var tagInput = document.getElementById("tag_input")
 var contentTextarea = document.getElementById("content")
 var lastContent = contentTextarea.value
 var timeoutID;
 function onPostChanged() {
   window.clearTimeout(timeoutID);
   timeoutID = window.setTimeout(postStoryContent, 2000);
+
+  var tagString = tagInput.value
+  console.log(tagString)
 }
 
 function postStoryContent() {
@@ -87,6 +91,8 @@ function onGetStories() {
   }).then(function (resp) {
     var stories_layout = document.getElementById("stories_layout")
     var stories = resp.data
+
+    stories_layout.innerHTML = ""
     for (let index = 0; index < stories.length; index++) {
       const content = stories[index];
       const content_a = document.createElement("a")
