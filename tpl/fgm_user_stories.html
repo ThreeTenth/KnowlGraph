@@ -3,15 +3,5 @@
   <button onclick="onGetStories()">Stories</button>
 </div>
 <script>
-  function onGetStories() {
-    axios({
-      method: "GET",
-      url: "/api/v1/stories",
-    }).then(function (resp) {
-      console.log(resp.status, resp.data)
-    }).catch(function (resp) {
-      console.log(resp.status, resp.data)
-    })
-  }
 </script>
 {{end}}

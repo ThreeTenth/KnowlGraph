@@ -161,7 +161,7 @@ func main() {
 	{
 		loadTemplates(router)
 
-		web.GET("/", authentication, handle(index))
+		web.GET("/", authentication, html(index))
 		web.GET("/signout", deauthorize, handle(signout))
 
 		join := web.Group("/user/join")
@@ -169,6 +169,7 @@ func main() {
 	}
 
 	web.StaticFS("/favicon", packr.NewBox("./res/favicon"))
+	web.StaticFS("/js", packr.NewBox("./res/js"))
 
 	v1 := router.Group("/api/v1")
 

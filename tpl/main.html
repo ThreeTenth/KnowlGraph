@@ -1,17 +1,11 @@
 <!doctype html>
 <html lang="zh-CN">
 
-{{ template "fgm_html_header" }}
+{{ template "fgm_html_header" .Header }}
 
 <body>
-  {{ .Name }}
+  {{ .Body.Name }}
   <button onclick="onSignout()">退出</button>
-  <script>
-    function onSignout() {
-      const githubOAuthAPI = "/signout"
-      window.open(githubOAuthAPI, "_self")
-    }
-  </script>
   {{ template "fgm_new_story" }}
 	{{ template "fgm_user_stories" }}
 </body>

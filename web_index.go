@@ -1,15 +1,17 @@
 package main
 
-func index(c *Context) error {
+import "net/http"
+
+func index(c *Context) (int, string, interface{}) {
 	_userID, ok := c.Get(GinKeyUserID)
 	if ok {
 		_user, err := client.User.Get(ctx, _userID.(int))
 		if err != nil {
-			return c.OkHTML(TplIndexHTML, config.Gci)
+			return http.StatusOK, TplIndexHTML, nil
 		}
 
-		return c.OkHTML(TplMainHTML, &_user)
+		return http.StatusOK, TplMainHTML, _user
 	}
 
-	return c.OkHTML(TplIndexHTML, config.Gci)
+	return http.StatusOK, TplIndexHTML, nil
 }

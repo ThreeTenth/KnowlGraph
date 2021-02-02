@@ -1,18 +1,10 @@
 <!doctype html>
 <html lang="zh-CN">
 
-{{ template "fgm_html_header" }}
+{{ template "fgm_html_header" .Header }}
 
 <body>
 	<button onclick="onGitHubOAuth()">Login with GitHub OAuth</button>
-	<script>
-		function onGitHubOAuth() {
-			const state = Math.random().toString(36).slice(2)
-			const githubOAuthAPI = "https://github.com/login/oauth/authorize?client_id={{.}}&state=" + state
-			Cookies.set('github_oauth_state', state)
-			window.open(githubOAuthAPI, "_self")
-		}
-	</script>
 	{{ template "fgm_new_story" }}
 	{{ template "fgm_user_stories" }}
 </body>
