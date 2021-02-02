@@ -100,16 +100,24 @@ func putStoryContent(c *Context) error {
 }
 
 func seo(title string, gist string, content string) string {
-	_seo := gist
-	if len(_seo) < MaxSeoLen {
-		_seo = title + " " + _seo
+	if len(gist) != 0 {
+		return gist
 	}
+
+	// Golang string is saved in UTF-8 format.
+	// For languages that use multiple bytes to express one character,
+	// such as Chinese characters, when substring the string,
+	// invalid character encoding will appear. We need to convert string to []rune type.
+	// Rune is stored in unicode encoding, it supports characters with long byte encoding.
+	_rune := []rune(content)
+
+	_seo := title
 	if len(_seo) < MaxSeoLen {
 		i := MaxSeoLen - len(_seo)
-		if len(content) <= i {
-			i = len(content) - 1
+		if len(_rune) <= i {
+			i = len(_rune) - 1
 		}
-		_seo = _seo + " " + content[:i]
+		_seo = _seo + " " + string(_rune[:i])
 	}
 
 	re := regexp.MustCompile(`\r?\n`)

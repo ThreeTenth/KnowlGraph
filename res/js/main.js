@@ -12,7 +12,7 @@ function onNewStory() {
     document.getElementById("content_layout").style.display = "block"
     document.querySelector("#langs_select").value = getLang()
     registerLangSelect(document.querySelector("#langs_select"))
-    contentTextarea.value = ""
+    setContentValue("")
   }).catch(function (resp) {
     console.log(resp.status, resp.data)
   })
@@ -21,7 +21,7 @@ function onNewStory() {
 function registerLangSelect(selectElement) {
   selectElement.addEventListener('change', (event) => {
     Cookies.set("user-lang", event.target.value)
-    contentTextarea.value = ""
+    setContentValue("")
   });
 }
 
@@ -47,8 +47,8 @@ function postStoryContent() {
     }).catch(function (resp) {
       console.log(resp.status, resp.data)
     })
+    lastContent = contentTextarea.value
   }
-  lastContent = contentTextarea.value
 }
 
 function getLang() {
@@ -89,12 +89,14 @@ function onGetStories() {
     var stories = resp.data
     for (let index = 0; index < stories.length; index++) {
       const content = stories[index];
-      content_div = document.createElement("a")
-      content_div.innerHTML = content.seo.substring(0, 48) + "..."
-      content_div.href = "#" + content.id
-      content_div.onclick = function () {
+      const content_a = document.createElement("a")
+      content_a.innerHTML = content.seo.substring(0, 48) + "..."
+      content_a.href = "#" + content.id
+      content_a.onclick = function () {
         editStoryContent(content.story_versions, content.id)
       }
+      const content_div = document.createElement("div")
+      content_div.appendChild(content_a)
       stories_layout.appendChild(content_div)
     }
   }).catch(function (resp) {
@@ -111,11 +113,16 @@ function editStoryContent(_storyID, _contentID) {
     document.getElementById("content_layout").style.display = "block"
     document.querySelector("#langs_select").value = content.edges.Lang.id
     registerLangSelect(document.querySelector("#langs_select"))
-    contentTextarea.value = content.content
+    setContentValue(content.content)
     storyID = _storyID
   }).catch(function (resp) {
 
   })
+}
+
+function setContentValue(value) {
+  contentTextarea.value = value
+  lastContent = value
 }
 
 function onSignout() {
