@@ -5,32 +5,44 @@ import (
 	"knowlgraph.com/ent/content"
 	"knowlgraph.com/ent/language"
 	"knowlgraph.com/ent/story"
+	"knowlgraph.com/ent/user"
 )
 
 // getStory returns 200 and if an story is found, if the request fails, it returns a non-200 code
 func getStory(c *Context) error {
-	storyID, err := c.GetQueryInt("id")
-	if err != nil {
-		return c.BadRequest(err.Error())
+	var _query struct {
+		ID        int `form:"id" binding:"required"`
+		ContentID int `form:"content_id"`
 	}
+	err := c.ShouldBindQuery(&_query)
 
-	_story, err := client.Story.Get(ctx, storyID)
+	_story, err := client.Story.Get(ctx, _query.ID)
 	if err != nil {
 		return c.NotFound(err.Error())
 	}
 
 	if story.StatusPrivate == _story.Status {
-		return c.Unauthorized("Unauthorized")
+		_userID, ok := c.Get(GinKeyUserID)
+		if !ok {
+			return c.Unauthorized("No access")
+		}
+		ok, err = client.User.Query().
+			Where(user.IDEQ(_userID.(int))).
+			QueryStories().
+			Where(story.IDEQ(_story.ID)).
+			Exist(ctx)
+		if !ok || err != nil {
+			return c.Unauthorized("No access")
+		}
 	}
 
 	ok := true // True if content exists
 	_version := &ent.Content{}
 
-	contentID, err := c.GetQueryInt("contentID")
-	if err != nil {
+	if 0 == _query.ContentID {
 		ok = false
 	} else {
-		_version, err = _story.QueryVersions().Where(content.IDEQ(contentID)).First(ctx)
+		_version, err = _story.QueryVersions().Where(content.IDEQ(_query.ContentID)).First(ctx)
 		if err != nil {
 			ok = false
 		}

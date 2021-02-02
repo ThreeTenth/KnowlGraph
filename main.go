@@ -186,7 +186,7 @@ func main() {
 	v1.POST("/recover")
 	v1.POST("/publish", authorizeRequired, handle(publishStory))
 
-	v1.GET("/story", handle(getStory))
+	v1.GET("/story", authentication, handle(getStory))
 	v1.GET("/story/responses")
 	v1.GET("/story/versions")
 	v1.GET("/story/reactions")

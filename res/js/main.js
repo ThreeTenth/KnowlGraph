@@ -1,3 +1,6 @@
+// main.js
+// Created at 2021-02-02
+
 var storyID;
 function onNewStory() {
   axios({
@@ -7,6 +10,7 @@ function onNewStory() {
     console.log(resp.status, resp.data)
     storyID = resp.data
     document.getElementById("content_layout").style.display = "block"
+    document.querySelector("#langs_select").value = getLang()
     registerLangSelect(document.querySelector("#langs_select"))
     contentTextarea.value = ""
   }).catch(function (resp) {
@@ -15,10 +19,9 @@ function onNewStory() {
 }
 
 function registerLangSelect(selectElement) {
-  selectElement.value = getLang()
-
   selectElement.addEventListener('change', (event) => {
     Cookies.set("user-lang", event.target.value)
+    contentTextarea.value = ""
   });
 }
 
@@ -83,9 +86,35 @@ function onGetStories() {
     url: "/api/v1/stories",
   }).then(function (resp) {
     var stories_layout = document.getElementById("stories_layout")
-    stories_layout.value = resp.data
+    var stories = resp.data
+    for (let index = 0; index < stories.length; index++) {
+      const content = stories[index];
+      content_div = document.createElement("a")
+      content_div.innerHTML = content.content.substring(0, 48) + "..."
+      content_div.href = "#" + content.ID
+      content_div.onclick = function () {
+        editStoryContent(content.story_versions, content.ID)
+      }
+      stories_layout.appendChild(content_div)
+    }
   }).catch(function (resp) {
     console.log(resp.status, resp.data)
+  })
+}
+
+function editStoryContent(_storyID, _contentID) {
+  axios({
+    method: "GET",
+    url: "/api/v1/story?id=" + _storyID + "&content_id=" + _contentID,
+  }).then(function (resp) {
+    const content = resp.data
+    document.getElementById("content_layout").style.display = "block"
+    document.querySelector("#langs_select").value = content.edges.Lang.id
+    registerLangSelect(document.querySelector("#langs_select"))
+    contentTextarea.value = content.content
+    storyID = _storyID
+  }).catch(function (resp) {
+
   })
 }
 
