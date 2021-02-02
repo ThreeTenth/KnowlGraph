@@ -170,6 +170,7 @@ func main() {
 
 	web.StaticFS("/favicon", packr.NewBox("./res/favicon"))
 	web.StaticFS("/js", packr.NewBox("./res/js"))
+	web.StaticFS("/css", packr.NewBox("./res/css"))
 
 	v1 := router.Group("/api/v1")
 

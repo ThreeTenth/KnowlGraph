@@ -4,16 +4,14 @@ import (
 	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/content"
 	"knowlgraph.com/ent/language"
+	"knowlgraph.com/ent/story"
 	"knowlgraph.com/ent/tag"
+	"knowlgraph.com/ent/user"
 )
 
 // putStoryContent creates a content version for the specified story
 func putStoryContent(c *Context) error {
-
-	///////////////// Story authentication //////////////////
-	//
-	//
-	////////////////////////////////////////////////////////
+	_userID, _ := c.Get(GinKeyUserID)
 
 	var _body struct {
 		Title       string   `json:"title"`
@@ -32,7 +30,12 @@ func putStoryContent(c *Context) error {
 		return c.BadRequest("Up to 5 tags")
 	}
 
-	_story, err := client.Story.Get(ctx, _body.StoryID)
+	_story, err := client.User.
+		Query().
+		Where(user.IDEQ(_userID.(int))).
+		QueryStories().
+		Where(story.IDEQ(_body.StoryID)).
+		First(ctx)
 	if err != nil {
 		return c.NotFound(err.Error())
 	}

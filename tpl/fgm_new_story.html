@@ -3,6 +3,12 @@
   <button onclick="onNewStory()">New Story</button>
 </div>
 <div id="content_layout" style="margin-top: 20px; display: none;">
+  <select id="langs_select" name="lang">
+    {{ range .Languages }}
+    <option class="{{ .Direction }}" value="{{ .ID }}">{{ .Name }}</option>
+    {{ end }}
+  </select>
+  <p></p>
   <textarea id="content" style="width: 480px; height: 260px;" onkeyup="onPostChanged()"
     onblur="onPostChanged()"></textarea>
 </div>

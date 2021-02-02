@@ -7,6 +7,8 @@ function onNewStory() {
     console.log(resp.status, resp.data)
     storyID = resp.data
     document.getElementById("content_layout").style.display = "block"
+    document.getElementById("langs_select").value = getLang()
+    contentTextarea.value = ""
   }).catch(function (resp) {
     console.log(resp.status, resp.data)
   })
@@ -69,7 +71,8 @@ function onGetStories() {
     method: "GET",
     url: "/api/v1/stories",
   }).then(function (resp) {
-    console.log(resp.status, resp.data)
+    var stories_layout = document.getElementById("stories_layout")
+    stories_layout.value = resp.data
   }).catch(function (resp) {
     console.log(resp.status, resp.data)
   })
