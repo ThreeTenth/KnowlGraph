@@ -113,14 +113,11 @@ func seo(title string, gist string, content string) string {
 	// Rune is stored in unicode encoding, it supports characters with long byte encoding.
 	_rune := []rune(stripmd.Strip(content))
 
-	_seo := title
-	if len(_seo) < MaxSeoLen {
-		i := MaxSeoLen - len(_seo)
-		if len(_rune) <= i {
-			_seo = _seo + " " + string(_rune[:len(_rune)-1])
-		} else {
-			_seo = _seo + " " + string(_rune[:i]) + "..."
-		}
+	var _seo string
+	if len(_rune) <= MaxSeoLen {
+		_seo = _seo + " " + string(_rune)
+	} else {
+		_seo = _seo + " " + string(_rune[:MaxSeoLen]) + "..."
 	}
 
 	re := regexp.MustCompile(`\r?\n`)

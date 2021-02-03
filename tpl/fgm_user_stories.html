@@ -2,5 +2,11 @@
 <div>
   <button onclick="onGetArticles()">Articles</button>
 </div>
-<div id="articles_layout"></div>
+<div id="articles_layout" v-if="seen">
+  <div v-for="article in articles">
+    <a v-bind:href="'#' + article.id" v-on:click="onEditArticleContent(article.article_versions, article.id)">
+      {{ `{{ article.seo.substring(0, 51) + "..." }}` }}
+    </a>
+  </div>
+</div>
 {{end}}

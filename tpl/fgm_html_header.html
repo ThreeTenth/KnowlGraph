@@ -12,5 +12,10 @@
   <link rel="stylesheet" href="/css/main.css" />
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script>
+  {{ if .Debug }}
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  {{ else }}
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  {{ end }}
 </head>
 {{ end }}
