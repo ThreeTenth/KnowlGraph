@@ -18,6 +18,7 @@ import (
 	"github.com/gobuffalo/packr/v2"
 	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/article"
+	"knowlgraph.com/ent/language"
 
 	"github.com/facebook/ent/dialect"
 
@@ -40,6 +41,12 @@ var ctx context.Context
 var client *ent.Client
 var rdb *redis.Client
 var config *Config
+var langs []*struct {
+	ID        string             `json:"id"`
+	Name      string             `json:"name"`
+	Direction language.Direction `json:"direction"`
+	Comment   string             `json:"comment"`
+}
 
 func init() {
 	time.FixedZone("CST", 8*3600) // China Standard Timzone
@@ -91,15 +98,14 @@ func loadLauguages() {
 		panic(err)
 	}
 
-	var values []*ent.Language
-	err = json.Unmarshal(bs, &values)
+	err = json.Unmarshal(bs, &langs)
 	if err != nil {
 		panic(err)
 	}
 
 	var _langCreates []*ent.LanguageCreate
 	var i = 0
-	for _, v := range values {
+	for _, v := range langs {
 		_, err := client.Language.UpdateOneID(v.ID).SetName(v.Name).SetDirection(v.Direction).Save(ctx)
 		if err != nil {
 			_langCreates = append(_langCreates, client.Language.Create().SetID(v.ID).SetName(v.Name).SetDirection(v.Direction))

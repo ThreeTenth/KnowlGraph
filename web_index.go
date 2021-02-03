@@ -10,14 +10,12 @@ func index(c *Context) (int, string, interface{}) {
 			return http.StatusOK, TplIndexHTML, nil
 		}
 
-		_langs, _ := client.Language.Query().All(ctx)
-
 		_data := struct {
 			User      interface{}
 			Languages interface{}
 		}{
 			User:      _user,
-			Languages: _langs,
+			Languages: langs,
 		}
 
 		return http.StatusOK, TplMainHTML, _data
