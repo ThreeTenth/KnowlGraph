@@ -36,13 +36,11 @@ func getArticle(c *Context) error {
 		}
 	}
 
-	ok := true // True if content exists
+	ok := 0 != _query.ContentID // True if content exists
 	_version := &ent.Content{}
 
-	if 0 == _query.ContentID {
-		ok = false
-	} else {
-		_version, err = _article.QueryVersions().Where(content.IDEQ(_query.ContentID)).First(ctx)
+	if ok {
+		_version, err = _article.QueryVersions().Where(content.IDEQ(_query.ContentID)).WithLang().WithTags().First(ctx)
 		if err != nil {
 			ok = false
 		}
@@ -52,23 +50,13 @@ func getArticle(c *Context) error {
 		_versionsCreate := _article.QueryVersions()
 		_lang, ok := c.GetQuery(QueryLang)
 		if ok {
-			_versionsCreate.Where(content.HasLangWith(language.IDEQ(_lang)))
+			_versionsCreate.Where(content.HasLangWith(language.IDEQ(_lang))).WithLang().WithTags()
 		}
 		_version, err = _versionsCreate.Order(ent.Desc(content.FieldCreatedAt)).First(ctx)
 	}
 
 	if err != nil {
 		return c.NotFound(err.Error())
-	}
-
-	lang, err := _version.QueryLang().First(ctx)
-	if err == nil {
-		_version.Edges.Lang = lang
-	}
-
-	_tags, err := _version.QueryTags().All(ctx)
-	if err == nil {
-		_version.Edges.Tags = _tags
 	}
 
 	return c.Ok(_version)

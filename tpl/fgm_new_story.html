@@ -2,15 +2,21 @@
 <div>
   <button onclick="onNewArticle()">New Article</button>
 </div>
-<div id="content_layout" style="margin-top: 20px;" v-if="seen">
-  <select id="langs_select" name="lang" v-bind:value="default_lang" v-on:change="onSelectLang">
+<div id="lang_layout" style="margin-top: 20px;" v-if="seen">
+  <select name="lang" v-bind:value="default_lang" v-on:change="onSelectLang">
     {{ range .Languages }}
     <option class="{{ .Direction }}" value="{{ .ID }}">{{ .Name }}</option>
     {{ end }}
   </select>
-  <p></p>
-  <textarea id="content" style="width: 480px; height: 260px;" v-on:keyup="onPostChanged" v-on:blur="onPostChanged()"
+</div>
+<div id="content_layout" style="margin-top: 10px;" v-if="seen">
+  <textarea style="width: 480px; height: 260px;" v-on:keyup="onPostChanged" v-on:blur="onPostBlur()"
     v-model="content"></textarea>
-  <!-- <input id="tag_input" type="text" style="width: 480px;" onkeyup="onPostChanged()" onblur="onPostChanged()"></input> -->
+</div>
+<div id="tag_layout" style="margin-top: 10px;" v-if="seen">
+  <div>
+    <span v-for="tag in tags">{{ `{{ tag.name }}` }}</span>
+  </div>
+  <input type="text" style="width: 480px;" v-on:keyup="onPostChanged" v-on:blur="onPostBlur()" v-model="tag"></input>
 </div>
 {{end}}
