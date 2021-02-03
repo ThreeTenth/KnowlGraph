@@ -1,6 +1,14 @@
 // main.js
 // Created at 2021-02-02
 
+const TagStateIdle = 0
+const TagStateMayDel = 1
+const TagStatePreDel = 2
+const TagStateSafe = 3
+
+var postChangedTimeoutID;
+var cancelDeleteTagTimeoutID;
+
 var articles_layout = new Vue({
   el: '#articles_layout',
   data: {
@@ -18,7 +26,7 @@ var lang_layout = new Vue({
   el: '#lang_layout',
   data: {
     seen: false,
-    default_lang: getLang(),
+    lang: getLang(),
   },
   methods: {
     onSelectLang: function (event) {
@@ -32,12 +40,8 @@ var content_layout = new Vue({
   data: {
     seen: false,
     content: "",
-    default_lang: getLang(),
   },
   methods: {
-    onSelectLang: function (event) {
-      setLang(event.target.value)
-    },
     onPostChanged: function () {
       postChanged()
     },
@@ -53,39 +57,52 @@ var tag_layout = new Vue({
     seen: false,
     tags: [],
     tag: "",
+    state: TagStateMayDel,
   },
   methods: {
     onPostChanged: function () {
       postChanged()
+      tagChanged()
     },
     onPostBlur: function () {
       postBlur()
+    },
+    onRemoveTag: function (tag) {
+      removeTag(tag)
+    },
+    onAdd: function () {
+      addTag()
+    },
+    onPreDel: function () {
+      preDeleteTag()
+    },
+    onDel: function () {
+      deleteTag()
     },
   },
 })
 
 var lastContent;
-var timeoutID;
 function postChanged() {
-  window.clearTimeout(timeoutID)
-  timeoutID = window.setTimeout(postArticleContent, 2000)
+  window.clearTimeout(postChangedTimeoutID)
+  postChangedTimeoutID = window.setTimeout(postArticleContent, 800)
 }
 
 function postBlur() {
-  window.clearTimeout(timeoutID)
+  window.clearTimeout(postChangedTimeoutID)
   postArticleContent()
 }
 
 function postArticleContent() {
   if (content_layout.content != lastContent) {
-    // const tags = content_layout.tag.split(",")
+    const tags = tag_layout.tag.split(",")
     axios({
       method: "PUT",
       url: "/api/v1/article/content?lang=" + getLang(),
       data: {
         content: content_layout.content,
         articleID: articleID,
-        // tags: tags,
+        tags: tags,
       },
     }).then(function (resp) {
       console.log(resp.status, resp.data)
@@ -109,6 +126,65 @@ function editArticleContent(_articleID, _contentID) {
   })
 }
 
+function tagChanged() {
+  if ("" == tag_layout.tag) {
+    if (TagStateSafe == tag_layout.state) {
+      tag_layout.state = TagStateIdle
+    }
+  } else {
+    tag_layout.state = TagStateSafe
+  }
+}
+
+function removeTag(tag) {
+  const index = tag_layout.tags.indexOf(tag)
+  if (index > -1) {
+    tag_layout.tags.splice(index, 1)
+  }
+}
+
+function addTag() {
+  // var tag = tag_layout.tag.trim()         // ",vue,,,,,   ,web, golang      ,,  ,,rest,"
+  // tag = tag.replace(/\, +,/g, '')         // ",vue,,,,web, golang      ,,rest,"
+  // tag = tag.replace(/\,+/g, ',')          // ",vue,web, golang      ,rest,"
+  // tag = tag.replace(/^\,+|\,+$/g, '')     // "vue,web, golang      ,rest"
+  // tag = tag.replace(/ *\, */g, ',')       // "vue,web,golang,rest"
+  //                                         // "gin    ", "gin  ,", "gin,"
+  // tag = tag.replace(/ *\,*$/g, '')        // "gin"
+
+  var tag = tag_layout.tag.replace(/ *\,*$/g, '')
+  if ("" == tag) return
+
+  tag_layout.tags.push(tag)
+  tag_layout.tag = ""
+  tag_layout.state = TagStateMayDel
+}
+
+function deleteTag() {
+  switch (tag_layout.state) {
+    case TagStateIdle:
+      tag_layout.state = TagStateMayDel
+      break;
+    case TagStateMayDel:
+      tag_layout.state = TagStatePreDel
+      cancelDeleteTagTimeoutID = window.setTimeout(cancelDeleteTag, 2000)
+      break;
+    case TagStatePreDel:
+      const removeIndex = tag_layout.tags.length
+      tag_layout.tags.splice(removeIndex - 1, 1)
+      tag_layout.state = TagStateMayDel
+      window.clearTimeout(cancelDeleteTagTimeoutID)
+      break;
+
+    default:
+      break;
+  }
+}
+
+function cancelDeleteTag() {
+  tag_layout.state = TagStateMayDel
+}
+
 function setLang(lang) {
   Cookies.set("user-lang", lang)
   setContent()
@@ -117,10 +193,17 @@ function setLang(lang) {
 function setContent(content = undefined) {
   if (content == undefined) {
     content_layout.content = ""
-    lang_layout.default_lang = getLang()
+    lang_layout.lang = getLang()
+    tag_layout.tags = []
   } else {
     content_layout.content = content.content
-    lang_layout.default_lang = content.edges.Lang.id
+    lang_layout.lang = content.edges.Lang.id
+
+    var tags = []
+    content.edges.Tags.forEach(tag => {
+      tags.push(tag.name)
+    });
+    tag_layout.tags = tags
   }
   content_layout.seen = true
   lang_layout.seen = true

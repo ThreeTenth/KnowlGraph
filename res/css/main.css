@@ -1,4 +1,5 @@
 /* main.css */
+
 body {
   width: 640px;
   margin: auto;
@@ -10,4 +11,62 @@ body {
 
 .ltr {
   direction: ltr
+}
+
+#tag_layout {
+  border: none;
+  border-bottom: 1px solid #a4b1b6;
+  padding: 4px 0;
+  margin: 10px 0
+}
+
+ul.tags {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  line-height: 1em;
+  margin: 0px;
+  padding: 0px;
+  list-style-type: none;
+  box-sizing: border-box;
+}
+
+li~li {
+  margin: 0 4px;
+}
+
+li.tag {
+  padding: 5px 8px;
+  background-color: #ebde6e;
+  color: #1e2a31;
+  border-radius: 2px;
+  display: flex;
+  box-sizing: border-box;
+  text-align: -webkit-match-parent;
+}
+
+li.tag.del {
+  background-color: #e54d42;
+  color: #fff;
+}
+
+li.new-tag {
+  padding: 5px 8px;
+  margin: 2px;
+  display: flex;
+  flex: 1 0 auto;
+  font-size: 1em;
+  box-sizing: border-box;
+}
+
+li.new-tag input {
+  background: transparent;
+  color: #383838;
+  flex: 1 0 auto;
+  min-width: 100px;
+  border: none;
+  padding: 0px;
+  margin: 0px;
+  line-height: initial;
+  box-sizing: border-box;
 }
