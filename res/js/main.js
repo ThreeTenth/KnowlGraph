@@ -106,13 +106,13 @@ function postArticleContent() {
 function editArticleContent(_articleID, _contentID) {
   axios({
     method: "GET",
-    url: "/api/v1/article?id=" + _articleID + "&content_id=" + _contentID,
+    url: encodeQueryData("/api/v1/article", { id: _articleID, content_id: _contentID }),
   }).then(function (resp) {
     const content = resp.data
     articleID = _articleID
     setContent(content)
   }).catch(function (resp) {
-
+    console.log(resp.status, resp.data)
   })
 }
 
@@ -184,8 +184,17 @@ function cancelDeleteTag() {
 
 function setLang(lang) {
   Cookies.set("user-lang", lang)
-  content_layout.content = ""
-  lastContent = getCurrentContent()
+  axios({
+    method: "GET",
+    url: encodeQueryData("/api/v1/article", { id: articleID, lang: lang }),
+  }).then(function (resp) {
+    const content = resp.data
+    setContent(content)
+  }).catch(function (resp) {
+    console.log(resp.status, resp.data)
+    content_layout.content = ""
+    lastContent = getCurrentContent()
+  })
 }
 
 function setContent(content = undefined) {
@@ -280,4 +289,15 @@ function getMeta(metaName) {
   }
 
   return ''
+}
+
+function encodeQueryData(url, data = undefined) {
+  if (undefined == data) return url
+  const ret = [];
+  for (let d in data)
+    ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
+
+  if (0 == ret.length) return url
+
+  return url + "?" + ret.join('&');
 }

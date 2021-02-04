@@ -11,8 +11,9 @@ import (
 // getArticle returns 200 and if an article is found, if the request fails, it returns a non-200 code
 func getArticle(c *Context) error {
 	var _query struct {
-		ID        int `form:"id" binding:"required"`
-		ContentID int `form:"content_id"`
+		ID        int    `form:"id" binding:"required"`
+		ContentID int    `form:"content_id"`
+		Lang      string `form:"lang"`
 	}
 	err := c.ShouldBindQuery(&_query)
 
@@ -36,7 +37,7 @@ func getArticle(c *Context) error {
 		}
 	}
 
-	ok := 0 != _query.ContentID // True if content exists
+	ok := 0 != _query.ContentID // True if contentID exists
 	_version := &ent.Content{}
 
 	if ok {
@@ -48,11 +49,10 @@ func getArticle(c *Context) error {
 
 	if !ok {
 		_versionsCreate := _article.QueryVersions()
-		_lang, ok := c.GetQuery(QueryLang)
-		if ok {
-			_versionsCreate.Where(content.HasLangWith(language.IDEQ(_lang))).WithLang().WithTags()
+		if "" != _query.Lang {
+			_versionsCreate.Where(content.HasLangWith(language.IDEQ(_query.Lang)))
 		}
-		_version, err = _versionsCreate.Order(ent.Desc(content.FieldCreatedAt)).First(ctx)
+		_version, err = _versionsCreate.Order(ent.Desc(content.FieldCreatedAt)).WithLang().WithTags().First(ctx)
 	}
 
 	if err != nil {

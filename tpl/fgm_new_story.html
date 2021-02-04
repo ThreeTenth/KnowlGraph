@@ -14,7 +14,7 @@
 </div>
 <div id="tag_layout" v-if="seen">
   <ul class="tags">
-    <li class="tag" v-for="(tag, i) in tags" v-bind:class="(i==tags.length-1 && state==TagStatePreDel) ? 'del' : ''"
+    <li class="tag" v-for="(tag, i) in tags" v-bind:class="(i==tags.length-1 && state==2) ? 'del' : ''"
       v-on:click="onRemoveTag(tag)">{{ `{{ tag }}` }} X</li>
     <li class="new-tag">
       <input type="text" v-on:keyup.enter="onAdd" v-on:keyup.188="onAdd" v-on:keyup.delete="onDel" v-model="tag"
