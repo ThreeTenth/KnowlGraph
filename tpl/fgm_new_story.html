@@ -2,24 +2,23 @@
 <div>
   <button onclick="onNewArticle()">New Article</button>
 </div>
-<div id="lang_layout" style="margin-top: 20px;" v-if="seen">
+<div id="lang_layout" v-if="seen">
   <select name="lang" v-bind:value="lang" v-on:change="onSelectLang">
     {{ range .Languages }}
     <option class="{{ .Direction }}" value="{{ .ID }}">{{ .Name }}</option>
     {{ end }}
   </select>
 </div>
-<div id="content_layout" style="margin-top: 10px;" v-if="seen">
-  <textarea style="width: 480px; height: 260px;" v-on:keyup="onPostChanged" v-on:blur="onPostBlur"
-    v-model="content"></textarea>
+<div id="content_layout" v-if="seen">
+  <textarea v-on:keyup="onChanged" v-on:blur="onBlur" v-model="content"></textarea>
 </div>
 <div id="tag_layout" v-if="seen">
   <ul class="tags">
-    <li class="tag" v-for="(tag, i) in tags" v-bind:class="(i==tags.length-1 && state==2) ? 'del' : ''"
+    <li class="tag" v-for="(tag, i) in tags" v-bind:class="(i==tags.length-1 && state==TagStatePreDel) ? 'del' : ''"
       v-on:click="onRemoveTag(tag)">{{ `{{ tag }}` }} X</li>
     <li class="new-tag">
-      <input type="text" v-on:keyup="onPostChanged" v-on:keyup.enter="onAdd" v-on:keyup.188="onAdd"
-        v-on:keyup.delete="onDel" v-model="tag" placeholder="Add a tag"></input>
+      <input type="text" v-on:keyup.enter="onAdd" v-on:keyup.188="onAdd" v-on:keyup.delete="onDel" v-model="tag"
+        placeholder="Add a tag"></input>
     </li>
   </ul>
 </div>

@@ -13,6 +13,24 @@ body {
   direction: ltr
 }
 
+#lang_layout {
+  margin-top: 20px;
+}
+
+#lang_layout select {
+  font-size: 1.15em;
+}
+
+#content_layout {
+  margin-top: 10px;
+}
+
+#content_layout textarea {
+  width: 100%;
+  height: 360px;
+  font-size: 1.25em;
+}
+
 #tag_layout {
   border: none;
   border-bottom: 1px solid #a4b1b6;

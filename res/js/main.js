@@ -42,10 +42,10 @@ var content_layout = new Vue({
     content: "",
   },
   methods: {
-    onPostChanged: function () {
+    onChanged: function () {
       postChanged()
     },
-    onPostBlur: function () {
+    onBlur: function () {
       postBlur()
     },
   }
@@ -60,13 +60,6 @@ var tag_layout = new Vue({
     state: TagStateMayDel,
   },
   methods: {
-    onPostChanged: function () {
-      postChanged()
-      tagChanged()
-    },
-    onPostBlur: function () {
-      postBlur()
-    },
     onRemoveTag: function (tag) {
       removeTag(tag)
     },
@@ -91,22 +84,22 @@ function postBlur() {
 }
 
 function postArticleContent() {
-  if (content_layout.content != lastContent) {
-    const tags = tag_layout.tag.split(",")
+  var currentContent = getCurrentContent()
+  if (currentContent != lastContent) {
     axios({
       method: "PUT",
       url: "/api/v1/article/content?lang=" + getLang(),
       data: {
         content: content_layout.content,
         articleID: articleID,
-        tags: tags,
+        tags: tag_layout.tags,
       },
     }).then(function (resp) {
       console.log(resp.status, resp.data)
     }).catch(function (resp) {
       console.log(resp.status, resp.data)
     })
-    setLastContent(content_layout.content)
+    lastContent = currentContent
   }
 }
 
@@ -139,6 +132,8 @@ function removeTag(tag) {
     tag_layout.tags.splice(index, 1)
   }
   tag_layout.state = TagStateMayDel
+
+  postBlur()
 }
 
 function addTag() {
@@ -159,6 +154,8 @@ function addTag() {
   tag_layout.tags.push(tag)
   tag_layout.tag = ""
   tag_layout.state = TagStateMayDel
+
+  postBlur()
 }
 
 function deleteTag() {
@@ -175,9 +172,8 @@ function deleteTag() {
       tag_layout.tags.splice(removeIndex - 1, 1)
       tag_layout.state = TagStateMayDel
       window.clearTimeout(cancelDeleteTagTimeoutID)
-      break;
 
-    default:
+      postBlur()
       break;
   }
 }
@@ -188,7 +184,8 @@ function cancelDeleteTag() {
 
 function setLang(lang) {
   Cookies.set("user-lang", lang)
-  setContent()
+  content_layout.content = ""
+  lastContent = getCurrentContent()
 }
 
 function setContent(content = undefined) {
@@ -210,15 +207,11 @@ function setContent(content = undefined) {
   lang_layout.seen = true
   tag_layout.seen = true
 
-  setLastContent(content_layout.content)
+  lastContent = getCurrentContent()
 }
 
-function setLastContent(content) {
-  lastContent = content
-}
-
-function getContentText() {
-  return content_layout.content
+function getCurrentContent() {
+  return content_layout.content + tag_layout.tags.join(",")
 }
 
 var articleID;

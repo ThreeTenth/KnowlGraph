@@ -78,9 +78,8 @@ func putArticleContent(c *Context) error {
 		if nil != _body.Tags && 0 < len(_body.Tags) {
 			_tags := make([]*ent.Tag, len(_body.Tags))
 			for i, _tag := range _body.Tags {
-				_tag = strings.Trim(_tag, " ")
-				if "" == _tag {
-					continue
+				if _tag = strings.Trim(_tag, " "); _tag == "" {
+					return c.BadRequest(`Invalid tag: ""`)
 				}
 				_tags[i], err = tx.Tag.Query().Where(tag.NameContainsFold(_tag)).First(ctx)
 				if err != nil {
