@@ -18,7 +18,7 @@ func (Content) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("title").Optional(),
 		field.String("gist").Optional(),
-		field.String("content").Default(""),
+		field.String("body").Default(""),
 		field.Int("version").Default(1),
 		field.String("versionName").Optional().Unique(),
 		field.String("seo").Optional(),

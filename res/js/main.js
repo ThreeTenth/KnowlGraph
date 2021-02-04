@@ -39,7 +39,7 @@ var content_layout = new Vue({
   el: '#content_layout',
   data: {
     seen: false,
-    content: "",
+    body: "",
   },
   methods: {
     onChanged: function () {
@@ -90,7 +90,7 @@ function postArticleContent() {
       method: "PUT",
       url: "/api/v1/article/content?lang=" + getLang(),
       data: {
-        content: content_layout.content,
+        body: content_layout.body,
         articleID: articleID,
         tags: tag_layout.tags,
       },
@@ -192,18 +192,18 @@ function setLang(lang) {
     setContent(content)
   }).catch(function (resp) {
     console.log(resp.status, resp.data)
-    content_layout.content = ""
+    content_layout.body = ""
     lastContent = getCurrentContent()
   })
 }
 
 function setContent(content = undefined) {
   if (content == undefined) {
-    content_layout.content = ""
+    content_layout.body = ""
     lang_layout.lang = getLang()
     tag_layout.tags = []
   } else {
-    content_layout.content = content.content
+    content_layout.body = content.body
     lang_layout.lang = content.edges.Lang.id
 
     var tags = []
@@ -220,7 +220,7 @@ function setContent(content = undefined) {
 }
 
 function getCurrentContent() {
-  return content_layout.content + tag_layout.tags.join(",")
+  return content_layout.body + tag_layout.tags.join(",")
 }
 
 var articleID;

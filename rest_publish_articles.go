@@ -77,7 +77,7 @@ func publishArticle(c *Context) error {
 		_publishedContent, err := tx.Content.Create().
 			SetTitle(_content.Title).
 			SetGist(_content.Gist).
-			SetContent(_content.Content).
+			SetBody(_content.Body).
 			SetVersion(_content.Version + 1).
 			SetVersionName(fmt.Sprintf("v%v.%v.%v", (_content.Version + 1), _count, _lang)).
 			SetArticle(_published).

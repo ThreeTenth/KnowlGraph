@@ -10,7 +10,7 @@
   </select>
 </div>
 <div id="content_layout" v-if="seen">
-  <textarea v-on:keyup="onChanged" v-on:blur="onBlur" v-model="content"></textarea>
+  <textarea v-on:keyup="onChanged" v-on:blur="onBlur" v-model="body"></textarea>
 </div>
 <div id="tag_layout" v-if="seen">
   <ul class="tags">

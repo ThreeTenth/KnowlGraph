@@ -18,20 +18,20 @@ import (
 func putArticleContent(c *Context) error {
 	_userID, _ := c.Get(GinKeyUserID)
 
-	var _body struct {
+	var _content struct {
 		Title       string   `json:"title"`
 		Gist        string   `json:"gist"`
-		Content     string   `json:"content" binding:"required"`
+		Body        string   `json:"body" binding:"required"`
 		VersionName string   `json:"versionName"`
 		ArticleID   int      `json:"articleID" binding:"required,gt=0,articleExist"`
 		Tags        []string `json:"tags" binding:"max=5" comment:"5 at most"`
 	}
-	err := c.ShouldBindJSON(&_body)
+	err := c.ShouldBindJSON(&_content)
 	if err != nil {
 		return c.BadRequest(err.Error())
 	}
 
-	if nil != _body.Tags && 5 < len(_body.Tags) {
+	if nil != _content.Tags && 5 < len(_content.Tags) {
 		return c.BadRequest("Up to 5 tags")
 	}
 
@@ -39,7 +39,7 @@ func putArticleContent(c *Context) error {
 		Query().
 		Where(user.IDEQ(_userID.(int))).
 		QueryArticles().
-		Where(article.IDEQ(_body.ArticleID)).
+		Where(article.IDEQ(_content.ArticleID)).
 		First(ctx)
 	if err != nil {
 		return c.NotFound(err.Error())
@@ -63,21 +63,21 @@ func putArticleContent(c *Context) error {
 		maxVersion = columns[0].Max
 	}
 
-	seo := seo(_body.Title, _body.Gist, _body.Content)
+	seo := seo(_content.Title, _content.Gist, _content.Body)
 
 	return WithTx(ctx, client, func(tx *ent.Tx) error {
 		_contentCreate := tx.Content.Create().
-			SetTitle(_body.Title).
-			SetGist(_body.Gist).
-			SetContent(_body.Content).
+			SetTitle(_content.Title).
+			SetGist(_content.Gist).
+			SetBody(_content.Body).
 			SetArticle(_article).
 			SetVersion(maxVersion).
 			SetSeo(seo).
 			SetLangID(_lang)
 
-		if nil != _body.Tags && 0 < len(_body.Tags) {
-			_tags := make([]*ent.Tag, len(_body.Tags))
-			for i, _tag := range _body.Tags {
+		if nil != _content.Tags && 0 < len(_content.Tags) {
+			_tags := make([]*ent.Tag, len(_content.Tags))
+			for i, _tag := range _content.Tags {
 				if _tag = strings.Trim(_tag, " "); _tag == "" {
 					return c.BadRequest(`Invalid tag: ""`)
 				}
