@@ -31,8 +31,8 @@ ul.tags {
   box-sizing: border-box;
 }
 
-li~li {
-  margin: 0 4px;
+ul.tags li {
+  margin: 2px 4px;
 }
 
 li.tag {

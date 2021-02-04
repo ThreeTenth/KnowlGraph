@@ -73,9 +73,6 @@ var tag_layout = new Vue({
     onAdd: function () {
       addTag()
     },
-    onPreDel: function () {
-      preDeleteTag()
-    },
     onDel: function () {
       deleteTag()
     },
@@ -141,6 +138,7 @@ function removeTag(tag) {
   if (index > -1) {
     tag_layout.tags.splice(index, 1)
   }
+  tag_layout.state = TagStateMayDel
 }
 
 function addTag() {
@@ -149,11 +147,14 @@ function addTag() {
   // tag = tag.replace(/\,+/g, ',')          // ",vue,web, golang      ,rest,"
   // tag = tag.replace(/^\,+|\,+$/g, '')     // "vue,web, golang      ,rest"
   // tag = tag.replace(/ *\, */g, ',')       // "vue,web,golang,rest"
-  //                                         // "gin    ", "gin  ,", "gin,"
+  //                                         // "gin    ", "gin  ,", "gin,", "gin,， ，  ,"
   // tag = tag.replace(/ *\,*$/g, '')        // "gin"
 
-  var tag = tag_layout.tag.replace(/ *\,*$/g, '')
-  if ("" == tag) return
+  var tag = tag_layout.tag.replace(/[\,\， ]*$/g, '')
+  if ("" == tag) {
+    tag_layout.tag = ""
+    return
+  }
 
   tag_layout.tags.push(tag)
   tag_layout.tag = ""
