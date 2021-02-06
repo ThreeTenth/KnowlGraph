@@ -198,7 +198,7 @@ func main() {
 	v1.GET("/article/reactions")
 	v1.GET("/article/fork")
 
-	v1.GET("/tags")
+	v1.GET("/tags", authentication, handle(getTags))
 	v1.GET("/tag/articles")
 	v1.GET("/tag/nodes")
 

@@ -32,10 +32,19 @@ body {
 }
 
 #tag_layout {
+  width: 100%;
+  max-width: none;
+  background: transparent;
+  position: relative;
+  box-sizing: border-box;
+  display: block;
+  margin: 10px 0;
+}
+
+#tag_input {
   border: none;
-  border-bottom: 1px solid #a4b1b6;
+  border-bottom: 1px solid var(--fg-c);
   padding: 4px 0;
-  margin: 10px 0
 }
 
 ul.tags {
@@ -55,8 +64,8 @@ ul.tags li {
 
 li.tag {
   padding: 5px 8px;
-  background-color: #ebde6e;
-  color: #1e2a31;
+  background-color: var(--fg-c);
+  color: var(--bg-c);
   border-radius: 2px;
   display: flex;
   box-sizing: border-box;
@@ -64,7 +73,7 @@ li.tag {
 }
 
 li.tag.del {
-  background-color: #e54d42;
+  background-color: var(--red);
   color: #fff;
 }
 
@@ -79,7 +88,7 @@ li.new-tag {
 
 li.new-tag input {
   background: transparent;
-  color: #383838;
+  color: var(--fg-c);
   flex: 1 0 auto;
   min-width: 100px;
   border: none;
@@ -87,4 +96,42 @@ li.new-tag input {
   margin: 0px;
   line-height: initial;
   box-sizing: border-box;
+}
+
+#tag_autocomplete {
+  background: var(--bg-c);
+  border: 1px solid var(--bg-c);
+  border-top: none;
+  width: 100%;
+  position: absolute;
+  z-index: 20;
+  box-sizing: border-box;
+  color: var(--text-c);
+}
+
+ul.items {
+  margin: 0px;
+  padding: 0px;
+  list-style-type: none;
+  box-sizing: border-box;
+}
+
+li.item {
+  padding: 2px 3px;
+  box-sizing: border-box;
+  display: list-item;
+  text-align: -webkit-match-parent;
+}
+
+li.item div::selection {
+  color: var(--bg-c);
+  background: var(--fg-c);
+}
+
+li.item div {
+  cursor: pointer;
+  padding: 3px 6px;
+  width: 100%;
+  box-sizing: border-box;
+  display: block;
 }

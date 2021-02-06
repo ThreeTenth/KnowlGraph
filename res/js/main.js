@@ -1,6 +1,8 @@
 // main.js
 // Created at 2021-02-02
 
+getTags()
+
 const TagStateIdle = 0
 const TagStateMayDel = 1
 const TagStatePreDel = 2
@@ -8,6 +10,8 @@ const TagStateSafe = 3
 
 var postChangedTimeoutID;
 var cancelDeleteTagTimeoutID;
+
+var lastContent;
 
 var articles_layout = new Vue({
   el: '#articles_layout',
@@ -55,11 +59,17 @@ var tag_layout = new Vue({
   el: '#tag_layout',
   data: {
     seen: false,
+    auto: false,
     tags: [],
     tag: "",
+    items: [],
+    all: [],
     state: TagStateMayDel,
   },
   methods: {
+    onTagChanged: function () {
+      tagChanged()
+    },
     onRemoveTag: function (tag) {
       removeTag(tag)
     },
@@ -72,7 +82,6 @@ var tag_layout = new Vue({
   },
 })
 
-var lastContent;
 function postChanged() {
   window.clearTimeout(postChangedTimeoutID)
   postChangedTimeoutID = window.setTimeout(postArticleContent, 800)
@@ -116,13 +125,38 @@ function editArticleContent(_articleID, _contentID) {
   })
 }
 
+function getTags() {
+  axios({
+    method: "GET",
+    url: encodeQueryData("/api/v1/tags"),
+  }).then(function (resp) {
+    tag_layout.all = resp.data
+  }).catch(function (resp) {
+    console.log(resp.status, resp.data)
+  })
+}
+
 function tagChanged() {
   if ("" == tag_layout.tag) {
     if (TagStateSafe == tag_layout.state) {
       tag_layout.state = TagStateIdle
     }
+    tag_layout.auto = false
   } else {
     tag_layout.state = TagStateSafe
+    if (2 <= tag_layout.tag.length) {
+      const items = []
+      const regex = new RegExp('^' + tag_layout.tag)
+      tag_layout.all.forEach(item => {
+        if (regex.test(item)) {
+          items.push(item)
+        }
+      });
+      tag_layout.items = items
+      tag_layout.auto = true
+    } else {
+      tag_layout.auto = false
+    }
   }
 }
 
@@ -215,6 +249,7 @@ function setContent(content = undefined) {
   content_layout.seen = true
   lang_layout.seen = true
   tag_layout.seen = true
+  tag_autocomplete.seen = true
 
   lastContent = getCurrentContent()
 }
