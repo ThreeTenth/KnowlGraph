@@ -28,7 +28,7 @@ func (RAS) Fields() []ent.Field {
 // Edges of the RAS.
 func (RAS) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("content", Content.Type).Unique().Required().
+		edge.To("version", Version.Type).Unique().Required().
 			Comment("The content is being voted, if allowed, it will be redirected to the content where published to the public space"),
 		edge.To("voters", User.Type).Required().
 			Comment("Voters are randomly selected and they will vote anonymously."),

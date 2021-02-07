@@ -17,7 +17,6 @@ type Vote struct {
 func (Vote) Fields() []ent.Field {
 	return []ent.Field{
 		field.Enum("status").Values("allowed", "rejected", "abstained"),
-		field.String("response").Optional().Comment("Response to voting content"),
 		field.Time("created_at").Default(time.Now),
 	}
 }
@@ -25,6 +24,9 @@ func (Vote) Fields() []ent.Field {
 // Edges of the Vote.
 func (Vote) Edges() []ent.Edge {
 	return []ent.Edge{
+		edge.To("feedback", Section.Type).
+			Unique().
+			Comment("feedback to voting content"),
 		edge.To("ras", RAS.Type).Unique(),
 	}
 }

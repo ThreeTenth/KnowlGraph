@@ -14,8 +14,9 @@ type Reaction struct {
 // Fields of the Reaction.
 func (Reaction) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("name"),
-		field.String("emoji"),
+		field.Enum("status").
+			Values("up", "down", "laugh", "hooray", "confused", "heart", "rocket", "eyes").
+			Comment("Refer to the Reaction list on GitHub"),
 		field.Int("count"),
 	}
 }

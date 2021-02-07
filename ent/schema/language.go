@@ -14,13 +14,14 @@ type Language struct {
 // Fields of the Language.
 func (Language) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("id").
+		field.String("code").
 			MaxLen(3).
 			NotEmpty().
 			Unique().
 			Immutable().Comment("Codes for the Representation of Names of Languages"),
 		field.String("name"),
 		field.Enum("direction").Values("ltr", "rtl").Default("ltr").Comment("Text writing direction"),
+		field.String("comment").Optional(),
 	}
 }
 

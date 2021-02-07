@@ -24,7 +24,8 @@ func (User) Fields() []ent.Field {
 // Edges of the User.
 func (User) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("stars", Star.Type),
-		edge.To("articles", Article.Type),
+		edge.To("assets", Asset.Type),
+		edge.To("archives", Archive.Type),
+		edge.To("drafts", Version.Type),
 	}
 }

@@ -15,13 +15,17 @@ type Tag struct {
 func (Tag) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name"),
+		field.Enum("status").
+			Values("private", "public").
+			Default("private").
+			Comment("public: tags associated with public articles; private: tags associated with private articles and not associated with public articles."),
 	}
 }
 
 // Edges of the Tag.
 func (Tag) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("contents", Content.Type),
+		edge.To("versions", Version.Type),
 		edge.To("nodes", Node.Type),
 	}
 }

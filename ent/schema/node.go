@@ -14,21 +14,31 @@ type Node struct {
 // Fields of the Node.
 func (Node) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("cover").Optional(),
 		field.Int("level"),
+		field.Enum("status").
+			Values("private", "public").
+			Default("private").
+			Comment("public: all tags on the node path are public; private: there is at least one private tag on the path."),
 	}
 }
 
 // Edges of the Node.
 func (Node) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("tag", Tag.Type).Ref("nodes").Unique().Required(),
-		edge.To("fork", Node.Type).
-			From("form").
+		edge.From("tag", Tag.Type).
+			Ref("nodes").
+			Unique().
+			Required(),
+		edge.To("subnodes", Node.Type).
+			Comment("subnodes: the next subdivision node of this node").
+			From("belong").
+			Comment("belong: belong to which node").
 			Unique(),
-		edge.To("nodes", Node.Type).
+		edge.To("branches", Node.Type).
+			Comment("branches: root node attribute, which means all branch nodes under the root node.").
 			From("root").
+			Comment("root: the root node of the current node.").
 			Unique(),
-		edge.To("stars", Star.Type),
+		edge.To("archives", Archive.Type),
 	}
 }
