@@ -16,9 +16,11 @@ func (Article) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int("id"),
 		field.Enum("status").
-			Values("private", "public").
+			Values("private", "protected", "public").
 			Default("public").
-			Comment("public: all users can access; private: only the source user can access."),
+			Comment("public: all users can access and edit.").
+			Comment("protected: all users just can access, used to built-in protocol.").
+			Comment("private: only the source user can access and edit."),
 	}
 }
 
