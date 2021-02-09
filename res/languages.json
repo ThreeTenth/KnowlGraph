@@ -99,7 +99,7 @@
   {"code":"yi","name":"יידיש", "direction": "rtl", "comment": "Yiddish"},
   {"code":"hi","name":"हिंदी", "direction": "ltr", "comment": "Hindi"},
   {"code":"su","name":"Sundanis", "direction": "ltr", "comment": "Sundanese"},
-  {"code":"code","name":"bahasa Indonesia", "direction": "ltr", "comment": "Indonesian"},
+  {"code":"id","name":"bahasa Indonesia", "direction": "ltr", "comment": "Indonesian"},
   {"code":"jw","name":"Wong jawa", "direction": "ltr", "comment": "Javanese"},
   {"code":"en","name":"English", "direction": "ltr", "comment": "English"},
   {"code":"yo","name":"Ede Yoruba", "direction": "ltr", "comment": "Yoruba"},
