@@ -3,11 +3,24 @@ package main
 import (
 	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/article"
+	"knowlgraph.com/ent/version"
 )
 
-// newArticle creates a new article, the default language is en
-func newArticle(c *Context) error {
+// newDraft creates a new article, the default language is en
+func newDraft(c *Context) error {
+	var _query struct {
+		Status article.Status `form:"status" binding:"required"`
+		Lang   article.Status `form:"lang,default=en"`
+	}
 	_userID, _ := c.Get(GinKeyUserID)
+
+	if err := c.ShouldBindQuery(&_query); err != nil {
+		return c.BadRequest(err.Error())
+	}
+
+	if err := article.StatusValidator(_query.Status); err != nil {
+		return c.BadRequest(err.Error())
+	}
 
 	return WithTx(ctx, client, func(tx *ent.Tx) error {
 		_user, err := tx.User.Get(ctx, _userID.(int))
@@ -16,19 +29,36 @@ func newArticle(c *Context) error {
 		}
 
 		// Return articles without any content first
-		_articleID, err := _user.QueryArticles().Where(article.Not(article.HasVersions())).FirstID(ctx)
+		_id, err := _user.QueryDrafts().
+			Where(version.And(
+				version.Not(version.HasContent()),
+				version.StatusEQ(version.DefaultStatus),
+				version.HasArticleWith(article.StatusEQ(_query.Status)))).
+			FirstID(ctx)
 		if err == nil {
-			return c.Ok(&_articleID)
+			return c.Ok(&_id)
 		}
 
-		_articleCreater := tx.Article.Create().SetStatus(article.StatusPrivate)
+		_articleCreater := tx.Article.Create().SetStatus(_query.Status)
 
 		_article, err := _articleCreater.Save(ctx)
 		if err != nil {
 			return c.InternalServerError(err.Error())
 		}
 
-		_userID, err = tx.User.UpdateOneID(_userID.(int)).AddArticles(_article).Save(ctx)
+		var _langID int
+		for _, _lang := range langs {
+			if _lang.Code == string(_query.Lang) {
+				_langID = _lang.ID
+			}
+		}
+
+		_version, err := tx.Version.Create().SetStatus(version.DefaultStatus).SetLangID(_langID).SetArticle(_article).Save(ctx)
+		if err != nil {
+			return c.InternalServerError(err.Error())
+		}
+
+		_userID, err = tx.User.UpdateOneID(_userID.(int)).AddDrafts(_version).Save(ctx)
 		if err != nil {
 			return c.InternalServerError(err.Error())
 		}

@@ -14,7 +14,7 @@ body {
 }
 
 #lang_layout {
-  margin-top: 20px;
+  margin: 10px 0;
 }
 
 #lang_layout select {

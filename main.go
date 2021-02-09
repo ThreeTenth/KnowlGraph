@@ -12,13 +12,11 @@ import (
 
 	"github.com/excing/goflag"
 	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/binding"
-	"github.com/go-playground/validator/v10"
 	"github.com/go-redis/redis/v8"
 	"github.com/gobuffalo/packr/v2"
 	"knowlgraph.com/ent"
-	"knowlgraph.com/ent/article"
 	"knowlgraph.com/ent/language"
+	"knowlgraph.com/ent/migrate"
 
 	"github.com/facebook/ent/dialect"
 
@@ -41,12 +39,7 @@ var ctx context.Context
 var client *ent.Client
 var rdb *redis.Client
 var config *Config
-var langs []*struct {
-	ID        string             `json:"id"`
-	Name      string             `json:"name"`
-	Direction language.Direction `json:"direction"`
-	Comment   string             `json:"comment"`
-}
+var langs []*ent.Language
 
 func init() {
 	time.FixedZone("CST", 8*3600) // China Standard Timzone
@@ -72,7 +65,7 @@ func openPostgreSQL() {
 	client = ent.NewClient(opts...)
 
 	ctx = context.Background()
-	if err = client.Schema.Create(ctx); err != nil {
+	if err = client.Schema.Create(ctx, migrate.WithGlobalUniqueID(true)); err != nil {
 		panic("failed to create schema: " + err.Error())
 	}
 }
@@ -106,13 +99,15 @@ func loadLauguages() {
 	var _langCreates []*ent.LanguageCreate
 	var i = 0
 	for _, v := range langs {
-		_, err := client.Language.UpdateOneID(v.ID).SetName(v.Name).SetDirection(v.Direction).Save(ctx)
-		if err != nil {
-			_langCreates = append(_langCreates, client.Language.Create().SetID(v.ID).SetName(v.Name).SetDirection(v.Direction))
+		_langID, _ := client.Language.Update().Where(language.CodeEQ(v.Code)).SetName(v.Name).SetDirection(v.Direction).Save(ctx)
+		if _langID == 0 {
+			_langCreates = append(_langCreates, client.Language.Create().SetCode(v.Code).SetName(v.Name).SetDirection(v.Direction))
 			i++
 		}
 	}
 	client.Language.CreateBulk(_langCreates...).SaveX(ctx)
+
+	langs = client.Language.Query().Order(ent.Asc(language.FieldID)).AllX(ctx)
 }
 
 func loadTemplates(router *gin.Engine) {
@@ -128,16 +123,16 @@ func loadTemplates(router *gin.Engine) {
 	router.SetHTMLTemplate(tmpl)
 }
 
-var articleExist validator.Func = func(fl validator.FieldLevel) bool {
-	date, ok := fl.Field().Interface().(int)
-	if ok {
-		ok, err := client.Article.Query().Where(article.IDEQ(date)).Exist(ctx)
-		if !ok || err != nil {
-			return false
-		}
-	}
-	return true
-}
+// var articleExist validator.Func = func(fl validator.FieldLevel) bool {
+// 	date, ok := fl.Field().Interface().(int)
+// 	if ok {
+// 		ok, err := client.Article.Query().Where(article.IDEQ(date)).Exist(ctx)
+// 		if !ok || err != nil {
+// 			return false
+// 		}
+// 	}
+// 	return true
+// }
 
 func main() {
 	goflag.Parse("config", "Configuration file path")
@@ -159,9 +154,9 @@ func main() {
 	}
 
 	// Custom Validators
-	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
-		v.RegisterValidation("articleExist", articleExist)
-	}
+	// if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+	// 	v.RegisterValidation("articleExist", articleExist)
+	// }
 
 	web := router.Group("/")
 	{
@@ -180,8 +175,8 @@ func main() {
 
 	v1 := router.Group("/api/v1")
 
-	v1.PUT("/article", authorizeRequired, handle(newArticle))
-	v1.PUT("/article/content", authorizeRequired, handle(putArticleContent))
+	v1.PUT("/article", authorizeRequired, handle(newDraft))
+	v1.PUT("/article/content", authorizeRequired, handle(putDraftContent))
 	v1.PUT("/response")
 	v1.PUT("/response/content")
 
@@ -192,6 +187,7 @@ func main() {
 	v1.POST("/recover")
 	v1.POST("/publish", authorizeRequired, handle(publishArticle))
 
+	v1.GET("/draft", authentication)
 	v1.GET("/article", authentication, handle(getArticle))
 	v1.GET("/article/responses")
 	v1.GET("/article/versions")

@@ -29,12 +29,12 @@ var articles_layout = new Vue({
 var lang_layout = new Vue({
   el: '#lang_layout',
   data: {
-    seen: false,
+    seen: true,
     lang: getLang(),
   },
   methods: {
     onSelectLang: function (event) {
-      setLang(event.target.value)
+      lang_layout.lang = event.target.value
     },
   }
 })
@@ -234,11 +234,9 @@ function setLang(lang) {
 function setContent(content = undefined) {
   if (content == undefined) {
     content_layout.body = ""
-    lang_layout.lang = getLang()
     tag_layout.tags = []
   } else {
     content_layout.body = content.body
-    lang_layout.lang = content.edges.Lang.id
 
     var tags = []
     content.edges.Tags.forEach(tag => {
@@ -247,7 +245,6 @@ function setContent(content = undefined) {
     tag_layout.tags = tags
   }
   content_layout.seen = true
-  lang_layout.seen = true
   tag_layout.seen = true
   tag_autocomplete.seen = true
 
@@ -262,7 +259,7 @@ var articleID;
 function onNewArticle() {
   axios({
     method: "PUT",
-    url: "/api/v1/article",
+    url: encodeQueryData("/api/v1/article", {status: "private", lang: lang_layout.lang}),
   }).then(function (resp) {
     console.log(resp.status, resp.data)
     articleID = resp.data

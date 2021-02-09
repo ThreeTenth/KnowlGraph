@@ -105,17 +105,9 @@ func joinGithub(c *Context) error {
 		return c.Unauthorized(string(body))
 	}
 
-	_userID, err := client.User.Update().
-		Where(user.GithubIDEQ(githubUser.ID)).
-		SetName(githubUser.Login).
-		SetEmail(githubUser.Email).
-		SetAvatar(githubUser.AvatarURL).
-		Save(ctx)
+	_user, err := client.User.Query().Where(user.GithubIDEQ(githubUser.ID)).Only(ctx)
 	if err != nil {
-		return c.InternalServerError(err.Error())
-	}
-	if _userID == 0 {
-		_user, err := client.User.Create().
+		_user, err = client.User.Create().
 			SetName(githubUser.Login).
 			SetEmail(githubUser.Email).
 			SetAvatar(githubUser.AvatarURL).
@@ -125,11 +117,19 @@ func joinGithub(c *Context) error {
 		if err != nil {
 			return c.InternalServerError(err.Error())
 		}
+	} else {
+		_user, err = _user.Update().
+			SetName(githubUser.Login).
+			SetEmail(githubUser.Email).
+			SetAvatar(githubUser.AvatarURL).
+			Save(ctx)
 
-		_userID = _user.ID
+		if err != nil {
+			return c.InternalServerError(err.Error())
+		}
 	}
 
-	if setAuthorization(c.Context, _userID) != nil {
+	if setAuthorization(c.Context, _user.ID) != nil {
 		return c.InternalServerError(err.Error())
 	}
 

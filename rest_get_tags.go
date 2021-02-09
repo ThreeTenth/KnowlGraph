@@ -1,39 +1,43 @@
 package main
 
 import (
-	"knowlgraph.com/ent/article"
 	"knowlgraph.com/ent/tag"
 	"knowlgraph.com/ent/user"
 )
 
 func getTags(c *Context) error {
-	_publicTags, err := client.Article.Query().
-		Where(article.StatusEQ(article.StatusPublic)).
-		QueryVersions().
-		QueryTags().
-		Select(tag.FieldName).
-		Strings(ctx)
-
-	if err != nil {
-		return c.InternalServerError(err.Error())
+	_status := c.Query("status")
+	_userID, ok := c.Get(GinKeyUserID)
+	if _status == tag.StatusPrivate.String() && !ok {
+		return c.Unauthorized("Unauthorized")
 	}
 
-	_userID, ok := c.Get(GinKeyUserID)
-	if ok {
-		_userTags, err := client.User.Query().
-			Where(user.IDEQ(_userID.(int))).
-			QueryArticles().
-			QueryVersions().
-			QueryTags().
-			Select(tag.FieldName).
-			Strings(ctx)
+	_publicTagCreate := client.Tag.Query().Where(tag.StatusEQ(tag.StatusPublic)).Select(tag.FieldName)
+	_privateTagCreate := client.User.Query().
+		Where(user.IDEQ(_userID.(int))).
+		QueryTags().
+		Select(tag.FieldName)
 
-		if err == nil {
-			_publicTags = mergeArrAndUnique(_publicTags, _userTags)
+	var _tags []string
+	var err error
+	switch _status {
+	case tag.StatusPrivate.String():
+		_tags, err = _privateTagCreate.Strings(ctx)
+	case tag.StatusPublic.String():
+		_tags, err = _publicTagCreate.Strings(ctx)
+	default:
+		if _tags, err = _privateTagCreate.Strings(ctx); err == nil {
+			if _publicTags, err1 := _publicTagCreate.Strings(ctx); err1 == nil {
+				_tags = mergeArrAndUnique(_tags, _publicTags)
+			}
 		}
 	}
 
-	return c.Ok(_publicTags)
+	if err != nil {
+		return c.NotFound(err.Error())
+	}
+
+	return c.Ok(_tags)
 }
 
 func mergeArrAndUnique(a []string, b []string) []string {
@@ -44,7 +48,7 @@ func mergeArrAndUnique(a []string, b []string) []string {
 		check[val] = 1
 	}
 
-	for letter, _ := range check {
+	for letter := range check {
 		res = append(res, letter)
 	}
 
