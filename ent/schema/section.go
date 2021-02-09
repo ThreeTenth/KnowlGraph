@@ -28,5 +28,6 @@ func (Section) Edges() []ent.Edge {
 			From("belong").
 			Comment("belong: belong to which pact").
 			Unique(),
+		edge.From("content", Content.Type).Ref("sections").Unique().Required(),
 	}
 }

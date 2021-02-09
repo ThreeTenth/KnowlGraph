@@ -24,6 +24,6 @@ func (Reaction) Fields() []ent.Field {
 // Edges of the Reaction.
 func (Reaction) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("articles", Article.Type).Ref("reactions"),
+		edge.From("article", Article.Type).Ref("reactions").Unique(),
 	}
 }

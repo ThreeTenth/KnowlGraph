@@ -40,5 +40,6 @@ func (Node) Edges() []ent.Edge {
 			Comment("root: the root node of the current node.").
 			Unique(),
 		edge.To("archives", Archive.Type),
+		edge.To("articles", Article.Type),
 	}
 }

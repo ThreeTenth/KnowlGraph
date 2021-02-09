@@ -2,6 +2,7 @@ package schema
 
 import (
 	"github.com/facebook/ent"
+	"github.com/facebook/ent/schema/edge"
 	"github.com/facebook/ent/schema/field"
 )
 
@@ -27,5 +28,7 @@ func (Language) Fields() []ent.Field {
 
 // Edges of the Language.
 func (Language) Edges() []ent.Edge {
-	return nil
+	return []ent.Edge{
+		edge.From("users", User.Type).Ref("languages"),
+	}
 }

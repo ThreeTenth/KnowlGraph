@@ -27,6 +27,6 @@ func (Vote) Edges() []ent.Edge {
 		edge.To("feedback", Section.Type).
 			Unique().
 			Comment("feedback to voting content"),
-		edge.To("ras", RAS.Type).Unique(),
+		edge.To("ras", RAS.Type).Unique().Required(),
 	}
 }

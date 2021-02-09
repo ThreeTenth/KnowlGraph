@@ -27,5 +27,6 @@ func (Tag) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("versions", Version.Type),
 		edge.To("nodes", Node.Type),
+		edge.From("users", User.Type).Ref("tags"),
 	}
 }
