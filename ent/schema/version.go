@@ -34,6 +34,7 @@ func (Version) Edges() []ent.Edge {
 		edge.To("content", Content.Type).Unique(),
 		edge.To("lang", Language.Type).Unique().Required(),
 		edge.To("history", Content.Type),
+		edge.To("main", Version.Type).Unique(),
 		edge.From("tags", Tag.Type).Ref("versions"),
 		edge.From("article", Article.Type).Ref("versions").Unique().Required(),
 		edge.From("user", User.Type).Ref("drafts").Unique(),
