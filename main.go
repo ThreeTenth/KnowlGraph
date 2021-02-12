@@ -175,24 +175,23 @@ func main() {
 
 	v1 := router.Group("/api/v1")
 
-	v1.PUT("/article", authorizeRequired, handle(newDraft))
-	v1.PUT("/article/content", authorizeRequired, handle(putDraftContent))
+	v1.PUT("/draft", authorizeRequired, handle(newDraft))
+	v1.PUT("/draft/content", authorizeRequired, handle(putDraftContent))
 	v1.PUT("/response")
 	v1.PUT("/response/content")
 
 	v1.POST("/reaction")
 	v1.POST("/star")
 	v1.POST("/node")
-	v1.POST("/fork")
-	v1.POST("/recover")
 	v1.POST("/publish", authorizeRequired, handle(publishArticle))
 
-	v1.GET("/draft", authentication)
+	v1.GET("/draft", authorizeRequired)
 	v1.GET("/article", authentication, handle(getArticle))
 	v1.GET("/article/responses")
 	v1.GET("/article/versions")
 	v1.GET("/article/reactions")
-	v1.GET("/article/fork")
+
+	v1.GET("/articles")
 
 	v1.GET("/tags", authentication, handle(getTags))
 	v1.GET("/tag/articles")
@@ -201,11 +200,10 @@ func main() {
 	v1.GET("/node/articles")
 	v1.GET("/node")
 
-	v1.GET("/star/storis")
-	v1.GET("/star/nodes")
-
-	v1.GET("/articles", authorizeRequired, handle(getUserArticles))
-	v1.GET("/recent")
+	v1.GET("/user/tags")
+	v1.GET("/user/nodes")
+	v1.GET("/user/drafts", authorizeRequired, handle(getUserDrafts))
+	v1.GET("/user/articles", authorizeRequired, handle(getUserArticles))
 	v1.GET("/search")
 
 	router.Run(fmt.Sprint(":", config.Port))

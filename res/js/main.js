@@ -97,10 +97,10 @@ function postArticleContent() {
   if (currentContent != lastContent) {
     axios({
       method: "PUT",
-      url: "/api/v1/article/content?lang=" + getLang(),
+      url: "/api/v1/draft/content?lang=" + getLang(),
       data: {
         body: content_layout.body,
-        articleID: articleID,
+        DraftID: articleID,
         tags: tag_layout.tags,
       },
     }).then(function (resp) {
@@ -259,7 +259,7 @@ var articleID;
 function onNewArticle() {
   axios({
     method: "PUT",
-    url: encodeQueryData("/api/v1/article", {status: "private", lang: lang_layout.lang}),
+    url: encodeQueryData("/api/v1/draft", { status: "private", lang: lang_layout.lang }),
   }).then(function (resp) {
     console.log(resp.status, resp.data)
     articleID = resp.data
@@ -272,7 +272,19 @@ function onNewArticle() {
 function onGetArticles() {
   axios({
     method: "GET",
-    url: "/api/v1/articles",
+    url: "/api/v1/user/articles",
+  }).then(function (resp) {
+    articles_layout.seen = true
+    articles_layout.articles = resp.data
+  }).catch(function (resp) {
+    console.log(resp.status, resp.data)
+  })
+}
+
+function onGetDrafts() {
+  axios({
+    method: "GET",
+    url: "/api/v1/user/drafts",
   }).then(function (resp) {
     articles_layout.seen = true
     articles_layout.articles = resp.data

@@ -4,9 +4,18 @@
 {{ template "fgm_html_header" .Header }}
 
 <body>
-  <div style="text-align: right;">
-    {{ .Body.User.Name }}
-    <button onclick="onSignout()">退出</button>
+  <div style="display: flex;">
+    <div style="flex: auto">
+      <a href="/"><button>Home</button></a>
+      <button onclick="onGetArticles()">Articles</button>
+      <button>Tags</button>
+      <button>Nodes</button>
+      <button>Graph</button>
+    </div>
+    <div>
+      {{ .Body.User.Name }}
+      <button onclick="onSignout()">退出</button>
+    </div>
   </div>
   {{ template "fgm_new_article" .Body }}
   {{ template "fgm_user_articles" }}

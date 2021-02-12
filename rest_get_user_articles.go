@@ -26,7 +26,7 @@ func getUserArticles(c *Context) error {
 			asset.StatusEQ(_query.Status))).
 		QueryArticle().
 		WithVersions(func(vq *ent.VersionQuery) {
-			vq.Where(version.StatusEQ(version.StatusPublished)).Order(ent.Desc(version.FieldID)).Limit(1)
+			vq.Where(version.StatusEQ(version.StatusRelease)).Order(ent.Desc(version.FieldID)).Limit(1)
 		}).
 		All(ctx)
 
