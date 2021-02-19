@@ -29,5 +29,6 @@ func (Content) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.From("version", Version.Type).Ref("history").Unique().Required(),
 		edge.To("sections", Section.Type),
+		edge.To("lang", Language.Type),
 	}
 }
