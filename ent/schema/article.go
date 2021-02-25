@@ -28,6 +28,7 @@ func (Article) Fields() []ent.Field {
 func (Article) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("versions", Version.Type),
+		edge.To("branches", Draft.Type),
 		edge.To("reactions", Reaction.Type),
 		edge.To("quote", Quote.Type).Unique().StorageKey(edge.Column("response_id")),
 		edge.To("assets", Asset.Type),

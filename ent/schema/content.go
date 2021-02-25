@@ -19,7 +19,13 @@ func (Content) Fields() []ent.Field {
 		field.String("title").Optional(),
 		field.String("gist").Optional(),
 		field.String("body").Default(""),
-		field.String("versionName").Optional().Unique(),
+		field.String("seo").Optional(),
+		field.Enum("state").
+			Values("draft", "review", "release").
+			Default("draft").
+			Comment("release: all users can access.").
+			Comment("review: only voters can access.").
+			Comment("draft: only the editor can access."),
 		field.Time("created_at").Default(time.Now),
 	}
 }
@@ -27,8 +33,18 @@ func (Content) Fields() []ent.Field {
 // Edges of the Content.
 func (Content) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("version", Version.Type).Ref("history").Unique().Required(),
+		edge.To("lang", Language.Type).Unique().Required(),
+		edge.To("last", Content.Type).Unique().Required(),
+		edge.To("tags", Tag.Type),
 		edge.To("sections", Section.Type),
-		edge.To("lang", Language.Type),
+		edge.From("branche", Draft.Type).
+			Ref("snapshots").
+			Unique().
+			Required().
+			Comment("Snapshot of a branch."),
+		edge.From("version", Version.Type).
+			Ref("content").
+			Unique().
+			Comment("The content of a published version. If the article is public, a vote is required. If the article is private, it is created directly."),
 	}
 }

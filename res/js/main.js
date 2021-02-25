@@ -92,50 +92,6 @@ function postBlur() {
   postArticleContent()
 }
 
-function postArticleContent() {
-  var currentContent = getCurrentContent()
-  if (currentContent != lastContent) {
-    axios({
-      method: "PUT",
-      url: "/api/v1/draft/content?lang=" + getLang(),
-      data: {
-        body: content_layout.body,
-        DraftID: articleID,
-        tags: tag_layout.tags,
-      },
-    }).then(function (resp) {
-      console.log(resp.status, resp.data)
-    }).catch(function (resp) {
-      console.log(resp.status, resp.data)
-    })
-    lastContent = currentContent
-  }
-}
-
-function editArticleContent(_articleID, _contentID) {
-  axios({
-    method: "GET",
-    url: encodeQueryData("/api/v1/article", { id: _articleID, content_id: _contentID }),
-  }).then(function (resp) {
-    const content = resp.data
-    articleID = _articleID
-    setContent(content)
-  }).catch(function (resp) {
-    console.log(resp.status, resp.data)
-  })
-}
-
-function getTags() {
-  axios({
-    method: "GET",
-    url: encodeQueryData("/api/v1/tags"),
-  }).then(function (resp) {
-    tag_layout.all = resp.data
-  }).catch(function (resp) {
-    console.log(resp.status, resp.data)
-  })
-}
-
 function tagChanged() {
   if ("" == tag_layout.tag) {
     if (TagStateSafe == tag_layout.state) {
@@ -216,21 +172,6 @@ function cancelDeleteTag() {
   tag_layout.state = TagStateMayDel
 }
 
-function setLang(lang) {
-  Cookies.set("user-lang", lang)
-  axios({
-    method: "GET",
-    url: encodeQueryData("/api/v1/article", { id: articleID, lang: lang }),
-  }).then(function (resp) {
-    const content = resp.data
-    setContent(content)
-  }).catch(function (resp) {
-    console.log(resp.status, resp.data)
-    content_layout.body = ""
-    lastContent = getCurrentContent()
-  })
-}
-
 function setContent(content = undefined) {
   if (content == undefined) {
     content_layout.body = ""
@@ -253,44 +194,6 @@ function setContent(content = undefined) {
 
 function getCurrentContent() {
   return content_layout.body + tag_layout.tags.join(",")
-}
-
-var articleID;
-function onNewArticle() {
-  axios({
-    method: "PUT",
-    url: encodeQueryData("/api/v1/draft", { status: "private", lang: lang_layout.lang }),
-  }).then(function (resp) {
-    console.log(resp.status, resp.data)
-    articleID = resp.data
-    setContent()
-  }).catch(function (resp) {
-    console.log(resp.status, resp.data)
-  })
-}
-
-function onGetArticles() {
-  axios({
-    method: "GET",
-    url: "/api/v1/user/articles",
-  }).then(function (resp) {
-    articles_layout.seen = true
-    articles_layout.articles = resp.data
-  }).catch(function (resp) {
-    console.log(resp.status, resp.data)
-  })
-}
-
-function onGetDrafts() {
-  axios({
-    method: "GET",
-    url: "/api/v1/user/drafts",
-  }).then(function (resp) {
-    articles_layout.seen = true
-    articles_layout.articles = resp.data
-  }).catch(function (resp) {
-    console.log(resp.status, resp.data)
-  })
 }
 
 function onSignout() {
