@@ -58,6 +58,10 @@ function postBlur() {
   postArticleContent()
 }
 
+function postChangedTimeoutID() {
+
+}
+
 function setContent(content = undefined) {
   if (content == undefined) {
     content_layout.body = ""
@@ -80,6 +84,19 @@ function setContent(content = undefined) {
 
 function getCurrentContent() {
   return content_layout.body + tag_layout.tags.join(",")
+}
+
+function onNewArticle() {
+  axios({
+    method: "PUT",
+    url: encodeQueryData("/api/v1/article", { status: "private" }),
+  }).then(function (resp) {
+    console.log(resp.status, resp.data)
+    articleID = resp.data
+    setContent()
+  }).catch(function (resp) {
+    console.log(resp.status, resp.data)
+  })
 }
 
 function onSignout() {

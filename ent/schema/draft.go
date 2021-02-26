@@ -14,7 +14,7 @@ type Draft struct {
 // Fields of the Draft.
 func (Draft) Fields() []ent.Field {
 	return []ent.Field{
-		field.Enum("status").Values("read", "write").Default("write"),
+		field.Enum("state").Values("read", "write").Default("write"),
 	}
 }
 
@@ -22,6 +22,7 @@ func (Draft) Fields() []ent.Field {
 func (Draft) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("snapshots", Content.Type),
+		edge.To("original", Version.Type).Unique(),
 		edge.From("user", User.Type).Ref("drafts").Unique().Required(),
 		edge.From("article", Article.Type).Ref("branches").Unique().Required(),
 	}
