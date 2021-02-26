@@ -146,6 +146,12 @@ func main() {
 	//
 	////////////////////////////////////////////////////////
 
+	router := setupRouter()
+
+	router.Run(fmt.Sprint(":", config.Port))
+}
+
+func setupRouter() *gin.Engine {
 	router := gin.Default()
 
 	// write the logs to file and console at the same time
@@ -175,7 +181,9 @@ func main() {
 
 	v1 := router.Group("/api/v1")
 
-	v1.PUT("/article", authorizeRequired)
+	v1.PUT("/article", authorizeRequired, handle(putArticleNew))
 
-	router.Run(fmt.Sprint(":", config.Port))
+	v1.GET("/branche", authorizeRequired, handle(getArticleBranche))
+
+	return router
 }
