@@ -158,6 +158,10 @@ func main() {
 	// 	v.RegisterValidation("articleExist", articleExist)
 	// }
 
+	router.StaticFS("/favicon", packr.NewBox("./res/favicon"))
+
+	router.GET("/static/*paths", getStaticServerFiles)
+
 	web := router.Group("/")
 	{
 		loadTemplates(router)
@@ -168,10 +172,6 @@ func main() {
 		join := web.Group("/user/join")
 		join.GET("/github", handle(joinGithub))
 	}
-
-	web.StaticFS("/favicon", packr.NewBox("./res/favicon"))
-	web.StaticFS("/js", packr.NewBox("./res/js"))
-	web.StaticFS("/css", packr.NewBox("./res/css"))
 
 	v1 := router.Group("/api/v1")
 
