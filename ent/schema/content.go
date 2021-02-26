@@ -19,7 +19,6 @@ func (Content) Fields() []ent.Field {
 		field.String("title").Optional(),
 		field.String("gist").Optional(),
 		field.String("body").Default(""),
-		field.String("seo").Optional(),
 		field.Enum("state").
 			Values("draft", "review", "release").
 			Default("draft").

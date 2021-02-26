@@ -18,6 +18,8 @@ func (Version) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name").Optional().Unique(),
 		field.String("comment").Optional().Unique(),
+		field.String("title").Optional(),
+		field.String("seo").Optional(),
 		field.Time("created_at").Default(time.Now),
 	}
 }
