@@ -99,6 +99,18 @@ function onNewArticle() {
   })
 }
 
+function onGetDrafts(){
+  axios({
+    method: "GET",
+    url: "/api/v1/branches",
+  }).then(function (resp) {
+    articles_layout.seen = true
+    articles_layout.articles = resp.data
+  }).catch(function (resp) {
+    console.log(resp.status, resp.data)
+  })
+}
+
 function onSignout() {
   const githubOAuthAPI = "/signout"
   window.open(githubOAuthAPI, "_self")

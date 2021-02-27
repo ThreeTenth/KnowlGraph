@@ -183,7 +183,7 @@ func setupRouter() *gin.Engine {
 
 	v1.PUT("/article", authorizeRequired, handle(putArticleNew))
 
-	v1.GET("/branche", authorizeRequired, handle(getArticleBranche))
+	v1.GET("/branches", authorizeRequired, handle(getArticleBranches))
 
 	return router
 }

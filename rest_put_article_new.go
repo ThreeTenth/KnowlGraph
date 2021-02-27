@@ -24,7 +24,7 @@ func putArticleNew(c *Context) error {
 		QueryDrafts().
 		Where(draft.And(
 			draft.Not(draft.HasSnapshots()),
-			draft.Not(draft.HasHead()),
+			draft.Not(draft.HasOriginal()),
 			draft.StateEQ(draft.StateWrite))).
 		Limit(1).
 		WithArticle().
