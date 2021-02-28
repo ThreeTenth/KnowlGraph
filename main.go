@@ -182,8 +182,9 @@ func setupRouter() *gin.Engine {
 	v1 := router.Group("/api/v1")
 
 	v1.PUT("/article", authorizeRequired, handle(putArticleNew))
+	v1.PUT("/article/content", authorizeRequired, handle(putArticleContent))
 
-	v1.GET("/branches", authorizeRequired, handle(getArticleBranches))
+	v1.GET("/drafts", authorizeRequired, handle(getArticleDrafts))
 
 	return router
 }

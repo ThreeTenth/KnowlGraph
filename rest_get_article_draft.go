@@ -6,7 +6,7 @@ import (
 	"knowlgraph.com/ent/user"
 )
 
-func getArticleBranches(c *Context) error {
+func getArticleDrafts(c *Context) error {
 	_userID, _ := c.Get(GinKeyUserID)
 
 	_drafts, err := client.User.Query().
