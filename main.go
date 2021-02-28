@@ -184,6 +184,8 @@ func setupRouter() *gin.Engine {
 	v1.PUT("/article", authorizeRequired, handle(putArticleNew))
 	v1.PUT("/article/content", authorizeRequired, handle(putArticleContent))
 
+	v1.PUT("/publish/article", authorizeRequired, handle(publishArticle))
+
 	v1.GET("/drafts", authorizeRequired, handle(getArticleDrafts))
 
 	return router

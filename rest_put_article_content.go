@@ -2,10 +2,10 @@ package main
 
 func putArticleContent(c *Context) error {
 	var _data struct {
-		Title     string
-		Body      string
-		LastID    int
-		BrancheID int
+		Title   string `json:"title"`
+		Body    string `json:"body"`
+		LastID  int    `json:"last_id"`
+		DraftID int    `json:"draft_id"`
 	}
 
 	err := c.ShouldBindJSON(&_data)
@@ -17,7 +17,7 @@ func putArticleContent(c *Context) error {
 		SetTitle(_data.Title).
 		SetBody(_data.Body).
 		SetLastID(_data.LastID).
-		SetBrancheID(_data.BrancheID).
+		SetBrancheID(_data.DraftID).
 		Save(ctx)
 
 	return c.Ok(_content)
