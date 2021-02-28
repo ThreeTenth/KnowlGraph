@@ -1,7 +1,6 @@
 package main
 
 import (
-	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/content"
 	"knowlgraph.com/ent/draft"
 	"knowlgraph.com/ent/language"
@@ -31,17 +30,26 @@ func publishArticle(c *Context) error {
 
 	_userID, _ := c.Get(GinKeyUserID)
 
-	_branche, err := client.Draft.Query().
-		Where(draft.HasUserWith(user.ID(_userID.(int)))).
-		WithSnapshots(func(cq *ent.ContentQuery) {
-			cq.Where(content.ID(_data.ContentID))
-		}).
+	// _branche, err := client.Draft.Query().
+	// 	Where(draft.And(
+	// 		draft.HasUserWith(user.ID(_userID.(int))),
+	// 		draft.HasSnapshotsWith(content.ID(_data.ContentID)))).
+	// 	WithSnapshots(func(cq *ent.ContentQuery) {
+	// 		cq.Where(content.ID(_data.ContentID))
+	// 	}).
+	// 	Only(ctx)
+
+	// _content := _branche.Edges.Snapshots[0]
+
+	_content, err := client.Content.Query().
+		Where(content.And(
+			content.ID(_data.ContentID),
+			content.HasBrancheWith(
+				draft.HasUserWith(user.ID(_userID.(int)))))).
 		Only(ctx)
 	if err != nil {
 		return c.BadRequest(err.Error())
 	}
-
-	_content := _branche.Edges.Snapshots[0]
 
 	if _data.Title == "" {
 		_data.Title = _content.Title
