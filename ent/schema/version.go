@@ -20,6 +20,12 @@ func (Version) Fields() []ent.Field {
 		field.String("comment").Optional().Unique(),
 		field.String("title").Optional(),
 		field.String("seo").Optional(),
+		field.Enum("state").
+			Values("review", "release", "reject").
+			Default("review").
+			Comment("release: all users can access.").
+			Comment("review: only voters can access.").
+			Comment("reject: nobody can access."),
 		field.Time("created_at").Default(time.Now),
 	}
 }
@@ -28,6 +34,8 @@ func (Version) Fields() []ent.Field {
 func (Version) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("content", Content.Type).Unique().Required(),
+		edge.To("lang", Language.Type).Unique().Required(),
+		edge.To("tags", Tag.Type),
 		edge.From("article", Article.Type).
 			Ref("versions").
 			Unique().

@@ -3,6 +3,7 @@ module knowlgraph.com
 go 1.15
 
 require (
+	entgo.io/ent v0.6.0 // indirect
 	github.com/excing/goflag v1.0.1
 	github.com/facebook/ent v0.5.4
 	github.com/gin-gonic/gin v1.6.3
