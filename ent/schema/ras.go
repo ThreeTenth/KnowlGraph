@@ -18,7 +18,7 @@ func (RAS) Fields() []ent.Field {
 	return []ent.Field{
 		field.Enum("status").Values("allowed", "rejected", "abstained").Optional().
 			Comment("Indicates the status of the voting result of the current space"),
-		field.String("message").Optional().
+		field.String("comment").Optional().
 			Comment("Postscript when creating the space"),
 		field.Time("created_at").Default(time.Now),
 		field.Time("updated_at").Default(time.Now).UpdateDefault(time.Now),

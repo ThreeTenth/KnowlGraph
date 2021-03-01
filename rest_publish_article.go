@@ -1,10 +1,15 @@
 package main
 
 import (
+	"github.com/facebook/ent/dialect/sql"
+	"github.com/pkg/errors"
+	"knowlgraph.com/ent"
+	"knowlgraph.com/ent/article"
 	"knowlgraph.com/ent/content"
 	"knowlgraph.com/ent/draft"
 	"knowlgraph.com/ent/language"
 	"knowlgraph.com/ent/user"
+	"knowlgraph.com/ent/version"
 )
 
 func publishArticle(c *Context) error {
@@ -41,6 +46,11 @@ func publishArticle(c *Context) error {
 
 	// _content := _branche.Edges.Snapshots[0]
 
+	_article, err := client.Article.Get(ctx, _data.ArticleID)
+	if err != nil {
+		return c.BadRequest(err.Error())
+	}
+
 	_content, err := client.Content.Query().
 		Where(content.And(
 			content.ID(_data.ContentID),
@@ -59,18 +69,62 @@ func publishArticle(c *Context) error {
 		_data.Gist = _content.Body
 	}
 
-	_version, err := client.Version.Create().
-		SetComment(_data.Comment).
-		SetTitle(_data.Title).
-		SetGist(_data.Gist).
-		SetLangID(_lang.ID).
-		SetContentID(_data.ContentID).
-		SetArticleID(_data.ArticleID).
-		Save(ctx)
+	_versionState := version.StateReview
+	if _article.Status == article.StatusPrivate {
+		_versionState = version.StateRelease
+	}
+
+	err = WithTx(ctx, client, func(tx *ent.Tx) error {
+		_version, err := tx.Version.Create().
+			SetComment(_data.Comment).
+			SetTitle(_data.Title).
+			SetGist(_data.Gist).
+			SetState(_versionState).
+			SetLangID(_lang.ID).
+			SetContentID(_data.ContentID).
+			SetArticleID(_data.ArticleID).
+			Save(ctx)
+		if err != nil {
+			return err
+		}
+
+		if _versionState == version.StateReview {
+			_userIDs, err := tx.User.Query().
+				Order(random()).
+				Limit(10).
+				Select(user.FieldID).
+				Ints(ctx)
+			if err != nil {
+				return err
+			}
+
+			_, err = tx.RAS.Create().
+				SetComment(_data.Comment).
+				SetVersionID(_version.ID).
+				AddVoterIDs(_userIDs...).
+				Save(ctx)
+			if err != nil {
+				return err
+			}
+		}
+
+		return c.Ok(_version)
+	})
 
 	if err != nil {
 		return c.InternalServerError(err.Error())
 	}
 
-	return c.Ok(&_version)
+	return nil
+}
+
+func random() ent.OrderFunc {
+	return func(s *sql.Selector, check func(string) bool) {
+		f := "random()"
+		if check(f) {
+			s.OrderBy(f)
+		} else {
+			s.AddError(errors.Errorf("invalid field %q for ordering", f))
+		}
+	}
 }

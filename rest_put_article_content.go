@@ -1,5 +1,10 @@
 package main
 
+import (
+	"knowlgraph.com/ent/draft"
+	"knowlgraph.com/ent/user"
+)
+
 func putArticleContent(c *Context) error {
 	var _data struct {
 		Title   string `json:"title"`
@@ -9,6 +14,17 @@ func putArticleContent(c *Context) error {
 	}
 
 	err := c.ShouldBindJSON(&_data)
+	if err != nil {
+		return c.BadRequest(err.Error())
+	}
+
+	_userID, _ := c.Get(GinKeyUserID)
+
+	_, err = client.User.Query().
+		Where(user.ID(_userID.(int))).
+		QueryDrafts().
+		Where(draft.ID(_data.DraftID)).
+		Only(ctx)
 	if err != nil {
 		return c.BadRequest(err.Error())
 	}

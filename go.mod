@@ -1,13 +1,11 @@
 module knowlgraph.com
 
-go 1.15
+go 1.16
 
 require (
-	entgo.io/ent v0.6.0 // indirect
 	github.com/excing/goflag v1.0.1
 	github.com/facebook/ent v0.5.4
 	github.com/gin-gonic/gin v1.6.3
-	github.com/go-playground/assert/v2 v2.0.1
 	github.com/go-redis/redis/v8 v8.4.11
 	github.com/gobuffalo/packr/v2 v2.8.1
 	github.com/gofrs/uuid v4.0.0+incompatible // indirect
@@ -25,7 +23,6 @@ require (
 	github.com/sirupsen/logrus v1.7.0 // indirect
 	github.com/stretchr/testify v1.7.0 // indirect
 	github.com/ugorji/go v1.2.3 // indirect
-	github.com/writeas/go-strip-markdown v2.0.1+incompatible
 	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad // indirect
 	golang.org/x/sync v0.0.0-20201207232520-09787c993a3a // indirect
 	golang.org/x/sys v0.0.0-20210124154548-22da62e12c0c // indirect
