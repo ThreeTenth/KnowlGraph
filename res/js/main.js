@@ -58,10 +58,6 @@ function postBlur() {
   postArticleContent()
 }
 
-function postChangedTimeoutID() {
-
-}
-
 function setContent(content = undefined) {
   if (content == undefined) {
     content_layout.body = ""
@@ -86,23 +82,51 @@ function getCurrentContent() {
   return content_layout.body + tag_layout.tags.join(",")
 }
 
+function postArticleContent() {
+  axios({
+    method: "PUT",
+    url: "/api/v1/article/content",
+    data: {
+      body: content_layout.body,
+      draft_id: draftID,
+    },
+  }).then(function (resp) {
+    console.log(resp.status, resp.data)
+  }).catch(function (resp) {
+    console.log(resp.status, resp.data)
+  })
+}
+
 function onNewArticle() {
   axios({
     method: "PUT",
     url: encodeQueryData("/api/v1/article", { status: "private" }),
   }).then(function (resp) {
     console.log(resp.status, resp.data)
-    articleID = resp.data
+    articleID = resp.data.ArticleID
+    draftID = resp.data.DraftID
     setContent()
   }).catch(function (resp) {
     console.log(resp.status, resp.data)
   })
 }
 
-function onGetDrafts(){
+function onGetArticles() {
   axios({
     method: "GET",
-    url: "/api/v1/branches",
+    url: encodeQueryData("/api/v1/user/articles", { status: "self" }),
+  }).then(function (resp) {
+    articles_layout.seen = true
+    articles_layout.articles = resp.data
+  }).catch(function (resp) {
+    console.log(resp.status, resp.data)
+  })
+}
+
+function onGetDrafts() {
+  axios({
+    method: "GET",
+    url: "/api/v1/drafts",
   }).then(function (resp) {
     articles_layout.seen = true
     articles_layout.articles = resp.data

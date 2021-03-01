@@ -10,7 +10,7 @@ func putArticleContent(c *Context) error {
 		Title   string `json:"title"`
 		Body    string `json:"body"`
 		LastID  int    `json:"last_id"`
-		DraftID int    `json:"draft_id"`
+		DraftID int    `json:"draft_id" binding:"required"`
 	}
 
 	err := c.ShouldBindJSON(&_data)
@@ -29,12 +29,23 @@ func putArticleContent(c *Context) error {
 		return c.BadRequest(err.Error())
 	}
 
-	_content, err := client.Content.Create().
-		SetTitle(_data.Title).
+	_contentCreate := client.Content.Create()
+	if 0 != _data.LastID {
+		_contentCreate.SetLastID(_data.LastID)
+	}
+
+	if "" != _data.Title {
+		_contentCreate.SetTitle(_data.Title)
+	}
+
+	_content, err := _contentCreate.
 		SetBody(_data.Body).
-		SetLastID(_data.LastID).
 		SetBrancheID(_data.DraftID).
 		Save(ctx)
+
+	if err != nil {
+		return c.InternalServerError(err.Error())
+	}
 
 	return c.Ok(_content)
 }

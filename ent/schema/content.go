@@ -25,7 +25,7 @@ func (Content) Fields() []ent.Field {
 // Edges of the Content.
 func (Content) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("last", Content.Type).Unique().Required(),
+		edge.To("last", Content.Type).Unique(),
 		edge.To("sections", Section.Type),
 		edge.From("branche", Draft.Type).
 			Ref("snapshots").

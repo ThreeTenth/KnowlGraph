@@ -40,6 +40,7 @@ var client *ent.Client
 var rdb *redis.Client
 var config *Config
 var langs []*ent.Language
+var defaultLang *ent.Language
 
 func init() {
 	time.FixedZone("CST", 8*3600) // China Standard Timzone
@@ -108,6 +109,32 @@ func loadLauguages() {
 	client.Language.CreateBulk(_langCreates...).SaveX(ctx)
 
 	langs = client.Language.Query().Order(ent.Asc(language.FieldID)).AllX(ctx)
+	defaultLang = getDefaultLanguageIfNotFound(DefaultLanguage)
+}
+
+func getLanguage(code string) *ent.Language {
+	for _, v := range langs {
+		if v.Code == code {
+			return v
+		}
+	}
+
+	return nil
+}
+
+func getDefaultLanguageIfNotFound(code string) *ent.Language {
+	for _, v := range langs {
+		if v.Code == code {
+			return v
+		}
+	}
+
+	for _, v := range langs {
+		if v.Code == DefaultLanguage {
+			return v
+		}
+	}
+	panic("server err: no default language.")
 }
 
 func loadTemplates(router *gin.Engine) {

@@ -1,6 +1,9 @@
 package main
 
 import (
+	"regexp"
+	"strings"
+
 	"github.com/facebook/ent/dialect/sql"
 	"github.com/pkg/errors"
 	"knowlgraph.com/ent"
@@ -11,6 +14,8 @@ import (
 	"knowlgraph.com/ent/tag"
 	"knowlgraph.com/ent/user"
 	"knowlgraph.com/ent/version"
+
+	stripmd "github.com/writeas/go-strip-markdown"
 )
 
 func publishArticle(c *Context) error {
@@ -68,7 +73,7 @@ func publishArticle(c *Context) error {
 	}
 
 	if _data.Gist == "" {
-		_data.Gist = _content.Body
+		_data.Gist = seo(_content.Body, MaxSeoLen)
 	}
 
 	_versionState := version.StateReview
@@ -144,4 +149,24 @@ func random() ent.OrderFunc {
 			s.AddError(errors.Errorf("invalid field %q for ordering", f))
 		}
 	}
+}
+
+func seo(md string, maxLen int) string {
+	// Golang string is saved in UTF-8 format.
+	// For languages that use multiple bytes to express one character,
+	// such as Chinese characters, when substring the string,
+	// invalid character encoding will appear. We need to convert string to []rune type.
+	// Rune is stored in unicode encoding, it supports characters with long byte encoding.
+	_rune := []rune(stripmd.Strip(md))
+
+	var _sub string
+	if len(_rune) <= maxLen {
+		_sub = _sub + " " + string(_rune)
+	} else {
+		_sub = _sub + " " + string(_rune[:MaxSeoLen]) + "..."
+	}
+
+	re := regexp.MustCompile(`\r?\n`)
+	_sub = re.ReplaceAllString(_sub, " ")
+	return strings.Trim(_sub, " ")
 }
