@@ -8,19 +8,21 @@ import (
 	"knowlgraph.com/ent/content"
 	"knowlgraph.com/ent/draft"
 	"knowlgraph.com/ent/language"
+	"knowlgraph.com/ent/tag"
 	"knowlgraph.com/ent/user"
 	"knowlgraph.com/ent/version"
 )
 
 func publishArticle(c *Context) error {
 	var _data struct {
-		Name      string `json:"name"`
-		Comment   string `json:"comment"`
-		Title     string `json:"title"`
-		Gist      string `json:"gist"`
-		Lang      string `json:"lang"`
-		ContentID int    `json:"content_id"`
-		ArticleID int    `json:"article_id"`
+		Name      string   `json:"name"`
+		Comment   string   `json:"comment"`
+		Title     string   `json:"title"`
+		Gist      string   `json:"gist"`
+		Lang      string   `json:"lang"`
+		Tags      []string `json:"tags"`
+		ContentID int      `json:"content_id"`
+		ArticleID int      `json:"article_id"`
 	}
 
 	err := c.ShouldBindJSON(&_data)
@@ -70,8 +72,22 @@ func publishArticle(c *Context) error {
 	}
 
 	_versionState := version.StateReview
+	_tagStatus := tag.StatusPublic
 	if _article.Status == article.StatusPrivate {
 		_versionState = version.StateRelease
+		_tagStatus = tag.StatusPrivate
+	}
+
+	_tags := make([]*ent.Tag, len(_data.Tags))
+	for i, v := range _data.Tags {
+		_tag, err := client.Tag.Query().Where(tag.Name(v)).First(ctx)
+		if err != nil {
+			_tag, err = client.Tag.Create().SetName(v).SetStatus(_tagStatus).Save(ctx)
+		}
+		if err != nil {
+			return c.InternalServerError(err.Error())
+		}
+		_tags[i] = _tag
 	}
 
 	err = WithTx(ctx, client, func(tx *ent.Tx) error {
@@ -81,6 +97,7 @@ func publishArticle(c *Context) error {
 			SetGist(_data.Gist).
 			SetState(_versionState).
 			SetLangID(_lang.ID).
+			AddTags(_tags...).
 			SetContentID(_data.ContentID).
 			SetArticleID(_data.ArticleID).
 			Save(ctx)
