@@ -8,7 +8,6 @@ import (
 	"github.com/pkg/errors"
 	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/article"
-	"knowlgraph.com/ent/content"
 	"knowlgraph.com/ent/draft"
 	"knowlgraph.com/ent/language"
 	"knowlgraph.com/ent/tag"
@@ -20,14 +19,13 @@ import (
 
 func publishArticle(c *Context) error {
 	var _data struct {
-		Name      string   `json:"name"`
-		Comment   string   `json:"comment"`
-		Title     string   `json:"title"`
-		Gist      string   `json:"gist"`
-		Lang      string   `json:"lang"`
-		Tags      []string `json:"tags"`
-		ContentID int      `json:"content_id"`
-		ArticleID int      `json:"article_id"`
+		Name    string   `json:"name"`
+		Comment string   `json:"comment"`
+		Title   string   `json:"title"`
+		Gist    string   `json:"gist"`
+		Lang    string   `json:"lang"`
+		Tags    []string `json:"tags"`
+		DraftID int      `json:"draft_id"`
 	}
 
 	err := c.ShouldBindJSON(&_data)
@@ -42,30 +40,29 @@ func publishArticle(c *Context) error {
 
 	_userID, _ := c.Get(GinKeyUserID)
 
-	// _branche, err := client.Draft.Query().
-	// 	Where(draft.And(
-	// 		draft.HasUserWith(user.ID(_userID.(int))),
-	// 		draft.HasSnapshotsWith(content.ID(_data.ContentID)))).
-	// 	WithSnapshots(func(cq *ent.ContentQuery) {
-	// 		cq.Where(content.ID(_data.ContentID))
-	// 	}).
-	// 	Only(ctx)
-
-	// _content := _branche.Edges.Snapshots[0]
-
-	_article, err := client.Article.Get(ctx, _data.ArticleID)
+	_draft, err := client.Draft.Query().
+		Where(draft.And(
+			draft.ID(_data.DraftID),
+			draft.HasUserWith(user.ID(_userID.(int))))).
+		WithSnapshots(func(cq *ent.ContentQuery) {
+			cq.Order(ent.Desc(draft.FieldID)).Limit(1)
+		}).
+		WithArticle().
+		First(ctx)
 	if err != nil {
 		return c.BadRequest(err.Error())
 	}
 
-	_content, err := client.Content.Query().
-		Where(content.And(
-			content.ID(_data.ContentID),
-			content.HasBrancheWith(
-				draft.HasUserWith(user.ID(_userID.(int)))))).
-		Only(ctx)
-	if err != nil {
-		return c.BadRequest(err.Error())
+	_article := _draft.Edges.Article
+
+	if 0 == len(_draft.Edges.Snapshots) {
+		return c.BadRequest("Error: Content is empty")
+	}
+
+	_content := _draft.Edges.Snapshots[0]
+
+	if _content.Body == "" {
+		return c.BadRequest("Error: Content is empty")
 	}
 
 	if _data.Title == "" {
@@ -103,8 +100,8 @@ func publishArticle(c *Context) error {
 			SetState(_versionState).
 			SetLangID(_lang.ID).
 			AddTags(_tags...).
-			SetContentID(_data.ContentID).
-			SetArticleID(_data.ArticleID).
+			SetContentID(_content.ID).
+			SetArticleID(_article.ID).
 			Save(ctx)
 		if err != nil {
 			return err

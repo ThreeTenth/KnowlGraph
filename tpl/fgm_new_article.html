@@ -1,17 +1,11 @@
 {{define "fgm_new_article"}}
-<div id="lang_layout" v-if="seen">
-  <select name="lang" v-bind:value="lang" v-on:change="onSelectLang">
-    {{ range .Languages }}
-    <option class="{{ .Direction }}" value="{{ .Code }}">{{ .Name }}</option>
-    {{ end }}
-  </select>
-</div>
 <div>
   <button onclick="onNewArticle()">New Article</button>
 </div>
 <div id="content_layout" v-if="seen">
   <textarea v-on:keyup="onChanged" v-on:blur="onBlur" v-model="body"></textarea>
 </div>
+<div><button onclick="onPublishArticle()">发布</button></div>
 <div id="tag_layout" v-if="seen">
   <div id="tag_input">
     <ul class="tags">
@@ -30,6 +24,21 @@
         <div>{{ `{{ item }}` }}</div>
       </li>
     </ul>
+  </div>
+  <div>
+    <form>
+      <input type="text" placeholder="版本名称"></input>
+      <input type="text" placeholder="备注"></input>
+      <input type="text" placeholder="标题"></input>
+      <input type="text" placeholder="重点"></input>
+      <div id="lang_layout" v-if="seen">
+        <select name="lang" v-bind:value="lang" v-on:change="onSelectLang">
+          {{ range .Languages }}
+          <option class="{{ .Direction }}" value="{{ .Code }}">{{ .Name }}</option>
+          {{ end }}
+        </select>
+      </div>
+    </form>
   </div>
 </div>
 {{end}}

@@ -111,6 +111,21 @@ function onNewArticle() {
   })
 }
 
+function onPublishArticle() {
+  axios({
+    method: "PUT",
+    url: "/api/v1/article/content",
+    data: {
+      name: content_layout.body,
+      comment: draftID,
+    },
+  }).then(function (resp) {
+    console.log(resp.status, resp.data)
+  }).catch(function (resp) {
+    console.log(resp.status, resp.data)
+  })
+}
+
 function onGetArticles() {
   axios({
     method: "GET",
