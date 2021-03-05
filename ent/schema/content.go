@@ -16,7 +16,6 @@ type Content struct {
 // Fields of the Content.
 func (Content) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("title").Optional(),
 		field.String("body").Default(""),
 		field.Time("created_at").Default(time.Now),
 	}

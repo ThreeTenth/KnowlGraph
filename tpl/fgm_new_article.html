@@ -5,40 +5,5 @@
 <div id="content_layout" v-if="seen">
   <textarea v-on:keyup="onChanged" v-on:blur="onBlur" v-model="body"></textarea>
 </div>
-<div><button onclick="onPublishArticle()">发布</button></div>
-<div id="tag_layout" v-if="seen">
-  <div id="tag_input">
-    <ul class="tags">
-      <li class="tag" v-for="(tag, i) in tags" v-bind:class="(i==tags.length-1 && state==2) ? 'del' : ''"
-        v-on:click="onRemoveTag(tag)">{{ `{{ tag }}` }} X</li>
-      <li class="new-tag">
-        <input type="text" v-on:keyup="onTagChanged" v-on:keyup.enter="onAdd" v-on:keyup.188="onAdd"
-          v-on:keyup.delete="onDel" v-on:keyup.up="onMoveUp" v-on:keyup.down="onMoveDown" v-model="tag"
-          placeholder="Add a tag"></input>
-      </li>
-    </ul>
-  </div>
-  <div id="tag_autocomplete" v-if="auto">
-    <ul class="items">
-      <li class="item" v-for="item in items">
-        <div>{{ `{{ item }}` }}</div>
-      </li>
-    </ul>
-  </div>
-  <div>
-    <form>
-      <input type="text" placeholder="版本名称"></input>
-      <input type="text" placeholder="备注"></input>
-      <input type="text" placeholder="标题"></input>
-      <input type="text" placeholder="重点"></input>
-      <div id="lang_layout" v-if="seen">
-        <select name="lang" v-bind:value="lang" v-on:change="onSelectLang">
-          {{ range .Languages }}
-          <option class="{{ .Direction }}" value="{{ .Code }}">{{ .Name }}</option>
-          {{ end }}
-        </select>
-      </div>
-    </form>
-  </div>
-</div>
+<div><button>历史记录</button></div>
 {{end}}

@@ -6,6 +6,13 @@ var cancelDeleteTagTimeoutID;
 
 var lastContent;
 
+var publish_layout = new Vue({
+  el: '#publish_layout',
+  data: {
+    see: true,
+  }
+})
+
 var articles_layout = new Vue({
   el: '#articles_layout',
   data: {
@@ -61,28 +68,16 @@ function postBlur() {
 function setContent(content = undefined) {
   if (content == undefined) {
     content_layout.body = ""
-    tag_layout.tags = []
   } else {
     content_layout.body = content.body
-
-    var tags = []
-    content.edges.Tags.forEach(tag => {
-      tags.push(tag.name)
-    });
-    tag_layout.tags = tags
   }
   content_layout.seen = true
-  tag_layout.seen = true
-  tag_autocomplete.seen = true
 
-  lastContent = getCurrentContent()
-}
-
-function getCurrentContent() {
-  return content_layout.body + tag_layout.tags.join(",")
+  lastContent = content_layout.body
 }
 
 function postArticleContent() {
+  if (lastContent == content_layout.body) return
   axios({
     method: "PUT",
     url: "/api/v1/article/content",
@@ -95,6 +90,8 @@ function postArticleContent() {
   }).catch(function (resp) {
     console.log(resp.status, resp.data)
   })
+
+  lastContent = content_layout.body
 }
 
 function onNewArticle() {

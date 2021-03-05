@@ -1,0 +1,38 @@
+{{define "fgm_publish_article"}}
+<div>
+  <form>
+    <div style="margin: 3px;"><input type="text" name="title" placeholder="标题"></input></div>
+    <div style="margin: 3px;"><input type="text" name="gist" placeholder="重点"></input></div>
+    <div style="margin: 3px;"><input type="text" name="versionName" placeholder="版本名称"></input></div>
+    <div style="margin: 3px;"><input type="text" name="comment" placeholder="备注"></input></div>
+    <div style="margin: 3px;" id="lang_layout" v-if="seen">
+      <select name="lang" v-bind:value="lang" v-on:change="onSelectLang">
+        {{ range .Languages }}
+        <option class="{{ .Direction }}" value="{{ .Code }}">{{ .Name }}</option>
+        {{ end }}
+      </select>
+    </div>
+    <div id="tag_layout" v-if="seen">
+      <div id="tag_input">
+        <ul class="tags">
+          <li class="tag" v-for="(tag, i) in tags" v-bind:class="(i==tags.length-1 && state==2) ? 'del' : ''"
+            v-on:click="onRemoveTag(tag)">{{ `{{ tag }}` }} X</li>
+          <li class="new-tag">
+            <input type="text" v-on:keyup="onTagChanged" v-on:keyup.enter="onAdd" v-on:keyup.188="onAdd"
+              v-on:keyup.delete="onDel" v-on:keyup.up="onMoveUp" v-on:keyup.down="onMoveDown" v-model="tag"
+              placeholder="Add a tag"></input>
+          </li>
+        </ul>
+      </div>
+      <div id="tag_autocomplete" v-if="auto">
+        <ul class="items">
+          <li class="item" v-for="item in items">
+            <div>{{ `{{ item }}` }}</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <input type="button" value="发布"></input>
+  </form>
+</div>
+{{end}}

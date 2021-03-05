@@ -7,7 +7,6 @@ import (
 
 func putArticleContent(c *Context) error {
 	var _data struct {
-		Title   string `json:"title"`
 		Body    string `json:"body"`
 		LastID  int    `json:"last_id"`
 		DraftID int    `json:"draft_id" binding:"required"`
@@ -32,10 +31,6 @@ func putArticleContent(c *Context) error {
 	_contentCreate := client.Content.Create()
 	if 0 != _data.LastID {
 		_contentCreate.SetLastID(_data.LastID)
-	}
-
-	if "" != _data.Title {
-		_contentCreate.SetTitle(_data.Title)
 	}
 
 	_content, err := _contentCreate.

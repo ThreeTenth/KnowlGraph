@@ -8,7 +8,7 @@ const TagStateSafe = 3
 var tag_layout = new Vue({
   el: '#tag_layout',
   data: {
-    seen: false,
+    seen: true,
     auto: false,
     tags: [],
     tag: "",

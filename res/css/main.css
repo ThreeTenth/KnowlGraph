@@ -17,9 +17,9 @@ body {
   margin: 10px 0;
 }
 
-#lang_layout select {
+/* #lang_layout select {
   font-size: 1.15em;
-}
+} */
 
 #content_layout {
   margin-top: 10px;
