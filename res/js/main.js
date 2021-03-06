@@ -1,59 +1,53 @@
 // main.js
 // Created at 2021-02-02
 
-var postChangedTimeoutID;
-var cancelDeleteTagTimeoutID;
-
-var lastContent;
-
-var publish_layout = new Vue({
-  el: '#publish_layout',
+var app = new Vue({
+  el: "#app",
   data: {
-    see: true,
-  }
-})
-
-var articles_layout = new Vue({
-  el: '#articles_layout',
-  data: {
-    seen: false,
-    articles: [],
-  },
-  methods: {
-    onEditArticleContent: function (_articleID, _contentID) {
-      editArticleContent(_articleID, _contentID)
-    },
-  }
-})
-
-var lang_layout = new Vue({
-  el: '#lang_layout',
-  data: {
-    seen: true,
+    seen_tag: true,
+    seen_lang: true,
+    seen_content: true,
+    seen_articles: true,
+    seen_drafts: true,
+    body: "",
     lang: getUserLang(),
+    articles: [],
+    auto: false,
+    tags: [],
+    tag: "",
+    items: [],
+    all: [],
+    state: TagStateMayDel,
   },
   methods: {
     onSelectContentLang: function (event) {
       lang_layout.lang = event.target.value
     },
-  }
-})
-
-var content_layout = new Vue({
-  el: '#content_layout',
-  data: {
-    seen: false,
-    body: "",
-  },
-  methods: {
     onChanged: function () {
       postChanged()
     },
     onBlur: function () {
       postBlur()
     },
-  }
+    onTagChanged: function () {
+      tagChanged()
+    },
+    onRemoveTag: function (tag) {
+      removeTag(tag)
+    },
+    onAdd: function () {
+      addTag()
+    },
+    onDel: function () {
+      deleteTag()
+    },
+  },
 })
+
+var postChangedTimeoutID;
+var cancelDeleteTagTimeoutID;
+
+var lastContent;
 
 function postChanged() {
   window.clearTimeout(postChangedTimeoutID)

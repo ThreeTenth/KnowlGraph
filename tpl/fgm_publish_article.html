@@ -1,19 +1,18 @@
 {{define "fgm_publish_article"}}
 <div>
   <form>
-    <div style="margin: 3px;"><input type="text" name="title" placeholder="{{ .Strings.Title }}"></input></div>
-    <div style="margin: 3px;"><input type="text" name="gist" placeholder="{{ .Strings.Gist }}"></input></div>
-    <div style="margin: 3px;"><input type="text" name="versionName" placeholder="{{ .Strings.VersionName }}"></input>
-    </div>
-    <div style="margin: 3px;"><input type="text" name="comment" placeholder="{{ .Strings.Comment }}"></input></div>
-    <div style="margin: 3px;" id="lang_layout" v-if="seen">
+    <input id="publish_title" type="text" name="title" placeholder="{{ .Strings.Title }}"></input>
+    <input id="publish_gist" type="text" name="gist" placeholder="{{ .Strings.Gist }}"></input>
+    <input id="publish_version_name" type="text" name="versionName" placeholder="{{ .Strings.VersionName }}"></input>
+    <input id="publish_comment" type="text" name="comment" placeholder="{{ .Strings.Comment }}"></input>
+    <div id="lang_layout" v-if="seen_lang">
       <select name="lang" v-bind:value="lang" v-on:change="onSelectContentLang">
         {{ range .Body.Languages }}
         <option class="{{ .Direction }}" value="{{ .Code }}">{{ .Name }}</option>
         {{ end }}
       </select>
     </div>
-    <div id="tag_layout" v-if="seen">
+    <div id="tag_layout" v-if="seen_tag">
       <div id="tag_input">
         <ul class="tags">
           <li class="tag" v-for="(tag, i) in tags" v-bind:class="(i==tags.length-1 && state==2) ? 'del' : ''"
