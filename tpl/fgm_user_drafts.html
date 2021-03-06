@@ -1,5 +1,5 @@
 {{define "fgm_user_drafts"}}
-<div><button onclick="onGetDrafts()">Drafts</button></div>
+<div><button onclick="onGetDrafts()">{{ .Strings.Drafts }}</button></div>
 <div id="articles_layout" v-if="seen">
   <div v-for="article in articles">
     <a v-bind:href="'#' + article.id" v-on:click="onEditArticleContent(article.article_versions, article.id)">

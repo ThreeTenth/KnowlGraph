@@ -1,0 +1,15 @@
+{
+  "NewArticle": "New article",
+  "Histories": "Histories",
+  "Publish": "Publish",
+  "Drafts": "Drafts",
+  "Articles": "Articles",
+  "Title": "Title",
+  "Gist": "Gist",
+  "VersionName": "Version name",
+  "Comment": "Comment",
+  "AddATag": "Add a tag",
+  "Logout": "Logout",
+  "LoginWithGitHubOAuth": "Login with GitHub OAuth",
+  "Home": "Home"
+}

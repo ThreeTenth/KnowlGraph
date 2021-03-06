@@ -33,7 +33,7 @@ var lang_layout = new Vue({
     lang: getUserLang(),
   },
   methods: {
-    onSelectLang: function (event) {
+    onSelectContentLang: function (event) {
       lang_layout.lang = event.target.value
     },
   }
@@ -74,6 +74,12 @@ function setContent(content = undefined) {
   content_layout.seen = true
 
   lastContent = content_layout.body
+}
+
+function onSelectUserLang() {
+  var select = document.getElementById("userLangSelect")
+  Cookies.set("user-lang", select.value)
+  location.reload()
 }
 
 function postArticleContent() {

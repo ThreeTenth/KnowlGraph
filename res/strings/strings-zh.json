@@ -1,0 +1,15 @@
+{
+  "NewArticle": "新文章",
+  "Histories": "历史记录",
+  "Publish": "发布",
+  "Drafts": "草稿箱",
+  "Articles": "归档",
+  "Title": "标题",
+  "Gist": "重点",
+  "VersionName": "版本名称",
+  "Comment": "备注",
+  "AddATag": "添加标签",
+  "Logout": "退出",
+  "LoginWithGitHubOAuth": "使用 GitHub OAuth 登录",
+  "Home": "首页"
+}

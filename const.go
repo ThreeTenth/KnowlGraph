@@ -48,6 +48,8 @@ const (
 const (
 	// CookieToken means http cookie `access_token`field
 	CookieToken = "access_token"
+	// CookieUserLang means http cookie `user-lang`field
+	CookieUserLang = "user-lang"
 )
 
 // Gin set keys

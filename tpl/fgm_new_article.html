@@ -1,9 +1,9 @@
 {{define "fgm_new_article"}}
 <div>
-  <button onclick="onNewArticle()">New Article</button>
+  <button onclick="onNewArticle()">{{ .Strings.NewArticle }}</button>
+  <button onclick="onHistories()">{{ .Strings.Histories }}</button>
 </div>
 <div id="content_layout" v-if="seen">
   <textarea v-on:keyup="onChanged" v-on:blur="onBlur" v-model="body"></textarea>
 </div>
-<div><button>历史记录</button></div>
 {{end}}

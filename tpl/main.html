@@ -4,19 +4,24 @@
 {{ template "fgm_html_header" .Header }}
 
 <body>
-  <div style="display: flex;">
+  <div style="display: flex; margin: 6px 0 10px 0;">
     <div style="flex: auto">
-      <a href="/"><button>Home</button></a>
+      <a href="/"><button>{{ .Strings.Home }}</button></a>
     </div>
     <div>
       {{ .Body.User.Name }}
-      <button onclick="onSignout()">退出</button>
+      <button onclick="onSignout()">{{ .Strings.Logout }}</button>
+      <select id="userLangSelect" name="lang" v-bind:value="lang" onchange="onSelectUserLang()">
+        {{ range .Body.Languages }}
+        <option class="{{ .Direction }}" value="{{ .Code }}">{{ .Name }}</option>
+        {{ end }}
+      </select>
     </div>
   </div>
-  {{ template "fgm_new_article" .Body }}
-  {{ template "fgm_publish_article" .Body }}
-  {{ template "fgm_user_drafts" }}
-  {{ template "fgm_user_articles" }}
+  {{ template "fgm_new_article" . }}
+  {{ template "fgm_publish_article" . }}
+  {{ template "fgm_user_drafts" . }}
+  {{ template "fgm_user_articles" . }}
 
   {{ template "fgm_html_footer" }}
 </body>

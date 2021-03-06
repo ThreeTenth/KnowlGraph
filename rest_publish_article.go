@@ -65,10 +65,6 @@ func publishArticle(c *Context) error {
 		return c.BadRequest("Error: Content is empty")
 	}
 
-	// if _data.Title == "" {
-	// _data.Title =
-	// }
-
 	if _data.Gist == "" {
 		_data.Gist = seo(_content.Body, MaxSeoLen)
 	}
