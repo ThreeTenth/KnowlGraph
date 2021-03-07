@@ -4,20 +4,31 @@
 var app = new Vue({
   el: "#app",
   data: {
-    seen_tag: true,
-    seen_lang: true,
-    seen_content: true,
-    seen_articles: true,
-    seen_drafts: true,
-    body: "",
-    lang: getUserLang(),
-    articles: [],
-    auto: false,
-    tags: [],
-    tag: "",
-    items: [],
-    all: [],
-    state: TagStateMayDel,
+    menu: {
+      user: {
+        lang: getUserLang(),
+      }
+    },
+    home: {},
+    my: {},
+    article: {},
+    draft: {
+      seen: false,
+      body: "",
+    },
+    publish: {
+      seen: false,
+      lang: getUserLang(),
+      tags: {
+        auto: false,
+        values: [],
+        new: "",
+        items: [],
+        all: [],
+        state: TagStateMayDel,
+      }
+    },
+    nodes: {},
   },
   methods: {
     onSelectContentLang: function (event) {
@@ -77,12 +88,12 @@ function onSelectUserLang() {
 }
 
 function postArticleContent() {
-  if (lastContent == content_layout.body) return
+  if (lastContent == app.draft.body) return
   axios({
     method: "PUT",
     url: "/api/v1/article/content",
     data: {
-      body: content_layout.body,
+      body: app.draft.body,
       draft_id: draftID,
     },
   }).then(function (resp) {

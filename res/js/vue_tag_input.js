@@ -6,41 +6,41 @@ const TagStatePreDel = 2
 const TagStateSafe = 3
 
 function tagChanged() {
-  if ("" == app.tag) {
-    if (TagStateSafe == app.state) {
-      app.state = TagStateIdle
+  if ("" == app.publish.tags.new) {
+    if (TagStateSafe == app.publish.tags.state) {
+      app.publish.tags.state = TagStateIdle
     }
-    app.auto = false
+    app.publish.tags.auto = false
   } else {
-    app.state = TagStateSafe
-    if (2 <= app.tag.length) {
+    app.publish.tags.state = TagStateSafe
+    if (2 <= app.publish.tags.new.length) {
       const items = []
-      const regex = new RegExp('^' + app.tag)
-      app.all.forEach(item => {
+      const regex = new RegExp('^' + app.publish.tags.tag)
+      app.publish.tags.all.forEach(item => {
         if (regex.test(item)) {
           items.push(item)
         }
       });
-      app.items = items
-      app.auto = true
+      app.publish.tags.items = items
+      app.publish.tags.auto = true
     } else {
-      app.auto = false
+      app.publish.tags.auto = false
     }
   }
 }
 
 function removeTag(tag) {
-  const index = app.tags.indexOf(tag)
+  const index = app.publish.tags.values.indexOf(tag)
   if (index > -1) {
-    app.tags.splice(index, 1)
+    app.publish.tags.values.splice(index, 1)
   }
-  app.state = TagStateMayDel
+  app.publish.tags.state = TagStateMayDel
 
   postBlur()
 }
 
 function addTag() {
-  // var tag = app.tag.trim()                // ",vue,,,,,   ,web, golang      ,,  ,,rest,"
+  // var tag = app.publish.tags.new.trim()                // ",vue,,,,,   ,web, golang      ,,  ,,rest,"
   // tag = tag.replace(/\, +,/g, '')         // ",vue,,,,web, golang      ,,rest,"
   // tag = tag.replace(/\,+/g, ',')          // ",vue,web, golang      ,rest,"
   // tag = tag.replace(/^\,+|\,+$/g, '')     // "vue,web, golang      ,rest"
@@ -48,32 +48,32 @@ function addTag() {
   //                                         // "gin    ", "gin  ,", "gin,", "gin,， ，  ,"
   // tag = tag.replace(/ *\,*$/g, '')        // "gin"
 
-  var tag = app.tag.replace(/[\,\， ]*$/g, '')
+  var tag = app.publish.tags.new.replace(/[\,\， ]*$/g, '')
   if ("" == tag) {
-    app.tag = ""
+    app.publish.tags.new = ""
     return
   }
 
-  app.tags.push(tag)
-  app.tag = ""
-  app.state = TagStateMayDel
+  app.publish.tags.values.push(tag)
+  app.publish.tags.new = ""
+  app.publish.tags.state = TagStateMayDel
 
   postBlur()
 }
 
 function deleteTag() {
-  switch (app.state) {
+  switch (app.publish.tags.state) {
     case TagStateIdle:
-      app.state = TagStateMayDel
+      app.publish.tags.state = TagStateMayDel
       break;
     case TagStateMayDel:
-      app.state = TagStatePreDel
+      app.publish.tags.state = TagStatePreDel
       cancelDeleteTagTimeoutID = window.setTimeout(cancelDeleteTag, 2000)
       break;
     case TagStatePreDel:
-      const removeIndex = app.tags.length
-      app.tags.splice(removeIndex - 1, 1)
-      app.state = TagStateMayDel
+      const removeIndex = app.publish.tags.values.length
+      app.publish.tags.values.splice(removeIndex - 1, 1)
+      app.publish.tags.state = TagStateMayDel
       window.clearTimeout(cancelDeleteTagTimeoutID)
 
       postBlur()
@@ -82,5 +82,5 @@ function deleteTag() {
 }
 
 function cancelDeleteTag() {
-  app.state = TagStateMayDel
+  app.publish.tags.state = TagStateMayDel
 }

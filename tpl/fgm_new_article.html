@@ -3,7 +3,7 @@
   <button onclick="onNewArticle()">{{ .Strings.NewArticle }}</button>
   <button onclick="onHistories()">{{ .Strings.Histories }}</button>
 </div>
-<div id="content_layout" v-if="seen_content">
-  <textarea v-on:keyup="onChanged" v-on:blur="onBlur" v-model="body"></textarea>
+<div id="content_layout" v-if="draft.seen">
+  <textarea v-on:keyup="onChanged" v-on:blur="onBlur" v-model="draft.body"></textarea>
 </div>
 {{end}}

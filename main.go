@@ -4,9 +4,9 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"html/template"
 	"io"
+	"net/http"
 	"os"
 	"time"
 
@@ -14,6 +14,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
 	"github.com/gobuffalo/packr/v2"
+	"golang.org/x/sync/errgroup"
 	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/language"
 	"knowlgraph.com/ent/migrate"
@@ -173,40 +174,68 @@ func main() {
 	//
 	////////////////////////////////////////////////////////
 
-	router := setupRouter()
-
-	router.Run(fmt.Sprint(":", config.Port))
-}
-
-func setupRouter() *gin.Engine {
-	router := gin.Default()
-
 	// write the logs to file and console at the same time
 	if f, err := os.Create(config.Log); err == nil {
 		gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
 	}
 
-	// Custom Validators
-	// if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
-	// 	v.RegisterValidation("articleExist", articleExist)
-	// }
+	server01 := &http.Server{
+		Addr:         ":20010",
+		Handler:      router01(),
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+	}
+
+	server02 := &http.Server{
+		Addr:         ":20011",
+		Handler:      router02(),
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+	}
+
+	var g errgroup.Group
+
+	g.Go(func() error {
+		err := server01.ListenAndServe()
+		if err != nil && err != http.ErrServerClosed {
+			panic(err)
+		}
+		return err
+	})
+
+	g.Go(func() error {
+		err := server02.ListenAndServe()
+		if err != nil && err != http.ErrServerClosed {
+			panic(err)
+		}
+		return err
+	})
+
+	if err := g.Wait(); err != nil {
+		panic(err)
+	}
+}
+
+func router01() http.Handler {
+	router := gin.Default()
+	loadTemplates(router)
 
 	router.StaticFS("/favicon", packr.NewBox("./res/favicon"))
-
 	router.GET("/static/*paths", getStaticServerFiles)
 
 	web := router.Group("/")
-	{
-		loadTemplates(router)
+	web.GET("/", authentication, html(index))
+	web.GET("/signout", deauthorize, handle(signout))
 
-		web.GET("/", authentication, html(index))
-		web.GET("/signout", deauthorize, handle(signout))
+	join := web.Group("/user/join")
+	join.GET("/github", handle(joinGithub))
 
-		join := web.Group("/user/join")
-		join.GET("/github", handle(joinGithub))
-	}
+	return router
+}
 
-	v1 := router.Group("/api/v1")
+func router02() http.Handler {
+	router := gin.Default()
+	v1 := router.Group("/v1")
 
 	v1.PUT("/article", authorizeRequired, handle(putArticleNew))
 	v1.PUT("/article/content", authorizeRequired, handle(putArticleContent))

@@ -1,12 +1,3 @@
 {{define "fgm_user_articles"}}
 <div><button onclick="onGetArticles()">{{ .Strings.Articles }}</button></div>
-<div id="articles_layout" v-if="seen_articles">
-  <ul>
-    <li v-for="article in articles">
-      <a v-bind:href="'#' + article.id" v-on:click="onEditArticleContent(article.article_versions, article.id)">
-        {{ `{{ article.seo.substring(0, 51) + "..." }}` }}
-      </a>
-    </li>
-  </ul>
-</div>
 {{end}}

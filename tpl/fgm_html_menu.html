@@ -6,7 +6,7 @@
   <div>
     {{ .Body.User.Name }}
     <button onclick="onSignout()">{{ .Strings.Logout }}</button>
-    <select id="userLangSelect" name="lang" v-bind:value="lang" onchange="onSelectUserLang()">
+    <select id="userLangSelect" name="lang" v-bind:value="menu.user.lang" onchange="onSelectUserLang()">
       {{ range .Body.Languages }}
       <option class="{{ .Direction }}" value="{{ .Code }}">{{ .Name }}</option>
       {{ end }}

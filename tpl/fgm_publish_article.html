@@ -1,32 +1,33 @@
 {{define "fgm_publish_article"}}
 <div>
   <form>
-    <input id="publish_title" type="text" name="title" placeholder="{{ .Strings.Title }}"></input>
-    <input id="publish_gist" type="text" name="gist" placeholder="{{ .Strings.Gist }}"></input>
-    <input id="publish_version_name" type="text" name="versionName" placeholder="{{ .Strings.VersionName }}"></input>
-    <input id="publish_comment" type="text" name="comment" placeholder="{{ .Strings.Comment }}"></input>
-    <div id="lang_layout" v-if="seen_lang">
-      <select name="lang" v-bind:value="lang" v-on:change="onSelectContentLang">
+    <input type="text" name="title" placeholder="{{ .Strings.Title }}"></input>
+    <input type="text" name="gist" placeholder="{{ .Strings.Gist }}"></input>
+    <input type="text" name="versionName" placeholder="{{ .Strings.VersionName }}"></input>
+    <input type="text" name="comment" placeholder="{{ .Strings.Comment }}"></input>
+    <div id="lang_layout">
+      <select name="lang" v-bind:value="publish.lang" v-on:change="onSelectContentLang">
         {{ range .Body.Languages }}
         <option class="{{ .Direction }}" value="{{ .Code }}">{{ .Name }}</option>
         {{ end }}
       </select>
     </div>
-    <div id="tag_layout" v-if="seen_tag">
+    <div id="tag_layout">
       <div id="tag_input">
         <ul class="tags">
-          <li class="tag" v-for="(tag, i) in tags" v-bind:class="(i==tags.length-1 && state==2) ? 'del' : ''"
-            v-on:click="onRemoveTag(tag)">{{ `{{ tag }}` }} X</li>
+          <li class="tag" v-for="(tag, i) in publish.tags.values"
+            v-bind:class="(i==publish.tags.values.length-1 && publish.tags.state==2) ? 'del' : ''" v-on:click="onRemoveTag(tag)">{{ `{{ tag }}` }} X
+          </li>
           <li class="new-tag">
             <input type="text" v-on:keyup="onTagChanged" v-on:keyup.enter="onAdd" v-on:keyup.188="onAdd"
-              v-on:keyup.delete="onDel" v-on:keyup.up="onMoveUp" v-on:keyup.down="onMoveDown" v-model="tag"
+              v-on:keyup.delete="onDel" v-on:keyup.up="onMoveUp" v-on:keyup.down="onMoveDown" v-model="publish.tags.new"
               placeholder="{{ .Strings.AddATag }}"></input>
           </li>
         </ul>
       </div>
-      <div id="tag_autocomplete" v-if="auto">
+      <div id="tag_autocomplete" v-if="publish.tags.auto">
         <ul class="items">
-          <li class="item" v-for="item in items">
+          <li class="item" v-for="item in publish.tags.items">
             <div>{{ `{{ item }}` }}</div>
           </li>
         </ul>
