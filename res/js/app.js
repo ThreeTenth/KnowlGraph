@@ -9,8 +9,8 @@ const router = new VueRouter({
   mode: 'history',
   routes: [
     { path: '/', name: 'home', component: Home },
-    { path: '/foo', name: 'foo', component: Foo },
-    { path: '/bar/:id', name: 'bar', component: Bar }
+    { path: '/my', name: 'foo', component: Foo },
+    { path: '/drafts/:id', name: 'bar', component: Bar }
   ]
 })
 
