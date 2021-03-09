@@ -4,18 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="github_client_id" content="{{.GithubClientID}}" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
   <title>KnowlGraph -- Knowledge Graph</title>
+  <link rel="apple-touch-icon" sizes="180x180" href="{{.StaticDomain}}/static/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{.StaticDomain}}/static/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{.StaticDomain}}/static/favicon/favicon-16x16.png">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ThreeTenth/css-theme@v0.1.2/colours.css" />
-  <link rel="stylesheet" href="/static/css/main.css" />
+  <link rel="stylesheet" href="{{.StaticDomain}}/static/css/main.css" />
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script>
   {{ if .Debug }}
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue-router/dist/vue-router.js"></script>
   {{ else }}
   <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue-router/dist/vue-router.min.js"></script>
   {{ end }}
 </head>
 {{ end }}

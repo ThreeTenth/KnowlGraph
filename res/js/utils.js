@@ -30,6 +30,7 @@ function getMeta(metaName) {
 }
 
 function encodeQueryData(url, data = undefined) {
+  url = restfulDomain + url
   if (undefined == data) return url
   const ret = [];
   for (let d in data)

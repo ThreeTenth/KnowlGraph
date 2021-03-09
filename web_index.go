@@ -11,11 +11,9 @@ func index(c *Context) (int, string, interface{}) {
 		}
 
 		_data := struct {
-			User      interface{}
-			Languages interface{}
+			User interface{}
 		}{
-			User:      _user,
-			Languages: langs,
+			User: _user,
 		}
 
 		return http.StatusOK, TplMainHTML, _data

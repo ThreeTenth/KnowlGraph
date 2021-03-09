@@ -34,6 +34,8 @@ type Config struct {
 	Debug bool   `flag:"Is debug mode"`
 	Gci   string `flag:"GitHub client ID, see https://docs.github.com/en/developers/apps/creating-an-oauth-app"`
 	Gcs   string `flag:"GitHub client secrets"`
+	Ssd   string `flag:"static server domain"`
+	Rad   string `flag:"restful api domain"`
 }
 
 var ctx context.Context
@@ -46,7 +48,7 @@ var defaultLang *ent.Language
 func init() {
 	time.FixedZone("CST", 8*3600) // China Standard Timzone
 
-	config = &Config{Port: 8080}
+	config = &Config{Port: 8080, Ssd: "http://localhost:20012", Rad: "http://localhost:20011"}
 	goflag.Var(config)
 }
 
@@ -193,6 +195,13 @@ func main() {
 		WriteTimeout: 10 * time.Second,
 	}
 
+	server03 := &http.Server{
+		Addr:         ":20012",
+		Handler:      router03(),
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+	}
+
 	var g errgroup.Group
 
 	g.Go(func() error {
@@ -211,6 +220,14 @@ func main() {
 		return err
 	})
 
+	g.Go(func() error {
+		err := server03.ListenAndServe()
+		if err != nil && err != http.ErrServerClosed {
+			panic(err)
+		}
+		return err
+	})
+
 	if err := g.Wait(); err != nil {
 		panic(err)
 	}
@@ -220,14 +237,11 @@ func router01() http.Handler {
 	router := gin.Default()
 	loadTemplates(router)
 
-	router.StaticFS("/favicon", packr.NewBox("./res/favicon"))
-	router.GET("/static/*paths", getStaticServerFiles)
+	router.GET("/favicon.ico", getFavicon)
+	router.GET("/", authentication, html(index))
+	router.GET("/signout", deauthorize, handle(signout))
 
-	web := router.Group("/")
-	web.GET("/", authentication, html(index))
-	web.GET("/signout", deauthorize, handle(signout))
-
-	join := web.Group("/user/join")
+	join := router.Group("/user/join")
 	join.GET("/github", handle(joinGithub))
 
 	return router
@@ -235,6 +249,8 @@ func router01() http.Handler {
 
 func router02() http.Handler {
 	router := gin.Default()
+	router.GET("/favicon.ico", getFavicon)
+
 	v1 := router.Group("/v1")
 
 	v1.PUT("/article", authorizeRequired, handle(putArticleNew))
@@ -244,6 +260,17 @@ func router02() http.Handler {
 
 	v1.GET("/drafts", authorizeRequired, handle(getArticleDrafts))
 	v1.GET("/user/articles", authorizeRequired, handle(getUserArticles))
+
+	return router
+}
+
+func router03() http.Handler {
+	router := gin.Default()
+
+	router.GET("/favicon.ico", getFavicon)
+	router.GET("/static/*paths", getStaticServerFiles)
+	router.GET("/theme/theme.js", getStaticTheme)
+	router.GET("/theme/theme@:id.js", getStaticTheme)
 
 	return router
 }

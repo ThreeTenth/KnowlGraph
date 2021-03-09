@@ -68,10 +68,14 @@ func html(fn func(p *Context) (int, string, interface{})) gin.HandlerFunc {
 func header() interface{} {
 	var header struct {
 		GithubClientID string
+		StaticDomain   string
+		RestfulDomain  string
 		Debug          bool
 	}
 
 	header.GithubClientID = config.Gci
+	header.StaticDomain = config.Ssd
+	header.RestfulDomain = config.Rad
 	header.Debug = config.Debug
 	return header
 }

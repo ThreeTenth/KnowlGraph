@@ -1,4 +1,3 @@
-{{define "fgm_publish_article"}}
 <div>
   <form>
     <input type="text" name="title" placeholder="{{ .Strings.Title }}"></input>
@@ -16,7 +15,7 @@
       <div id="tag_input">
         <ul class="tags">
           <li class="tag" v-for="(tag, i) in publish.tags.values"
-            v-bind:class="(i==publish.tags.values.length-1 && publish.tags.state==2) ? 'del' : ''" v-on:click="onRemoveTag(tag)">{{ `{{ tag }}` }} X
+            v-bind:class="(i==publish.tags.values.length-1 && publish.tags.state==2) ? 'del' : ''" v-on:click="onRemoveTag(tag)">{{ tag }} X
           </li>
           <li class="new-tag">
             <input type="text" v-on:keyup="onTagChanged" v-on:keyup.enter="onAdd" v-on:keyup.188="onAdd"
@@ -28,7 +27,7 @@
       <div id="tag_autocomplete" v-if="publish.tags.auto">
         <ul class="items">
           <li class="item" v-for="item in publish.tags.items">
-            <div>{{ `{{ item }}` }}</div>
+            <div>{{ item }}</div>
           </li>
         </ul>
       </div>
@@ -36,4 +35,3 @@
     <input type="button" value="{{ .Strings.Publish }}"></input>
   </form>
 </div>
-{{end}}

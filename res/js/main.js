@@ -1,6 +1,8 @@
 // main.js
 // Created at 2021-02-02
 
+const app = new Vue({ router }).$mount('#app')
+
 var app = new Vue({
   el: "#app",
   data: {
@@ -29,6 +31,7 @@ var app = new Vue({
       }
     },
     nodes: {},
+    toast: [],
   },
   methods: {
     onSelectContentLang: function (event) {
@@ -36,6 +39,7 @@ var app = new Vue({
     },
     onChanged: function () {
       postChanged()
+      console.log(i)
     },
     onBlur: function () {
       postBlur()
@@ -81,17 +85,11 @@ function setContent(content = undefined) {
   lastContent = content_layout.body
 }
 
-function onSelectUserLang() {
-  var select = document.getElementById("userLangSelect")
-  Cookies.set("user-lang", select.value)
-  location.reload()
-}
-
 function postArticleContent() {
   if (lastContent == app.draft.body) return
   axios({
     method: "PUT",
-    url: "/api/v1/article/content",
+    url: encodeQueryData("/api/v1/article/content"),
     data: {
       body: app.draft.body,
       draft_id: draftID,
@@ -103,6 +101,12 @@ function postArticleContent() {
   })
 
   lastContent = content_layout.body
+}
+
+function onSelectUserLang() {
+  var select = document.getElementById("userLangSelect")
+  Cookies.set("user-lang", select.value)
+  location.reload()
 }
 
 function onNewArticle() {
@@ -122,7 +126,7 @@ function onNewArticle() {
 function onPublishArticle() {
   axios({
     method: "PUT",
-    url: "/api/v1/article/content",
+    url: encodeQueryData("/api/v1/article/content"),
     data: {
       name: content_layout.body,
       comment: draftID,
@@ -149,7 +153,7 @@ function onGetArticles() {
 function onGetDrafts() {
   axios({
     method: "GET",
-    url: "/api/v1/drafts",
+    url: encodeQueryData("/api/v1/drafts"),
   }).then(function (resp) {
     articles_layout.seen = true
     articles_layout.articles = resp.data

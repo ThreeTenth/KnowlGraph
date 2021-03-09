@@ -35,8 +35,6 @@ function removeTag(tag) {
     app.publish.tags.values.splice(index, 1)
   }
   app.publish.tags.state = TagStateMayDel
-
-  postBlur()
 }
 
 function addTag() {
@@ -51,14 +49,23 @@ function addTag() {
   var tag = app.publish.tags.new.replace(/[\,\， ]*$/g, '')
   if ("" == tag) {
     app.publish.tags.new = ""
+    // todo Waring toast
     return
+  }
+
+  var tags = app.publish.tags.values
+  for (let index = 0; index < tags.length; index++) {
+    const element = tags[index];
+    if (element == tag) {
+      app.publish.tags.new = ""
+      // todo Waring toast
+      return
+    }
   }
 
   app.publish.tags.values.push(tag)
   app.publish.tags.new = ""
   app.publish.tags.state = TagStateMayDel
-
-  postBlur()
 }
 
 function deleteTag() {
@@ -75,8 +82,6 @@ function deleteTag() {
       app.publish.tags.values.splice(removeIndex - 1, 1)
       app.publish.tags.state = TagStateMayDel
       window.clearTimeout(cancelDeleteTagTimeoutID)
-
-      postBlur()
       break;
   }
 }

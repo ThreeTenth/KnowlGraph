@@ -1,0 +1,7 @@
+{{ range $key, $value := .}}
+  {{ if eq $key "languages" }}
+  const {{ $key }} = {{ $value }}
+  {{ else }}
+  const {{ $key }} = `{{ $value }}`
+  {{ end }}
+{{ end }}

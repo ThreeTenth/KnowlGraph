@@ -1,0 +1,12 @@
+<div style="display: flex; margin: 6px 0 10px 0;">
+  <div style="flex: auto">
+    <a href="/"><button>{{ strings.home }}</button></a>
+  </div>
+  <div>
+    <button onclick="onSignout()">{{ strings.logout }}</button>
+    <select id="userLangSelect" name="lang" v-bind:value="menu.user.lang" onchange="onSelectUserLang()">
+      <option v-for="(lang, i) in languages" class="{{ lang.direction }}" value="{{ lang.code }}">{{ lang.name }}
+      </option>
+    </select>
+  </div>
+</div>

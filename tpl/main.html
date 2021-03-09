@@ -4,15 +4,9 @@
 {{ template "fgm_html_header" .Header }}
 
 <body>
-  <div id="app">
-    {{ template "fgm_html_menu" . }}
-    {{ template "fgm_new_article" . }}
-    {{ template "fgm_publish_article" . }}
-    {{ template "fgm_user_drafts" . }}
-    {{ template "fgm_user_articles" . }}
-  </div>
+  <div id="app"></div>
 
-  {{ template "fgm_html_footer" }}
+  {{ template "fgm_html_footer" .Header }}
 </body>
 
 </html>
