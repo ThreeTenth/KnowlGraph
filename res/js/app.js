@@ -39,6 +39,7 @@ var app = new Vue({
       const old = this.user.lang
 
       this.user.lang = lang
+      setUserLang(lang)
 
       if (lang == defaultLang._code) {
         Object.assign(i18n, defaultLang)
@@ -66,6 +67,7 @@ var app = new Vue({
       }).catch(function (resp) {
         console.error("catch", resp)
         app.user.lang = old
+        setUserLang(old)
       })
     },
   }

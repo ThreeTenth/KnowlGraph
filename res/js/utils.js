@@ -17,6 +17,10 @@ function getUserLang() {
   return language
 }
 
+function setUserLang(lang) {
+  Cookies.set("user-lang", lang)
+}
+
 function getMeta(metaName) {
   const metas = document.getElementsByTagName('meta')
 
