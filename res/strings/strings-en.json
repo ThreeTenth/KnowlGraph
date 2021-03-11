@@ -1,6 +1,6 @@
 {
   "_code": "en",
-  "_version": 3,
+  "_version": 4,
   "NewArticle": "New article",
   "Histories": "Histories",
   "Publish": "Publish",
@@ -15,5 +15,6 @@
   "Logout": "Logout",
   "LoginWithGitHubOAuth": "Login with GitHub OAuth",
   "My": "My",
+  "Index": "Index unlogin",
   "Home": "Home"
 }

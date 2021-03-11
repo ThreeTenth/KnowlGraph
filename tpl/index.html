@@ -1,12 +1,27 @@
 <!doctype html>
-<html lang="{{ .Lang }}">
+<html lang="{{ .Header.UserLang }}">
 
-{{ template "fgm_html_header" .Header }}
+<head>
+	{{ template "fgm_html_header" .Header }}
+	{{ if .Body.Logined }}
+	<title>Knowledge Graph -- {{ .Body.User.Name }} </title>
+	<link rel="icon" type="image/png" href="{{ .Body.User.Avatar }}">
+	{{ else }}
+	<title>Knowledge Graph -- KnowlGraph</title>
+	<link rel="apple-touch-icon" sizes="180x180" href="{{.Header.StaticDomain}}/static/favicon/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="{{.Header.StaticDomain}}/static/favicon/favicon-32x32.png">
+	{{ end }}
+</head>
 
 <body>
-	<div style="text-align: right;">
-		<button onclick="onGitHubOAuth()">{{ .Strings.LoginWithGitHubOAuth }}</button>
-	</div>
+	<div id="app"></div>
+
+	{{ if .Body.Logined }}
+	<script>var logined = true</script>
+	{{ else }}
+	<script>var logined = false</script>
+	{{ end }}
+	{{ template "fgm_html_footer" .Header }}
 </body>
 
 </html>

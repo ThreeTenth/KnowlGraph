@@ -1,6 +1,6 @@
 {
   "_code": "zh",
-  "_version": 3,
+  "_version": 4,
   "NewArticle": "新文章",
   "Histories": "历史记录",
   "Publish": "发布",
@@ -15,5 +15,6 @@
   "Logout": "退出",
   "LoginWithGitHubOAuth": "使用 GitHub OAuth 登录",
   "My": "我的",
+  "Index": "未登录时的首页",
   "Home": "首页"
 }

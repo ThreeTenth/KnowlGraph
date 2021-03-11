@@ -9,6 +9,7 @@ const plugin = {
 
 Vue.use(plugin)
 
+const Index = { template: logined ? fgm_home : fgm_index }
 const Home = { template: fgm_home }
 const Drafts = { template: fgm_user_drafts }
 const About = { template: fgm_about }
@@ -17,7 +18,7 @@ const My = { template: fgm_my }
 const router = new VueRouter({
   mode: 'history',
   routes: [
-    { path: '/', name: 'home', component: Home },
+    { path: '/', component: Index },
     { path: '/drafts/:id', name: 'drafts', component: Drafts },
     { path: '/about', name: 'about', component: About },
     { path: '/my', name: 'my', component: My },
@@ -30,10 +31,22 @@ var app = new Vue({
       lang: getUserLang(),
     },
     languages: languages,
+    logined: logined,
   },
   router,
-  template: fgm_app,
+  template: logined ? app_home : app_index,
   methods: {
+    onGitHubOAuth: function () {
+      const github_client_id = getMeta("github_client_id")
+      const state = Math.random().toString(36).slice(2)
+      const githubOAuthAPI = "https://github.com/login/oauth/authorize?client_id=" + github_client_id + "&state=" + state
+      Cookies.set('github_oauth_state', state)
+      window.open(githubOAuthAPI, "_self")
+    },
+    onSignout: function () {
+      const githubOAuthAPI = "/signout"
+      window.open(githubOAuthAPI, "_self")
+    },
     onSelectUserLang: function (event) {
       const lang = event.target.value
       const old = this.user.lang

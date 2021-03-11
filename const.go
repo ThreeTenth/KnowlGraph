@@ -16,7 +16,6 @@ const (
 const (
 	// TplIndexHTML is index html template
 	TplIndexHTML = "index.html"
-	TplMainHTML  = "main.html"
 	TplThemeJS   = "theme.const"
 )
 
