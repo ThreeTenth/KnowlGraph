@@ -6,7 +6,6 @@ const TagStatePreDel = 2
 const TagStateSafe = 3
 
 Vue.component('tags-input', {
-  inject: ['i18n'],
   data: function () {
     return {
       auto: false,

@@ -1,40 +1,39 @@
 // app.js
 // Created at 03/09/2021
 
-const Home = { inject: ['i18n'], template: fgm_home }
-const My = { inject: ['i18n'], template: fgm_my }
-const Drafts = { inject: ['i18n'], template: fgm_user_drafts }
+const plugin = {
+  install: function (Vue, options) {
+    Vue.prototype.i18n = i18n
+  }
+}
+
+Vue.use(plugin)
+
+const Home = { template: fgm_home }
+const Drafts = { template: fgm_user_drafts }
+const About = { template: fgm_about }
+const My = { template: fgm_my }
 
 const router = new VueRouter({
   mode: 'history',
   routes: [
     { path: '/', name: 'home', component: Home },
+    { path: '/drafts/:id', name: 'drafts', component: Drafts },
+    { path: '/about', name: 'about', component: About },
     { path: '/my', name: 'my', component: My },
-    { path: '/drafts/:id', name: 'drafts', component: Drafts }
   ]
 })
 
 var app = new Vue({
-  provide: {
-    i18n,
-  },
   data: {
     user: {
       lang: getUserLang(),
     },
     languages: languages,
-    i18n,
   },
   router,
   template: fgm_app,
   methods: {
-    onToggle: function () {
-      if (i18n.language === 'en') {
-        Object.assign(i18n, zh)
-      } else {
-        Object.assign(i18n, en)
-      }
-    },
     onSelectUserLang: function (event) {
       const lang = event.target.value
       const old = this.user.lang
