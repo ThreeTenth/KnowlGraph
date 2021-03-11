@@ -1,10 +1,11 @@
 <div id="app">
-  <h1>Named Routes</h1>
-  <p>Current route name: {{ $route.name }}</p>
+  <h1>{{ i18n.namedRoutes }}</h1>
+  <p>{{ i18n.currentRouteName }}: {{ i18n[$route.name] }}({{ $route.name }})</p>
+  <button v-on:click="onToggle">T</button>
   <div>
-    <router-link to="/home">Home</router-link>
-    <router-link to="/drafts/1">Drafts</router-link>
-    <router-link to="/my">My</router-link>
+    <router-link to="/">{{ i18n.home }}</router-link>
+    <router-link to="/drafts/1">{{ i18n.drafts }}</router-link>
+    <router-link to="/my">{{ i18n.my }}</router-link>
   </div>
   <router-view class="view"></router-view>
   <tags-input />
