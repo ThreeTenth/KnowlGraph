@@ -1,10 +1,12 @@
 {
-  "language": "en",
+  "_code": "en",
+  "_version": 3,
   "NewArticle": "New article",
   "Histories": "Histories",
   "Publish": "Publish",
   "Drafts": "Drafts",
   "Articles": "Articles",
+  "About": "About",
   "Title": "Title",
   "Gist": "Gist",
   "VersionName": "Version name",

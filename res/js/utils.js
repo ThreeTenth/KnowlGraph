@@ -28,3 +28,16 @@ function getMeta(metaName) {
 
   return ''
 }
+
+function setI18nStrings(lang, strings) {
+  localStorage.setItem('strings-' + lang, JSON.stringify(strings));
+}
+
+function getI18nStrings(lang) {
+  let strings = localStorage.getItem('strings-' + lang);
+  return JSON.parse(strings)
+}
+
+function removeI18nStrings(lang) {
+  localStorage.removeItem('strings-' + lang);
+}
