@@ -1,4 +1,5 @@
 {
+  "language": "en",
   "NewArticle": "New article",
   "Histories": "Histories",
   "Publish": "Publish",
@@ -11,5 +12,6 @@
   "AddATag": "Add a tag",
   "Logout": "Logout",
   "LoginWithGitHubOAuth": "Login with GitHub OAuth",
+  "My": "My",
   "Home": "Home"
 }

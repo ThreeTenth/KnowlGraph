@@ -5,36 +5,6 @@ const TagStateMayDel = 1
 const TagStatePreDel = 2
 const TagStateSafe = 3
 
-var en = {
-  language: "en",
-  addATag: "Add a tag",
-  thisIsHome: "This is Home",
-  thisIsFoo: "This is Foo",
-  thisIsBar: "This is Bar",
-  namedRoutes: "Named Routes",
-  currentRouteName: "Current route name",
-  home: "Home",
-  drafts: "Drafts",
-  my: "Bar",
-}
-
-var zh = {
-  language: "zh",
-  addATag: "添加一个标签",
-  thisIsHome: "这是首页",
-  thisIsFoo: "这是Foo页",
-  thisIsBar: "这是Bar页",
-  namedRoutes: "路由名称",
-  currentRouteName: "当前路由名称",
-  home: "首页",
-  drafts: "草稿箱",
-  my: "我的",
-}
-
-const i18n = Vue.observable({
-	...en,
-})
-
 Vue.component('tags-input', {
   inject: ['i18n'],
   data: function () {

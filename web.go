@@ -1,14 +1,19 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gobuffalo/packr/v2"
 )
+
+// Header is html header data
+type Header struct {
+	GithubClientID string
+	StaticDomain   string
+	RestfulDomain  string
+	UserLang       string
+	Debug          bool
+}
 
 func html(fn func(p *Context) (int, string, interface{})) gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -32,32 +37,17 @@ func html(fn func(p *Context) (int, string, interface{})) gin.HandlerFunc {
 			_lang = DefaultLanguage
 		}
 
-		fmt.Println(_lang)
-		box := packr.NewBox("./res/strings")
-		bs, err := box.Find("strings-" + _lang + ".json")
-		if err != nil {
-			bs, err = box.Find("strings-" + DefaultLanguage + ".json")
-		}
-		if err != nil {
-			c.AbortWithError(http.StatusInternalServerError, err)
-			return
-		}
-
-		_strings := make(map[string]interface{})
-		err = json.Unmarshal(bs, &_strings)
-		if err != nil {
-			c.AbortWithError(http.StatusInternalServerError, err)
-			return
-		}
+		header := header()
+		header.UserLang = _lang
 
 		data := struct {
-			Header  interface{}
-			Body    interface{}
-			Strings map[string]interface{}
+			Lang   string
+			Header Header
+			Body   interface{}
 		}{
-			Header:  header(),
-			Body:    body,
-			Strings: _strings,
+			Lang:   _lang,
+			Header: header,
+			Body:   body,
 		}
 
 		c.HTML(status, name, data)
@@ -65,14 +55,8 @@ func html(fn func(p *Context) (int, string, interface{})) gin.HandlerFunc {
 	}
 }
 
-func header() interface{} {
-	var header struct {
-		GithubClientID string
-		StaticDomain   string
-		RestfulDomain  string
-		Debug          bool
-	}
-
+func header() Header {
+	var header Header
 	header.GithubClientID = config.Gci
 	header.StaticDomain = config.Ssd
 	header.RestfulDomain = config.Rad

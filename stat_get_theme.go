@@ -30,9 +30,10 @@ func getStaticTheme(c *gin.Context) {
 	}
 
 	_json, _ := packr.NewBox("./res").FindString("languages.json")
-	_data["languages"] = _json
 
+	_data["languages"] = _json
 	_data["restfulDomain"] = config.Rad
+	_data["staticDomain"] = config.Ssd
 
 	_themeJS, _ := _box.FindString(TplThemeJS)
 

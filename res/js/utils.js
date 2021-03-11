@@ -1,4 +1,4 @@
-// utils
+// utils.js
 
 function getUserLang() {
   var language = Cookies.get("user-lang")
@@ -27,16 +27,4 @@ function getMeta(metaName) {
   }
 
   return ''
-}
-
-function encodeQueryData(url, data = undefined) {
-  url = restfulDomain + url
-  if (undefined == data) return url
-  const ret = [];
-  for (let d in data)
-    ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
-
-  if (0 == ret.length) return url
-
-  return url + "?" + ret.join('&');
 }

@@ -1,4 +1,5 @@
 {
+  "language": "zh",
   "NewArticle": "新文章",
   "Histories": "历史记录",
   "Publish": "发布",
@@ -11,5 +12,6 @@
   "AddATag": "添加标签",
   "Logout": "退出",
   "LoginWithGitHubOAuth": "使用 GitHub OAuth 登录",
+  "My": "我的",
   "Home": "首页"
 }

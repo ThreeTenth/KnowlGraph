@@ -55,6 +55,11 @@ func getStaticServerFiles(c *gin.Context) {
 		output = append(output, _bs...)
 	}
 
+	if 0 == len(output) {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
 	ctype := mime.TypeByExtension(filepath.Ext(_paths))
 	if "" == ctype {
 		ctype = "application/octet-stream"

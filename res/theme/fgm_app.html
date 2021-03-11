@@ -1,11 +1,17 @@
 <div id="app">
-  <h1>{{ i18n.namedRoutes }}</h1>
-  <p>{{ i18n.currentRouteName }}: {{ i18n[$route.name] }}({{ $route.name }})</p>
-  <button v-on:click="onToggle">T</button>
-  <div>
-    <router-link to="/">{{ i18n.home }}</router-link>
-    <router-link to="/drafts/1">{{ i18n.drafts }}</router-link>
-    <router-link to="/my">{{ i18n.my }}</router-link>
+  <div style="display: flex; margin: 6px 0 10px 0;">
+    <div style="flex: auto">
+      <router-link to="/">{{ i18n.Home }}</router-link>
+      <router-link to="/drafts/1">{{ i18n.Drafts }}</router-link>
+    </div>
+    <div>
+      <router-link to="/my">{{ i18n.My }}</router-link>
+      <button onclick="onSignout()">{{ i18n.Logout }}</button>
+      <select id="userLangSelect" name="lang" v-bind:value="user.lang" v-on:change="onSelectUserLang">
+        <option v-for="(lang, i) in languages" v-bind:class="lang.direction" v-bind:value="lang.code">{{ lang.name }}
+        </option>
+      </select>
+    </div>
   </div>
   <router-view class="view"></router-view>
   <tags-input />

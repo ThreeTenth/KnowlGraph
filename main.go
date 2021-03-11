@@ -233,9 +233,25 @@ func main() {
 	}
 }
 
+func cors(c *gin.Context) {
+	// todo
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+	c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, ResponseType, accept, origin, Cache-Control, X-Requested-With")
+	c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE")
+
+	if c.Request.Method == "OPTIONS" {
+		c.AbortWithStatus(204)
+		return
+	}
+	c.Next()
+}
+
 func router01() http.Handler {
 	router := gin.Default()
 	loadTemplates(router)
+
+	router.Use(cors)
 
 	router.GET("/favicon.ico", getFavicon)
 	router.GET("/", authentication, html(index))
@@ -249,6 +265,7 @@ func router01() http.Handler {
 
 func router02() http.Handler {
 	router := gin.Default()
+	router.Use(cors)
 	router.GET("/favicon.ico", getFavicon)
 
 	v1 := router.Group("/v1")
@@ -266,11 +283,13 @@ func router02() http.Handler {
 
 func router03() http.Handler {
 	router := gin.Default()
+	router.Use(cors)
 
 	router.GET("/favicon.ico", getFavicon)
 	router.GET("/static/*paths", getStaticServerFiles)
 	router.GET("/theme/theme.js", getStaticTheme)
 	router.GET("/theme/theme@:id.js", getStaticTheme)
+	router.GET("/lang/:id", getStaticLang)
 
 	return router
 }
