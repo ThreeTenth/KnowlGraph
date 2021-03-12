@@ -4,6 +4,7 @@
 *.dll
 *.so
 *.dylib
+knowlgraph.com
 
 # Test binary, built with `go test -c`
 *.test
@@ -24,6 +25,12 @@ debug.log
 ent/*
 !ent/schema
 !ent/generate.go
+
+# packr2
+packrd
+
+# upx build file
+*.upx
 
 # project
 config.json
