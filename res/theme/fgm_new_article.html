@@ -1,7 +1,9 @@
 <div>
-  <button onclick="onNewArticle()">{{ strings.NewArticle }}</button>
-  <button onclick="onHistories()">{{ strings.Histories }}</button>
-</div>
-<div id="content_layout" v-if="draft.seen">
-  <textarea v-on:keyup="onChanged" v-on:blur="onBlur" v-model="draft.body"></textarea>
+  <div>
+    <button onclick="onNewArticle()">{{ i18n.NewArticle }}</button>
+    <button onclick="onHistories()">{{ i18n.Histories }}</button>
+  </div>
+  <div id="content_layout">
+    <textarea v-on:keyup="onChanged" v-on:blur="onBlur" v-model="draft.body"></textarea>
+  </div>
 </div>

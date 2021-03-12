@@ -1,6 +1,7 @@
 <div id="app">
   <div style="display: flex; margin: 6px 0 10px 0;">
     <div style="flex: auto">
+      <router-link to="/">{{ i18n.Home }}</router-link>
     </div>
     <div>
       <button v-on:click="onGitHubOAuth">{{ i18n.LoginWithGitHubOAuth }}</button>

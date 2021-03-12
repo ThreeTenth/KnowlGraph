@@ -22,6 +22,8 @@ const router = new VueRouter({
     { path: '/drafts/:id', name: 'drafts', component: Drafts },
     { path: '/about', name: 'about', component: About },
     { path: '/my', name: 'my', component: My },
+    { path: '/new/article', name: 'newArticle', component: NewArticle },
+    { path: '/p/:id/edit', name: 'editDraft', component: EditDraft, props: true },
   ]
 })
 

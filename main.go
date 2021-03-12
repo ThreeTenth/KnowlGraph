@@ -72,6 +72,7 @@ func openPostgreSQL() {
 	if err = client.Schema.Create(ctx, migrate.WithGlobalUniqueID(true)); err != nil {
 		panic("failed to create schema: " + err.Error())
 	}
+	// sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt buster-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
 }
 
 func openRedis() {
@@ -254,7 +255,14 @@ func router01() http.Handler {
 	router.Use(cors)
 
 	router.GET("/favicon.ico", getFavicon)
+
 	router.GET("/", authentication, html(index))
+	router.GET("/drafts/*id", authentication, html(index))
+	router.GET("/about", authentication, html(index))
+	router.GET("/my", authentication, html(index))
+	router.GET("/new/article", authentication, html(index))
+	router.GET("/p/:id/edit", authentication, html(index))
+
 	router.GET("/signout", deauthorize, handle(signout))
 
 	join := router.Group("/user/join")
