@@ -14,7 +14,6 @@ func index(c *Context) (int, string, interface{}) {
 		_user, err := client.User.Get(ctx, _userID.(int))
 
 		if err != nil {
-			_data.Logined = false
 			return http.StatusOK, TplIndexHTML, _data
 		}
 

@@ -15,43 +15,42 @@ import (
 func getStaticServerFiles(c *gin.Context) {
 	_paths := c.Param("paths")[1:]
 
+	var _type string
+	if idx := strings.Index(_paths, "/"); -1 < idx {
+		_type = _paths[:idx]
+		_paths = _paths[idx+1:]
+	} else {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
 	var output []byte
 	for idx := 0; -1 < idx; {
-		var _type string
 		var _name string
-		idx = strings.Index(_paths, "/")
-		if 0 < idx {
-			_type = _paths[:idx]
-			_paths = _paths[idx+1:]
-		} else {
-			break
-		}
 
-		idx = strings.Index(_paths, "/")
+		idx = strings.Index(_paths, ",")
 		if -1 == idx {
 			_name = _paths
 		} else if 0 < idx {
 			_name = _paths[:idx]
 			_paths = _paths[idx+1:]
+		} else {
+			continue
 		}
 
 		_bs, err := packr.NewBox("./res").Find(_type + "/" + _name)
 		if err != nil {
-			continue
+			c.AbortWithError(http.StatusNotFound, err)
+			return
 		}
 
-		if idx := strings.Index(_name, "."); 0 < idx {
-			switch _name[idx+1:] {
-			case "js":
-				output = append(output, ([]byte)(fmt.Sprintf("\r\n////////////////// %v/%v //////////////////\r\n", _type, _name))...)
-			case "css":
-				output = append(output, ([]byte)(fmt.Sprintf("\r\n/***************** %v/%v *****************/\r\n", _type, _name))...)
-			default:
-				output = append(output, ([]byte)("\r\n\r\n")...)
-			}
-		} else {
-			output = append(output, ([]byte)("\r\n\r\n")...)
+		switch _type {
+		case "js":
+			output = append(output, ([]byte)(fmt.Sprintf("\r\n////////////////// %v/%v //////////////////\r\n", _type, _name))...)
+		case "css":
+			output = append(output, ([]byte)(fmt.Sprintf("\r\n/***************** %v/%v *****************/\r\n", _type, _name))...)
 		}
+
 		output = append(output, _bs...)
 	}
 

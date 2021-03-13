@@ -263,6 +263,7 @@ func router01() http.Handler {
 	router.GET("/new/article", authentication, html(index))
 	router.GET("/p/:id/edit", authentication, html(index))
 
+	router.GET("/signin", authentication, html(index))
 	router.GET("/signout", deauthorize, handle(signout))
 
 	join := router.Group("/user/join")

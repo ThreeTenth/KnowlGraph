@@ -31,20 +31,30 @@ const EditDraft = {
       }
     }
   },
+
   methods: {
     onChanged: function () {
       window.clearTimeout(postChangedTimeoutID)
-      postChangedTimeoutID = window.setTimeout(this._postArticleContent(), 800)
+      postChangedTimeoutID = window.setTimeout(this.__postArticleContent(), 800)
     },
 
     onBlur: function () {
       window.clearTimeout(postChangedTimeoutID)
-      this._postArticleContent()
+      this.__postArticleContent()
     },
 
-    _postArticleContent: function () {
+    __postArticleContent: function () {
       console.log(this.draft.body)
     },
   },
+
+  beforeRouteEnter(to, from, next) {
+    if (logined) {
+      next()
+    } else {
+      router.push({ name: "signin" })
+    }
+  },
+
   template: fgm_new_article,
 }
