@@ -13,7 +13,7 @@
   "Comment": "备注",
   "AddATag": "添加标签",
   "Logout": "退出",
-  "Signin": "登录",
+  "Login": "登录",
   "LoginWithGitHubOAuth": "使用 GitHub OAuth 登录",
   "My": "我的",
   "Index": "未登录时的首页",

@@ -52,7 +52,7 @@ const EditDraft = {
     if (logined) {
       next()
     } else {
-      router.push({ name: "signin" })
+      router.push({ name: "login" })
     }
   },
 
