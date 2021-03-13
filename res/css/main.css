@@ -135,3 +135,18 @@ li.item div {
   box-sizing: border-box;
   display: block;
 }
+
+.modal {
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  display: grid;
+  width: 100vw;
+  height: 100vh;
+  z-index: 40;
+  background: #fff;
+  place-items: center;
+  flex-direction: column;
+}

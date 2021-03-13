@@ -14,6 +14,7 @@ const Home = { template: fgm_home }
 const Drafts = { template: fgm_user_drafts }
 const About = { template: fgm_about }
 const My = { template: fgm_my }
+const Signin = { template: fgm_signin }
 
 const router = new VueRouter({
   mode: 'history',
@@ -24,7 +25,7 @@ const router = new VueRouter({
     { path: '/my', name: 'my', component: My },
     { path: '/new/article', name: 'newArticle', component: NewArticle },
     { path: '/p/:id/edit', name: 'editDraft', component: EditDraft, props: true },
-    { path: '/signin', name: 'signin', component: About },
+    { path: '/signin', name: 'signin', component: Signin },
   ]
 })
 
