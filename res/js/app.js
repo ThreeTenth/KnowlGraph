@@ -20,11 +20,13 @@ const router = new VueRouter({
   mode: 'history',
   routes: [
     { path: '/', component: Index },
-    { path: '/drafts/:id', name: 'drafts', component: Drafts },
+    { path: '/drafts', name: 'drafts', component: Drafts },
     { path: '/about', name: 'about', component: About },
     { path: '/my', name: 'my', component: My },
     { path: '/new/article', name: 'newArticle', component: NewArticle },
     { path: '/p/:id/edit', name: 'editDraft', component: EditDraft, props: true },
+    { path: '/p/:id/histories', name: 'draftHistories', component: DraftHistories, props: true },
+    { path: '/p/:id/history/:hid', name: 'draftHistory', component: DraftHistory, props: true },
     { path: '/login', name: 'login', component: Login },
   ]
 })

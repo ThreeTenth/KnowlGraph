@@ -10,8 +10,8 @@ import (
 
 func getUserArticles(c *Context) error {
 	var _query struct {
-		Status asset.Status `from:"status"`
-		Lang   string       `from:"lang"`
+		Status asset.Status `form:"status"`
+		Lang   string       `form:"lang"`
 	}
 
 	err := c.ShouldBindQuery(&_query)

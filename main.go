@@ -257,11 +257,11 @@ func router01() http.Handler {
 	router.GET("/favicon.ico", getFavicon)
 
 	router.GET("/", authentication, html(index))
-	router.GET("/drafts/*id", authentication, html(index))
+	router.GET("/drafts", authentication, html(index))
 	router.GET("/about", authentication, html(index))
 	router.GET("/my", authentication, html(index))
 	router.GET("/new/article", authentication, html(index))
-	router.GET("/p/:id/edit", authentication, html(index))
+	router.GET("/p/*path", authentication, html(index))
 
 	router.GET("/login", authentication, html(index))
 	router.GET("/signout", deauthorize, handle(signout))
@@ -285,6 +285,7 @@ func router02() http.Handler {
 	v1.PUT("/publish/article", authorizeRequired, handle(publishArticle))
 
 	v1.GET("/drafts", authorizeRequired, handle(getArticleDrafts))
+	v1.GET("/draft", authorizeRequired, handle(getDraft))
 	v1.GET("/user/articles", authorizeRequired, handle(getUserArticles))
 
 	return router
