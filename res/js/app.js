@@ -11,7 +11,6 @@ Vue.use(plugin)
 
 const Index = { template: logined ? fgm_home : fgm_index }
 const Home = { template: fgm_home }
-const Drafts = { template: fgm_user_drafts }
 const About = { template: fgm_about }
 const My = { template: fgm_my }
 const Login = { template: fgm_login }
@@ -24,9 +23,9 @@ const router = new VueRouter({
     { path: '/about', name: 'about', component: About },
     { path: '/my', name: 'my', component: My },
     { path: '/new/article', name: 'newArticle', component: NewArticle },
-    { path: '/p/:id/edit', name: 'editDraft', component: EditDraft, props: true },
-    { path: '/p/:id/histories', name: 'draftHistories', component: DraftHistories, props: true },
-    { path: '/p/:id/history/:hid', name: 'draftHistory', component: DraftHistory, props: true },
+    { path: '/d/:id/edit', name: 'editDraft', component: EditDraft, props: true },
+    { path: '/d/:id/histories', name: 'draftHistories', component: DraftHistories, props: true },
+    { path: '/d/:id/history/:hid', name: 'draftHistory', component: DraftHistory, props: true },
     { path: '/login', name: 'login', component: Login },
   ]
 })

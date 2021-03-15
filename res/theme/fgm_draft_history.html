@@ -1,4 +1,16 @@
 <div>
-  <p style="white-space: pre-wrap;">{{ snapshot.body }}</p>
-  <time>{{ snapshot.created_at }}</time>
+  <div>
+    <button v-on:click="onBack">{{ i18n.Back }}</button>
+    <button>{{ i18n.Preview }}</button>
+    <button>{{ i18n.Compare }}</button>
+    <button>{{ i18n.RestoreThisVersion }}</button>
+  </div>
+  <div v-if="snapshot">
+    <p style="white-space: pre-wrap;">{{ snapshot.body }}</p>
+    <br>
+    <time>{{ i18n.CreatedAt }}: {{ snapshot.created_at }}</time>
+  </div>
+  <div v-else>
+    Loading
+  </div>
 </div>

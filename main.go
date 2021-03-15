@@ -261,7 +261,7 @@ func router01() http.Handler {
 	router.GET("/about", authentication, html(index))
 	router.GET("/my", authentication, html(index))
 	router.GET("/new/article", authentication, html(index))
-	router.GET("/p/*path", authentication, html(index))
+	router.GET("/d/*path", authentication, html(index))
 
 	router.GET("/login", authentication, html(index))
 	router.GET("/signout", deauthorize, handle(signout))

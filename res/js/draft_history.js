@@ -11,12 +11,11 @@ const DraftHistories = {
 
   methods: {
     onHistory: function (snapshot) {
-      router.push({ name: 'draftHistory', params: { id: this.id, hid: snapshot.id, snapshot: snapshot } })
+      router.push({ name: 'draftHistory', params: { id: this.id, hid: snapshot.id, __snapshot: snapshot } })
     },
   },
 
   created() {
-    console.log(this.id)
     let _this = this
     axios({
       method: "GET",
@@ -30,7 +29,7 @@ const DraftHistories = {
 
   beforeRouteEnter(to, from, next) {
     if (logined) {
-      next()
+      next(vm => {console.log(vm.snapshots)})
     } else {
       router.push({ name: "login" })
     }
@@ -40,11 +39,24 @@ const DraftHistories = {
 }
 
 const DraftHistory = {
-  props: ['id', 'hid', 'snapshot'],
+  props: ['id', 'hid', '__snapshot'],
+
+  data: function() {
+    return {
+      snapshot: this.__snapshot,
+    }
+  },
 
   methods: {
     onHistory: function () {
     },
+    onBack: function () {
+      if (3 <= window.history.length) {
+        router.go(-1)
+      } else {
+        router.push({ name: 'draftHistories', params: { id: this.id } })
+      }
+    }
   },
 
   created() {

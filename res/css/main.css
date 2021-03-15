@@ -150,3 +150,7 @@ li.item div {
   place-items: center;
   flex-direction: column;
 }
+
+.item {
+  line-height: 26px;
+}

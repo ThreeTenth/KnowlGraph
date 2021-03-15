@@ -1,1 +1,8 @@
-<h3>{{ i18n.Drafts }}</h3>
+<div>
+  <ol v-if="drafts">
+    <li class="item" v-for="(draft, i) in drafts" v-on:click="onDraft(i)">
+      {{ draft.body }} / {{ draft.created_at}}
+    </li>
+  </ol>
+  <div v-else>Loading</div>
+</div>

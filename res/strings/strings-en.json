@@ -15,6 +15,11 @@
   "Logout": "Logout",
   "Login": "Login",
   "LoginWithGitHubOAuth": "Login with GitHub OAuth",
+  "Back": "Back",
+  "Compare": "Compare",
+  "Preview": "Preview",
+  "RestoreThisVersion": "Restore this version",
+  "CreatedAt": "Created at",
   "My": "My",
   "Index": "Index unlogin",
   "Home": "Home"

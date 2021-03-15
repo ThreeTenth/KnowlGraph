@@ -15,6 +15,11 @@
   "Logout": "退出",
   "Login": "登录",
   "LoginWithGitHubOAuth": "使用 GitHub OAuth 登录",
+  "Back": "返回",
+  "Compare": "比较",
+  "Preview": "预览",
+  "RestoreThisVersion": "恢复此版本",
+  "CreatedAt": "创建于",
   "My": "我的",
   "Index": "未登录时的首页",
   "Home": "首页"
