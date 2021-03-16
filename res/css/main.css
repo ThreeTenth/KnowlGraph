@@ -1,8 +1,15 @@
 /* main.css */
 
+:root {
+  --theme: var(--primary);
+  font-family: "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
+}
+
 body {
-  width: 720px;
+  font-size: 1.1em !important;
+  max-width: 720px;
   margin: auto;
+  padding: 0 4px;
 }
 
 .rtl {
@@ -153,4 +160,10 @@ li.item div {
 
 .item {
   line-height: 26px;
+}
+
+.block {
+  display: block;
+  margin-top: 6px;
+  margin-bottom: 12px;
 }

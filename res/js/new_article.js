@@ -48,8 +48,12 @@ const EditDraft = {
   },
 
   methods: {
-    onHistories: function () {
+    onHistories() {
       router.push({ name: 'draftHistories', params: { id: this.id } })
+    },
+
+    onPublish() {
+      router.push({ name: 'publishArticle', params: { id: this.id } })
     },
 
     onChanged: function () {

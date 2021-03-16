@@ -10,7 +10,7 @@
   "Title": "Title",
   "Gist": "Gist",
   "VersionName": "Version name",
-  "Comment": "Comment",
+  "Comment": "Version comment",
   "AddATag": "Add a tag",
   "Logout": "Logout",
   "Login": "Login",
@@ -20,6 +20,7 @@
   "Preview": "Preview",
   "RestoreThisVersion": "Restore this version",
   "CreatedAt": "Created at",
+  "ChooseALanguage": "Choose a language",
   "My": "My",
   "Index": "Index unlogin",
   "Home": "Home"

@@ -10,7 +10,7 @@
   "About": "关于",
   "Gist": "重点",
   "VersionName": "版本名称",
-  "Comment": "备注",
+  "Comment": "版本备注",
   "AddATag": "添加标签",
   "Logout": "退出",
   "Login": "登录",
@@ -20,6 +20,7 @@
   "Preview": "预览",
   "RestoreThisVersion": "恢复此版本",
   "CreatedAt": "创建于",
+  "ChooseALanguage": "选择一个语言",
   "My": "我的",
   "Index": "未登录时的首页",
   "Home": "首页"

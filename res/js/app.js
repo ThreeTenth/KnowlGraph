@@ -3,6 +3,30 @@
 
 const plugin = {
   install: function (Vue, options) {
+    Vue.prototype.format = function (format, val) {
+      let now = new Date()
+      let date1 = new Date(timestamp)
+      let timer = (now - date1) / 1000
+      console.log(timer)
+      let tip = ''
+
+      if (timer <= 0) {
+        tip = '刚刚'
+      } else if (Math.floor(timer / 60) <= 0) {
+        tip = '刚刚'
+      } else if (Math.floor(timer < 3600)) {
+        tip = Math.floor(timer / 60) + '分钟前'
+      } else if (timer >= 3600 && timer < 86400) {
+        tip = Math.floor(timer / 3600) + '小时前'
+      } else if (timer / 86400 <= 31) {
+        tip = Math.floor(timer / 86400) + '天前'
+      } else {
+        tip = "too lang ago"
+      }
+
+      return tip
+    }
+
     Vue.prototype.i18n = i18n
   }
 }
@@ -24,8 +48,9 @@ const router = new VueRouter({
     { path: '/my', name: 'my', component: My },
     { path: '/new/article', name: 'newArticle', component: NewArticle },
     { path: '/d/:id/edit', name: 'editDraft', component: EditDraft, props: true },
-    { path: '/d/:id/histories', name: 'draftHistories', component: DraftHistories, props: true },
+    { path: '/d/:id/history', name: 'draftHistories', component: DraftHistories, props: true },
     { path: '/d/:id/history/:hid', name: 'draftHistory', component: DraftHistory, props: true },
+    { path: '/d/:id/publish', name: 'publishArticle', component: PublishArticle },
     { path: '/login', name: 'login', component: Login },
   ]
 })

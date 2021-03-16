@@ -1,7 +1,8 @@
 <div>
   <ol v-if="drafts">
     <li class="item" v-for="(draft, i) in drafts" v-on:click="onDraft(i)">
-      {{ draft.body }} / {{ draft.created_at}}
+      <div>{{ draft.body }}</div>
+      <time>{{ draft.created_at }}</time>
     </li>
   </ol>
   <div v-else>Loading</div>

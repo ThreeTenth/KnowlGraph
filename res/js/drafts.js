@@ -13,16 +13,13 @@ const Drafts = {
       var _drafts = []
       for (let index = 0; index < original.length; index++) {
         const element = original[index];
-        if (element.edges.Snapshots[0]) {
-          let snapshot = element.edges.Snapshots[0]
-          let body = snapshot.body
-          if (200 < body.length) {
-            body = body.substr(0, 140).trim() + '...'
-          }
-          _drafts[index] = { body: body, created_at: snapshot.created_at }
-        } else {
-          _drafts[index] = { body: undefined, created_at: undefined }
+        let snapshot = element.edges.Snapshots[0]
+        let body = snapshot.body
+        if (200 < body.length) {
+          body = body.substr(0, 120).trim() + '...'
         }
+        let created_at = snapshot.created_at
+        _drafts[index] = { body: body, created_at: created_at }
       }
       return _drafts
     }
