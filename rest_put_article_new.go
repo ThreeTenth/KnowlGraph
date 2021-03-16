@@ -30,14 +30,10 @@ func putArticleNew(c *Context) error {
 		WithArticle().
 		First(ctx)
 
+	_draft.Edges.Snapshots = make([]*ent.Content, 0)
+
 	if err == nil {
-		return c.Ok(struct {
-			ArticleID int
-			DraftID   int
-		}{
-			ArticleID: _draft.Edges.Article.ID,
-			DraftID:   _draft.ID,
-		})
+		return c.Ok(_draft)
 	}
 
 	err = WithTx(ctx, client, func(tx *ent.Tx) error {
@@ -46,18 +42,14 @@ func putArticleNew(c *Context) error {
 			return err
 		}
 
-		_branche, err := tx.Draft.Create().SetArticle(_article).SetUserID(_userID.(int)).SetState(draft.StateWrite).Save(ctx)
+		_draft, err = tx.Draft.Create().SetArticle(_article).SetUserID(_userID.(int)).SetState(draft.StateWrite).Save(ctx)
 		if err != nil {
 			return err
 		}
 
-		return c.Ok(struct {
-			ArticleID int
-			DraftID   int
-		}{
-			ArticleID: _article.ID,
-			DraftID:   _branche.ID,
-		})
+		_draft.Edges.Article = _article
+
+		return c.Ok(_draft)
 	})
 
 	if err != nil {

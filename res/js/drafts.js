@@ -3,7 +3,7 @@
 const Drafts = {
   data: function () {
     return {
-      __original: 1,
+      __original: [],
     }
   },
 
@@ -19,7 +19,7 @@ const Drafts = {
           if (200 < body.length) {
             body = body.substr(0, 70).trim() + '...'
           }
-          _drafts[index] = {body: body, created_at: snapshot.created_at}
+          _drafts[index] = { body: body, created_at: snapshot.created_at }
         } else {
           _drafts[index] = { body: undefined, created_at: undefined }
         }
@@ -43,7 +43,7 @@ const Drafts = {
   methods: {
     onDraft(i) {
       let draft = this.$data.__original[i]
-      console.log(draft)
+      router.push({ name: 'editDraft', params: { id: draft.id, __draft: draft } })
     }
   },
 

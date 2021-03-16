@@ -29,7 +29,7 @@ const DraftHistories = {
 
   beforeRouteEnter(to, from, next) {
     if (logined) {
-      next(vm => {console.log(vm.snapshots)})
+      next()
     } else {
       router.push({ name: "login" })
     }

@@ -8,7 +8,7 @@ const NewArticle = {
       method: "PUT",
       url: queryRestful("/v1/article", { status: "private" }),
     }).then(function (resp) {
-      router.push({ name: 'editDraft', params: { id: resp.data.DraftID, __new: true } })
+      router.push({ name: 'editDraft', params: { id: resp.data.id, __draft: resp.data } })
     }).catch(function (resp) {
       console.log(resp.status, resp.data)
     })
@@ -18,19 +18,37 @@ const NewArticle = {
 }
 
 const EditDraft = {
-  props: ['id', "__new"],
+  props: ['id', "__draft"],
 
   data: function () {
     return {
-      draft: {
-        body: "",
-      },
+      draft: this.__draft,
       __last: "",
     }
   },
 
+  computed: {
+    body: {
+      get: function () {
+        if (!this.draft) {
+          return ""
+        }
+        if (this.draft.edges.Snapshots[0])
+          return this.draft.edges.Snapshots[0].body
+        return ""
+      },
+      set: function (newValue) {
+        if (this.draft.edges.Snapshots[0]) {
+          this.draft.edges.Snapshots[0].body = newValue
+        } else {
+          this.draft.edges.Snapshots[0] = { body: newValue }
+        }
+      }
+    },
+  },
+
   methods: {
-    onHistories: function() {
+    onHistories: function () {
       router.push({ name: 'draftHistories', params: { id: this.id } })
     },
 
@@ -45,44 +63,47 @@ const EditDraft = {
     },
 
     __postArticleContent: function () {
-      if (this.draft.body === this.__last) {
+      let content = this.draft.edges.Snapshots[0].body
+      if (content.body === this.__last) {
         return
       }
 
-      console.log(this.draft.body)
-
-      this.__last = this.draft.body
+      this.__last = content.body
     },
-  },
 
-  created() {
-    if (this.__new) {
-      return
-    }
-
-    console.log(this.id)
-    let _this = this
-    axios({
-      method: "GET",
-      url: queryRestful("/v1/draft", { id: this.id }),
-    }).then(function (resp) {
-      let snapshots = resp.data.edges.Snapshots
-      if (0 == snapshots.length) {
+    __load(id) {
+      if (this.draft) {
         return
       }
-      _this.draft.body = snapshots[0].body
-      _this.__last = snapshots[0].body
-    }).catch(function (resp) {
-      console.log(resp)
-    })
+
+      let _this = this
+      axios({
+        method: "GET",
+        url: queryRestful("/v1/draft", { id: id }),
+      }).then(function (resp) {
+        _this.draft = resp.data
+        _this.__last = resp.data.edges.Snapshots[0].body
+      }).catch(function (resp) {
+        console.log(resp)
+      })
+    },
   },
 
   beforeRouteEnter(to, from, next) {
     if (logined) {
-      next()
+      next(vm => {
+        vm.draft = to.params.__draft
+        vm.__load(to.params.id)
+      })
     } else {
       router.push({ name: "login" })
     }
+  },
+
+  beforeRouteUpdate(to, from, next) {
+    next()
+    this.draft = to.params.__draft
+    this.__load(to.params.id)
   },
 
   template: fgm_new_article,
