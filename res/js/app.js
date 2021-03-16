@@ -3,28 +3,12 @@
 
 const plugin = {
   install: function (Vue, options) {
-    Vue.prototype.format = function (format, val) {
-      let now = new Date()
-      let date1 = new Date(timestamp)
-      let timer = (now - date1) / 1000
-      console.log(timer)
-      let tip = ''
+    Vue.prototype.sprintf = function (format, ...val) {
+      return sprintf(format, val)
+    }
 
-      if (timer <= 0) {
-        tip = '刚刚'
-      } else if (Math.floor(timer / 60) <= 0) {
-        tip = '刚刚'
-      } else if (Math.floor(timer < 3600)) {
-        tip = Math.floor(timer / 60) + '分钟前'
-      } else if (timer >= 3600 && timer < 86400) {
-        tip = Math.floor(timer / 3600) + '小时前'
-      } else if (timer / 86400 <= 31) {
-        tip = Math.floor(timer / 86400) + '天前'
-      } else {
-        tip = "too lang ago"
-      }
-
-      return tip
+    Vue.prototype.tprintf = function (format, ...val) {
+      return sprintf(format, val)
     }
 
     Vue.prototype.i18n = i18n

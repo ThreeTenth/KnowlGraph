@@ -1,6 +1,6 @@
 {
   "_code": "en",
-  "_version": 4,
+  "_version": 6,
   "NewArticle": "New article",
   "Histories": "Histories",
   "Publish": "Publish",
@@ -20,6 +20,7 @@
   "Preview": "Preview",
   "RestoreThisVersion": "Restore this version",
   "CreatedAt": "Created at",
+  "CreatedAt1": "Created at: ",
   "ChooseALanguage": "Choose a language",
   "My": "My",
   "Index": "Index unlogin",

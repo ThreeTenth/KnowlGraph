@@ -1,18 +1,21 @@
 // publish_article.js
 
 const PublishArticle = {
-  data: function() {
+  data: function () {
     return {
-      user: {
-        lang: getUserLang(),
-      },
+      title: "",
+      gist: "",
+      versionName: "",
+      comment: "",
+      lang: getUserLang(),
+      tags: [],
       languages: languages,
     }
   },
 
   methods: {
-    onSelectArticleLang() {
-
+    onPublish() {
+      console.log(this.$data)
     },
   },
 

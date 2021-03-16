@@ -1,6 +1,6 @@
 {
   "_code": "zh",
-  "_version": 4,
+  "_version": 6,
   "NewArticle": "新文章",
   "Histories": "历史记录",
   "Publish": "发布",
@@ -20,6 +20,7 @@
   "Preview": "预览",
   "RestoreThisVersion": "恢复此版本",
   "CreatedAt": "创建于",
+  "CreatedAt1": "创建于：",
   "ChooseALanguage": "选择一个语言",
   "My": "我的",
   "Index": "未登录时的首页",

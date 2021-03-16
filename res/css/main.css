@@ -12,6 +12,10 @@ body {
   padding: 0 4px;
 }
 
+time {
+  font-size: 0.85em;
+}
+
 .rtl {
   direction: rtl
 }
