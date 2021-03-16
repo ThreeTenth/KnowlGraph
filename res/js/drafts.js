@@ -17,7 +17,7 @@ const Drafts = {
           let snapshot = element.edges.Snapshots[0]
           let body = snapshot.body
           if (200 < body.length) {
-            body = body.substr(0, 70).trim() + '...'
+            body = body.substr(0, 140).trim() + '...'
           }
           _drafts[index] = { body: body, created_at: snapshot.created_at }
         } else {

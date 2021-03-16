@@ -30,9 +30,8 @@ func putArticleNew(c *Context) error {
 		WithArticle().
 		First(ctx)
 
-	_draft.Edges.Snapshots = make([]*ent.Content, 0)
-
 	if err == nil {
+		_draft.Edges.Snapshots = make([]*ent.Content, 0)
 		return c.Ok(_draft)
 	}
 
@@ -48,6 +47,7 @@ func putArticleNew(c *Context) error {
 		}
 
 		_draft.Edges.Article = _article
+		_draft.Edges.Snapshots = make([]*ent.Content, 0)
 
 		return c.Ok(_draft)
 	})

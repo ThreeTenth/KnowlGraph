@@ -53,26 +53,43 @@ const EditDraft = {
     },
 
     onChanged: function () {
+      let _this = this
       window.clearTimeout(postChangedTimeoutID)
-      postChangedTimeoutID = window.setTimeout(this.__postArticleContent(), 800)
+      postChangedTimeoutID = window.setTimeout(function () { _this.onSaveDraft() }, 2000)
     },
 
     onBlur: function () {
       window.clearTimeout(postChangedTimeoutID)
-      this.__postArticleContent()
+      this.onSaveDraft()
     },
 
-    __postArticleContent: function () {
-      let content = this.draft.edges.Snapshots[0].body
+    onSaveDraft: function () {
+      // console.trace()
+      let content = this.draft.edges.Snapshots[0]
       if (content.body === this.__last) {
         return
       }
 
-      this.__last = content.body
+      let _this = this
+      axios({
+        method: "PUT",
+        url: queryRestful("/v1/article/content"),
+        data: {
+          body: content.body,
+          draft_id: this.draft.id,
+        },
+      }).then(function (resp) {
+        console.log(resp.status, resp.data)
+
+        _this.__last = resp.data.body
+      }).catch(function (resp) {
+        console.log(resp)
+      })
     },
 
     __load(id) {
       if (this.draft) {
+        this.__last = this.draft.edges.Snapshots[0].body
         return
       }
 
