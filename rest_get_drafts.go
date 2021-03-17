@@ -20,7 +20,7 @@ func (d Drafts) Less(i, j int) bool {
 
 func (d Drafts) Swap(i, j int) { d[i], d[j] = d[j], d[i] }
 
-func getArticleDrafts(c *Context) error {
+func getDrafts(c *Context) error {
 	_userID, _ := c.Get(GinKeyUserID)
 
 	_drafts, err := client.User.Query().
