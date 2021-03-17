@@ -23,7 +23,7 @@ const EditDraft = {
   data: function () {
     return {
       draft: this.__draft,
-      __last: {},
+      __last: { body: "" },
     }
   },
 
@@ -53,7 +53,7 @@ const EditDraft = {
     },
 
     onPublish() {
-      router.push({ name: 'publishArticle', params: { id: this.id } })
+      router.push({ name: 'publishArticle', params: { id: this.id, __draft: this.draft } })
     },
 
     onChanged: function () {
@@ -70,7 +70,7 @@ const EditDraft = {
     onSaveDraft: function () {
       // console.trace()
       let content = this.draft.edges.Snapshots[0]
-      if (content.body === this.__last.body) {
+      if (this.__last && content.body && content.body === this.__last) {
         return
       }
 
@@ -83,29 +83,48 @@ const EditDraft = {
           draft_id: this.draft.id,
         },
       }).then(function (resp) {
-        _this.__last = resp.data
+        _this.draft.edges.Snapshots[0] = resp.data
+        _this.__setLast(_this.draft)
       }).catch(function (resp) {
         console.log(resp)
       })
     },
 
-    __load(id) {
-      if (this.draft) {
-        this.__last = this.draft.edges.Snapshots[0]
+    __load(__id, __draft) {
+      if (__draft) {
+        this.draft = __draft
+        this.__setLast(__draft)
+        return
+      }
+
+      if (this.draft && __id == this.draft.id) {
+        this.__setLast(this.draft)
         return
       }
 
       let _this = this
       axios({
         method: "GET",
-        url: queryRestful("/v1/draft", { id: id }),
+        url: queryRestful("/v1/draft", { id: __id }),
       }).then(function (resp) {
         _this.draft = resp.data
-        _this.__last = resp.data.edges.Snapshots[0]
+        _this.__setLast(resp.data)
       }).catch(function (resp) {
         console.log(resp)
       })
     },
+
+    __setLast(__draft) {
+      if (__draft.edges.Snapshots[0]) {
+        this.__last = __draft.edges.Snapshots[0].body
+      } else {
+        this.__last = ""
+      }
+    }
+  },
+
+  activated() {
+    this.__load(this.id, this.__draft)
   },
 
   beforeRouteEnter(to, from, next) {
@@ -114,20 +133,12 @@ const EditDraft = {
       return
     }
 
-    if (from.name === "draftHistories") {
-      next()
-    } else {
-      next(vm => {
-        vm.draft = to.params.__draft
-        vm.__load(to.params.id)
-      })
-    }
+    next()
   },
 
   beforeRouteUpdate(to, from, next) {
     next()
-    this.draft = to.params.__draft
-    this.__load(to.params.id)
+    this.__load(to.params.id, to.params.__draft)
   },
 
   template: fgm_new_article,

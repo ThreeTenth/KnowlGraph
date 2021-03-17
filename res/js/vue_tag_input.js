@@ -6,16 +6,20 @@ const TagStatePreDel = 2
 const TagStateSafe = 3
 
 Vue.component('tags-input', {
+  props: ['tags'],
+
   data: function () {
     return {
       auto: false,
-      values: [],
+      values: this.tags,
       input: "",
       items: [],
       all: [],
       state: TagStateMayDel,
     }
   },
+
+  created() { console.log(this.$props) },
   methods: {
     onTagChanged: function () {
       if ("" == this.input) {

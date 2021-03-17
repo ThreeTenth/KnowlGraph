@@ -2,18 +2,25 @@
 
 :root {
   --theme: var(--primary);
+  --body-w: 720px;
+  --padding-4: 4px;
+  --app-w: calc(100% - var(--padding-4));
   font-family: "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
 }
 
 body {
   font-size: 1.1em !important;
-  max-width: 720px;
+  max-width: var(--body-w);
   margin: auto;
-  padding: 0 4px;
+  padding: 0 var(--padding-4);
 }
 
 time {
   font-size: 0.85em;
+}
+
+textarea {
+  min-height: 48px;
 }
 
 .rtl {
@@ -22,24 +29,6 @@ time {
 
 .ltr {
   direction: ltr
-}
-
-#lang_layout {
-  margin: 10px 0;
-}
-
-/* #lang_layout select {
-  font-size: 1.15em;
-} */
-
-#content_layout {
-  margin-top: 10px;
-}
-
-#content_layout textarea {
-  width: 100%;
-  height: 360px;
-  font-size: 1.25em;
 }
 
 #tag_layout {
@@ -170,4 +159,6 @@ li.item div {
   display: block;
   margin-top: 6px;
   margin-bottom: 12px;
+  padding: 4px;
+  width: 60%;
 }

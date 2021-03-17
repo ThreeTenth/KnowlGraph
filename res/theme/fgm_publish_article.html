@@ -1,21 +1,21 @@
-<div class="modal">
+<div>
   <div>
     <h1>{{ i18n.Publish }}</h1>
     <div>
       <label for="title">{{ i18n.Title }}</label>
-      <input type="text" name="title" class="block" v-bind:value="title" v-bind:placeholder="i18n.Title"></input>
+      <input type="text" name="title" class="block" v-model="title" v-bind:placeholder="i18n.Title"></input>
       <label for="gist">{{ i18n.Gist }}</label>
-      <input type="text" name="gist" class="block" v-bind:value="gist" v-bind:placeholder="i18n.Gist"></input>
+      <textarea type="text" name="gist" class="block" v-model="gist" v-bind:placeholder="i18n.Gist"></textarea>
       <label for="gist">{{ i18n.VersionName }}</label>
-      <input type="text" name="versionName" class="block" v-bind:value="versionName" v-bind:placeholder="i18n.VersionName"></input>
+      <input type="text" name="versionName" class="block" v-model="versionName" v-bind:placeholder="i18n.VersionName"></input>
       <label for="gist">{{ i18n.Comment }}</label>
-      <input type="text" name="comment" class="block" v-bind:value="comment" v-bind:placeholder="i18n.Comment"></input>
+      <textarea type="text" name="comment" class="block" v-model="comment" v-bind:placeholder="i18n.Comment"></textarea>
       <label for="gist">{{ i18n.ChooseALanguage }}</label>
-      <select id="userLangSelect" name="lang" class="block" v-bind:value="lang">
+      <select id="userLangSelect" name="lang" class="block" v-model="lang">
         <option v-for="(lang, i) in languages" v-bind:class="lang.direction" v-bind:value="lang.code">{{ lang.name }}
         </option>
       </select>
-      <tags-input />
+      <tags-input v-bind:tags="tags" />
       <button v-on:click="onPublish">{{ i18n.Publish }}</button>
     </div>
   </div>

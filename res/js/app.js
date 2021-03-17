@@ -29,7 +29,7 @@ const router = new VueRouter({
     { path: '/d/:id/edit', name: 'editDraft', component: EditDraft, props: true },
     { path: '/d/:id/history', name: 'draftHistories', component: DraftHistories, props: true },
     { path: '/d/:id/history/:hid', name: 'draftHistory', component: DraftHistory, props: true },
-    { path: '/d/:id/publish', name: 'publishArticle', component: PublishArticle },
+    { path: '/d/:id/publish', name: 'publishArticle', component: PublishArticle, props: true },
     { path: '/login', name: 'login', component: Login },
   ]
 })

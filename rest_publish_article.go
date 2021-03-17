@@ -90,6 +90,7 @@ func publishArticle(c *Context) error {
 
 	err = WithTx(ctx, client, func(tx *ent.Tx) error {
 		_version, err := tx.Version.Create().
+			SetName(_data.Name).
 			SetComment(_data.Comment).
 			SetTitle(_data.Title).
 			SetGist(_data.Gist).

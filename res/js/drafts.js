@@ -14,7 +14,7 @@ const Drafts = {
       for (let index = 0; index < original.length; index++) {
         const element = original[index];
         let snapshot = element.edges.Snapshots[0]
-        let body = snapshot.body
+        let body = removeMarkdown(snapshot.body)
         if (200 < body.length) {
           body = body.substr(0, 120).trim() + '...'
         }
