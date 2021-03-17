@@ -23,7 +23,7 @@ const EditDraft = {
   data: function () {
     return {
       draft: this.__draft,
-      __last: "",
+      __last: {},
     }
   },
 
@@ -70,7 +70,7 @@ const EditDraft = {
     onSaveDraft: function () {
       // console.trace()
       let content = this.draft.edges.Snapshots[0]
-      if (content.body === this.__last) {
+      if (content.body === this.__last.body) {
         return
       }
 
@@ -83,9 +83,7 @@ const EditDraft = {
           draft_id: this.draft.id,
         },
       }).then(function (resp) {
-        console.log(resp.status, resp.data)
-
-        _this.__last = resp.data.body
+        _this.__last = resp.data
       }).catch(function (resp) {
         console.log(resp)
       })
@@ -93,7 +91,7 @@ const EditDraft = {
 
     __load(id) {
       if (this.draft) {
-        this.__last = this.draft.edges.Snapshots[0].body
+        this.__last = this.draft.edges.Snapshots[0]
         return
       }
 
@@ -103,7 +101,7 @@ const EditDraft = {
         url: queryRestful("/v1/draft", { id: id }),
       }).then(function (resp) {
         _this.draft = resp.data
-        _this.__last = resp.data.edges.Snapshots[0].body
+        _this.__last = resp.data.edges.Snapshots[0]
       }).catch(function (resp) {
         console.log(resp)
       })

@@ -19,10 +19,7 @@ const Drafts = {
           body = body.substr(0, 120).trim() + '...'
         }
 
-        let createdat = this.i18n.CreatedAt1
-        var options = { weekday: "long", year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric", hour12: false };
-        let created_at = new Date(snapshot.created_at).toLocaleString(getUserLang(), options)
-        _drafts[index] = { body: body, created_at: createdat + created_at }
+        _drafts[index] = { body: body, created_at: snapshot.created_at }
       }
       return _drafts
     }

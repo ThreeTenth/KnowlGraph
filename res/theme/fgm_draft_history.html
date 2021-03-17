@@ -8,7 +8,7 @@
   <div v-if="snapshot">
     <p style="white-space: pre-wrap;">{{ snapshot.body }}</p>
     <br>
-    <time>{{ i18n.CreatedAt }}: {{ snapshot.created_at }}</time>
+    <the-time v-bind:datetime="snapshot.created_at"></the-time>
   </div>
   <div v-else>
     Loading

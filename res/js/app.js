@@ -3,14 +3,9 @@
 
 const plugin = {
   install: function (Vue, options) {
-    Vue.prototype.sprintf = function (format, ...val) {
-      return sprintf(format, val)
+    Vue.prototype.user = {
+      lang: getUserLang(),
     }
-
-    Vue.prototype.tprintf = function (format, ...val) {
-      return sprintf(format, val)
-    }
-
     Vue.prototype.i18n = i18n
   }
 }
@@ -41,9 +36,6 @@ const router = new VueRouter({
 
 var app = new Vue({
   data: {
-    user: {
-      lang: getUserLang(),
-    },
     languages: languages,
     logined: logined,
   },
@@ -68,7 +60,7 @@ var app = new Vue({
       this.user.lang = lang
       setUserLang(lang)
 
-      if (lang == defaultLang._code) {
+      if (lang == defaultLang.__code) {
         Object.assign(i18n, defaultLang)
         return
       } else if (i18ns.has(lang)) {
@@ -76,7 +68,7 @@ var app = new Vue({
         return
       } else {
         let strings = getI18nStrings(lang)
-        if (null != strings && strings._version == defaultLang._version) {
+        if (null != strings && strings.__version == defaultLang.__version) {
           i18ns.set(lang, strings)
           Object.assign(i18n, strings)
           return
