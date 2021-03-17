@@ -111,13 +111,18 @@ const EditDraft = {
   },
 
   beforeRouteEnter(to, from, next) {
-    if (logined) {
+    if (!logined) {
+      router.push({ name: "login" })
+      return
+    }
+
+    if (from.name === "draftHistories") {
+      next()
+    } else {
       next(vm => {
         vm.draft = to.params.__draft
         vm.__load(to.params.id)
       })
-    } else {
-      router.push({ name: "login" })
     }
   },
 

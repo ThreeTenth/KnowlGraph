@@ -13,26 +13,38 @@ const DraftHistories = {
     onHistory: function (snapshot) {
       router.push({ name: 'draftHistory', params: { id: this.id, hid: snapshot.id, __snapshot: snapshot } })
     },
-  },
 
-  created() {
-    let _this = this
-    axios({
-      method: "GET",
-      url: queryRestful("/v1/draft", { id: this.id, needHistories: true }),
-    }).then(function (resp) {
-      _this.snapshots = resp.data.edges.Snapshots
-    }).catch(function (resp) {
-      console.log(resp)
-    })
+    __load(id) {
+      let _this = this
+      axios({
+        method: "GET",
+        url: queryRestful("/v1/draft", { id: id, needHistory: true }),
+      }).then(function (resp) {
+        _this.snapshots = resp.data.edges.Snapshots
+      }).catch(function (resp) {
+        console.log(resp)
+      })
+    },
   },
 
   beforeRouteEnter(to, from, next) {
-    if (logined) {
+    if (!logined) {
+      router.push({ name: "login" })
+      return
+    }
+
+    if (from.name === "draftHistory") {
       next()
     } else {
-      router.push({ name: "login" })
+      next(vm => {
+        vm.__load(to.params.id)
+      })
     }
+  },
+
+  beforeRouteUpdate(to, from, next) {
+    next()
+    this.__load(to.params.id)
   },
 
   template: fgm_draft_histories,
@@ -41,7 +53,7 @@ const DraftHistories = {
 const DraftHistory = {
   props: ['id', 'hid', '__snapshot'],
 
-  data: function() {
+  data: function () {
     return {
       snapshot: this.__snapshot,
     }
@@ -56,35 +68,44 @@ const DraftHistory = {
       } else {
         router.push({ name: 'draftHistories', params: { id: this.id } })
       }
-    }
-  },
-
-  created() {
-    if (null != this.snapshot) {
-      return
-    }
-
-    let _this = this
-    axios({
-      method: "GET",
-      url: queryRestful("/v1/draft", { id: this.id, historyID: this.hid }),
-    }).then(function (resp) {
-      let snapshots = resp.data.edges.Snapshots
-      if (0 == snapshots.length) {
+    },
+    __load(id, hid) {
+      if (null != this.snapshot) {
         return
       }
-      _this.snapshot = snapshots[0]
-    }).catch(function (resp) {
-      console.log(resp)
-    })
+
+      let _this = this
+      axios({
+        method: "GET",
+        url: queryRestful("/v1/draft", { id: id, historyID: hid }),
+      }).then(function (resp) {
+        let snapshots = resp.data.edges.Snapshots
+        if (0 == snapshots.length) {
+          return
+        }
+        _this.snapshot = snapshots[0]
+      }).catch(function (resp) {
+        console.log(resp)
+      })
+    },
   },
 
   beforeRouteEnter(to, from, next) {
-    if (logined) {
-      next()
-    } else {
+    if (!logined) {
       router.push({ name: "login" })
+      return
     }
+
+    next(vm => {
+      vm.snapshot = to.params.__snapshot
+      vm.__load(to.params.id, to.params.hid)
+    })
+  },
+
+  beforeRouteUpdate(to, from, next) {
+    next()
+    this.snapshot = to.params.__snapshot
+    this.__load(to.params.id, to.params.hid)
   },
 
   template: fgm_draft_history,
