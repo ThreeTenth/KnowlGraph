@@ -42,13 +42,6 @@ const PublishArticle = {
         this.title = found[1]
         return
       }
-
-      found = text.match(/.*/)
-
-      if (found) {
-        this.title = found[0]
-        return
-      }
     },
   },
 

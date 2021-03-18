@@ -8,6 +8,7 @@ import (
 	"github.com/pkg/errors"
 	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/article"
+	"knowlgraph.com/ent/asset"
 	"knowlgraph.com/ent/draft"
 	"knowlgraph.com/ent/language"
 	"knowlgraph.com/ent/tag"
@@ -51,6 +52,10 @@ func publishArticle(c *Context) error {
 		First(ctx)
 	if err != nil {
 		return c.BadRequest(err.Error())
+	}
+
+	if _draft.State == draft.StateRead {
+		return c.Unauthorized("Cannot be publish because it is read-only")
 	}
 
 	_article := _draft.Edges.Article
@@ -119,6 +124,24 @@ func publishArticle(c *Context) error {
 				SetVersionID(_version.ID).
 				AddVoterIDs(_userIDs...).
 				Save(ctx)
+			if err != nil {
+				return err
+			}
+
+			_, err = _draft.Update().SetState(draft.StateRead).Save(ctx)
+
+			if err != nil {
+				return err
+			}
+		} else {
+			_, err = tx.Asset.Create().SetArticle(_article).SetUserID(_userID.(int)).SetStatus(asset.StatusSelf).Save(ctx)
+
+			if err != nil {
+				return err
+			}
+
+			err = tx.Draft.DeleteOne(_draft).Exec(ctx)
+
 			if err != nil {
 				return err
 			}

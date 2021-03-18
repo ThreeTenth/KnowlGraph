@@ -19,13 +19,17 @@ func putArticleContent(c *Context) error {
 
 	_userID, _ := c.Get(GinKeyUserID)
 
-	_, err = client.User.Query().
+	_draft, err := client.User.Query().
 		Where(user.ID(_userID.(int))).
 		QueryDrafts().
 		Where(draft.ID(_data.DraftID)).
 		Only(ctx)
 	if err != nil {
 		return c.BadRequest(err.Error())
+	}
+
+	if _draft.State == draft.StateRead {
+		return c.Unauthorized("Cannot be modified because it is read-only")
 	}
 
 	_contentCreate := client.Content.Create()

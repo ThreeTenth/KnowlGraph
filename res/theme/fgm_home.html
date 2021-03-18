@@ -1,4 +1,12 @@
 <div>
-  <h3>{{ i18n.Home }}</h3>
-  <tags-input />
+  <ol v-if="articles">
+    <li class="item" v-for="(article, i) in articles">
+      <div v-on:click="onArticle(i)">
+        <div v-if="article.title" class="title">{{ article.title }}</div>
+        <div v-bind:class="article.title ? '' : 'title'">{{ article.gist }}</div>
+      </div>
+      <the-time v-bind:datetime="article.created_at"></the-time>
+    </li>
+  </ol>
+  <div v-else>Loading</div>
 </div>

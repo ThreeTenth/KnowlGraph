@@ -16,8 +16,8 @@ type Version struct {
 // Fields of the Version.
 func (Version) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("name").Optional().Unique(),
-		field.String("comment").Optional().Unique(),
+		field.String("name").Optional(),
+		field.String("comment").Optional(),
 		field.String("title").Optional(),
 		field.String("gist").Optional(),
 		field.Enum("state").

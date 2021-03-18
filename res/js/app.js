@@ -12,8 +12,6 @@ const plugin = {
 
 Vue.use(plugin)
 
-const Index = { template: logined ? fgm_home : fgm_index }
-const Home = { template: fgm_home }
 const About = { template: fgm_about }
 const My = { template: fgm_my }
 const Login = { template: fgm_login }

@@ -32,9 +32,7 @@ func getUserArticles(c *Context) error {
 				if _lang != nil {
 					vq = vq.Where(version.HasLangWith(language.Code(_lang.Code)))
 				}
-				vq.Order(ent.Desc(version.FieldCreatedAt)).
-					Limit(1).
-					WithContent()
+				vq.Order(ent.Desc(version.FieldCreatedAt))
 			})
 		}).
 		All(ctx)
