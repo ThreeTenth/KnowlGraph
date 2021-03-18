@@ -3,11 +3,6 @@ package main
 import "time"
 
 const (
-	// MaxSeoLen is the maximum length of SEO characters
-	MaxSeoLen = 156
-)
-
-const (
 	// ExpireTimeToken is token expire time
 	ExpireTimeToken = 30 * 24 * time.Hour
 )

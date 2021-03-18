@@ -1,7 +1,7 @@
 // article.js
 
 const Article = {
-  props: ['id', 'title'],
+  props: ['id', 'code'],
 
   data: function () {
     return {
@@ -17,20 +17,23 @@ const Article = {
       let version = article.edges.Versions[0]
       let content = version.edges.Content
 
+      var title, gist, code = seo(version.title, version.gist)
+
       return {
         id: article.id,
         status: article.status,
-        title: version.title ? version.title : "",
-        gist: version.gist,
+        title: title,
+        gist: gist,
         body: content.body,
-        created_at: version.created_at
+        created_at: version.created_at,
+        code: code,
       }
     }
   },
 
   methods: {
     __load(id) {
-      if (null != this.snapshot) {
+      if (this.$data.__original.id == this.id) {
         return
       }
 
@@ -40,6 +43,14 @@ const Article = {
         url: queryRestful("/v1/article", { id: id }),
       }).then(function (resp) {
         _this.$data.__original = resp.data
+        if (!_this.code) {
+          router.replace({
+            name: 'article', params: {
+              id: _this.id,
+              code: _this.article.code,
+            }
+          })
+        }
       }).catch(function (resp) {
         console.log(resp)
       })
@@ -48,14 +59,12 @@ const Article = {
 
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      vm.snapshot = to.params.__snapshot
       vm.__load(to.params.id)
     })
   },
 
   beforeRouteUpdate(to, from, next) {
     next()
-    this.snapshot = to.params.__snapshot
     this.__load(to.params.id)
   },
 

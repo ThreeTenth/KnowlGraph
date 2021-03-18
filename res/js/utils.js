@@ -1,5 +1,27 @@
 // utils.js
 
+function seo(title, gist) {
+  let vt = title
+  if (!vt) {
+    vt = gist
+    if (60 < gist.length) {
+      let idx = vt.search(/[.?!。？！]/g)
+      if (1 < idx) {
+        vt = gist.substr(0, idx)
+      }
+    }
+  }
+
+  return vt, gist, encodeURLTitle(vt)
+}
+
+function encodeURLTitle(title) {
+  return title.trim()
+    .replace(/[;,/?:@&=+$_.!~*'()# ]+/g, '-')
+    .replace(/-$/g, '')
+    .toLowerCase()
+}
+
 // by @Stian Grytøyr's https://github.com/stiang/remove-markdown
 function removeMarkdown(md, options) {
   options = options || {};
@@ -58,7 +80,7 @@ function removeMarkdown(md, options) {
       .replace(/`(.+?)`/g, '$1')
       // Replace two or more newlines with exactly two? Not entirely sure this belongs here...
       .replace(/\n{2,}/g, '\n\n');
-  } catch(e) {
+  } catch (e) {
     console.error(e);
     return md;
   }

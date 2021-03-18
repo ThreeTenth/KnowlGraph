@@ -47,12 +47,10 @@ const Index = {
       if (!title) {
         title = this.articles[i].gist
       }
-      title = title.trim().replace(/[;,/?:@&=+$_.!~*'()# ]+/g, '-')
-      title = title.replace(/-$/g, '').toLowerCase()
       router.push({
         name: 'article', params: {
           id: id,
-          title: title
+          code: encodeURLTitle(title)
         }
       })
     }

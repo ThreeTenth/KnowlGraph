@@ -71,7 +71,7 @@ func publishArticle(c *Context) error {
 	}
 
 	if _data.Gist == "" {
-		_data.Gist = seo(_content.Body, MaxSeoLen)
+		_data.Gist = seo(_content.Body)
 	}
 
 	_versionState := version.StateReview
@@ -168,7 +168,7 @@ func random() ent.OrderFunc {
 	}
 }
 
-func seo(md string, maxLen int) string {
+func seo(md string) string {
 	// Golang string is saved in UTF-8 format.
 	// For languages that use multiple bytes to express one character,
 	// such as Chinese characters, when substring the string,
@@ -177,10 +177,10 @@ func seo(md string, maxLen int) string {
 	_rune := []rune(stripmd.Strip(md))
 
 	var _sub string
-	if len(_rune) <= maxLen {
+	if len(_rune) <= 200 {
 		_sub = _sub + " " + string(_rune)
 	} else {
-		_sub = _sub + " " + string(_rune[:MaxSeoLen]) + "..."
+		_sub = _sub + " " + string(_rune[:120]) + "..."
 	}
 
 	re := regexp.MustCompile(`\r?\n`)

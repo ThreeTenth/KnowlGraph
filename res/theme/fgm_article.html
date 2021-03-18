@@ -1,3 +1,7 @@
 <div>
-  <p style="white-space: pre-wrap;">{{ article.body }}</p>
+  <div v-if="article">
+    <p style="white-space: pre-wrap;">{{ article.body }}</p>
+    <the-time v-bind:datetime="article.created_at"/>
+  </div>
+  <div v-else>Loading</div>
 </div>
