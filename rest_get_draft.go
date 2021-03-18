@@ -24,7 +24,7 @@ func getDraft(c *Context) error {
 	_draft, err := client.User.Query().
 		Where(user.ID(_userID.(int))).
 		QueryDrafts().
-		Where(draft.And(draft.ID(_query.ID), draft.StateIn(draft.StateRead, draft.StateWrite))).
+		Where(draft.And(draft.ID(_query.ID), draft.StateIn(draft.StateWrite))).
 		WithSnapshots(func(cq *ent.ContentQuery) {
 			if 0 < _query.HistoryID {
 				cq.Where(content.ID(_query.HistoryID))

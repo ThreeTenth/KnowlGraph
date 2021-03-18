@@ -17,6 +17,7 @@ const Index = {
         let version = article.edges.Versions[0]
 
         _articles[index] = {
+          id: article.id,
           status: article.status,
           title: version.title ? version.title : "",
           gist: version.gist,
@@ -40,10 +41,20 @@ const Index = {
   },
 
   methods: {
-    onArticles(i) {
-      let article = this.$data.__original[i]
-      console.log(article)
-      // router.push({ name: 'article', params: { id: article.id, __article: article } })
+    onArticle(i) {
+      let id = this.articles[i].id
+      let title = this.articles[i].title
+      if (!title) {
+        title = this.articles[i].gist
+      }
+      title = title.trim().replace(/[;,/?:@&=+$_.!~*'()# ]+/g, '-')
+      title = title.replace(/-$/g, '').toLowerCase()
+      router.push({
+        name: 'article', params: {
+          id: id,
+          title: title
+        }
+      })
     }
   },
 

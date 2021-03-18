@@ -24,7 +24,7 @@ textarea {
 }
 
 input, textarea {
-  font-size: 1.0em !important;
+  font-size: 15px !important;
   font-family: "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
 }
 
@@ -153,7 +153,7 @@ li.item div {
   margin-top: 6px;
   margin-bottom: 12px;
   padding: 4px;
-  width: 60%;
+  width: 100%;
 }
 
 .title {
