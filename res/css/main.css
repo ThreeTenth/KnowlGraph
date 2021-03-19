@@ -163,3 +163,23 @@ li.item div {
 .mb-4 {
   margin-bottom: 4px;
 }
+
+.anchor {
+  float: left;
+  line-height: 1;
+  margin-left: -20px;
+  padding-right: 4px;
+}
+.anchor:focus .octicon {
+  visibility: visible;
+}
+.octicon {
+  display: inline-block;
+  fill: currentColor;
+  color: #1b1f23;
+  vertical-align: middle;
+  visibility: hidden;
+}
+h1:hover .octicon, h2:hover .octicon, h3:hover .octicon, h4:hover .octicon, h5:hover .octicon, h6:hover .octicon {
+  visibility: visible;
+}

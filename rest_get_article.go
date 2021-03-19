@@ -23,15 +23,30 @@ func getArticle(c *Context) error {
 
 	_userID, _ := c.Get(GinKeyUserID)
 
+	_article, err := GetArticle(
+		_userID.(int),
+		_query.ID,
+		_query.NeedVersions,
+		_query.VersionID)
+
+	if err != nil {
+		return c.NotFound(err.Error())
+	}
+
+	return c.Ok(&_article)
+}
+
+// GetArticle is get article
+func GetArticle(_userID int, articleID int, needVersions bool, versionID int) (*ent.Article, error) {
 	_article, err := client.Asset.Query().
 		Where(asset.And(
-			asset.HasUserWith(user.ID(_userID.(int))),
-			asset.HasArticleWith(article.ID(_query.ID)))).
+			asset.HasUserWith(user.ID(_userID)),
+			asset.HasArticleWith(article.ID(articleID)))).
 		QueryArticle().
 		WithVersions(func(vq *ent.VersionQuery) {
-			if 0 < _query.VersionID {
-				vq.Where(version.ID(_query.VersionID))
-			} else if _query.NeedVersions {
+			if 0 < versionID {
+				vq.Where(version.ID(versionID))
+			} else if needVersions {
 				vq.Order(ent.Desc(version.FieldCreatedAt))
 			} else {
 				vq.Order(ent.Desc(version.FieldCreatedAt)).Limit(1)
@@ -39,9 +54,6 @@ func getArticle(c *Context) error {
 			vq.WithContent()
 		}).
 		Only(ctx)
-	if err != nil {
-		return c.NotFound(err.Error())
-	}
 
-	return c.Ok(&_article)
+	return _article, err
 }

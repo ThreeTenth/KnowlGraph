@@ -3,6 +3,15 @@
 
 <head>
 	{{ template "fgm_html_header" .Header }}
+
+	{{ if .Body.Article }}
+	<title>{{ .Body.Article.Title}} - {{ if .Body.Logined }} {{ .Body.User.Name }} {{ end }} - KnowlGraph</title>
+	<meta data-rh="true" name="title" content="{{ .Body.Article.Title}} - KnowlGraph">
+	<meta data-rh="true" property="og:title" content="{{ .Body.Article.Title}}">
+	<meta data-rh="true" property="og:description" content="{{ .Body.Article.Gist}}">
+	<meta data-rh="true" property="twitter:description" content="{{ .Body.Article.Gist}}">
+	{{ end }}
+
 	{{ if .Body.Logined }}
 	<title>Knowledge Graph -- {{ .Body.User.Name }} </title>
 	<link rel="icon" type="image/png" href="{{ .Body.User.Avatar }}">
@@ -14,7 +23,11 @@
 </head>
 
 <body>
-	<div id="app"></div>
+	<div id="app">
+		{{ if .Body.Article }}
+		<div id="article_md">{{ .Body.Article.Edges.Content.Body }}</div>
+		{{ end }}
+	</div>
 
 	{{ if .Body.Logined }}
 	<script>var logined = true</script>

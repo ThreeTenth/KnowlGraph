@@ -24,7 +24,7 @@ const PublishArticle = {
       let text = removeMarkdown(content)
 
       if (200 <= text.length) {
-        this.gist = text.substr(0, 120).trim() + '...'
+        this.gist = text.substr(0, 120).trim().replace(/[\r|\n]/g, ' ') + '...'
       } else {
         this.gist = text
       }

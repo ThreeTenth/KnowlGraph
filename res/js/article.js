@@ -19,12 +19,22 @@ const Article = {
 
       var title, gist, code = seo(version.title, version.gist)
 
+      var converter = new showdown.Converter({
+        'disableForced4SpacesIndentedSublists': 'true',
+        'tasklists': 'true',
+        'tables': 'true',
+        'extensions': ['video', 'audio', 'catalog', 'anchor']
+      })
+      // KaTeX: math regex: /\$\$([^$]+)\$\$/gm
+
+      var body = converter.makeHtml(content.body);
+
       return {
         id: article.id,
         status: article.status,
         title: title,
         gist: gist,
-        body: content.body,
+        body: body,
         created_at: version.created_at,
         code: code,
       }

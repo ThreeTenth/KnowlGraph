@@ -1,6 +1,6 @@
 <div>
   <div v-if="article">
-    <p style="white-space: pre-wrap;">{{ article.body }}</p>
+    <div v-html="article.body"></div>
     <the-time v-bind:datetime="article.created_at"/>
   </div>
   <div v-else>Loading</div>
