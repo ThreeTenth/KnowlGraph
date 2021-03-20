@@ -24,7 +24,7 @@ const PublishArticle = {
       let text = removeMarkdown(content)
 
       if (200 <= text.length) {
-        this.gist = text.substr(0, 120).trim().replace(/[\r|\n]/g, ' ') + '...'
+        this.gist = text.substr(0, 120).trim().replace(/[\r\n]/g, ' ') + '...'
       } else {
         this.gist = text
       }
@@ -47,6 +47,8 @@ const PublishArticle = {
 
   methods: {
     onPublish() {
+      var _this = this
+
       axios({
         method: "PUT",
         url: queryRestful("/v1/publish/article"),
@@ -60,7 +62,13 @@ const PublishArticle = {
           draft_id: this.draft.id,
         },
       }).then(function (resp) {
-        console.log(resp.status, resp.data)
+        // todo this content is published and notify home page and drafts page
+        router.push({
+          name: 'article', params: {
+            id: resp.data.edges.Article.id,
+            code: encodeURLTitle(_this.title)
+          }
+        })
       }).catch(function (resp) {
         console.log(resp)
       })

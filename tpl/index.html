@@ -5,7 +5,7 @@
 	{{ template "fgm_html_header" .Header }}
 
 	{{ if .Body.Article }}
-	<title>{{ .Body.Article.Title}} - {{ if .Body.Logined }} {{ .Body.User.Name }} {{ end }} - KnowlGraph</title>
+	<title>{{ .Body.Article.Title}} - KnowlGraph</title>
 	<meta data-rh="true" name="title" content="{{ .Body.Article.Title}} - KnowlGraph">
 	<meta data-rh="true" property="og:title" content="{{ .Body.Article.Title}}">
 	<meta data-rh="true" property="og:description" content="{{ .Body.Article.Gist}}">

@@ -1,7 +1,13 @@
 <div>
   <div v-if="article">
+    <div>
+      <button v-on:click="onEditArticle">{{ i18n.Edit }}</button>
+    </div>
     <div v-html="article.body"></div>
-    <the-time v-bind:datetime="article.created_at"/>
+    <div>
+      <code style="margin: 2px 4px; padding: 2px 4px;" v-for="(tag, i) in article.tags">{{tag.name}}</code>
+      <the-time v-bind:datetime="article.created_at" />
+    </div>
   </div>
   <div v-else>Loading</div>
 </div>

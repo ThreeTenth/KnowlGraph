@@ -28,6 +28,7 @@ const Article = {
       // KaTeX: math regex: /\$\$([^$]+)\$\$/gm
 
       var body = converter.makeHtml(content.body);
+      var tags = version.edges.Tags
 
       return {
         id: article.id,
@@ -35,6 +36,7 @@ const Article = {
         title: title,
         gist: gist,
         body: body,
+        tags: tags,
         created_at: version.created_at,
         code: code,
       }
@@ -42,6 +44,10 @@ const Article = {
   },
 
   methods: {
+    onEditArticle() {
+
+    },
+
     __load(id) {
       if (this.$data.__original.id == this.id) {
         return

@@ -85,6 +85,7 @@ const EditDraft = {
       }).then(function (resp) {
         _this.draft.edges.Snapshots[0] = resp.data
         _this.__setLast(_this.draft)
+        // todo the new article have content and notify drafts page
       }).catch(function (resp) {
         console.log(resp)
       })

@@ -11,7 +11,7 @@ Vue.component('tags-input', {
   data: function () {
     return {
       auto: false,
-      values: this.tags,
+      values: this.tags ? this.tags : [],
       input: "",
       items: [],
       all: [],

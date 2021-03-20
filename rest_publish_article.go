@@ -147,6 +147,8 @@ func publishArticle(c *Context) error {
 			}
 		}
 
+		_version.Edges.Article = _article
+
 		return c.Ok(_version)
 	})
 
