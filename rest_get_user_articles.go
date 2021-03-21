@@ -1,12 +1,27 @@
 package main
 
 import (
+	"sort"
+
 	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/asset"
 	"knowlgraph.com/ent/language"
 	"knowlgraph.com/ent/user"
 	"knowlgraph.com/ent/version"
 )
+
+// Articles are used to sort articles
+type Articles []*ent.Asset
+
+func (d Articles) Len() int { return len(d) }
+
+func (d Articles) Less(i, j int) bool {
+	return d[i].Edges.Article.Edges.Versions[0].CreatedAt.
+		After(
+			d[j].Edges.Article.Edges.Versions[0].CreatedAt)
+}
+
+func (d Articles) Swap(i, j int) { d[i], d[j] = d[j], d[i] }
 
 func getUserArticles(c *Context) error {
 	var _query struct {
@@ -40,6 +55,8 @@ func getUserArticles(c *Context) error {
 	if err != nil {
 		return c.BadRequest(err.Error())
 	}
+
+	sort.Sort(Articles(_articles))
 
 	return c.Ok(_articles)
 }
