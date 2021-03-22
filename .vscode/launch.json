@@ -38,6 +38,17 @@
       ]
     },
     {
+      "name": "Launch by test",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceRoot}",
+      "env": {},
+      "args": [
+        "-config", "${workspaceRoot}/config test.json",
+      ]
+    },
+    {
       "name": "Launch Chrome",
       "request": "launch",
       "type": "pwa-chrome",
