@@ -2,6 +2,8 @@ package main
 
 import (
 	"knowlgraph.com/ent"
+	"knowlgraph.com/ent/draft"
+	"knowlgraph.com/ent/user"
 	"knowlgraph.com/ent/version"
 )
 
@@ -33,6 +35,25 @@ func editArticle(c *Context) error {
 
 	if err != nil {
 		return err
+	}
+
+	_draft, err := client.User.Query().
+		Where(user.ID(_userID.(int))).
+		QueryDrafts().
+		Where(draft.And(
+			draft.HasOriginalWith(version.ID(_version.ID)),
+			draft.StateEQ(draft.StateWrite))).
+		Limit(1).
+		WithArticle().
+		WithOriginal(func(vq *ent.VersionQuery) {
+			vq.WithContent()
+		}).
+		WithSnapshots().
+		First(ctx)
+
+	if err == nil {
+		_draft.Edges.Snapshots = make([]*ent.Content, 0)
+		return c.Ok(_draft)
 	}
 
 	err = WithTx(ctx, client, func(tx *ent.Tx) error {

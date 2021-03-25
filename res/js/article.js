@@ -45,7 +45,19 @@ const Article = {
 
   methods: {
     onEditArticle() {
+      let article = this.$data.__original
+      if (undefined == article.edges) return
 
+      let version = article.edges.Versions[0]
+
+      axios({
+        method: "PUT",
+        url: queryRestful("/v1/article/edit", { id: version.id }),
+      }).then(function (resp) {
+        router.push({ name: 'editDraft', params: { id: resp.data.id, __draft: resp.data } })
+      }).catch(function (resp) {
+        console.log(resp.status, resp.data)
+      })
     },
 
     __load(id) {
