@@ -130,10 +130,14 @@ func publishArticle(c *Context) error {
 				return err
 			}
 		} else {
-			_, err = tx.Asset.Create().SetArticle(_article).SetUserID(_userID.(int)).SetStatus(asset.StatusSelf).Save(ctx)
+			_, err := tx.Asset.Query().Where(asset.HasArticleWith(article.ID(_article.ID))).Only(ctx)
 
 			if err != nil {
-				return err
+				_, err = tx.Asset.Create().SetArticle(_article).SetUserID(_userID.(int)).SetStatus(asset.StatusSelf).Save(ctx)
+
+				if err != nil {
+					return err
+				}
 			}
 
 			err = tx.Draft.DeleteOne(_draft).Exec(ctx)
@@ -143,6 +147,7 @@ func publishArticle(c *Context) error {
 			}
 		}
 
+		_version.Edges.Content = _content
 		_version.Edges.Article = _article
 
 		return c.Ok(_version)

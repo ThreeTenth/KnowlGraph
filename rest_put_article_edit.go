@@ -43,36 +43,32 @@ func editArticle(c *Context) error {
 		Where(draft.And(
 			draft.HasOriginalWith(version.ID(_version.ID)),
 			draft.StateEQ(draft.StateWrite))).
-		Limit(1).
-		WithArticle().
 		WithOriginal(func(vq *ent.VersionQuery) {
 			vq.WithContent()
 		}).
 		WithSnapshots().
 		First(ctx)
 
-	if err == nil {
-		_draft.Edges.Snapshots = make([]*ent.Content, 0)
-		return c.Ok(_draft)
-	}
-
-	err = WithTx(ctx, client, func(tx *ent.Tx) error {
-		_article, err := tx.Article.Create().
-			SetStatus(_version.Edges.Article.Status).
-			Save(ctx)
-
-		if err != nil {
-			return err
-		}
-
-		_draft, err := tx.Draft.Create().
-			SetArticle(_article).
+	if err != nil {
+		_draft, err = client.Draft.Create().
+			SetArticle(_version.Edges.Article).
 			SetOriginal(_version).
 			SetUserID(_userID.(int)).
 			Save(ctx)
 
-		return c.Ok(&_draft)
-	})
+		if err != nil {
+			return c.InternalServerError(err.Error())
+		}
 
-	return err
+	}
+
+	if 0 == len(_draft.Edges.Snapshots) {
+		_draft.Edges.Snapshots = []*ent.Content{
+			_version.Edges.Content,
+		}
+	}
+
+	_draft.Edges.Article = _version.Edges.Article
+
+	return c.Ok(&_draft)
 }
