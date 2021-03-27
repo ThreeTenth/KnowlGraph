@@ -11,7 +11,7 @@
   "Gist": "Gist",
   "VersionName": "Version name",
   "Comment": "Version comment",
-  "AddATag": "Add a tag",
+  "AddAWord": "Add a keyword",
   "Logout": "Logout",
   "Login": "Login",
   "LoginWithGitHubOAuth": "Login with GitHub OAuth",

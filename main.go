@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"database/sql"
-	"encoding/json"
 	"html/template"
 	"io"
 	"net/http"
@@ -16,7 +15,6 @@ import (
 	"github.com/gobuffalo/packr/v2"
 	"golang.org/x/sync/errgroup"
 	"knowlgraph.com/ent"
-	"knowlgraph.com/ent/language"
 	"knowlgraph.com/ent/migrate"
 
 	"github.com/facebook/ent/dialect"
@@ -42,8 +40,6 @@ var ctx context.Context
 var client *ent.Client
 var rdb *redis.Client
 var config *Config
-var langs []*ent.Language
-var defaultLang *ent.Language
 
 func init() {
 	time.FixedZone("CST", 8*3600) // China Standard Timzone
@@ -69,10 +65,13 @@ func openPostgreSQL() {
 	client = ent.NewClient(opts...)
 
 	ctx = context.Background()
-	if err = client.Schema.Create(ctx, migrate.WithGlobalUniqueID(true)); err != nil {
+	err = client.Schema.Create(ctx,
+		migrate.WithGlobalUniqueID(true),
+		migrate.WithDropIndex(true),
+		migrate.WithDropColumn(true))
+	if err != nil {
 		panic("failed to create schema: " + err.Error())
 	}
-	// sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt buster-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
 }
 
 func openRedis() {
@@ -82,63 +81,6 @@ func openRedis() {
 	}
 
 	rdb = redis.NewClient(opt)
-}
-
-func loadLauguages() {
-	//////////// load languages.json resource //////////////
-	//
-	//
-	////////////////////////////////////////////////////////
-
-	box := packr.NewBox("./res")
-	bs, err := box.Find("languages.json")
-	if err != nil {
-		panic(err)
-	}
-
-	err = json.Unmarshal(bs, &langs)
-	if err != nil {
-		panic(err)
-	}
-
-	var _langCreates []*ent.LanguageCreate
-	var i = 0
-	for _, v := range langs {
-		_langID, _ := client.Language.Update().Where(language.CodeEQ(v.Code)).SetName(v.Name).SetDirection(v.Direction).Save(ctx)
-		if _langID == 0 {
-			_langCreates = append(_langCreates, client.Language.Create().SetCode(v.Code).SetName(v.Name).SetDirection(v.Direction))
-			i++
-		}
-	}
-	client.Language.CreateBulk(_langCreates...).SaveX(ctx)
-
-	langs = client.Language.Query().Order(ent.Asc(language.FieldID)).AllX(ctx)
-	defaultLang = getDefaultLanguageIfNotFound(DefaultLanguage)
-}
-
-func getLanguage(code string) *ent.Language {
-	for _, v := range langs {
-		if v.Code == code {
-			return v
-		}
-	}
-
-	return nil
-}
-
-func getDefaultLanguageIfNotFound(code string) *ent.Language {
-	for _, v := range langs {
-		if v.Code == code {
-			return v
-		}
-	}
-
-	for _, v := range langs {
-		if v.Code == DefaultLanguage {
-			return v
-		}
-	}
-	panic("server err: no default language.")
 }
 
 func loadTemplates(router *gin.Engine) {
@@ -170,7 +112,6 @@ func main() {
 
 	openPostgreSQL()
 	openRedis()
-	loadLauguages()
 
 	/////////////////////// router code ////////////////////
 	//

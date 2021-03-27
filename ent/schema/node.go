@@ -18,14 +18,14 @@ func (Node) Fields() []ent.Field {
 		field.Enum("status").
 			Values("private", "public").
 			Default("private").
-			Comment("public: all tags on the node path are public; private: there is at least one private tag on the path."),
+			Comment("public: all words on the node path are public; private: there is at least one private word on the path."),
 	}
 }
 
 // Edges of the Node.
 func (Node) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("tag", Tag.Type).
+		edge.From("word", Word.Type).
 			Ref("nodes").
 			Unique().
 			Required(),

@@ -15,20 +15,13 @@ type Language struct {
 // Fields of the Language.
 func (Language) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("code").
-			MaxLen(3).
-			NotEmpty().
-			Unique().
-			Immutable().Comment("Codes for the Representation of Names of Languages"),
-		field.String("name"),
-		field.Enum("direction").Values("ltr", "rtl").Default("ltr").Comment("Text writing direction"),
-		field.String("comment").Optional(),
+		field.String("code"),
 	}
 }
 
 // Edges of the Language.
 func (Language) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("users", User.Type).Ref("languages"),
+		edge.From("users", User.Type).Ref("languages").Unique(),
 	}
 }

@@ -11,7 +11,7 @@ const PublishArticle = {
       versionName: "",
       comment: "",
       lang: getUserLang(),
-      tags: [],
+      keywords: [],
       languages: languages,
     }
   },
@@ -58,7 +58,7 @@ const PublishArticle = {
           title: this.title,
           gist: this.gist,
           lang: this.lang,
-          tags: this.tags,
+          keywords: this.keywords,
           draft_id: this.draft.id,
         },
       }).then(function (resp) {

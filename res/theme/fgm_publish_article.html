@@ -15,7 +15,7 @@
         <option v-for="(lang, i) in languages" v-bind:class="lang.direction" v-bind:value="lang.code">{{ lang.name }}
         </option>
       </select>
-      <tags-input v-bind:tags="tags" />
+      <words-input v-bind:words="keywords" />
       <button v-on:click="onPublish">{{ i18n.Publish }}</button>
     </div>
   </div>

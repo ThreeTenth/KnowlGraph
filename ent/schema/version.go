@@ -20,6 +20,7 @@ func (Version) Fields() []ent.Field {
 		field.String("comment").Optional(),
 		field.String("title").Optional(),
 		field.String("gist").Optional(),
+		field.String("lang").Default("en"),
 		field.Enum("state").
 			Values("review", "release", "reject").
 			Default("review").
@@ -34,8 +35,7 @@ func (Version) Fields() []ent.Field {
 func (Version) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("content", Content.Type).Unique().Required(),
-		edge.To("lang", Language.Type).Unique().Required(),
-		edge.To("tags", Tag.Type),
+		edge.To("keywords", Word.Type),
 		edge.From("article", Article.Type).
 			Ref("versions").
 			Unique().

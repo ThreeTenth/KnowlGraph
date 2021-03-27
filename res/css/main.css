@@ -40,7 +40,7 @@ input, textarea {
   direction: ltr
 }
 
-#tag_layout {
+#word_layout {
   width: 100%;
   max-width: none;
   background: transparent;
@@ -50,13 +50,13 @@ input, textarea {
   margin: 10px 0;
 }
 
-#tag_input {
+#word_input {
   border: none;
   border-bottom: 1px solid var(--fg-c);
   padding: 4px 0;
 }
 
-ul.tags {
+ul.words {
   display: flex;
   flex-wrap: wrap;
   width: 100%;
@@ -67,11 +67,11 @@ ul.tags {
   box-sizing: border-box;
 }
 
-ul.tags li {
+ul.words li {
   margin: 2px 4px;
 }
 
-li.tag {
+li.word {
   padding: 5px 8px;
   background-color: var(--fg-c);
   color: var(--bg-c);
@@ -81,12 +81,12 @@ li.tag {
   text-align: -webkit-match-parent;
 }
 
-li.tag.del {
+li.word.del {
   background-color: var(--red);
   color: #fff;
 }
 
-li.new-tag {
+li.new-word {
   padding: 5px 8px;
   margin: 2px;
   display: flex;
@@ -95,7 +95,7 @@ li.new-tag {
   box-sizing: border-box;
 }
 
-li.new-tag input {
+li.new-word input {
   background: transparent;
   color: var(--fg-c);
   flex: 1 0 auto;
@@ -107,7 +107,7 @@ li.new-tag input {
   box-sizing: border-box;
 }
 
-#tag_autocomplete {
+#word_autocomplete {
   background: var(--bg-c);
   border: 1px solid var(--bg-c);
   border-top: none;

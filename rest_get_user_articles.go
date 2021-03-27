@@ -5,7 +5,6 @@ import (
 
 	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/asset"
-	"knowlgraph.com/ent/language"
 	"knowlgraph.com/ent/user"
 	"knowlgraph.com/ent/version"
 )
@@ -36,16 +35,14 @@ func getUserArticles(c *Context) error {
 
 	_userID, _ := c.Get(GinKeyUserID)
 
-	_lang := getLanguage(_query.Lang)
-
 	_articles, err := client.User.Query().
 		Where(user.ID(_userID.(int))).
 		QueryAssets().
 		Where(asset.StatusEQ(_query.Status)).
 		WithArticle(func(aq *ent.ArticleQuery) {
 			aq.WithVersions(func(vq *ent.VersionQuery) {
-				if _lang != nil {
-					vq = vq.Where(version.HasLangWith(language.Code(_lang.Code)))
+				if _query.Lang != "" {
+					vq = vq.Where(version.Lang(_query.Lang))
 				}
 				vq.Order(ent.Desc(version.FieldCreatedAt))
 			})

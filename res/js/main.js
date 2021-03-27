@@ -21,13 +21,13 @@ var app = new Vue({
     publish: {
       seen: false,
       lang: getUserLang(),
-      tags: {
+      words: {
         auto: false,
         values: [],
         new: "",
         items: [],
         all: [],
-        state: TagStateMayDel,
+        state: WordStateMayDel,
       }
     },
     nodes: {},
@@ -44,23 +44,23 @@ var app = new Vue({
     onBlur: function () {
       postBlur()
     },
-    onTagChanged: function () {
-      tagChanged()
+    onWordChanged: function () {
+      wordChanged()
     },
-    onRemoveTag: function (tag) {
-      removeTag(tag)
+    onRemoveWord: function (word) {
+      removeWord(word)
     },
     onAdd: function () {
-      addTag()
+      addWord()
     },
     onDel: function () {
-      deleteTag()
+      deleteWord()
     },
   },
 })
 
 var postChangedTimeoutID;
-var cancelDeleteTagTimeoutID;
+var cancelDeleteWordTimeoutID;
 
 var lastContent;
 

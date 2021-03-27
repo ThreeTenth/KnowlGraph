@@ -11,7 +11,7 @@
   "Gist": "重点",
   "VersionName": "版本名称",
   "Comment": "版本备注",
-  "AddATag": "添加标签",
+  "AddAWord": "添加关键字",
   "Logout": "退出",
   "Login": "登录",
   "LoginWithGitHubOAuth": "使用 GitHub OAuth 登录",

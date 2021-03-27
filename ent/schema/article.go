@@ -34,5 +34,8 @@ func (Article) Edges() []ent.Edge {
 		edge.To("assets", Asset.Type),
 		edge.From("nodes", Node.Type).
 			Ref("articles"),
+		edge.From("word", Word.Type).
+			Ref("definition").
+			Unique(),
 	}
 }

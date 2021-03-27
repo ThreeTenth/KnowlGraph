@@ -28,7 +28,7 @@ const Article = {
       // KaTeX: math regex: /\$\$([^$]+)\$\$/gm
 
       var body = converter.makeHtml(content.body);
-      var tags = version.edges.Tags
+      var keywords = version.edges.Keywords
 
       return {
         id: article.id,
@@ -36,7 +36,7 @@ const Article = {
         title: title,
         gist: gist,
         body: body,
-        tags: tags,
+        keywords: keywords,
         created_at: version.created_at,
         code: code,
       }

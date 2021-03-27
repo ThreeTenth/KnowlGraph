@@ -10,23 +10,22 @@ import (
 	"knowlgraph.com/ent/article"
 	"knowlgraph.com/ent/asset"
 	"knowlgraph.com/ent/draft"
-	"knowlgraph.com/ent/language"
-	"knowlgraph.com/ent/tag"
 	"knowlgraph.com/ent/user"
 	"knowlgraph.com/ent/version"
+	"knowlgraph.com/ent/word"
 
 	stripmd "github.com/writeas/go-strip-markdown"
 )
 
 func publishArticle(c *Context) error {
 	var _data struct {
-		Name    string   `json:"name"`
-		Comment string   `json:"comment"`
-		Title   string   `json:"title"`
-		Gist    string   `json:"gist"`
-		Lang    string   `json:"lang"`
-		Tags    []string `json:"tags"`
-		DraftID int      `json:"draft_id"`
+		Name     string   `json:"name"`
+		Comment  string   `json:"comment"`
+		Title    string   `json:"title"`
+		Gist     string   `json:"gist"`
+		Lang     string   `json:"lang"`
+		Keywords []string `json:"keywords"`
+		DraftID  int      `json:"draft_id"`
 	}
 
 	err := c.ShouldBindJSON(&_data)
@@ -34,10 +33,7 @@ func publishArticle(c *Context) error {
 		return c.BadRequest(err.Error())
 	}
 
-	_lang, err := client.Language.Query().Where(language.CodeEQ(_data.Lang)).First(ctx)
-	if err != nil {
-		return c.BadRequest(err.Error())
-	}
+	// todo 校验 lang code 的准确性
 
 	_userID, _ := c.Get(GinKeyUserID)
 
@@ -75,22 +71,22 @@ func publishArticle(c *Context) error {
 	}
 
 	_versionState := version.StateReview
-	_tagStatus := tag.StatusPublic
+	_wordStatus := word.StatusPublic
 	if _article.Status == article.StatusPrivate {
 		_versionState = version.StateRelease
-		_tagStatus = tag.StatusPrivate
+		_wordStatus = word.StatusPrivate
 	}
 
-	_tags := make([]*ent.Tag, len(_data.Tags))
-	for i, v := range _data.Tags {
-		_tag, err := client.Tag.Query().Where(tag.Name(v)).First(ctx)
+	_words := make([]*ent.Word, len(_data.Keywords))
+	for i, v := range _data.Keywords {
+		_word, err := client.Word.Query().Where(word.Name(v)).First(ctx)
 		if err != nil {
-			_tag, err = client.Tag.Create().SetName(v).SetStatus(_tagStatus).Save(ctx)
+			_word, err = client.Word.Create().SetName(v).SetStatus(_wordStatus).Save(ctx)
 		}
 		if err != nil {
 			return c.InternalServerError(err.Error())
 		}
-		_tags[i] = _tag
+		_words[i] = _word
 	}
 
 	err = WithTx(ctx, client, func(tx *ent.Tx) error {
@@ -100,8 +96,8 @@ func publishArticle(c *Context) error {
 			SetTitle(_data.Title).
 			SetGist(_data.Gist).
 			SetState(_versionState).
-			SetLangID(_lang.ID).
-			AddTags(_tags...).
+			SetLang(_data.Lang).
+			AddKeywords(_words...).
 			SetContentID(_content.ID).
 			SetArticleID(_article.ID).
 			Save(ctx)
