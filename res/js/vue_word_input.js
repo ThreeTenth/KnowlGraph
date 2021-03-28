@@ -6,15 +6,14 @@ const WordStatePreDel = 2
 const WordStateSafe = 3
 
 Vue.component('words-input', {
-  props: ['words'],
+  props: ['words', 'keywords'],
 
   data: function () {
     return {
       auto: false,
-      values: this.words ? this.words : [],
+      values: this.keywords ? this.keywords : [],
       input: "",
       items: [],
-      all: [],
       state: WordStateMayDel,
     }
   },
@@ -27,18 +26,18 @@ Vue.component('words-input', {
           this.state = WordStateIdle
         }
         this.auto = false
-      } else {
+      } else if (this.words) {
         this.state = WordStateSafe
         if (2 <= this.input.length) {
           const items = []
-          const regex = new RegExp('^' + this.word)
-          this.all.forEach(item => {
+          const regex = new RegExp('^' + this.input)
+          this.words.forEach(item => {
             if (regex.test(item)) {
               items.push(item)
             }
           });
           this.items = items
-          this.auto = true
+          this.auto = 0 != items.length
         } else {
           this.auto = false
         }

@@ -12,6 +12,7 @@ const PublishArticle = {
       comment: "",
       lang: getUserLang(),
       keywords: [],
+      words: [],
       languages: languages,
     }
   },
@@ -90,6 +91,15 @@ const PublishArticle = {
         url: queryRestful("/v1/draft", { id: __id }),
       }).then(function (resp) {
         _this.draft = resp.data
+      }).catch(function (resp) {
+        console.log(resp)
+      })
+
+      axios({
+        method: "GET",
+        url: queryRestful("/v1/words"),
+      }).then(function (resp) {
+        _this.words = resp.data
       }).catch(function (resp) {
         console.log(resp)
       })

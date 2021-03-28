@@ -227,6 +227,7 @@ func router02() http.Handler {
 
 	v1.PUT("/publish/article", authorizeRequired, handle(publishArticle))
 
+	v1.GET("/words", authentication, handle(getKeywords))
 	v1.GET("/drafts", authorizeRequired, handle(getDrafts))
 	v1.GET("/draft", authorizeRequired, handle(getDraft))
 	v1.GET("/article", authorizeRequired, handle(getArticle))

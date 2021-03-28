@@ -71,25 +71,25 @@ func publishArticle(c *Context) error {
 	}
 
 	_versionState := version.StateReview
-	_wordStatus := word.StatusPublic
 	if _article.Status == article.StatusPrivate {
 		_versionState = version.StateRelease
-		_wordStatus = word.StatusPrivate
-	}
-
-	_words := make([]*ent.Word, len(_data.Keywords))
-	for i, v := range _data.Keywords {
-		_word, err := client.Word.Query().Where(word.Name(v)).First(ctx)
-		if err != nil {
-			_word, err = client.Word.Create().SetName(v).SetStatus(_wordStatus).Save(ctx)
-		}
-		if err != nil {
-			return c.InternalServerError(err.Error())
-		}
-		_words[i] = _word
 	}
 
 	err = WithTx(ctx, client, func(tx *ent.Tx) error {
+
+		// todo publish successed, the words has set public status
+		_words := make([]*ent.Word, len(_data.Keywords))
+		for i, v := range _data.Keywords {
+			_word, err := tx.Word.Query().Where(word.Name(v)).First(ctx)
+			if err != nil {
+				_word, err = tx.Word.Create().SetName(v).SetStatus(word.StatusPrivate).Save(ctx)
+			}
+			if err != nil {
+				return err
+			}
+			_words[i] = _word
+		}
+
 		_version, err := tx.Version.Create().
 			SetName(_data.Name).
 			SetComment(_data.Comment).
@@ -138,6 +138,12 @@ func publishArticle(c *Context) error {
 				if err != nil {
 					return err
 				}
+			}
+
+			_, err = tx.User.Update().Where(user.ID(_userID.(int))).AddWords(_words...).Save(ctx)
+
+			if err != nil {
+				return err
 			}
 
 			err = tx.Draft.DeleteOne(_draft).Exec(ctx)
