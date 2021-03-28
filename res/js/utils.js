@@ -17,7 +17,7 @@ function seo(title, gist) {
 
 function encodeURLTitle(title) {
   return title.trim()
-    .replace(/[;,/?:@&=+$_.!~*'()# ]+/g, '-')
+    .replace(/[;,/?:@&=+$_.!~*'()# \n]+/g, '-')
     .replace(/-$/g, '')
     .toLowerCase()
 }

@@ -15,12 +15,19 @@ const Index = {
         const element = original[index];
         let article = element.edges.Article
         let version = article.edges.Versions[0]
+        let title = version.title ? version.title : ""
+        let code = title
+        if (!code) {
+          code = version.gist
+        }
+        code = encodeURLTitle(code)
 
         _articles[index] = {
           id: article.id,
           status: article.status,
-          title: version.title ? version.title : "",
+          title: title,
           gist: version.gist,
+          code: code,
           created_at: version.created_at
         }
       }
@@ -43,14 +50,11 @@ const Index = {
   methods: {
     onArticle(i) {
       let id = this.articles[i].id
-      let title = this.articles[i].title
-      if (!title) {
-        title = this.articles[i].gist
-      }
+      let code = this.articles[i].code
       router.push({
         name: 'article', params: {
           id: id,
-          code: encodeURLTitle(title)
+          code: code
         }
       })
     }

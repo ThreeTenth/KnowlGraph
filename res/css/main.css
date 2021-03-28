@@ -187,3 +187,8 @@ li.item div {
 h1:hover .octicon, h2:hover .octicon, h3:hover .octicon, h4:hover .octicon, h5:hover .octicon, h6:hover .octicon {
   visibility: visible;
 }
+
+.text-link {
+  color: var(--text-c);
+  text-decoration: none;
+}
