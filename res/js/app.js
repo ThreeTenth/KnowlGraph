@@ -37,6 +37,7 @@ var app = new Vue({
   data: {
     languages: languages,
     logined: logined,
+    profilePicture: getLink("icon")
   },
   router,
   template: logined ? app_home : app_index,

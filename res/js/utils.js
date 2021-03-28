@@ -120,6 +120,18 @@ function getMeta(metaName) {
   return ''
 }
 
+function getLink(linkRel) {
+  const metas = document.getElementsByTagName('link')
+
+  for (let i = 0; i < metas.length; i++) {
+    if (metas[i].getAttribute('rel') === linkRel) {
+      return metas[i].getAttribute('href')
+    }
+  }
+
+  return ''
+}
+
 function setI18nStrings(lang, strings) {
   localStorage.setItem('strings-' + lang, JSON.stringify(strings));
 }

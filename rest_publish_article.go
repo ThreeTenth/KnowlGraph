@@ -9,6 +9,7 @@ import (
 	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/article"
 	"knowlgraph.com/ent/asset"
+	"knowlgraph.com/ent/content"
 	"knowlgraph.com/ent/draft"
 	"knowlgraph.com/ent/user"
 	"knowlgraph.com/ent/version"
@@ -105,58 +106,43 @@ func publishArticle(c *Context) error {
 			return err
 		}
 
-		if _versionState == version.StateReview {
-			_userIDs, err := tx.User.Query().
-				Order(random()).
-				Limit(10).
-				Select(user.FieldID).
-				Ints(ctx)
-			if err != nil {
-				return err
-			}
-
-			_, err = tx.RAS.Create().
-				SetComment(_data.Comment).
-				SetVersionID(_version.ID).
-				AddVoterIDs(_userIDs...).
-				Save(ctx)
-			if err != nil {
-				return err
-			}
-
-			_, err = _draft.Update().SetState(draft.StateRead).Save(ctx)
-
-			if err != nil {
-				return err
-			}
-		} else {
-			_, err := tx.Asset.Query().Where(asset.HasArticleWith(article.ID(_article.ID))).Only(ctx)
-
-			if err != nil {
-				_, err = tx.Asset.Create().SetArticle(_article).SetUserID(_userID.(int)).SetStatus(asset.StatusSelf).Save(ctx)
-
-				if err != nil {
-					return err
-				}
-			}
-
-			_, err = tx.User.Update().Where(user.ID(_userID.(int))).AddWords(_words...).Save(ctx)
-
-			if err != nil {
-				return err
-			}
-
-			err = tx.Draft.DeleteOne(_draft).Exec(ctx)
-
-			if err != nil {
-				return err
-			}
-		}
-
 		_version.Edges.Content = _content
 		_version.Edges.Article = _article
+		_version.Edges.Keywords = _words
 
-		return c.Ok(_version)
+		if _versionState == version.StateRelease {
+			if err = addArticleToAsset(tx, _userID.(int), asset.StatusSelf, _version); err != nil {
+				return err
+			}
+
+			return c.Ok(_version)
+		}
+
+		_userIDs, err := tx.User.Query().
+			Order(random()).
+			Limit(10).
+			Select(user.FieldID).
+			Ints(ctx)
+		if err != nil {
+			return err
+		}
+
+		_, err = tx.RAS.Create().
+			SetComment(_data.Comment).
+			SetVersionID(_version.ID).
+			AddVoterIDs(_userIDs...).
+			Save(ctx)
+		if err != nil {
+			return err
+		}
+
+		_, err = _draft.Update().SetState(draft.StateRead).Save(ctx)
+
+		if err != nil {
+			return err
+		}
+
+		return c.NoContent()
 	})
 
 	if err != nil {
@@ -175,6 +161,44 @@ func random() ent.OrderFunc {
 			s.AddError(errors.Errorf("invalid field %q for ordering", f))
 		}
 	}
+}
+
+func addArticleToAsset(tx *ent.Tx, userID int, status asset.Status, vers *ent.Version) error {
+	_, err := tx.Asset.Query().
+		Where(asset.HasArticleWith(
+			article.ID(vers.Edges.Article.ID))).
+		Only(ctx)
+
+	if err != nil {
+		_, err = tx.Asset.Create().
+			SetArticle(vers.Edges.Article).
+			SetUserID(userID).
+			SetStatus(status).
+			Save(ctx)
+
+		if err != nil {
+			return err
+		}
+	}
+
+	_, err = tx.User.Update().
+		Where(user.ID(userID)).
+		AddWords(vers.Edges.Keywords...).
+		Save(ctx)
+
+	if err != nil {
+		return err
+	}
+
+	count, err := tx.Draft.Delete().
+		Where(draft.HasSnapshotsWith(
+			content.ID(vers.Edges.Content.ID))).
+		Exec(ctx)
+	if 0 == count {
+		return errors.New("No draft")
+	}
+
+	return err
 }
 
 func seo(md string) string {

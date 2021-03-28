@@ -27,7 +27,7 @@ func getDrafts(c *Context) error {
 		Where(user.ID(_userID.(int))).
 		QueryDrafts().
 		Where(draft.And(
-			draft.StateIn(draft.StateRead, draft.StateWrite),
+			draft.StateEQ(draft.StateWrite),
 			draft.HasSnapshots())).
 		WithSnapshots(func(cq *ent.ContentQuery) {
 			cq.Order(ent.Desc(content.FieldID))

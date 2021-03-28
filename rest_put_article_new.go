@@ -22,10 +22,9 @@ func putArticleNew(c *Context) error {
 	_draft, err := client.User.Query().
 		Where(user.ID(_userID.(int))).
 		QueryDrafts().
-		Where(draft.And(
-			draft.Not(draft.HasSnapshots()),
+		Where(draft.Not(draft.HasSnapshots()),
 			draft.Not(draft.HasOriginal()),
-			draft.StateEQ(draft.StateWrite))).
+			draft.HasArticleWith(article.StatusEQ(_query.Status))).
 		Limit(1).
 		WithArticle().
 		First(ctx)

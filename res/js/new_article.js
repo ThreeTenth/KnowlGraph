@@ -6,7 +6,7 @@ const NewArticle = {
   beforeRouteEnter(to, from, next) {
     axios({
       method: "PUT",
-      url: queryRestful("/v1/article", { status: "private" }),
+      url: queryRestful("/v1/article", { status: to.query.status }),
     }).then(function (resp) {
       router.push({ name: 'editDraft', params: { id: resp.data.id, __draft: resp.data } })
     }).catch(function (resp) {
@@ -44,6 +44,11 @@ const EditDraft = {
           this.draft.edges.Snapshots[0] = { body: newValue }
         }
       }
+    },
+
+    status: function () {
+      if (!this.draft) { return "" }
+      return this.draft.edges.Article.status
     },
   },
 

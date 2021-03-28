@@ -1,26 +1,33 @@
 <div id="app">
-  <div style="display: flex; margin: 6px 0 10px 0;">
+  <div style="display: flex; align-items: center;">
     <div style="flex: auto">
       <router-link to="/">{{ i18n.Home }}</router-link>
     </div>
     <div>
       <div class="dropdown">
-        <router-link class="dropbtn" to="/my">{{ i18n.My }}</router-link>
+        <router-link class="dropbtn" to="/my">
+          <img class="icon" alt="" v-bind:src="profilePicture" width="32" height="32">
+        </router-link>
         <div class="dropdown-content">
-          <router-link to="/new/article">{{ i18n.NewArticle }}</router-link>
-          <hr/>
+          <select id="userLangSelect" name="lang" v-bind:value="user.lang" v-on:change="onSelectUserLang">
+            <option v-for="(lang, i) in languages" v-bind:class="lang.direction" v-bind:value="lang.code">{{ lang.name
+              }}
+            </option>
+          </select>
+          <hr />
+          <div style="display: flex;">
+            <router-link style="flex: 1;" v-bind:to="{ name: 'newArticle', query: { status: 'public' }}">{{
+              i18n.NewArticle }}</router-link>
+            <router-link v-bind:to="{ path: '/new/article', query: { status: 'private' }}">🔒</router-link>
+          </div>
+          <hr />
           <router-link to="/drafts">{{ i18n.Drafts }}</router-link>
           <router-link to="/about">{{ i18n.About }}</router-link>
+          <hr />
+          <a href="/signout">{{ i18n.Logout }}</a>
         </div>
       </div>
-      <button v-on:click="onSignout">{{ i18n.Logout }}</button>
     </div>
-  </div>
-  <div style="text-align: right;">
-    <select id="userLangSelect" name="lang" v-bind:value="user.lang" v-on:change="onSelectUserLang">
-      <option v-for="(lang, i) in languages" v-bind:class="lang.direction" v-bind:value="lang.code">{{ lang.name }}
-      </option>
-    </select>
   </div>
   <keep-alive>
     <router-view class="view"></router-view>

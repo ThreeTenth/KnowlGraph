@@ -14,6 +14,7 @@ const PublishArticle = {
       keywords: [],
       words: [],
       languages: languages,
+      status: "public",
     }
   },
 
@@ -29,6 +30,8 @@ const PublishArticle = {
       } else {
         this.gist = text
       }
+
+      this.status = val.edges.Article.status
 
       let found = content.match(/^# (.*)/m)
 
@@ -64,6 +67,10 @@ const PublishArticle = {
         },
       }).then(function (resp) {
         // todo this content is published and notify home page and drafts page
+        if (204 == resp.status) {
+          router.push({ path: '/' })
+          return
+        }
         router.push({
           name: 'article', params: {
             id: resp.data.edges.Article.id,

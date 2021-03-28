@@ -28,6 +28,11 @@ input, textarea {
   font-family: "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
 }
 
+hr {
+  color: #f1f1f1;
+  border-top: 1px solid #f1f1f1;
+}
+
 #app {
   padding: 18px 0;
 }
@@ -193,17 +198,23 @@ h1:hover .octicon, h2:hover .octicon, h3:hover .octicon, h4:hover .octicon, h5:h
   text-decoration: none;
 }
 
+.icon {
+  border-radius:50px;
+}
+
 .dropdown {
   position: relative;
   display: inline-block;
 }
 
 .dropdown-content {
+  padding-block-start: 0.5em;
+  padding-block-end: 0.5em;
   display: none;
   position: absolute;
   background-color: #f9f9f9;
   min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.2);
 }
 
 .dropdown-content a {
@@ -217,8 +228,4 @@ h1:hover .octicon, h2:hover .octicon, h3:hover .octicon, h4:hover .octicon, h5:h
 
 .dropdown:hover .dropdown-content {
   display: block;
-}
-
-.dropdown:hover .dropbtn {
-  background-color: #f1f1f1;
 }

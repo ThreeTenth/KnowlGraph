@@ -16,7 +16,7 @@
         </option>
       </select>
       <words-input v-bind:keywords="keywords" v-bind:words="words" />
-      <button v-on:click="onPublish">{{ i18n.Publish }}</button>
+      <button v-on:click="onPublish">{{ i18n.Publish }} <span v-if="status=='private'">🔒</span></button>
     </div>
   </div>
 </div>
