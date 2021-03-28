@@ -2,12 +2,17 @@
   <div style="display: flex; margin: 6px 0 10px 0;">
     <div style="flex: auto">
       <router-link to="/">{{ i18n.Home }}</router-link>
-      <router-link to="/drafts">{{ i18n.Drafts }}</router-link>
-      <router-link to="/about">{{ i18n.About }}</router-link>
     </div>
     <div>
-      <router-link to="/new/article">{{ i18n.NewArticle }}</router-link>
-      <router-link to="/my">{{ i18n.My }}</router-link>
+      <div class="dropdown">
+        <router-link class="dropbtn" to="/my">{{ i18n.My }}</router-link>
+        <div class="dropdown-content">
+          <router-link to="/new/article">{{ i18n.NewArticle }}</router-link>
+          <hr/>
+          <router-link to="/drafts">{{ i18n.Drafts }}</router-link>
+          <router-link to="/about">{{ i18n.About }}</router-link>
+        </div>
+      </div>
       <button v-on:click="onSignout">{{ i18n.Logout }}</button>
     </div>
   </div>
