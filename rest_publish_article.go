@@ -111,7 +111,7 @@ func publishArticle(c *Context) error {
 		_version.Edges.Keywords = _words
 
 		if _versionState == version.StateRelease {
-			if err = addArticleToAsset(tx, _userID.(int), asset.StatusSelf, _version); err != nil {
+			if err = updateUserAsset(tx, _userID.(int), asset.StatusSelf, _version); err != nil {
 				return err
 			}
 
@@ -163,7 +163,7 @@ func random() ent.OrderFunc {
 	}
 }
 
-func addArticleToAsset(tx *ent.Tx, userID int, status asset.Status, vers *ent.Version) error {
+func updateUserAsset(tx *ent.Tx, userID int, status asset.Status, vers *ent.Version) error {
 	_, err := tx.Asset.Query().
 		Where(asset.HasArticleWith(
 			article.ID(vers.Edges.Article.ID))).
@@ -184,6 +184,15 @@ func addArticleToAsset(tx *ent.Tx, userID int, status asset.Status, vers *ent.Ve
 	_, err = tx.User.Update().
 		Where(user.ID(userID)).
 		AddWords(vers.Edges.Keywords...).
+		Save(ctx)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.Language.Create().
+		SetCode(vers.Lang).
+		SetUserID(userID).
 		Save(ctx)
 
 	if err != nil {
