@@ -3,10 +3,10 @@
     <div>
       <button v-on:click="onEditArticle">{{ i18n.Edit }}</button>
     </div>
-    <div v-html="article.body"></div>
-    <div style="display: flex; align-items: center;">
+    <div class="content" v-html="article.body"></div>
+    <div>
       <the-time v-bind:datetime="article.created_at" />
-      <code style="margin: 2px 4px; padding: 2px 4px;" v-for="(keyword, i) in article.keywords">{{keyword.name}}</code>
+      <code v-for="(keyword, i) in article.keywords">{{keyword.name}}</code>
     </div>
   </div>
   <div v-else>Loading</div>

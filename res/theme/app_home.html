@@ -1,35 +1,53 @@
 <div id="app">
-  <div style="display: flex; align-items: center;">
-    <div style="flex: auto">
-      <router-link to="/">{{ i18n.Home }}</router-link>
+  <div class="navbar is-black" style="max-width: 720px; margin: auto;">
+    <div class="navbar-start">
+      <router-link class="navbar-item" to="/">{{ i18n.Home }}</router-link>
     </div>
-    <div>
-      <div class="dropdown">
-        <router-link class="dropbtn" to="/my">
-          <img class="icon" alt="" v-bind:src="profilePicture" width="32" height="32">
-        </router-link>
-        <div class="dropdown-content">
-          <select id="userLangSelect" name="lang" v-bind:value="user.lang" v-on:change="onSelectUserLang">
-            <option v-for="(lang, i) in languages" v-bind:class="lang.direction" v-bind:value="lang.code">{{ lang.name
-              }}
-            </option>
-          </select>
-          <hr />
-          <div style="display: flex;">
-            <router-link style="flex: 1;" v-bind:to="{ name: 'newArticle', query: { status: 'public' }}">{{
-              i18n.NewArticle }}</router-link>
-            <router-link v-bind:to="{ path: '/new/article', query: { status: 'private' }}">🔒</router-link>
+    <div class="navbar-end">
+      <div class="navbar-item dropdown is-right" v-bind:class="ui.languages ? 'is-active' : ''">
+        <div class="dropdown-trigger">
+          <button class="button" v-on:click="toggleLanguageSetting">
+            <span>{{ user.lang.name }}</span>
+            <span class="icon is-small">
+              <i class="fas fa-angle-down"></i>
+            </span>
+          </button>
+        </div>
+        <div class="dropdown-menu" style="max-height: calc(100vh - 86px);">
+          <div class="dropdown-content" style="overflow-y: scroll; max-height: inherit;">
+            <a class="dropdown-item" v-for="(lang, i) in languages" v-on:click="onSelectUserLang(lang)"
+              v-bind:dir="lang.direction" v-bind:value="lang.code">{{ lang.name }}
+            </a>
           </div>
-          <hr />
-          <router-link to="/drafts">{{ i18n.Drafts }}</router-link>
-          <router-link to="/about">{{ i18n.About }}</router-link>
-          <hr />
-          <a href="/signout">{{ i18n.Logout }}</a>
+        </div>
+      </div>
+
+      <div class="navbar-item dropdown is-right" v-bind:class="ui.menu ? 'is-active' : ''">
+        <div class="dropdown-trigger">
+          <figure class="image is-32x32">
+            <img class="is-rounded" alt="" v-bind:src="profilePicture" v-on:click="toggleMenu(!ui.menu)">
+          </figure>
+        </div>
+        <div class="dropdown-menu">
+          <div class="dropdown-content" style="display: flex;">
+            <router-link class="dropdown-item" style="flex: auto;"
+              v-bind:to="{ name: 'newArticle', query: { status: 'public' }}">{{
+              i18n.NewArticle }}</router-link>
+            <router-link class="dropdown-item" v-bind:to="{ path: '/new/article', query: { status: 'private' }}">🔒
+            </router-link>
+          </div>
+          <div class="dropdown-content">
+            <router-link class="dropdown-item" to="/drafts">{{ i18n.Drafts }}</router-link>
+            <router-link class="dropdown-item" to="/about">{{ i18n.About }}</router-link>
+          </div>
+          <div class="dropdown-content">
+            <a class="dropdown-item" href="/signout">{{ i18n.Logout }}</a>
+          </div>
         </div>
       </div>
     </div>
   </div>
   <keep-alive>
-    <router-view class="view"></router-view>
+    <router-view class="hero" style="max-width: 720px; margin: auto;"></router-view>
   </keep-alive>
 </div>
