@@ -1,12 +1,15 @@
-<div>
+<div class="container">
   <div v-if="article">
-    <div>
-      <button v-on:click="onEditArticle">{{ i18n.Edit }}</button>
+    <div class="article-content" v-html="article.body"></div>
+    <div class="bar">
+      <div>
+        <button class="emoji-button">😃</button>
+      </div>
+      <button class="menu-button" v-on:click="onEditArticle">{{ i18n.Edit }}</button>
     </div>
-    <div v-html="article.body"></div>
-    <div style="display: flex; align-items: center;">
+    <div class="flex v">
       <the-time v-bind:datetime="article.created_at" />
-      <code style="margin: 2px 4px; padding: 2px 4px;" v-for="(keyword, i) in article.keywords">{{keyword.name}}</code>
+      <code class="m-2-4 p-2-4" v-for="(keyword, i) in article.keywords">{{keyword.name}}</code>
     </div>
   </div>
   <div v-else>Loading</div>

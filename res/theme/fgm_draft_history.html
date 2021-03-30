@@ -1,13 +1,12 @@
-<div>
-  <div>
-    <button v-on:click="onBack">{{ i18n.Back }}</button>
-    <button>{{ i18n.Preview }}</button>
-    <button>{{ i18n.Compare }}</button>
-    <button>{{ i18n.RestoreThisVersion }}</button>
-  </div>
+<div class="container">
   <div v-if="snapshot">
-    <p style="white-space: pre-wrap;">{{ snapshot.body }}</p>
-    <br>
+    <p class="wrap">{{ snapshot.body }}</p>
+    <div class="bar">
+      <button class="menu-button" v-on:click="onBack">{{ i18n.Back }}</button>
+      <button class="menu-button">{{ i18n.Preview }}</button>
+      <button class="menu-button">{{ i18n.Compare }}</button>
+      <button class="menu-button">{{ i18n.RestoreThisVersion }}</button>
+    </div>
     <the-time v-bind:datetime="snapshot.created_at"></the-time>
   </div>
   <div v-else>

@@ -24,12 +24,15 @@ const PublishArticle = {
 
       let content = val.edges.Snapshots[0].body
       let text = removeMarkdown(content)
+      let gist
 
       if (200 <= text.length) {
-        this.gist = text.substr(0, 120).trim().replace(/[\r\n]/g, ' ') + '...'
+        gist = text.substr(0, 120).trim() + '...'
       } else {
-        this.gist = text
+        gist = text
       }
+      
+      this.gist = gist.replace(/[\r|\n]/g, ' ')
 
       this.status = val.edges.Article.status
 

@@ -1,14 +1,14 @@
-<div>
-  <ol v-if="articles">
-    <li class="item" v-for="(article, i) in articles">
-      <router-link class="text-link" :to="{ name: 'article', params: { id: article.id, code: article.code }}">
-        <div>
-          <div v-if="article.title" class="title">{{ article.title }}</div>
-          <div v-bind:class="article.title ? '' : 'title'">{{ article.gist }}</div>
+<div class="container">
+  <div v-if="articles">
+    <div class="articles-item" v-for="(article, i) in articles">
+      <router-link class="articles-item-link" :to="{ name: 'article', params: { id: article.id, code: article.code }}">
+        <div class="articles-item-body">
+          <div v-if="article.title">{{ article.title }}</div>
+          <div>{{ article.gist }}</div>
         </div>
       </router-link>
       <the-time v-bind:datetime="article.created_at"></the-time>
-    </li>
+    </div>
   </ol>
   <div v-else>Loading</div>
 </div>

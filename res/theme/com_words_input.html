@@ -1,5 +1,5 @@
-<div id="word_layout">
-  <div id="word_input">
+<div clss="word-layout">
+  <div class="word-input">
     <ul class="words">
       <li class="word" v-for="(word, i) in values"
         v-bind:class="(i==values.length-1 && state==2) ? 'del' : ''"
@@ -12,9 +12,9 @@
       </li>
     </ul>
   </div>
-  <div id="word_autocomplete" v-if="auto">
-    <ul class="items">
-      <li class="item" v-for="item in items">
+  <div class="word-autocomplete" v-if="auto">
+    <ul class="">
+      <li class="" v-for="item in items">
         <div>{{ item }}</div>
       </li>
     </ul>
