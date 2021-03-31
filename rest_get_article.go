@@ -53,6 +53,7 @@ func GetArticle(_userID int, articleID int, needVersions bool, versionID int) (*
 			}
 			vq.WithContent().WithKeywords()
 		}).
+		WithReactions().
 		Only(ctx)
 
 	return _article, err

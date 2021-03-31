@@ -42,6 +42,12 @@ hr {
   border-top: 1px solid #f1f1f1;
 }
 
+#app {
+  max-width: var(--body-w);
+  margin: auto;
+  padding: var(--body-pw);
+}
+
 .word-layout {
   width     : 100%;
   max-width : none;
@@ -224,43 +230,40 @@ h6:hover .octicon {
   display: block;
 }
 
-.menu-button {
-  border          : none;
-  background-color: white;
-  padding         : 6px 24px;
-  border-radius   : 4px;
-}
-
+.menu-button,
+.reaction-button,
 .emoji-button {
   border          : none;
   background-color: transparent;
   border-radius   : 4px;
-  font-size       : 1.2rem;
+  cursor          : pointer;
+}
+
+.emoji-button {
+  font-size: 1.1rem;
+}
+
+.reaction-button {
+  font-size: 0.8rem;
 }
 
 .menu-button+.menu-button {
   margin: 0 4px;
 }
 
-.menu-button:hover {
-  background-color: #f1f1f1;
+.container {
+  margin-top: 32px;
 }
 
-.container {
-  max-width : var(--body-w);
-  margin    : auto;
-  margin-top: 32px;
-  padding   : 0 var(--body-pw);
+.container.none {
+  margin-top: 0;
+  padding   : 0;
 }
 
 .nav {
   display      : flex;
   align-items  : center;
   height       : var(--nav-h);
-  max-width    : var(--nav-w);
-  margin       : auto;
-  padding      : 0 var(--body-pw);
-  border-bottom: 1px solid #f1f1f1;
 }
 
 .nav-start {
@@ -280,10 +283,6 @@ h6:hover .octicon {
   font-size      : var(--md);
 }
 
-.nav-a:hover {
-  background-color: #f1f1f1;
-}
-
 .nav-img {
   width        : 32px;
   height       : 32px;
@@ -291,6 +290,7 @@ h6:hover .octicon {
   border-radius: 1000px;
   margin       : 0;
   padding      : 0;
+  cursor       : pointer;
 }
 
 .nav-img img {
@@ -306,6 +306,7 @@ h6:hover .octicon {
   margin          : 0;
   padding         : 6px 24px;
   border-radius   : 4px;
+  cursor          : pointer;
 }
 
 .nav-button span {
@@ -379,9 +380,38 @@ h6:hover .octicon {
 
 .article-content {
   word-wrap: break-word;
+  padding  : 0 var(--body-pw);
 }
 
 .article-content:first-child {
   margin-top : 0;
   padding-top: 0;
+}
+
+.article-nodes {
+  padding         : 10px var(--body-pw);
+  margin-top: 10px;
+  display         : flex;
+  background-color: #f1f1f1;
+  align-items     : center;
+}
+
+.article-nodes div:first-child {
+  flex: 1;
+}
+
+.article-nav {
+  padding: 20px 0 15px 0;
+  border-bottom: #f1f1f1 solid 1px;
+}
+
+.article-nav a {
+  padding: 15px 20px;
+  text-decoration: none;
+  color: #000;
+  font-size      : var(--md);
+}
+
+.article-nav a.selected {
+  border-bottom: green solid 3px;
 }

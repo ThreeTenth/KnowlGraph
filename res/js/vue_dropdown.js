@@ -35,7 +35,6 @@ Vue.component('dropdown', {
 
     __update() {
       let top = this.$refs.dropdown.getBoundingClientRect().top
-      console.log(top)
       if (top < 240) {
         this.pos = 'down'
       } else {

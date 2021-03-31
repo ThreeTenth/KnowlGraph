@@ -1,11 +1,12 @@
 {
   "__code": "en",
-  "__version": 8,
+  "__version": 9,
   "NewArticle": "New article",
   "Histories": "Histories",
   "Publish": "Publish",
   "Drafts": "Drafts",
   "Articles": "Articles",
+  "Archive": "Archive",
   "About": "About",
   "Title": "Title",
   "Gist": "Gist",

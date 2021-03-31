@@ -5,6 +5,9 @@ const Article = {
 
   data: function () {
     return {
+      emoji: {
+        "up": "👍", "down": "👎", "laugh": "😄", "hooray": "🎉", "confused": "😕", "heart": "❤️", "rocket": "🚀", "eyes": "👀",
+      },
       __original: {},
     }
   },
@@ -30,12 +33,32 @@ const Article = {
       var body = converter.makeHtml(content.body);
       var keywords = version.edges.Keywords
 
+      var lang = userLang
+      languages.forEach(element => {
+        if (element.code == version.lang) {
+          lang = element
+        }
+      });
+
+      var reactions = [
+        { status: "up", count: "9" },
+        { status: "down", count: "99" },
+        { status: "laugh", count: "999" },
+        { status: "heart", count: "1K" },
+        { status: "hooray", count: "10K" },
+        { status: "confused", count: "100k" },
+        { status: "rocket", count: "1M" },
+        { status: "eyes", count: "10M" },
+      ]
+
       return {
         id: article.id,
         status: article.status,
         title: title,
         gist: gist,
         body: body,
+        lang: lang,
+        reactions: reactions,
         keywords: keywords,
         created_at: version.created_at,
         code: code,
