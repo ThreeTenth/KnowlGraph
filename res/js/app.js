@@ -19,6 +19,17 @@ const plugin = {
       lang: userLang,
     }
     Vue.prototype.i18n = i18n
+    Vue.prototype.seen = {
+      nav: {
+        menu: false,
+        languages: false,
+      },
+      draft: {
+        history: {
+          menu: false,
+        }
+      }
+    }
   }
 }
 

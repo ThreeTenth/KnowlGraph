@@ -9,10 +9,10 @@
   --theme    : var(--primary);
 
   --body-w        : 720px;
-  --body-pw       : 10px;
+  --body-pw       : 4px;
   --nav-h         : 72px;
   --nav-w         : 720px;
-  --bar-h        : 72px;
+  --bar-h         : 72px;
   --textarea-min-h: 20px;
   font-family     : "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
 }
@@ -38,13 +38,8 @@ textarea {
 
 hr {
   color     : #f1f1f1;
+  border    : none;
   border-top: 1px solid #f1f1f1;
-}
-
-.container {
-  max-width: var(--body-w);
-  margin   : auto;
-  padding  : 0 var(--body-pw);
 }
 
 .word-layout {
@@ -169,12 +164,22 @@ h6:hover .octicon {
   visibility: visible;
 }
 
-.dropdown {
+.drop {
   position: relative;
   display : inline-block;
 }
 
-.dropdown-content {
+.drop.down .drop-content {
+  right: 0px;
+  top  : 36px;
+}
+
+.drop.up .drop-content {
+  right : 0px;
+  bottom: 28px;
+}
+
+.drop-content {
   background   : #fff;
   border       : 1px solid rgba(0, 0, 0, .2);
   border-radius: 4px;
@@ -184,25 +189,23 @@ h6:hover .octicon {
   outline      : none;
   overflow     : auto;
   position     : absolute;
-  right        : 0px;
-  top          : 32px;
   max-height   : calc(100vh - 86px);
   min-width    : 180px;
 }
 
-.dropdown-content a {
+.drop-content a {
   color          : black;
   padding        : 12px 16px;
   text-decoration: none;
   display        : block;
 }
 
-.dropdown-content a:hover,
-.dropdown-content .selected {
+.drop-content a:hover,
+.drop-content .selected {
   background-color: #f1f1f1
 }
 
-.dropdown-content.block {
+.drop-content.block {
   display: block;
 }
 
@@ -228,12 +231,19 @@ h6:hover .octicon {
   background-color: #f1f1f1;
 }
 
+.container {
+  max-width: var(--body-w);
+  margin   : auto;
+  padding  : 0 var(--body-pw);
+}
+
 .nav {
   display    : flex;
   align-items: center;
   height     : var(--nav-h);
   max-width  : var(--nav-w);
   margin     : auto;
+  padding  : 0 var(--body-pw);
 }
 
 .nav-start {
@@ -243,8 +253,8 @@ h6:hover .octicon {
 .nav-a {
   text-decoration: none;
   color          : var(--text-c);
-  padding        : 6px 14px;
-  margin: 0 4px;
+  padding        : 6px 0;
+  margin         : 0;
   border-radius  : 4px;
   font-size      : var(--md);
 }
@@ -257,7 +267,7 @@ h6:hover .octicon {
   width        : 32px;
   height       : 32px;
   border-radius: 1000px;
-  margin       : 0 4px;
+  margin       : 0;
 }
 
 .nav-button {
@@ -293,8 +303,8 @@ h6:hover .octicon {
   box-sizing : border-box;
   display    : block;
   text-align : -webkit-match-parent;
-  word-wrap: break-word;
-  padding    : 3px 6px;
+  word-wrap  : break-word;
+  padding    : 3px 4px;
   line-height: 26px;
 }
 
@@ -324,7 +334,7 @@ h6:hover .octicon {
   box-sizing : border-box;
   display    : block;
   text-align : -webkit-match-parent;
-  padding    : 3px 6px;
+  padding    : 3px 4px;
   line-height: 26px;
 }
 
@@ -338,5 +348,12 @@ h6:hover .octicon {
 }
 
 .article-content {
-  word-wrap  : break-word;
+  word-wrap : break-word;
+  margin-top: 32px;
+  padding: 0 4px;
+}
+
+.article-content:first-child {
+  margin-top : 0;
+  padding-top: 0;
 }

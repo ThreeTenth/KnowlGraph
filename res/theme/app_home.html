@@ -3,16 +3,16 @@
     <div class="nav-start">
       <router-link class="nav-a" to="/">🏠 {{ i18n.Home }}</router-link>
     </div>
-    <div class="dropdown">
+    <div class="drop down">
       <button class="nav-button" v-on:click="toggleLanguageSetting">{{ user.lang.name }}<span></span>👇</button>
-      <div class="dropdown-content" v-bind:class="ui.languages? 'block' : ''">
+      <div class="drop-content" v-bind:class="ui.languages? 'block' : ''">
         <a v-for="(lang, i) in languages" v-bind:class="user.lang.code == lang.code ? 'selected' : ''"
           v-bind:dir="lang.direction" v-on:click="onSelectUserLang(lang)"> {{ lang.name }}</a>
       </div>
     </div>
-    <div class="dropdown">
-      <img class="dropbtn nav-img" alt="" v-bind:src="profilePicture" v-on:click="toggleMenu">
-      <div class="dropdown-content" v-bind:class="ui.menu ? 'block' : ''">
+    <div class="drop down">
+      <img class="nav-img" alt="" v-bind:src="profilePicture" v-on:click="toggleMenu">
+      <div class="drop-content" v-bind:class="ui.menu ? 'block' : ''">
         <div class="flex">
           <router-link class="flex-1" v-bind:to="{ name: 'newArticle', query: { status: 'public' }}">{{
             i18n.NewArticle }}</router-link>
