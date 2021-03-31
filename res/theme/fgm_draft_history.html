@@ -3,15 +3,15 @@
     <p class="wrap">{{ snapshot.body }}</p>
     <div class="bar">
       <div></div>
-      <div class="drop up">
+      <dropdown>
         <button class="emoji-button">...</button>
-        <div class="drop-content" v-bind:class="seen.draft.history.menu ? 'block' : ''">
-          <button class="menu-button" v-on:click="onBack">{{ i18n.Back }}</button>
-          <button class="menu-button">{{ i18n.Preview }}</button>
-          <button class="menu-button">{{ i18n.Compare }}</button>
-          <button class="menu-button">{{ i18n.RestoreThisVersion }}</button>
+        <div class="drop-content">
+          <button v-on:click="onBack">{{ i18n.Back }}</button>
+          <button>{{ i18n.Preview }}</button>
+          <button>{{ i18n.Compare }}</button>
+          <button>{{ i18n.RestoreThisVersion }}</button>
         </div>
-      </div>
+      </dropdown>
     </div>
     <the-time v-bind:datetime="snapshot.created_at"></the-time>
   </div>

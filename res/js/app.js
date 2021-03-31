@@ -19,17 +19,6 @@ const plugin = {
       lang: userLang,
     }
     Vue.prototype.i18n = i18n
-    Vue.prototype.seen = {
-      nav: {
-        menu: false,
-        languages: false,
-      },
-      draft: {
-        history: {
-          menu: false,
-        }
-      }
-    }
   }
 }
 
@@ -58,10 +47,6 @@ const router = new VueRouter({
 
 var app = new Vue({
   data: {
-    ui: {
-      menu: false,
-      languages: false,
-    },
     languages: languages,
     logined: logined,
     profilePicture: getLink("icon")
@@ -104,6 +89,8 @@ var app = new Vue({
         removeI18nStrings(langCode)
       }
 
+      let _this = this
+
       axios({
         method: "GET",
         url: queryStatic("/static/strings/strings-" + langCode + ".json"),
@@ -112,44 +99,9 @@ var app = new Vue({
         setI18nStrings(langCode, resp.data)
         Object.assign(i18n, resp.data)
       }).catch(function (resp) {
-        console.error("catch", resp)
-        app.user.lang = old
-        setUserLang(old)
+        _this.user.lang = old
+        setUserLang(old.code)
       })
-    },
-
-    toggleMenu() {
-      if (this.ui.menu) {
-        return this.__hideMenu()
-      }
-      return this.__showMenu()
-    },
-
-    __showMenu() {
-      this.ui.menu = true
-      setTimeout(() => document.addEventListener('click', this.__hideMenu), 0);
-    },
-
-    __hideMenu() {
-      this.ui.menu = false
-      document.removeEventListener('click', this.__hideMenu);
-    },
-
-    toggleLanguageSetting() {
-      if (this.ui.languages) {
-        return this.__hideLanguageSetting()
-      }
-      return this.__showLanguageSetting()
-    },
-
-    __showLanguageSetting() {
-      this.ui.languages = true
-      setTimeout(() => document.addEventListener('click', this.__hideLanguageSetting), 0);
-    },
-
-    __hideLanguageSetting() {
-      this.ui.languages = false
-      document.removeEventListener('click', this.__hideLanguageSetting);
     },
   }
 }).$mount('#app')

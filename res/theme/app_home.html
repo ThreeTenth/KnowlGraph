@@ -3,16 +3,19 @@
     <div class="nav-start">
       <router-link class="nav-a" to="/">🏠 {{ i18n.Home }}</router-link>
     </div>
-    <div class="drop down">
-      <button class="nav-button" v-on:click="toggleLanguageSetting">{{ user.lang.name }}<span></span>👇</button>
-      <div class="drop-content" v-bind:class="ui.languages? 'block' : ''">
-        <a v-for="(lang, i) in languages" v-bind:class="user.lang.code == lang.code ? 'selected' : ''"
-          v-bind:dir="lang.direction" v-on:click="onSelectUserLang(lang)"> {{ lang.name }}</a>
+    <dropdown>
+      <button class="nav-button">{{ user.lang.name }}<span></span>👇</button>
+      <div class="drop-content">
+        <button v-for="(lang, i) in languages" v-bind:class="user.lang.code == lang.code ? 'selected' : ''"
+          v-bind:dir="lang.direction" v-on:click="onSelectUserLang(lang)"> {{ lang.name }}</button>
       </div>
-    </div>
-    <div class="drop down">
-      <img class="nav-img" alt="" v-bind:src="profilePicture" v-on:click="toggleMenu">
-      <div class="drop-content" v-bind:class="ui.menu ? 'block' : ''">
+    </dropdown>
+    <span class="nav-space"></span>
+    <dropdown>
+      <button class="nav-img">
+        <img alt="" v-bind:src="profilePicture">
+      </button>
+      <div class="drop-content">
         <div class="flex">
           <router-link class="flex-1" v-bind:to="{ name: 'newArticle', query: { status: 'public' }}">{{
             i18n.NewArticle }}</router-link>
@@ -24,7 +27,7 @@
         <hr />
         <a href="/signout">{{ i18n.Logout }}</a>
       </div>
-    </div>
+    </dropdown>
   </nav>
   <keep-alive>
     <router-view></router-view>

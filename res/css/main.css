@@ -9,8 +9,8 @@
   --theme    : var(--primary);
 
   --body-w        : 720px;
-  --body-pw       : 4px;
-  --nav-h         : 72px;
+  --body-pw       : 10px;
+  --nav-h         : 56px;
   --nav-w         : 720px;
   --bar-h         : 72px;
   --textarea-min-h: 20px;
@@ -179,6 +179,10 @@ h6:hover .octicon {
   bottom: 28px;
 }
 
+.drop.block .drop-content {
+  display: block;
+}
+
 .drop-content {
   background   : #fff;
   border       : 1px solid rgba(0, 0, 0, .2);
@@ -200,7 +204,18 @@ h6:hover .octicon {
   display        : block;
 }
 
+.drop-content button {
+  border          : none;
+  color           : black;
+  background-color: transparent;
+  display         : block;
+  width           : 100%;
+  padding         : 12px 16px;
+  text-align      : inherit;
+}
+
 .drop-content a:hover,
+.drop-content button:hover,
 .drop-content .selected {
   background-color: #f1f1f1
 }
@@ -232,22 +247,28 @@ h6:hover .octicon {
 }
 
 .container {
-  max-width: var(--body-w);
-  margin   : auto;
-  padding  : 0 var(--body-pw);
+  max-width : var(--body-w);
+  margin    : auto;
+  margin-top: 32px;
+  padding   : 0 var(--body-pw);
 }
 
 .nav {
-  display    : flex;
-  align-items: center;
-  height     : var(--nav-h);
-  max-width  : var(--nav-w);
-  margin     : auto;
-  padding  : 0 var(--body-pw);
+  display      : flex;
+  align-items  : center;
+  height       : var(--nav-h);
+  max-width    : var(--nav-w);
+  margin       : auto;
+  padding      : 0 var(--body-pw);
+  border-bottom: 1px solid #f1f1f1;
 }
 
 .nav-start {
   flex: auto;
+}
+
+.nav-space {
+  width: 14px;
 }
 
 .nav-a {
@@ -266,6 +287,15 @@ h6:hover .octicon {
 .nav-img {
   width        : 32px;
   height       : 32px;
+  border       : none;
+  border-radius: 1000px;
+  margin       : 0;
+  padding      : 0;
+}
+
+.nav-img img {
+  width        : 32px;
+  height       : 32px;
   border-radius: 1000px;
   margin       : 0;
 }
@@ -273,7 +303,7 @@ h6:hover .octicon {
 .nav-button {
   border          : #b0aec0 solid 1px;
   background-color: white;
-  margin          : 0 12px;
+  margin          : 0;
   padding         : 6px 24px;
   border-radius   : 4px;
 }
@@ -348,9 +378,7 @@ h6:hover .octicon {
 }
 
 .article-content {
-  word-wrap : break-word;
-  margin-top: 32px;
-  padding: 0 4px;
+  word-wrap: break-word;
 }
 
 .article-content:first-child {
