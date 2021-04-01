@@ -10,12 +10,12 @@
       <a href="#">笔记</a>
     </div>
     <article class="article-content" v-html="article.body"></article>
-    <div class="flex v">
-      <the-time v-bind:datetime="article.created_at" />
-      <code class="m-2-4 p-2-4" v-for="(keyword, i) in article.keywords">{{keyword.name}}</code>
+    <div class="article-keywords" v-if="0 != article.keywords.length">
+      <a href="#" v-for="(keyword, i) in article.keywords">#{{keyword.name}}</a>
     </div>
     <div class="bar">
       <div>
+        <the-time v-bind:datetime="article.created_at" />
       </div>
       <dropdown>
         <button class="emoji-button">😃</button>
@@ -37,7 +37,7 @@
         </div>
       </dropdown>
     </div>
-    <div>
+    <div class="article-reactions" v-if="0 != article.reactions.length">
       <button class="reaction-button" v-for="(rt, i) in article.reactions">{{ emoji[rt.status]}} {{ rt.count}}</button>
     </div>
   </div>

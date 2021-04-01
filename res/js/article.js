@@ -50,6 +50,7 @@ const Article = {
         { status: "rocket", count: "1M" },
         { status: "eyes", count: "10M" },
       ]
+      reactions = article.edges.Reactions
 
       return {
         id: article.id,

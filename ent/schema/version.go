@@ -36,6 +36,7 @@ func (Version) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("content", Content.Type).Unique().Required(),
 		edge.To("keywords", Word.Type),
+		edge.To("quotes", Quote.Type),
 		edge.From("article", Article.Type).
 			Ref("versions").
 			Unique().

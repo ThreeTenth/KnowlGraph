@@ -51,7 +51,9 @@ func GetArticle(_userID int, articleID int, needVersions bool, versionID int) (*
 			} else {
 				vq.Order(ent.Desc(version.FieldCreatedAt)).Limit(1)
 			}
-			vq.WithContent().WithKeywords()
+			vq.WithContent().
+				WithKeywords().
+				WithQuotes()
 		}).
 		WithReactions().
 		Only(ctx)

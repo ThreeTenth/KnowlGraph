@@ -27,7 +27,6 @@ func (Word) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("nodes", Node.Type),
 		edge.To("definition", Article.Type).Unique(),
-		edge.From("users", User.Type).Ref("words"),
 		edge.From("versions", Version.Type).Ref("keywords"),
 	}
 }

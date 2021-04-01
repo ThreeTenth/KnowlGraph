@@ -27,7 +27,7 @@ func (User) Edges() []ent.Edge {
 		edge.To("assets", Asset.Type).StorageKey(edge.Column("owner_id")),
 		edge.To("archives", Archive.Type).StorageKey(edge.Column("owner_id")),
 		edge.To("drafts", Draft.Type).StorageKey(edge.Column("editor_id")),
-		edge.To("words", Word.Type),
+		edge.To("words", UserWord.Type).StorageKey(edge.Column("user_words")),
 		edge.To("languages", Language.Type),
 		edge.From("rass", RAS.Type).Ref("voters"),
 	}

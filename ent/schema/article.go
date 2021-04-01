@@ -30,12 +30,15 @@ func (Article) Edges() []ent.Edge {
 		edge.To("versions", Version.Type),
 		edge.To("branches", Draft.Type),
 		edge.To("reactions", Reaction.Type),
-		edge.To("quote", Quote.Type).Unique().StorageKey(edge.Column("response_id")),
 		edge.To("assets", Asset.Type),
+		edge.To("quotes", Quote.Type),
 		edge.From("nodes", Node.Type).
 			Ref("articles"),
 		edge.From("word", Word.Type).
 			Ref("definition").
+			Unique(),
+		edge.From("quote", Quote.Type).
+			Ref("response").
 			Unique(),
 	}
 }

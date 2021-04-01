@@ -12,7 +12,7 @@
   --body-pw       : 10px;
   --nav-h         : 56px;
   --nav-w         : 720px;
-  --bar-h         : 72px;
+  --bar-h         : 56px;
   --textarea-min-h: 20px;
   font-family     : "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
 }
@@ -44,8 +44,8 @@ hr {
 
 #app {
   max-width: var(--body-w);
-  margin: auto;
-  padding: var(--body-pw);
+  margin   : auto;
+  padding  : var(--body-pw);
 }
 
 .word-layout {
@@ -261,9 +261,9 @@ h6:hover .octicon {
 }
 
 .nav {
-  display      : flex;
-  align-items  : center;
-  height       : var(--nav-h);
+  display    : flex;
+  align-items: center;
+  height     : var(--nav-h);
 }
 
 .nav-start {
@@ -390,7 +390,7 @@ h6:hover .octicon {
 
 .article-nodes {
   padding         : 10px var(--body-pw);
-  margin-top: 10px;
+  margin-top      : 10px;
   display         : flex;
   background-color: #f1f1f1;
   align-items     : center;
@@ -401,17 +401,36 @@ h6:hover .octicon {
 }
 
 .article-nav {
-  padding: 20px 0 15px 0;
+  padding      : 20px 0 15px 0;
   border-bottom: #f1f1f1 solid 1px;
 }
 
 .article-nav a {
-  padding: 15px 20px;
+  padding        : 15px 20px;
   text-decoration: none;
-  color: #000;
-  font-size      : var(--md);
+  color          : #000;
+  font-size      : var(--sm);
 }
 
 .article-nav a.selected {
   border-bottom: green solid 3px;
+}
+
+.article-reactions {
+  background-color: var(--highlight);
+  padding         : 4px 6px;
+}
+
+.article-keywords {
+  padding: 10px 0;
+}
+
+.article-keywords a {
+  text-decoration : none;
+  font-size       : 0.8rem;
+  color           : whitesmoke;
+  background-color: green;
+  border-radius   : 19px;
+  padding         : 2px 8px;
+  margin          : 0 2px;
 }

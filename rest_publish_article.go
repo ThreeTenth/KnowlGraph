@@ -12,6 +12,7 @@ import (
 	"knowlgraph.com/ent/content"
 	"knowlgraph.com/ent/draft"
 	"knowlgraph.com/ent/user"
+	"knowlgraph.com/ent/userword"
 	"knowlgraph.com/ent/version"
 	"knowlgraph.com/ent/word"
 
@@ -181,14 +182,53 @@ func updateUserAsset(tx *ent.Tx, userID int, status asset.Status, vers *ent.Vers
 		}
 	}
 
-	_, err = tx.User.Update().
-		Where(user.ID(userID)).
-		AddWords(vers.Edges.Keywords...).
-		Save(ctx)
+	_wordIDs := make([]int, len(vers.Edges.Keywords))
+	for i, keyword := range vers.Edges.Keywords {
+		_wordIDs[i] = keyword.ID
+	}
+
+	_userwordIDs, err := tx.UserWord.Query().
+		Where(
+			userword.HasWordWith(word.IDIn(_wordIDs...)),
+			userword.HasUserWith(user.ID(userID))).
+		Select(userword.FieldID).
+		Ints(ctx)
+	if err != nil {
+		return err
+	}
+
+	_insertCount := len(_wordIDs) - len(_userwordIDs)
+
+	if 0 < _insertCount {
+		_wordBulk := make([]*ent.UserWordCreate, _insertCount)
+		i := 0
+		for _, keywordID := range _wordIDs {
+			for _, userwordID := range _userwordIDs {
+				if keywordID == userwordID {
+					continue
+				}
+			}
+			_wordBulk[i] = tx.UserWord.Create().SetUserID(userID).SetWordID(keywordID)
+			i++
+		}
+
+		_, err = tx.UserWord.CreateBulk(_wordBulk...).Save(ctx)
+
+		if err != nil {
+			return err
+		}
+	}
+
+	_, err = tx.UserWord.Update().Where(userword.IDIn(_userwordIDs...)).AddWeight(1).Save(ctx)
 
 	if err != nil {
 		return err
 	}
+
+	// _, err = tx.User.Update().
+	// 	Where(user.ID(userID)).
+	// 	AddWords(vers.Edges.Keywords...).
+	// 	Save(ctx)
 
 	_, err = tx.Language.Create().
 		SetCode(vers.Lang).
