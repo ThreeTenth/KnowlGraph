@@ -13,35 +13,11 @@ Vue.component('words-input', {
       auto: false,
       values: this.keywords ? this.keywords : [],
       input: "",
+      newInput: "",
       items: [],
-      state: WordStateMayDel,
+      deleteMark: null,
       __isDelProcess: false,
     }
-  },
-  watch: {
-    input: function (val, oldVal) {
-      if ("" == val) {
-        if (WordStateSafe == this.state) {
-          this.state = WordStateIdle
-        }
-        this.auto = false
-      } else if (this.words) {
-        this.state = WordStateSafe
-        if (2 <= val.length) {
-          const items = []
-          const regex = new RegExp('^' + val)
-          this.words.forEach(item => {
-            if (regex.test(item)) {
-              items.push(item)
-            }
-          });
-          this.items = items
-          this.auto = 0 != items.length
-        } else {
-          this.auto = false
-        }
-      }
-    },
   },
 
   created() { console.log(this.$props) },
@@ -72,7 +48,6 @@ Vue.component('words-input', {
       if (index > -1) {
         this.values.splice(index, 1)
       }
-      this.state = WordStateMayDel
     },
     onAdd: function () {
       var word = this.input.replace(/[\,\， ]*$/g, '')
@@ -94,29 +69,49 @@ Vue.component('words-input', {
 
       this.values.push(word)
       this.input = ""
-      this.state = WordStateMayDel
     },
     onDel: function () {
       if (this.$data.__isDelProcess) {
         this.$data.__isDelProcess = false
         return
       }
-      switch (this.state) {
-        case WordStateIdle:
-          this.state = WordStateMayDel
-          break;
-        case WordStateMayDel:
-          this.state = WordStatePreDel
-          cancelDeleteWordTimeoutID = window.setTimeout(() => { this.state = WordStateMayDel }, 2000)
-          break;
-        case WordStatePreDel:
-          const removeIndex = this.values.length
-          this.values.splice(removeIndex - 1, 1)
-          this.state = WordStateMayDel
-          window.clearTimeout(cancelDeleteWordTimeoutID)
-          break;
+      if (0 < this.newInput.length) return
+      if (null == this.deleteMark) {
+        cancelDeleteWordTimeoutID = window.setTimeout(() => { this.deleteMark = null }, 2000)
+        this.deleteMark = this.values.length - 1
+      } else {
+        this.values.splice(this.deleteMark, 1)
+        window.clearTimeout(cancelDeleteWordTimeoutID)
+        this.deleteMark = null
       }
     },
   },
+
+  watch: {
+    input: function (val, oldVal) {
+      window.setTimeout(() => { this.newInput = val }, 100)
+      if ("" == val) {
+        this.auto = false
+      } else {
+        this.deleteMark = null
+        if (this.words) {
+          if (2 <= val.length) {
+            const items = []
+            const regex = new RegExp('^' + val)
+            this.words.forEach(item => {
+              if (regex.test(item)) {
+                items.push(item)
+              }
+            });
+            this.items = items
+            this.auto = 0 != items.length
+          } else {
+            this.auto = false
+          }
+        }
+      }
+    },
+  },
+
   template: com_words_input,
 })
