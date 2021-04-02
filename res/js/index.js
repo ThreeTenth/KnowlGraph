@@ -13,7 +13,7 @@ const Index = {
       var _articles = []
       for (let index = 0; index < original.length; index++) {
         const article = original[index];
-        let version = article.edges.Versions[0]
+        let version = article.edges.versions[0]
         let title = version.title ? version.title : ""
         let code = title
         if (!code) {

@@ -16,6 +16,7 @@ func getKeywords(c *Context) error {
 	_privateCreate := client.User.Query().
 		Where(user.IDEQ(_userID.(int))).
 		QueryWords().
+		QueryWord().
 		Select(word.FieldName)
 
 	var _words []string

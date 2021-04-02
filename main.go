@@ -196,6 +196,11 @@ func router01() http.Handler {
 	router.Use(cors)
 
 	router.GET("/favicon.ico", getFavicon)
+	router.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
 
 	router.GET("/", authentication, html(index))
 	router.GET("/drafts", authentication, html(index))

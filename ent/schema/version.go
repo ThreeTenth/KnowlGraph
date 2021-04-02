@@ -34,12 +34,18 @@ func (Version) Fields() []ent.Field {
 // Edges of the Version.
 func (Version) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("content", Content.Type).Unique().Required(),
-		edge.To("keywords", Word.Type),
-		edge.To("quotes", Quote.Type),
+		edge.To("content", Content.Type).
+			Unique().
+			Required().
+			StructTag(`json:"content,omitempty"`),
+		edge.To("keywords", Word.Type).
+			StructTag(`json:"keywords,omitempty"`),
+		edge.To("quotes", Quote.Type).
+			StructTag(`json:"quotes,omitempty"`),
 		edge.From("article", Article.Type).
 			Ref("versions").
 			Unique().
-			Required(),
+			Required().
+			StructTag(`json:"article,omitempty"`),
 	}
 }

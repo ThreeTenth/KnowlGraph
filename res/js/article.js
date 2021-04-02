@@ -17,8 +17,8 @@ const Article = {
       let article = this.$data.__original
       if (undefined == article.edges) return
 
-      let version = article.edges.Versions[0]
-      let content = version.edges.Content
+      let version = article.edges.versions[0]
+      let content = version.edges.content
 
       var title, gist, code = seo(version.title, version.gist)
 
@@ -31,7 +31,7 @@ const Article = {
       // KaTeX: math regex: /\$\$([^$]+)\$\$/gm
 
       var body = converter.makeHtml(content.body);
-      var keywords = version.edges.Keywords
+      var keywords = version.edges.keywords
 
       var lang = userLang
       languages.forEach(element => {
@@ -50,7 +50,7 @@ const Article = {
         { status: "rocket", count: "1M" },
         { status: "eyes", count: "10M" },
       ]
-      reactions = article.edges.Reactions
+      reactions = article.edges.reactions
 
       return {
         id: article.id,
@@ -72,7 +72,7 @@ const Article = {
       let article = this.$data.__original
       if (undefined == article.edges) return
 
-      let version = article.edges.Versions[0]
+      let version = article.edges.versions[0]
 
       axios({
         method: "PUT",

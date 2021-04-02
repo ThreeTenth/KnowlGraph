@@ -105,7 +105,7 @@ func joinGithub(c *Context) error {
 		return c.Unauthorized(string(body))
 	}
 
-	_user, err := client.User.Query().Where(user.GithubIDEQ(githubUser.ID)).Only(ctx)
+	_user, err := client.User.Query().Where(user.GithubIDEQ(githubUser.ID)).First(ctx)
 	if err != nil {
 		_user, err = client.User.Create().
 			SetName(githubUser.Login).
