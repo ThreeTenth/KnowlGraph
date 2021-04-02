@@ -26,15 +26,13 @@ const PublishArticle = {
       let text = removeMarkdown(content)
       let gist
 
-      // todo remove title text in gist
-
       if (200 <= text.length) {
         gist = text.substr(0, 120).trim() + '...'
       } else {
         gist = text
       }
       
-      this.gist = gist.replace(/[\r|\n]/g, ' ')
+      gist = gist.replace(/[\r|\n]/g, ' ')
 
       this.status = val.edges.article.status
 
@@ -42,6 +40,7 @@ const PublishArticle = {
 
       if (found) {
         this.title = found[1]
+        this.gist = gist.replace(found[1], '').trim()
         return
       }
 
@@ -49,6 +48,7 @@ const PublishArticle = {
 
       if (found) {
         this.title = found[1]
+        this.gist = gist.replace(found[1], '').trim()
         return
       }
     },
