@@ -10,7 +10,7 @@
       <a href="#">笔记</a>
     </div>
     <article class="article-content" v-html="article.body"></article>
-    <div class="article-keywords" v-if="0 != article.keywords.length">
+    <div class="article-keywords" v-if="article.keywords">
       <a href="#" v-for="(keyword, i) in article.keywords">#{{keyword.name}}</a>
     </div>
     <div class="bar">
@@ -37,7 +37,7 @@
         </div>
       </dropdown>
     </div>
-    <div class="article-reactions" v-if="0 != article.reactions.length">
+    <div class="article-reactions" v-if="article.reactions">
       <button class="reaction-button" v-for="(rt, i) in article.reactions">{{ emoji[rt.status]}} {{ rt.count}}</button>
     </div>
   </div>

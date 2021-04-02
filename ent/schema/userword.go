@@ -25,10 +25,12 @@ func (UserWord) Edges() []ent.Edge {
 		edge.From("user", User.Type).
 			Ref("words").
 			Unique().
-			Required(),
+			Required().
+			StructTag(`json:"user,omitempty"`),
 		edge.To("word", Word.Type).
 			Unique().
-			Required(),
+			Required().
+			StructTag(`json:"word,omitempty"`),
 	}
 }
 

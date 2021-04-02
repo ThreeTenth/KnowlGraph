@@ -22,9 +22,11 @@ const PublishArticle = {
     draft: function (val, oldVal) {
       if (!val) return ""
 
-      let content = val.edges.Snapshots[0].body
+      let content = val.edges.snapshots[0].body
       let text = removeMarkdown(content)
       let gist
+
+      // todo remove title text in gist
 
       if (200 <= text.length) {
         gist = text.substr(0, 120).trim() + '...'
@@ -34,7 +36,7 @@ const PublishArticle = {
       
       this.gist = gist.replace(/[\r|\n]/g, ' ')
 
-      this.status = val.edges.Article.status
+      this.status = val.edges.article.status
 
       let found = content.match(/^# (.*)/m)
 
@@ -76,7 +78,7 @@ const PublishArticle = {
         }
         router.push({
           name: 'article', params: {
-            id: resp.data.edges.Article.id,
+            id: resp.data.edges.article.id,
             code: encodeURLTitle(_this.title)
           }
         })

@@ -24,16 +24,20 @@ func (Content) Fields() []ent.Field {
 // Edges of the Content.
 func (Content) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("last", Content.Type).Unique(),
-		edge.To("sections", Section.Type),
+		edge.To("last", Content.Type).Unique().
+			StructTag(`json:"last,omitempty"`),
+		edge.To("sections", Section.Type).
+			StructTag(`json:"sections,omitempty"`),
 		edge.From("branche", Draft.Type).
 			Ref("snapshots").
 			Unique().
 			Required().
-			Comment("Snapshot of a branch."),
+			Comment("Snapshot of a branch.").
+			StructTag(`json:"branche,omitempty"`),
 		edge.From("version", Version.Type).
 			Ref("content").
 			Unique().
-			Comment("The content of a published version. If the article is public, a vote is required. If the article is private, it is created directly."),
+			Comment("The content of a published version. If the article is public, a vote is required. If the article is private, it is created directly.").
+			StructTag(`json:"version,omitempty"`),
 	}
 }

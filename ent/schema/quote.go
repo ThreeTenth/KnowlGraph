@@ -27,12 +27,14 @@ func (Quote) Edges() []ent.Edge {
 		edge.To("response", Article.Type).
 			Unique().
 			Required().
-			StorageKey(edge.Column("response_id")),
+			StorageKey(edge.Column("response_id")).
+			StructTag(`json:"response,omitempty"`),
 		edge.From("article", Article.Type).
 			Ref("quotes").
 			Unique(),
 		edge.From("version", Version.Type).
 			Ref("quotes").
-			Unique(),
+			Unique().
+			StructTag(`json:"version,omitempty"`),
 	}
 }

@@ -21,9 +21,13 @@ func (Draft) Fields() []ent.Field {
 // Edges of the Draft.
 func (Draft) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("snapshots", Content.Type),
-		edge.To("original", Version.Type).Unique(),
-		edge.From("user", User.Type).Ref("drafts").Unique().Required(),
-		edge.From("article", Article.Type).Ref("branches").Unique().Required(),
+		edge.To("snapshots", Content.Type).
+			StructTag(`json:"snapshots,omitempty"`),
+		edge.To("original", Version.Type).Unique().
+			StructTag(`json:"original,omitempty"`),
+		edge.From("user", User.Type).Ref("drafts").Unique().Required().
+			StructTag(`json:"user,omitempty"`),
+		edge.From("article", Article.Type).Ref("branches").Unique().Required().
+			StructTag(`json:"article,omitempty"`),
 	}
 }

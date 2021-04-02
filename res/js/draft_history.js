@@ -20,7 +20,7 @@ const DraftHistories = {
         method: "GET",
         url: queryRestful("/v1/draft", { id: id, needHistory: true }),
       }).then(function (resp) {
-        _this.snapshots = resp.data.edges.Snapshots
+        _this.snapshots = resp.data.edges.snapshots
       }).catch(function (resp) {
         console.log(resp)
       })
@@ -79,11 +79,10 @@ const DraftHistory = {
         method: "GET",
         url: queryRestful("/v1/draft", { id: id, historyID: hid }),
       }).then(function (resp) {
-        let snapshots = resp.data.edges.Snapshots
-        if (0 == snapshots.length) {
-          return
+        let snapshots = resp.data.edges.snapshots
+        if (snapshots) {
+          _this.snapshot = snapshots[0]
         }
-        _this.snapshot = snapshots[0]
       }).catch(function (resp) {
         console.log(resp)
       })

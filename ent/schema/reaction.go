@@ -24,6 +24,9 @@ func (Reaction) Fields() []ent.Field {
 // Edges of the Reaction.
 func (Reaction) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("article", Article.Type).Ref("reactions").Unique(),
+		edge.From("article", Article.Type).
+			Ref("reactions").
+			Unique().
+			StructTag(`json:"article,omitempty"`),
 	}
 }

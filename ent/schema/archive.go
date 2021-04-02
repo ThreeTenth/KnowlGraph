@@ -31,11 +31,13 @@ func (Archive) Edges() []ent.Edge {
 			Ref("archives").
 			Unique().
 			Required().
-			Comment("The owner of the archive"),
+			Comment("The owner of the archive").
+			StructTag(`json:"user,omitempty"`),
 		edge.From("node", Node.Type).
 			Ref("archives").
 			Unique().
 			Required(),
-		edge.To("assets", Asset.Type),
+		edge.To("assets", Asset.Type).
+			StructTag(`json:"assets,omitempty"`),
 	}
 }

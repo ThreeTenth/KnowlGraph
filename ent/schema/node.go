@@ -28,18 +28,23 @@ func (Node) Edges() []ent.Edge {
 		edge.From("word", Word.Type).
 			Ref("nodes").
 			Unique().
-			Required(),
+			Required().
+			StructTag(`json:"word,omitempty"`),
 		edge.To("subnodes", Node.Type).
 			Comment("subnodes: the next subdivision node of this node").
 			From("belong").
 			Comment("belong: belong to which node").
-			Unique(),
+			Unique().
+			StructTag(`json:"subnodes,omitempty"`),
 		edge.To("branches", Node.Type).
 			Comment("branches: root node attribute, which means all branch nodes under the root node.").
 			From("root").
 			Comment("root: the root node of the current node.").
-			Unique(),
-		edge.To("archives", Archive.Type),
-		edge.To("articles", Article.Type),
+			Unique().
+			StructTag(`json:"branches,omitempty"`),
+		edge.To("archives", Archive.Type).
+			StructTag(`json:"archives,omitempty"`),
+		edge.To("articles", Article.Type).
+			StructTag(`json:"articles,omitempty"`),
 	}
 }

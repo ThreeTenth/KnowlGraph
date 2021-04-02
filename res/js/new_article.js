@@ -33,22 +33,22 @@ const EditDraft = {
         if (!this.draft) {
           return ""
         }
-        if (this.draft.edges.Snapshots[0])
-          return this.draft.edges.Snapshots[0].body
+        if (this.draft.edges.snapshots[0])
+          return this.draft.edges.snapshots[0].body
         return ""
       },
       set: function (newValue) {
-        if (this.draft.edges.Snapshots[0]) {
-          this.draft.edges.Snapshots[0].body = newValue
+        if (this.draft.edges.snapshots[0]) {
+          this.draft.edges.snapshots[0].body = newValue
         } else {
-          this.draft.edges.Snapshots[0] = { body: newValue }
+          this.draft.edges.snapshots[0] = { body: newValue }
         }
       }
     },
 
     status: function () {
       if (!this.draft) { return "" }
-      return this.draft.edges.Article.status
+      return this.draft.edges.article.status
     },
   },
 
@@ -74,7 +74,7 @@ const EditDraft = {
 
     onSaveDraft: function () {
       // console.trace()
-      let content = this.draft.edges.Snapshots[0]
+      let content = this.draft.edges.snapshots[0]
       if (this.__last && content.body && content.body === this.__last) {
         return
       }
@@ -88,7 +88,7 @@ const EditDraft = {
           draft_id: this.draft.id,
         },
       }).then(function (resp) {
-        _this.draft.edges.Snapshots[0] = resp.data
+        _this.draft.edges.snapshots[0] = resp.data
         _this.__setLast(_this.draft)
         // todo the new article have content and notify drafts page
       }).catch(function (resp) {
@@ -121,8 +121,8 @@ const EditDraft = {
     },
 
     __setLast(__draft) {
-      if (__draft.edges.Snapshots[0]) {
-        this.__last = __draft.edges.Snapshots[0].body
+      if (__draft.edges.snapshots[0]) {
+        this.__last = __draft.edges.snapshots[0].body
       } else {
         this.__last = ""
       }

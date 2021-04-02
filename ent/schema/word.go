@@ -25,8 +25,13 @@ func (Word) Fields() []ent.Field {
 // Edges of the Word.
 func (Word) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("nodes", Node.Type),
-		edge.To("definition", Article.Type).Unique(),
-		edge.From("versions", Version.Type).Ref("keywords"),
+		edge.To("nodes", Node.Type).
+			StructTag(`json:"nodes,omitempty"`),
+		edge.To("definition", Article.Type).
+			Unique().
+			StructTag(`json:"definition,omitempty"`),
+		edge.From("versions", Version.Type).
+			Ref("keywords").
+			StructTag(`json:"versions,omitempty"`),
 	}
 }

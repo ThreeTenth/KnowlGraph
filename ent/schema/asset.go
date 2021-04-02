@@ -34,12 +34,14 @@ func (Asset) Edges() []ent.Edge {
 			Ref("assets").
 			Unique().
 			Required().
-			Comment("The owner of the asset"),
+			Comment("The owner of the asset").
+			StructTag(`json:"user,omitempty"`),
 		edge.From("article", Article.Type).
 			Ref("assets").
 			Unique().
 			Required(),
 		edge.From("archives", Archive.Type).
-			Ref("assets"),
+			Ref("assets").
+			StructTag(`json:"archives,omitempty"`),
 	}
 }

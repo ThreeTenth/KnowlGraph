@@ -26,8 +26,13 @@ func (Section) Edges() []ent.Edge {
 		edge.To("subsections", Section.Type).
 			Comment("subsections: the next subdivision sections of this section").
 			From("belong").
+			Unique().
 			Comment("belong: belong to which pact").
-			Unique(),
-		edge.From("content", Content.Type).Ref("sections").Unique().Required(),
+			StructTag(`json:"subsections,omitempty"`),
+		edge.From("content", Content.Type).
+			Ref("sections").
+			Unique().
+			Required().
+			StructTag(`json:"content,omitempty"`),
 	}
 }

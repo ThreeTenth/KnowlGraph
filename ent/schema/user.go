@@ -24,11 +24,22 @@ func (User) Fields() []ent.Field {
 // Edges of the User.
 func (User) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("assets", Asset.Type).StorageKey(edge.Column("owner_id")),
-		edge.To("archives", Archive.Type).StorageKey(edge.Column("owner_id")),
-		edge.To("drafts", Draft.Type).StorageKey(edge.Column("editor_id")),
-		edge.To("words", UserWord.Type).StorageKey(edge.Column("user_words")),
-		edge.To("languages", Language.Type),
-		edge.From("rass", RAS.Type).Ref("voters"),
+		edge.To("assets", Asset.Type).
+			StorageKey(edge.Column("owner_id")).
+			StructTag(`json:"assets,omitempty"`),
+		edge.To("archives", Archive.Type).
+			StorageKey(edge.Column("owner_id")).
+			StructTag(`json:"archives,omitempty"`),
+		edge.To("drafts", Draft.Type).
+			StorageKey(edge.Column("editor_id")).
+			StructTag(`json:"drafts,omitempty"`),
+		edge.To("words", UserWord.Type).
+			StorageKey(edge.Column("user_words")).
+			StructTag(`json:"words,omitempty"`),
+		edge.To("languages", Language.Type).
+			StructTag(`json:"languages,omitempty"`),
+		edge.From("rass", RAS.Type).
+			Ref("voters").
+			StructTag(`json:"rass,omitempty"`),
 	}
 }

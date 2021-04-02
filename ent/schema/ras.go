@@ -29,8 +29,10 @@ func (RAS) Fields() []ent.Field {
 func (RAS) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("version", Version.Type).Unique().Required().
-			Comment("The content is being voted, if allowed, it will be redirected to the content where published to the public space"),
+			Comment("The content is being voted, if allowed, it will be redirected to the content where published to the public space").
+			StructTag(`json:"version,omitempty"`),
 		edge.To("voters", User.Type).Required().
-			Comment("Voters are randomly selected and they will vote anonymously."),
+			Comment("Voters are randomly selected and they will vote anonymously.").
+			StructTag(`json:"voters,omitempty"`),
 	}
 }

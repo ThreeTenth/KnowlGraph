@@ -22,6 +22,9 @@ func (Language) Fields() []ent.Field {
 // Edges of the Language.
 func (Language) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("user", User.Type).Ref("languages").Unique(),
+		edge.From("user", User.Type).
+			Ref("languages").
+			Unique().
+			StructTag(`json:"user,omitempty"`),
 	}
 }
