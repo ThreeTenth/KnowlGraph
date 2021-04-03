@@ -1,6 +1,7 @@
 package main
 
 import (
+	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/user"
 	"knowlgraph.com/ent/word"
 )
@@ -13,11 +14,16 @@ func getKeywords(c *Context) error {
 	}
 
 	_publicCreate := client.Word.Query().Where(word.StatusEQ(word.StatusPublic)).Select(word.FieldName)
-	_privateCreate := client.User.Query().
-		Where(user.IDEQ(_userID.(int))).
-		QueryWords().
-		QueryWord().
-		Select(word.FieldName)
+
+	var _privateCreate *ent.WordSelect
+
+	if ok {
+		_privateCreate = client.User.Query().
+			Where(user.IDEQ(_userID.(int))).
+			QueryWords().
+			QueryWord().
+			Select(word.FieldName)
+	}
 
 	var _words []string
 	var err error
@@ -27,9 +33,9 @@ func getKeywords(c *Context) error {
 	case word.StatusPublic.String():
 		_words, err = _publicCreate.Strings(ctx)
 	default:
-		if _words, err = _privateCreate.Strings(ctx); err == nil {
-			if _publicWords, err1 := _publicCreate.Strings(ctx); err1 == nil {
-				_words = mergeArrAndUnique(_words, _publicWords)
+		if _words, err = _publicCreate.Strings(ctx); err == nil && ok {
+			if _privateWords, err1 := _privateCreate.Strings(ctx); err1 == nil {
+				_words = mergeArrAndUnique(_words, _privateWords)
 			}
 		}
 	}

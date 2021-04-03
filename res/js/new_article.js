@@ -30,19 +30,12 @@ const EditDraft = {
   computed: {
     body: {
       get: function () {
-        if (!this.draft) {
-          return ""
-        }
-        if (this.draft.edges.snapshots[0])
+        if (this.draft.edges.snapshots)
           return this.draft.edges.snapshots[0].body
         return ""
       },
       set: function (newValue) {
-        if (this.draft.edges.snapshots[0]) {
-          this.draft.edges.snapshots[0].body = newValue
-        } else {
-          this.draft.edges.snapshots[0] = { body: newValue }
-        }
+        this.draft.edges.snapshots[0].body = newValue
       }
     },
 
@@ -75,6 +68,7 @@ const EditDraft = {
     onSaveDraft: function () {
       // console.trace()
       let content = this.draft.edges.snapshots[0]
+      if ("" === content.body) return
       if (this.__last && content.body && content.body === this.__last) {
         return
       }
@@ -98,7 +92,7 @@ const EditDraft = {
 
     __load(__id, __draft) {
       if (__draft) {
-        this.draft = __draft
+        this.__setDraft(__draft)
         this.__setLast(__draft)
         return
       }
@@ -113,19 +107,22 @@ const EditDraft = {
         method: "GET",
         url: queryRestful("/v1/draft", { id: __id }),
       }).then(function (resp) {
-        _this.draft = resp.data
+        _this.__setDraft(resp.data)
         _this.__setLast(resp.data)
       }).catch(function (resp) {
         console.log(resp)
       })
     },
 
-    __setLast(__draft) {
-      if (__draft.edges.snapshots[0]) {
-        this.__last = __draft.edges.snapshots[0].body
-      } else {
-        this.__last = ""
+    __setDraft(__draft) {
+      this.draft = __draft
+      if (!this.draft.edges.snapshots) {
+        this.draft.edges.snapshots = [{ body: "" }]
       }
+    },
+
+    __setLast(__draft) {
+      this.__last = __draft.edges.snapshots[0].body
     }
   },
 

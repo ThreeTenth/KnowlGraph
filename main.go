@@ -193,7 +193,9 @@ func router01() http.Handler {
 	router := gin.Default()
 	loadTemplates(router)
 
-	router.Use(cors)
+	if config.Debug {
+		router.Use(cors)
+	}
 
 	router.GET("/favicon.ico", getFavicon)
 	router.GET("/ping", func(c *gin.Context) {
@@ -221,7 +223,11 @@ func router01() http.Handler {
 
 func router02() http.Handler {
 	router := gin.Default()
-	router.Use(cors)
+
+	if config.Debug {
+		router.Use(cors)
+	}
+
 	router.GET("/favicon.ico", getFavicon)
 
 	v1 := router.Group("/v1")
@@ -243,7 +249,10 @@ func router02() http.Handler {
 
 func router03() http.Handler {
 	router := gin.Default()
-	router.Use(cors)
+
+	if config.Debug {
+		router.Use(cors)
+	}
 
 	router.GET("/favicon.ico", getFavicon)
 	router.GET("/static/*paths", getStaticServerFiles)
