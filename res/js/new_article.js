@@ -30,7 +30,7 @@ const EditDraft = {
   computed: {
     body: {
       get: function () {
-        if (this.draft.edges.snapshots)
+        if (this.draft && this.draft.edges.snapshots)
           return this.draft.edges.snapshots[0].body
         return ""
       },

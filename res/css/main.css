@@ -326,7 +326,7 @@ h6:hover .octicon {
 .draft-area {
   margin: var(--xxl) 0 var(--xxs) 0;
   width : 100%;
-  height: calc(100vh - var(--bar-h) - var(--nav-h) - var(--xxl) - var(--xxs) - 12px);
+  height: calc(100vh - var(--bar-h) - var(--nav-h) - var(--xxl) - var(--xxs) - 24px);
 }
 
 .drafts-item,

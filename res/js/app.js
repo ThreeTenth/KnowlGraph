@@ -53,6 +53,18 @@ var app = new Vue({
   },
   router,
   template: logined ? app_home : app_index,
+
+  created() {
+    axios({
+      method: "GET",
+      url: queryRestful("/v1/vote"),
+    }).then(function (resp) {
+      console.log(resp)
+    }).catch(function (resp) {
+      console.log(resp)
+    })
+  },
+
   methods: {
     onGitHubOAuth: function () {
       const github_client_id = getMeta("github_client_id")

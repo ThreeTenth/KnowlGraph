@@ -17,6 +17,8 @@ type Vote struct {
 func (Vote) Fields() []ent.Field {
 	return []ent.Field{
 		field.Enum("status").Values("allowed", "rejected", "abstained"),
+		field.Enum("code").Values("uncertainty", "attack", "other").Optional(),
+		field.String("comment").Optional(),
 		field.Time("created_at").Default(time.Now),
 	}
 }

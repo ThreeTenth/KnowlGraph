@@ -39,6 +39,7 @@ func getUserArticles(c *Context) error {
 		Where(user.ID(_userID.(int))).
 		QueryAssets().
 		Where(asset.StatusEQ(_query.Status)).
+		Order(ent.Desc(asset.FieldCreatedAt)).
 		QueryArticle().
 		WithVersions(func(vq *ent.VersionQuery) {
 			if _query.Lang != "" {
