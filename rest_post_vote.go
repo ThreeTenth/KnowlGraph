@@ -5,6 +5,7 @@ import (
 	"knowlgraph.com/ent/ras"
 	"knowlgraph.com/ent/user"
 	"knowlgraph.com/ent/vote"
+	"knowlgraph.com/ent/voter"
 )
 
 func postVote(c *Context) error {
@@ -26,7 +27,8 @@ func postVote(c *Context) error {
 		Where(
 			ras.ID(_query.ID),
 			ras.HasVotersWith(
-				user.ID(_userID.(int)))).
+				voter.Voted(false),
+				voter.HasUserWith(user.ID(_userID.(int))))).
 		Only(ctx)
 
 	if err != nil {
@@ -44,6 +46,9 @@ func postVote(c *Context) error {
 			return err
 		}
 
+		// todo 此处删除投票人，则无法在表决完成后通知投票人表决结果，应设法通知。
+		// 1. 创建投票人表，记录是否表决，不记录表决结果。
+		// 2. 主题表决完成，通知投票人，并解除所有投票人与表决空间的关系。
 		_, err = _ras.Update().
 			RemoveVoterIDs(_userID.(int)).
 			Save(ctx)
