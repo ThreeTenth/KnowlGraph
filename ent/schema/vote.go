@@ -26,10 +26,6 @@ func (Vote) Fields() []ent.Field {
 // Edges of the Vote.
 func (Vote) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("feedback", Section.Type).
-			Unique().
-			Comment("feedback to voting content").
-			StructTag(`json:"feedback,omitempty"`),
 		edge.To("ras", RAS.Type).
 			Unique().
 			Required().

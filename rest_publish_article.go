@@ -119,7 +119,8 @@ func publishArticle(c *Context) error {
 			return c.Ok(_version)
 		}
 
-		_userIDs, err := tx.User.Query().
+		// Randomly select up to 10 users as voters
+		_voterIDs, err := tx.User.Query().
 			Order(random()).
 			Limit(10).
 			Select(user.FieldID).
@@ -128,17 +129,14 @@ func publishArticle(c *Context) error {
 			return err
 		}
 
-		_, err = tx.RAS.Create().
-			SetComment(_data.Comment).
-			SetVersionID(_version.ID).
-			AddVoterIDs(_userIDs...).
-			Save(ctx)
+		// Open a random anonymous space,
+		// which is composed of voters and articles waiting to vote
+		err = openRandomAnonymousSpace(tx, _data.Comment, _version, _voterIDs)
 		if err != nil {
 			return err
 		}
 
 		_, err = _draft.Update().SetState(draft.StateRead).Save(ctx)
-
 		if err != nil {
 			return err
 		}
@@ -162,6 +160,42 @@ func random() ent.OrderFunc {
 			s.AddError(errors.Errorf("invalid field %q for ordering", f))
 		}
 	}
+}
+
+func openRandomAnonymousSpace(tx *ent.Tx, comment string, vers *ent.Version, voterIDs []int) error {
+	// 创建一个随机匿名空间
+	_newRAS, err := tx.RAS.Create().
+		SetComment(comment).
+		SetVersion(vers).
+		Save(ctx)
+	if err != nil {
+		return err
+	}
+
+	// 设置表决者初始投票状态：未投票
+	_newVoters := make([]*ent.VoterCreate, len(voterIDs))
+	for i, _voterID := range voterIDs {
+		_newVoters[i] = tx.Voter.Create().SetRas(_newRAS).SetUserID(_voterID)
+	}
+	_, err = tx.Voter.CreateBulk(_newVoters...).Save(ctx)
+	if err != nil {
+		return err
+	}
+
+	// todo 倒计时，每个空间最长开启 72 小时，
+	// 72 小时后，所有未投票的表决者，
+	// 视为弃权，并触发警示系统。
+	//
+	// todo 2.0 争议性方案
+	// 在某些领域的文章，
+	// 是否可能需要花费远超 72 小时才能得到结论？
+	// 72 小时作为固定时长，是否合理？
+
+	return nil
+}
+
+func startSpaceCountdown() {
+
 }
 
 func updateUserAsset(tx *ent.Tx, userID int, status asset.Status, vers *ent.Version) error {
