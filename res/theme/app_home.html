@@ -32,4 +32,18 @@
   <keep-alive>
     <router-view></router-view>
   </keep-alive>
+  <div class="modal" v-if="ras">
+    <div>
+      <div>{{ ras.edges.version.gist }}</div>
+      <div class="m-t10">{{ ras.edges.version.edges.content.body }}</div>
+      <div class="m-t10" v-if="ras.edges.version.edges.keywords">
+        <span v-for="(keyword, i) in ras.edges.version.edges.keywords">{{ keyword.name }}</span>
+      </div>
+      <div class="m-t22">是否同意该文章发布？</div>
+      <div class="m-t10">
+        <button class="nav-button" v-on:click="onAllow">同意发布</button>
+        <button class="nav-button" v-on:click="onRejecte">反对发布</button>
+      </div>
+    </div>
+  </div>
 </div>

@@ -44,6 +44,14 @@ const Index = {
     }).catch(function (resp) {
       console.log(resp)
     })
+    axios({
+      method: "GET",
+      url: queryRestful("/v1/articles"),
+    }).then(function (resp) {
+      console.log(resp.data)
+    }).catch(function (resp) {
+      console.log(resp)
+    })
   },
 
   methods: {

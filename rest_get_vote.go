@@ -20,7 +20,7 @@ func getVote(c *Context) error {
 		}).
 		First(ctx)
 	if err != nil {
-		return c.NotFound(err.Error())
+		return c.NoContent()
 	}
 
 	return c.Ok(&_vote)

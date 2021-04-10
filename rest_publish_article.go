@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"regexp"
 	"strings"
 
@@ -30,6 +31,7 @@ func publishArticle(c *Context) error {
 		DraftID  int      `json:"draft_id"`
 	}
 
+	fmt.Println("publishArticle 01: get args")
 	err := c.ShouldBindJSON(&_data)
 	if err != nil {
 		return c.BadRequest(err.Error())
@@ -39,6 +41,7 @@ func publishArticle(c *Context) error {
 
 	_userID, _ := c.Get(GinKeyUserID)
 
+	fmt.Println("publishArticle 02: query draft")
 	_draft, err := client.Draft.Query().
 		Where(draft.And(
 			draft.ID(_data.DraftID),
@@ -77,9 +80,11 @@ func publishArticle(c *Context) error {
 		_versionState = version.StateRelease
 	}
 
+	fmt.Println("publishArticle 03: pre publish article")
 	err = WithTx(ctx, client, func(tx *ent.Tx) error {
 
 		// todo publish successed, the words has set public status
+		fmt.Println("publishArticle 04")
 		_words := make([]*ent.Word, len(_data.Keywords))
 		for i, v := range _data.Keywords {
 			_word, err := tx.Word.Query().Where(word.Name(v)).First(ctx)
@@ -92,6 +97,7 @@ func publishArticle(c *Context) error {
 			_words[i] = _word
 		}
 
+		fmt.Println("publishArticle 05")
 		_version, err := tx.Version.Create().
 			SetName(_data.Name).
 			SetComment(_data.Comment).
@@ -111,6 +117,7 @@ func publishArticle(c *Context) error {
 		_version.Edges.Article = _article
 		_version.Edges.Keywords = _words
 
+		fmt.Println("publishArticle 06")
 		if _versionState == version.StateRelease {
 			if err = updateUserAsset(tx, _userID.(int), asset.StatusSelf, _version); err != nil {
 				return err
@@ -119,6 +126,7 @@ func publishArticle(c *Context) error {
 			return c.Ok(_version)
 		}
 
+		fmt.Println("publishArticle 07")
 		// Randomly select up to 10 users as voters
 		_voterIDs, err := tx.User.Query().
 			Order(random()).
@@ -129,6 +137,7 @@ func publishArticle(c *Context) error {
 			return err
 		}
 
+		fmt.Println("publishArticle 08")
 		// Open a random anonymous space,
 		// which is composed of voters and articles waiting to vote
 		err = openRandomAnonymousSpace(tx, _data.Comment, _version, _voterIDs)
@@ -136,6 +145,7 @@ func publishArticle(c *Context) error {
 			return err
 		}
 
+		fmt.Println("publishArticle 09")
 		_, err = _draft.Update().SetState(draft.StateRead).Save(ctx)
 		if err != nil {
 			return err
@@ -144,10 +154,12 @@ func publishArticle(c *Context) error {
 		return c.NoContent()
 	})
 
+	fmt.Println("publishArticle 10")
 	if err != nil {
 		return c.InternalServerError(err.Error())
 	}
 
+	fmt.Println("publishArticle 11")
 	return nil
 }
 
@@ -163,6 +175,7 @@ func random() ent.OrderFunc {
 }
 
 func openRandomAnonymousSpace(tx *ent.Tx, comment string, vers *ent.Version, voterIDs []int) error {
+	fmt.Println("publishArticle 08.01")
 	// 创建一个随机匿名空间
 	_newRAS, err := tx.RAS.Create().
 		SetComment(comment).
@@ -172,11 +185,13 @@ func openRandomAnonymousSpace(tx *ent.Tx, comment string, vers *ent.Version, vot
 		return err
 	}
 
+	fmt.Println("publishArticle 08.02")
 	// 设置表决者初始投票状态：未投票
 	_newVoters := make([]*ent.VoterCreate, len(voterIDs))
 	for i, _voterID := range voterIDs {
 		_newVoters[i] = tx.Voter.Create().SetRas(_newRAS).SetUserID(_voterID)
 	}
+	fmt.Println("publishArticle 08.03")
 	_, err = tx.Voter.CreateBulk(_newVoters...).Save(ctx)
 	if err != nil {
 		return err
@@ -191,6 +206,7 @@ func openRandomAnonymousSpace(tx *ent.Tx, comment string, vers *ent.Version, vot
 	// 是否可能需要花费远超 72 小时才能得到结论？
 	// 72 小时作为固定时长，是否合理？
 
+	fmt.Println("publishArticle 08.04")
 	return nil
 }
 
@@ -199,12 +215,14 @@ func startSpaceCountdown() {
 }
 
 func updateUserAsset(tx *ent.Tx, userID int, status asset.Status, vers *ent.Version) error {
+	fmt.Println("publishArticle 06.01")
 	_, err := tx.Asset.Query().
 		Where(asset.HasArticleWith(
 			article.ID(vers.Edges.Article.ID))).
 		Only(ctx)
 
 	if err != nil {
+		fmt.Println("publishArticle 06.01.01")
 		_, err = tx.Asset.Create().
 			SetArticle(vers.Edges.Article).
 			SetUserID(userID).
@@ -216,11 +234,13 @@ func updateUserAsset(tx *ent.Tx, userID int, status asset.Status, vers *ent.Vers
 		}
 	}
 
+	fmt.Println("publishArticle 06.02")
 	_wordIDs := make([]int, len(vers.Edges.Keywords))
 	for i, keyword := range vers.Edges.Keywords {
 		_wordIDs[i] = keyword.ID
 	}
 
+	fmt.Println("publishArticle 06.03")
 	_userwordIDs, err := tx.UserWord.Query().
 		Where(
 			userword.HasWordWith(word.IDIn(_wordIDs...)),
@@ -231,9 +251,11 @@ func updateUserAsset(tx *ent.Tx, userID int, status asset.Status, vers *ent.Vers
 		return err
 	}
 
+	fmt.Println("publishArticle 06.04")
 	_insertCount := len(_wordIDs) - len(_userwordIDs)
 
 	if 0 < _insertCount {
+		fmt.Println("publishArticle 06.04.01")
 		_wordBulk := make([]*ent.UserWordCreate, _insertCount)
 		i := 0
 		for _, keywordID := range _wordIDs {
@@ -246,6 +268,7 @@ func updateUserAsset(tx *ent.Tx, userID int, status asset.Status, vers *ent.Vers
 			i++
 		}
 
+		fmt.Println("publishArticle 06.04.02")
 		_, err = tx.UserWord.CreateBulk(_wordBulk...).Save(ctx)
 
 		if err != nil {
@@ -253,6 +276,7 @@ func updateUserAsset(tx *ent.Tx, userID int, status asset.Status, vers *ent.Vers
 		}
 	}
 
+	fmt.Println("publishArticle 06.05")
 	_, err = tx.UserWord.Update().Where(userword.IDIn(_userwordIDs...)).AddWeight(1).Save(ctx)
 
 	if err != nil {
@@ -264,6 +288,7 @@ func updateUserAsset(tx *ent.Tx, userID int, status asset.Status, vers *ent.Vers
 	// 	AddWords(vers.Edges.Keywords...).
 	// 	Save(ctx)
 
+	fmt.Println("publishArticle 06.06")
 	_, err = tx.Language.Create().
 		SetCode(vers.Lang).
 		SetUserID(userID).
@@ -273,6 +298,7 @@ func updateUserAsset(tx *ent.Tx, userID int, status asset.Status, vers *ent.Vers
 		return err
 	}
 
+	fmt.Println("publishArticle 06.07")
 	count, err := tx.Draft.Delete().
 		Where(draft.HasSnapshotsWith(
 			content.ID(vers.Edges.Content.ID))).
@@ -281,6 +307,7 @@ func updateUserAsset(tx *ent.Tx, userID int, status asset.Status, vers *ent.Vers
 		return errors.New("No draft")
 	}
 
+	fmt.Println("publishArticle 06.08")
 	return err
 }
 

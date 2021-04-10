@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/draft"
 	"knowlgraph.com/ent/ras"
@@ -20,12 +22,13 @@ func postVote(c *Context) error {
 	// Code: Violating code
 	// Comment: A description of the violation
 	var _query struct {
-		ID      int
-		Status  vote.Status
-		Code    vote.Code
-		Comment string
+		ID     int         `json:"id" binding:"required"`
+		Status vote.Status `json:"status" binding:"required"`
+		// Code    vote.Code   `json:"code"`
+		// Comment string      `json:"comment"`
 	}
 
+	fmt.Println("postVote 01")
 	err := c.ShouldBindJSON(&_query)
 	if err != nil {
 		return c.BadRequest(err.Error())
@@ -33,6 +36,7 @@ func postVote(c *Context) error {
 
 	_userID, _ := c.Get(GinKeyUserID)
 
+	fmt.Println("postVote 02")
 	// Match whether the specified user has the right
 	// to vote in RAS, and return the matching result.
 	// If the match fails, it returns authentication failure (401)
@@ -48,18 +52,21 @@ func postVote(c *Context) error {
 		return c.Unauthorized(err.Error())
 	}
 
+	fmt.Println("postVote 03")
 	err = WithTx(ctx, client, func(tx *ent.Tx) error {
+		fmt.Println("postVote 04")
 		// 设置投票结果，不记录表决者，匿名投票
-		_, err = client.Vote.Create().
+		_, err = tx.Vote.Create().
 			SetRasID(_ras.ID).
 			SetStatus(_query.Status).
-			SetCode(_query.Code).
-			SetComment(_query.Comment).
+			// SetCode(_query.Code).
+			// SetComment(_query.Comment).
 			Save(ctx)
 		if err != nil {
 			return err
 		}
 
+		fmt.Println("postVote 05")
 		// 设置表决者投票状态为已投票。
 		// 不记录表决结果，仅记录是否投票。
 		// 匿名投票。
@@ -72,6 +79,7 @@ func postVote(c *Context) error {
 			return err
 		}
 
+		fmt.Println("postVote 06")
 		// 获取未投票的数量
 		_unvoteCount, err := _ras.QueryVoters().
 			Where(voter.Voted(false)).
@@ -79,24 +87,33 @@ func postVote(c *Context) error {
 		if err != nil {
 			return err
 		}
+		// 在数据库事务处理中，
+		// 由于操作数据没有真正被更新，
+		// 所以需要手动减一。
+		_unvoteCount--
 
+		fmt.Println("postVote 07", _unvoteCount)
 		if 0 == _unvoteCount {
 			return votingSettlement(tx, _ras)
 		}
 
+		fmt.Println("postVote 08")
 		return nil
 	})
 
+	fmt.Println("postVote 09")
 	if err != nil {
 		return c.InternalServerError(err.Error())
 	}
 
+	fmt.Println("postVote 10")
 	return c.Ok(&_query)
 }
 
 func votingSettlement(tx *ent.Tx, _ras *ent.RAS) error {
 	// 如果所有表决者已投票，则进入表决结算阶段
 
+	fmt.Println("postVote 07.01")
 	_votes, err := tx.Vote.Query().
 		Where(
 			vote.HasRasWith(ras.ID(_ras.ID))).
@@ -106,6 +123,7 @@ func votingSettlement(tx *ent.Tx, _ras *ent.RAS) error {
 		return err
 	}
 
+	fmt.Println("postVote 07.02")
 	// 允许通过的票数
 	_allowedCount := 0
 	// 反对通过的票数
@@ -134,6 +152,7 @@ func votingSettlement(tx *ent.Tx, _ras *ent.RAS) error {
 		_voteStatus = ras.StatusAbstained
 	}
 
+	fmt.Println("postVote 07.03")
 	// 获取表决文章的版本
 	_version, err := _ras.QueryVersion().First(ctx)
 	if err != nil {
@@ -141,8 +160,10 @@ func votingSettlement(tx *ent.Tx, _ras *ent.RAS) error {
 	}
 	_ras.Edges.Version = _version
 
+	fmt.Println("postVote 07.04", _voteStatus)
 	if ras.StatusAbstained == _voteStatus {
 		// 如果表决无效，则重新开启一个随机匿名空间
+		fmt.Println("postVote 07.04.011")
 
 		// 获取原表决者
 		// todo 1.0 争议性方案
@@ -164,17 +185,21 @@ func votingSettlement(tx *ent.Tx, _ras *ent.RAS) error {
 			return err
 		}
 
+		fmt.Println("postVote 07.04.012")
 		// 开启一个随机匿名空间
 		err = openRandomAnonymousSpace(tx, _ras.Comment, _version, _voterIDs)
 		if err != nil {
 			return err
 		}
+
+		fmt.Println("postVote 07.04.013")
 	} else if ras.StatusAllowed == _voteStatus {
 		// 表决结果为允许通过，
 		// 即文章可以公示在公共空间。
 		// 则删除文章草稿
 		// 并更新文章状态，
 		// 同时通知所有参与者（发起人和表决者）
+		fmt.Println("postVote 07.04.021")
 
 		// 获取该版本与关联的草稿
 		_branche, err := _version.QueryContent().QueryBranche().First(ctx)
@@ -182,45 +207,67 @@ func votingSettlement(tx *ent.Tx, _ras *ent.RAS) error {
 			return err
 		}
 
+		fmt.Println("postVote 07.04.022")
 		// 删除草稿
 		err = tx.Draft.DeleteOne(_branche).Exec(ctx)
 		if err != nil {
 			return err
 		}
 
+		fmt.Println("postVote 07.04.023")
 		// 更新文章状态为正式版
-		_, err = _version.Update().SetState(version.StateRelease).Save(ctx)
+		_, err = tx.Version.
+			UpdateOne(_version).
+			SetState(version.StateRelease).
+			Save(ctx)
 		if err != nil {
 			return err
 		}
 
+		// todo 更新文章关键字及与用户的关系
 		// todo 通知所有参与者
 
+		fmt.Println("postVote 07.04.024")
 	} else if ras.StatusRejected == _voteStatus {
 		// 表决结果为反对通过，
 		// 文章版本状态变更为 "reject"，
 		// 且文章草稿由只读变为可写，
 		// 并通知所有参与者（发起人和表决者），
 		// 同时触发警示系统。
+		fmt.Println("postVote 07.04.031")
 
 		// 更新文章状态为驳回
-		_version.Update().SetState(version.StateReject).Save(ctx)
+		_, err = tx.Version.
+			UpdateOne(_version).
+			SetState(version.StateReject).
+			Save(ctx)
+		if err != nil {
+			return err
+		}
 
+		fmt.Println("postVote 07.04.032")
 		// 获取与文章版本关联的草稿
 		_branche, err := _version.QueryContent().QueryBranche().First(ctx)
 		if err != nil {
 			return err
 		}
 
+		fmt.Println("postVote 07.04.033")
 		// 设置草稿状态变更为可写
-		_, err = _branche.Update().SetState(draft.StateWrite).Save(ctx)
+		_, err = tx.Draft.
+			UpdateOne(_branche).
+			SetState(draft.StateWrite).
+			Save(ctx)
 		if err != nil {
 			return err
 		}
 
 		// todo 通知所有参与者
 		// todo 触发警示系统
+		fmt.Println("postVote 07.04.034")
 	}
+
+	fmt.Println("postVote 07.05")
 
 	// 关闭空间（更新随机匿名空间状态），并清除所有表决者
 	//
@@ -230,7 +277,16 @@ func votingSettlement(tx *ent.Tx, _ras *ent.RAS) error {
 	// 如果采用新表决者，那么此时清除原表决者，
 	// 则会出现表决成功后，无法通知原表决者的情况，
 	// 故，在切换方案时，一定要考虑此类场景的处理方式。
-	_, err = _ras.Update().SetStatus(_voteStatus).ClearVoters().Save(ctx)
+	_, err = tx.RAS.
+		UpdateOne(_ras).
+		SetStatus(_voteStatus).
+		ClearVoters().
+		Save(ctx)
+	if err != nil {
+		fmt.Println("postVote 07.05.01")
+		return err
+	}
 
-	return err
+	fmt.Println("postVote 07.06")
+	return nil
 }

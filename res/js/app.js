@@ -47,6 +47,7 @@ const router = new VueRouter({
 
 var app = new Vue({
   data: {
+    ras: null,
     languages: languages,
     logined: logined,
     profilePicture: getLink("icon")
@@ -55,17 +56,32 @@ var app = new Vue({
   template: logined ? app_home : app_index,
 
   created() {
-    axios({
-      method: "GET",
-      url: queryRestful("/v1/vote"),
-    }).then(function (resp) {
-      console.log(resp)
-    }).catch(function (resp) {
-      console.log(resp)
-    })
+    var _this = this
+    if (logined) {
+      axios({
+        method: "GET",
+        url: queryRestful("/v1/vote"),
+      }).then(function (resp) {
+        if (200 == resp.status) {
+          _this.ras = resp.data
+        }
+      }).catch(function (resp) {
+        console.log(resp)
+      })
+    }
   },
 
   methods: {
+    onAllow() {
+      if (!this.ras) return
+
+      this.__postVote("allowed")
+    },
+    onRejecte() {
+      if (!this.ras) return
+
+      this.__postVote("rejected")
+    },
     onGitHubOAuth: function () {
       const github_client_id = getMeta("github_client_id")
       const state = Math.random().toString(36).slice(2)
@@ -113,6 +129,21 @@ var app = new Vue({
       }).catch(function (resp) {
         _this.user.lang = old
         setUserLang(old.code)
+      })
+    },
+    __postVote(status) {
+      var _this = this
+      axios({
+        method: "POST",
+        url: queryRestful("/v1/vote"),
+        data: {
+          id: this.ras.id,
+          status: status,
+        },
+      }).then(function (resp) {
+        _this.ras = null
+      }).catch(function (resp) {
+        console.log(resp)
       })
     },
   }

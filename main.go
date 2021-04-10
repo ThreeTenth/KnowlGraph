@@ -40,6 +40,7 @@ var ctx context.Context
 var client *ent.Client
 var rdb *redis.Client
 var config *Config
+var db *sql.DB
 
 func init() {
 	time.FixedZone("CST", 8*3600) // China Standard Timzone
@@ -49,7 +50,8 @@ func init() {
 }
 
 func openPostgreSQL() {
-	db, err := sql.Open("pgx", "postgresql://"+config.Pg)
+	var err error
+	db, err = sql.Open("pgx", "postgresql://"+config.Pg)
 	if err != nil {
 		panic("open postgresql failed: " + err.Error())
 	}
@@ -112,6 +114,8 @@ func main() {
 
 	openPostgreSQL()
 	openRedis()
+
+	defer db.Close()
 
 	/////////////////////// router code ////////////////////
 	//
@@ -238,6 +242,7 @@ func router02() http.Handler {
 
 	v1.PUT("/publish/article", authorizeRequired, handle(publishArticle))
 
+	v1.GET("/articles", authentication, handle(getArticles))
 	v1.GET("/words", authentication, handle(getKeywords))
 	v1.GET("/drafts", authorizeRequired, handle(getDrafts))
 	v1.GET("/draft", authorizeRequired, handle(getDraft))
