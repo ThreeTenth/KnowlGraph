@@ -4,12 +4,6 @@ import (
 	"knowlgraph.com/ent"
 )
 
-// QueryNoPrivateArticlesSQL is query no private article
-const QueryNoPrivateArticlesSQL = `select * from (
-	select  id, name, state, created_at, article_versions, row_number() over (partition by article_versions order by created_at) as rownum from  "versions" WHERE "state" = 'release'
-) tmp
-where rownum < 2  order by created_at desc offset $1 limit $2 `
-
 func getArticles(c *Context) error {
 	var _query struct {
 		Limit  int `form:"limit,default=10"`
@@ -21,7 +15,7 @@ func getArticles(c *Context) error {
 		return c.BadRequest(err.Error())
 	}
 
-	rows, err := db.Query(QueryNoPrivateArticlesSQL, _query.Offset, _query.Limit)
+	rows, err := queryNoPrivateArticles(db, _query.Offset, _query.Limit)
 	if err != nil {
 		return c.NotFound(err.Error())
 	}
@@ -31,9 +25,17 @@ func getArticles(c *Context) error {
 	for rows.Next() {
 		var _version ent.Version
 		var _article ent.Article
-		var rownum int
 
-		err := rows.Scan(&_version.ID, &_version.Name, &_version.State, &_version.CreatedAt, &_article.ID, &rownum)
+		err := rows.Scan(
+			&_version.ID,
+			&_version.Name,
+			&_version.Comment,
+			&_version.Title,
+			&_version.Gist,
+			&_version.State,
+			&_version.CreatedAt,
+			&_article.ID,
+			&_article.Status)
 		if err != nil {
 			return c.InternalServerError("rows scan failed: " + err.Error())
 		}
