@@ -46,7 +46,7 @@ const Index = {
     })
     axios({
       method: "GET",
-      url: queryRestful("/v1/articles"),
+      url: queryRestful("/v1/articles", { limit: 10, offset: 0 }),
     }).then(function (resp) {
       console.log(resp.data)
     }).catch(function (resp) {
