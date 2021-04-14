@@ -3,10 +3,12 @@ package main
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"log"
 
 	"github.com/pkg/errors"
 	"knowlgraph.com/ent"
+	"knowlgraph.com/ent/asset"
 )
 
 // QueryNoPrivateArticlesSQL is query no private article
@@ -37,6 +39,45 @@ func queryNoPrivateArticles(db *sql.DB, offset, limit int) (*sql.Rows, error) {
 		log.Printf("sql:Query: query=%v args=[%v, %v]", QueryNoPrivateArticlesSQL, offset, limit)
 	}
 	return db.Query(QueryNoPrivateArticlesSQL, offset, limit)
+}
+
+// QueryUserAssetsSQL is query user article assets
+const QueryUserAssetsSQL = `select 
+"tmp".id as version_id,
+"tmp".name as version_name,
+"tmp".comment as version_comment,
+"tmp".title as version_title,
+"tmp".gist as version_gist,
+"tmp".state as version_state,
+"tmp".lang as version_lang,
+"tmp".created_at as version_createdAt,
+"articles".id as article_id,
+"articles".status as article_status
+from (
+	SELECT DISTINCT "versions"."id" as "id", "name", "comment", "title", "gist", "state", "lang", "versions"."created_at" as "created_at", "article_versions", "assets"."created_at" as "joined_at", 
+	row_number() over (
+			partition by "versions".article_versions order by "versions"."created_at" desc
+	) as rownum 
+	FROM "versions" 
+	INNER JOIN "assets" ON "assets"."owner_id" = $1 and "assets"."status" = $2 and "versions"."article_versions" = "assets"."article_assets"
+	WHERE "versions"."state" = 'release' %v
+) tmp
+inner join "articles"
+	on "articles".id = "tmp".article_versions
+where tmp.rownum < 2 order by tmp.joined_at desc limit $4 offset $5;`
+
+func queryUserAssets(db *sql.DB, userID int, status asset.Status, lang string, offset, limit int) (*sql.Rows, error) {
+	_sql := QueryUserAssetsSQL
+	if lang != "" {
+		_sql = fmt.Sprintf(_sql, `and "versions"."lang" = $3`)
+	} else {
+		_sql = fmt.Sprintf(_sql, "")
+	}
+	if config.Debug {
+		log.Printf("sql:Query: query=%v args=[%v, %v, %v, %v, %v]", _sql, userID, status, lang, offset, limit)
+	}
+
+	return db.Query(QueryNoPrivateArticlesSQL, userID, status, lang, offset, limit)
 }
 
 // WithTx best Practices, reusable function that runs callbacks in a transaction

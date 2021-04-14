@@ -1,12 +1,8 @@
 package main
 
 import (
-	"sort"
-
 	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/asset"
-	"knowlgraph.com/ent/user"
-	"knowlgraph.com/ent/version"
 )
 
 // Articles are used to sort articles
@@ -26,6 +22,8 @@ func getUserArticles(c *Context) error {
 	var _query struct {
 		Status asset.Status `form:"status"`
 		Lang   string       `form:"lang"`
+		Limit  int          `form:"limit,default=10"`
+		Offset int          `form:"Offset,default=0"`
 	}
 
 	err := c.ShouldBindQuery(&_query)
@@ -35,33 +33,7 @@ func getUserArticles(c *Context) error {
 
 	_userID, _ := c.Get(GinKeyUserID)
 
-	_articles, err := client.User.Query().
-		Where(user.ID(_userID.(int))).
-		QueryAssets().
-		Where(asset.StatusEQ(_query.Status)).
-		Order(ent.Desc(asset.FieldCreatedAt)).
-		QueryArticle().
-		WithVersions(func(vq *ent.VersionQuery) {
-			if _query.Lang != "" {
-				vq = vq.Where(version.Lang(_query.Lang))
-			}
-			vq.Order(ent.Desc(version.FieldCreatedAt))
-		}).
-		All(ctx)
+	_versions, err := queryUserAssets(db, _userID.(int), _query.Status, _query.Lang, _query.Offset, _query.Limit)
 
-	if err != nil {
-		return c.BadRequest(err.Error())
-	}
-
-	for _, v := range _articles {
-		_versions := make([]*ent.Version, 0)
-		if 0 < len(v.Edges.Versions) {
-			_versions = v.Edges.Versions[:1]
-		}
-		v.Edges.Versions = _versions
-	}
-
-	sort.Sort(Articles(_articles))
-
-	return c.Ok(_articles)
+	return c.Ok(_versions)
 }
