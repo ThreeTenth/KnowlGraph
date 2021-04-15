@@ -66,7 +66,7 @@ inner join "articles"
 	on "articles".id = "tmp".article_versions
 where tmp.rownum < 2 order by tmp.joined_at desc limit $4 offset $5;`
 
-func queryUserAssets(db *sql.DB, userID int, status asset.Status, lang string, offset, limit int) (*sql.Rows, error) {
+func queryUserAssets(db *sql.DB, userID int, status asset.Status, lang string, offset, limit int) ([]*ent.Version, error) {
 	_sql := QueryUserAssetsSQL
 	if lang != "" {
 		_sql = fmt.Sprintf(_sql, `and "versions"."lang" = $3`)
@@ -77,7 +77,44 @@ func queryUserAssets(db *sql.DB, userID int, status asset.Status, lang string, o
 		log.Printf("sql:Query: query=%v args=[%v, %v, %v, %v, %v]", _sql, userID, status, lang, offset, limit)
 	}
 
-	return db.Query(QueryNoPrivateArticlesSQL, userID, status, lang, offset, limit)
+	rows, err := db.Query(QueryNoPrivateArticlesSQL, userID, status, lang, offset, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	return scanArticleRows(rows)
+}
+
+func scanArticleRows(rows *sql.Rows) ([]*ent.Version, error) {
+	var _versions []*ent.Version
+	var err error
+	for rows.Next() {
+		var _version ent.Version
+		var _article ent.Article
+
+		err = rows.Scan(
+			&_version.ID,
+			&_version.Name,
+			&_version.Comment,
+			&_version.Title,
+			&_version.Gist,
+			&_version.State,
+			&_version.CreatedAt,
+			&_article.ID,
+			&_article.Status)
+		if err != nil {
+			return nil, err
+		}
+		_version.Edges.Article = &_article
+		_versions = append(_versions, &_version)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return _versions, nil
 }
 
 // WithTx best Practices, reusable function that runs callbacks in a transaction
