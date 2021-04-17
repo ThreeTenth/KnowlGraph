@@ -16,10 +16,11 @@ type Version struct {
 // Fields of the Version.
 func (Version) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("name").Optional(),
-		field.String("comment").Optional(),
-		field.String("title").Optional(),
-		field.String("gist").Optional(),
+		field.String("name").Default(""),
+		field.String("comment").Default(""),
+		field.String("title").Default(""),
+		field.String("gist"),
+		field.String("cover").Default(""),
 		field.String("lang").Default("en"),
 		field.Enum("state").
 			Values("review", "release", "reject").
