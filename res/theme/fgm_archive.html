@@ -1,5 +1,11 @@
 <div class="container">
-  <div v-if="articles">
+  <div class="article-nav">
+    <a class="selected" href="#">我的文章 🔒</a>
+    <a href="#">收藏</a>
+    <a href="#">关注</a>
+    <a href="#">阅读清单</a>
+  </div>
+  <div v-if="articles" class="m-t22">
     <div class="articles-item" v-for="(article, i) in articles">
       <router-link class="articles-item-link" :to="{ name: 'article', params: { id: article.id, code: article.code }}">
         <div class="articles-item-body">

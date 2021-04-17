@@ -403,6 +403,7 @@ h6:hover .octicon {
 .article-nav {
   padding      : 20px 0 15px 0;
   border-bottom: #f1f1f1 solid 1px;
+  text-align: right;
 }
 
 .article-nav a {
