@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/pkg/errors"
 	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/article"
 	"knowlgraph.com/ent/asset"
@@ -38,25 +39,41 @@ func getArticle(c *Context) error {
 
 // GetArticle is get article
 func GetArticle(_userID int, articleID int, needVersions bool, versionID int) (*ent.Article, error) {
-	_article, err := client.Asset.Query().
-		Where(asset.And(
-			asset.HasUserWith(user.ID(_userID)),
-			asset.HasArticleWith(article.ID(articleID)))).
-		QueryArticle().
-		WithVersions(func(vq *ent.VersionQuery) {
-			if 0 < versionID {
-				vq.Where(version.ID(versionID))
-			} else if needVersions {
-				vq.Order(ent.Desc(version.FieldCreatedAt))
-			} else {
-				vq.Order(ent.Desc(version.FieldCreatedAt)).Limit(1)
-			}
-			vq.WithContent().
-				WithKeywords().
-				WithQuotes()
-		}).
-		WithReactions().
-		Only(ctx)
+	_article, err := client.Article.
+		Query().
+		Where(article.ID(articleID)).
+		First(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if _article.Status == article.StatusPrivate {
+		ok, _ := _article.QueryAssets().Where(asset.HasUserWith(user.ID(_userID))).Exist(ctx)
+		if !ok {
+			return nil, errors.New("Unauthorized")
+		}
+	}
+
+	vq := _article.QueryVersions()
+
+	if 0 < versionID {
+		vq.Where(version.ID(versionID))
+	} else if needVersions {
+		vq.Order(ent.Desc(version.FieldCreatedAt))
+	} else {
+		vq.Order(ent.Desc(version.FieldCreatedAt)).Limit(1)
+	}
+
+	_versions, err := vq.WithContent().WithKeywords().WithQuotes().All(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	_reactions, _ := _article.QueryReactions().All(ctx)
+
+	_article.Edges.Versions = _versions
+	_article.Edges.Reactions = _reactions
 
 	return _article, err
 }

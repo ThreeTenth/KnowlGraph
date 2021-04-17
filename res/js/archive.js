@@ -1,6 +1,6 @@
 // fgm_home.js
 
-const Index = {
+const Archive = {
   data: function () {
     return {
       __original: [],
@@ -38,7 +38,7 @@ const Index = {
     let _this = this
     axios({
       method: "GET",
-      url: queryRestful("/v1/articles", { limit: 10, offset: 0 }),
+      url: queryRestful("/v1/user/articles", { status: "self" }),
     }).then(function (resp) {
       _this.$data.__original = resp.data
     }).catch(function (resp) {
@@ -59,5 +59,5 @@ const Index = {
     }
   },
 
-  template: fgm_home,
+  template: fgm_archive,
 }
