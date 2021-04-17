@@ -19,26 +19,43 @@ const QueryNoPrivateArticlesSQL = `select
 "tmp".title as version_title,
 "tmp".gist as version_gist,
 "tmp".state as version_state,
+"tmp".lang as version_lang,
 "tmp".created_at as version_createdAt,
 "articles".id as article_id,
 "articles".status as article_status
 from (
-	select "id", "name", "comment", "title", "gist", "state", "created_at", "article_versions", row_number() 
+	select "id", "name", "comment", "title", "gist", "state", "lang", "created_at", "article_versions", row_number() 
 	over (
 		partition by article_versions order by created_at)
 	as rownum 
 	from  "versions"
-	WHERE "state" = 'release'
+	WHERE "state" = 'release' %v
 ) tmp
 inner join "articles"
 	on "articles".id = "tmp".article_versions and "articles".status = 'public'
 where "tmp".rownum < 2  order by "tmp".created_at desc offset $1 limit $2`
 
-func queryNoPrivateArticles(db *sql.DB, offset, limit int) (*sql.Rows, error) {
-	if config.Debug {
-		log.Printf("sql:Query: query=%v args=[%v, %v]", QueryNoPrivateArticlesSQL, offset, limit)
+func queryNoPrivateArticles(db *sql.DB, lang string, offset, limit int) ([]*ent.Version, error) {
+	_sql := QueryNoPrivateArticlesSQL
+	_args := []interface{}{
+		offset, limit,
 	}
-	return db.Query(QueryNoPrivateArticlesSQL, offset, limit)
+	if lang != "" {
+		_sql = fmt.Sprintf(_sql, `and "versions"."lang" = $3`)
+		_args = append(_args, lang)
+	} else {
+		_sql = fmt.Sprintf(_sql, "")
+	}
+	if config.Debug {
+		log.Printf("sql:Query: query=%v args=%v", _sql, _args)
+	}
+	rows, err := db.Query(_sql, _args...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	return scanArticleRows(rows)
 }
 
 // QueryUserAssetsSQL is query user article assets
@@ -64,20 +81,24 @@ from (
 ) tmp
 inner join "articles"
 	on "articles".id = "tmp".article_versions
-where tmp.rownum < 2 order by tmp.joined_at desc limit $4 offset $5;`
+where tmp.rownum < 2 order by tmp.created_at desc offset $3 limit $4;`
 
 func queryUserAssets(db *sql.DB, userID int, status asset.Status, lang string, offset, limit int) ([]*ent.Version, error) {
 	_sql := QueryUserAssetsSQL
+	_args := []interface{}{
+		userID, status, offset, limit,
+	}
 	if lang != "" {
-		_sql = fmt.Sprintf(_sql, `and "versions"."lang" = $3`)
+		_sql = fmt.Sprintf(_sql, `and "versions"."lang" = $5`)
+		_args = append(_args, lang)
 	} else {
 		_sql = fmt.Sprintf(_sql, "")
 	}
 	if config.Debug {
-		log.Printf("sql:Query: query=%v args=[%v, %v, %v, %v, %v]", _sql, userID, status, lang, offset, limit)
+		log.Printf("sql:Query: query=%v args=%v", _sql, _args)
 	}
 
-	rows, err := db.Query(QueryNoPrivateArticlesSQL, userID, status, lang, offset, limit)
+	rows, err := db.Query(_sql, _args...)
 	if err != nil {
 		return nil, err
 	}
@@ -100,6 +121,7 @@ func scanArticleRows(rows *sql.Rows) ([]*ent.Version, error) {
 			&_version.Title,
 			&_version.Gist,
 			&_version.State,
+			&_version.Lang,
 			&_version.CreatedAt,
 			&_article.ID,
 			&_article.Status)

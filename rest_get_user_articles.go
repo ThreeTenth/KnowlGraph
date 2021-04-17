@@ -34,6 +34,9 @@ func getUserArticles(c *Context) error {
 	_userID, _ := c.Get(GinKeyUserID)
 
 	_versions, err := queryUserAssets(db, _userID.(int), _query.Status, _query.Lang, _query.Offset, _query.Limit)
+	if err != nil {
+		return c.NotFound(err.Error())
+	}
 
 	return c.Ok(_versions)
 }

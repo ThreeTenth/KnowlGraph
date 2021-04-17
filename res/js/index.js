@@ -4,16 +4,17 @@ const Index = {
   data: function () {
     return {
       __original: [],
+      __published: [],
     }
   },
 
   computed: {
     articles: function () {
-      let original = this.$data.__original
+      let original = this.$data.__original.concat(this.$data.__published)
       var _articles = []
       for (let index = 0; index < original.length; index++) {
-        const article = original[index];
-        let version = article.edges.versions[0]
+        const version = original[index];
+        const article = version.edges.article
         let title = version.title ? version.title : ""
         let code = title
         if (!code) {
@@ -48,7 +49,7 @@ const Index = {
       method: "GET",
       url: queryRestful("/v1/articles", { limit: 10, offset: 0 }),
     }).then(function (resp) {
-      console.log(resp.data)
+      _this.$data.__published = resp.data
     }).catch(function (resp) {
       console.log(resp)
     })
