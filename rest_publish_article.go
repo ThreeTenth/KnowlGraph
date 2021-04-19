@@ -197,19 +197,20 @@ func openRandomAnonymousSpace(tx *ent.Tx, comment string, vers *ent.Version, vot
 		return err
 	}
 
-	// todo 倒计时，每个空间最长开启 72 小时，
-	// 72 小时后，所有未投票的表决者，
-	// 视为弃权，并触发警示系统。
-	//
-	// todo 2.0 争议性方案
-	// 在某些领域的文章，
-	// 是否可能需要花费远超 72 小时才能得到结论？
-	// 72 小时作为固定时长，是否合理？
+	startSpaceCountdown()
 
 	fmt.Println("publishArticle 08.04")
 	return nil
 }
 
+// todo 倒计时，每个空间最长开启 72 小时，
+// 72 小时后，所有未投票的表决者，
+// 视为弃权，并触发警示系统。
+//
+// todo 2.0 争议性方案
+// 在某些领域的文章，
+// 是否可能需要花费远超 72 小时才能得到结论？
+// 72 小时作为固定时长，是否合理？
 func startSpaceCountdown() {
 
 }
