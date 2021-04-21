@@ -1,9 +1,9 @@
 <div class="container">
   <div class="article-nav">
-    <a class="selected" href="#">我的文章 🔒</a>
-    <a href="#">收藏</a>
-    <a href="#">关注</a>
-    <a href="#">阅读清单</a>
+    <a class="selected" href="#">{{ i18n.MyArticles }} 🔒</a>
+    <a href="#">{{ i18n.Star }}</a>
+    <a href="#">{{ i18n.Watch }}</a>
+    <a href="#">{{ i18n.ReadList }}</a>
   </div>
   <div v-if="articles" class="m-t22">
     <div class="articles-item" v-for="(article, i) in articles">

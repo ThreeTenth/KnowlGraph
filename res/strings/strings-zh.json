@@ -28,6 +28,10 @@
   "DaysAgo": "%d天前",
   "ChooseALanguage": "选择一个语言",
   "My": "我的",
+  "MyArticles": "我的文章",
+  "Star": "收藏",
+  "Watch": "关注",
+  "ReadList": "阅读清单",
   "Index": "未登录时的首页",
   "Home": "首页"
 }

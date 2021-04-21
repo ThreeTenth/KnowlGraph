@@ -27,6 +27,10 @@
   "DaysAgo": "%d days ago",
   "ChooseALanguage": "Choose a language",
   "My": "My",
+  "MyArticles": "My Articles",
+  "Star": "Star",
+  "Watch": "Watch",
+  "ReadList": "Read list",
   "Index": "Index unlogin",
   "Home": "Home"
 }
