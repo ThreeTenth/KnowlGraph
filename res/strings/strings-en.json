@@ -1,6 +1,6 @@
 {
   "__code": "en",
-  "__version": 9,
+  "__version": 10,
   "NewArticle": "New article",
   "Histories": "Histories",
   "Publish": "Publish",
@@ -31,6 +31,9 @@
   "Star": "Star",
   "Watch": "Watch",
   "ReadList": "Read list",
+  "Body": "Body",
+  "Issues": "Issues",
+  "Notes": "Notes",
   "Index": "Index unlogin",
   "Home": "Home"
 }

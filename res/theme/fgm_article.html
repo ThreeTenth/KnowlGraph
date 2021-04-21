@@ -5,9 +5,9 @@
       <button class="menu-button">{{ article.lang.name }}</button>
     </div>
     <div class="article-nav">
-      <a class="selected" href="#">正文</a>
-      <a href="#">讨论</a>
-      <a href="#">笔记</a>
+      <a class="selected" href="#">{{ i18n.Body }}</a>
+      <a href="#">{{ i18n.Issues }}</a>
+      <a href="#">{{ i18n.Notes }}</a>
     </div>
     <article class="article-content" v-html="article.body"></article>
     <div class="article-keywords" v-if="article.keywords">

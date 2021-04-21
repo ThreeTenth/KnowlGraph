@@ -1,6 +1,6 @@
 {
   "__code": "zh",
-  "__version": 9,
+  "__version": 10,
   "NewArticle": "新文章",
   "Histories": "历史记录",
   "Publish": "发布",
@@ -32,6 +32,9 @@
   "Star": "收藏",
   "Watch": "关注",
   "ReadList": "阅读清单",
+  "Body": "正文",
+  "Issues": "讨论",
+  "Notes": "笔记",
   "Index": "未登录时的首页",
   "Home": "首页"
 }
