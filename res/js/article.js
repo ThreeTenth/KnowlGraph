@@ -63,6 +63,11 @@ const Article = {
         keywords: keywords,
         created_at: version.created_at,
         code: code,
+        asset: [{
+          archives: [{
+
+          }],
+        }],
       }
     }
   },

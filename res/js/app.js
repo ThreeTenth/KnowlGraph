@@ -17,6 +17,7 @@ const plugin = {
   install: function (Vue, options) {
     Vue.prototype.user = {
       lang: userLang,
+      logined: logined,
     }
     Vue.prototype.i18n = i18n
   }
@@ -50,7 +51,6 @@ var app = new Vue({
   data: {
     ras: null,
     languages: languages,
-    logined: logined,
     profilePicture: getLink("icon")
   },
   router,

@@ -1,7 +1,13 @@
 <div class="container none">
   <div v-if="article">
     <div class="article-nodes">
-      <div><button class="menu-button">💡 {{ i18n.Archive }}</button></div>
+      <div>
+        <div v-if="user.logined">
+          <button v-if="asset" class="menu-button">⭐ {{ i18n.Star }}</button>
+          <button v-else-if="asset" class="menu-button">💡 {{ i18n.Watch }}</button>
+          <button v-else="asset" class="menu-button">💡 {{ i18n.Star }} ⭐</button>
+        </div>
+      </div>
       <button class="menu-button">{{ article.lang.name }}</button>
     </div>
     <div class="article-nav">

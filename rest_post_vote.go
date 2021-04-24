@@ -8,6 +8,7 @@ import (
 	"knowlgraph.com/ent/version"
 	"knowlgraph.com/ent/vote"
 	"knowlgraph.com/ent/voter"
+	"knowlgraph.com/ent/word"
 )
 
 // Post vote. Users vote for an article,
@@ -198,6 +199,12 @@ func votingSettlement(tx *ent.Tx, _ras *ent.RAS) error {
 			UpdateOne(_version).
 			SetState(version.StateRelease).
 			Save(ctx)
+		if err != nil {
+			return err
+		}
+
+		_wordIDs, err := _version.QueryKeywords().Select(word.FieldID).Ints(ctx)
+		_, err = tx.Word.Update().Where(word.IDIn(_wordIDs...)).SetStatus(word.StatusPublic).Save(ctx)
 		if err != nil {
 			return err
 		}

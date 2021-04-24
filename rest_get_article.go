@@ -71,9 +71,19 @@ func GetArticle(_userID int, articleID int, needVersions bool, versionID int) (*
 	}
 
 	_reactions, _ := _article.QueryReactions().All(ctx)
+	_assets, _ := _article.QueryAssets().
+		Where(asset.
+			HasUserWith(user.ID(_userID))).
+		WithArchives(func(aq *ent.ArchiveQuery) {
+			aq.WithNode(func(nq *ent.NodeQuery) {
+				nq.WithWord()
+			})
+		}).
+		All(ctx)
 
 	_article.Edges.Versions = _versions
 	_article.Edges.Reactions = _reactions
+	_article.Edges.Assets = _assets
 
 	return _article, err
 }
