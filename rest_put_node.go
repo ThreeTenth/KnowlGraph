@@ -1,6 +1,14 @@
 package main
 
-import "knowlgraph.com/ent/node"
+import (
+	"github.com/pkg/errors"
+	"knowlgraph.com/ent"
+	"knowlgraph.com/ent/archive"
+	"knowlgraph.com/ent/node"
+	"knowlgraph.com/ent/user"
+	"knowlgraph.com/ent/userword"
+	"knowlgraph.com/ent/word"
+)
 
 func putNode(c *Context) error {
 	// 创建节点的接口参数
@@ -16,23 +24,127 @@ func putNode(c *Context) error {
 		return c.BadRequest(err.Error())
 	}
 
-	_nodeCreate := client.Node.Create().SetWordID(_query.WordID)
-
-	if 0 < _query.NodeID {
-		_prev, err := client.Node.Query().Where(node.ID(_query.NodeID)).WithPath().First(ctx)
-		if err != nil {
-			return c.BadRequest(err.Error())
-		}
-
-		_path := append(_prev.Edges.Path, _prev)
-
-		_nodeCreate.SetPrev(_prev).SetLevel(_prev.Level + 1).AddPath(_path...)
+	// 获取关键字信息
+	// 如果关键字是私有的，那么需要对关键字鉴权
+	_word, err := client.Word.Get(ctx, _query.WordID)
+	if err != nil {
+		return c.NotFound(err.Error())
 	}
 
-	_node, err := _nodeCreate.Save(ctx)
+	_userID, ok := c.Get(GinKeyUserID)
+
+	if _word.Status == word.StatusPrivate {
+		// 关键字是私有的
+
+		if !ok {
+			// 未登录
+			return c.Unauthorized("Unlogin")
+		}
+
+		// 查询指定的私有关键字是否为用户所有
+		ok, err := client.UserWord.Query().
+			Where(
+				userword.HasUserWith(
+					user.ID(_userID.(int))),
+				userword.HasWordWith(
+					word.ID(_query.WordID))).
+			Exist(ctx)
+
+		if err != nil {
+			return c.InternalServerError(err.Error())
+		}
+
+		if !ok {
+			// 鉴权失败
+
+			return c.Unauthorized("Unauthorized")
+		}
+	}
+
+	err = WithTx(ctx, client, func(tx *ent.Tx) error {
+		// 创建节点
+
+		_nodeCreate := tx.Node.Create().SetWordID(_query.WordID)
+
+		if 0 < _query.NodeID {
+			// 如果存在上级节点，则需要鉴权
+
+			_prev, err := client.Node.
+				Query().
+				Where(node.ID(_query.NodeID)).
+				WithWord().
+				WithPath(func(nq *ent.NodeQuery) {
+					nq.WithWord()
+				}).
+				First(ctx)
+			if err != nil {
+				return c.BadRequest(err.Error())
+			}
+
+			_path := _prev.Edges.Path
+
+			// 判断上级节点的路径上是否存在私有节点
+			_status := _prev.Edges.Word.Status
+			if _status == word.StatusPublic {
+				for _, _pn := range _path {
+					if _pn.Edges.Word.Status == word.StatusPrivate {
+						_status = word.StatusPrivate
+						break
+					}
+				}
+			}
+
+			if _status == word.StatusPrivate {
+				// 如果上级节点的路径中存在私有节点
+
+				// 查询用户是否拥有指定节点
+				ok, err := client.Archive.
+					Query().
+					Where(
+						archive.HasNodeWith(node.ID(_prev.ID)),
+						archive.HasUserWith(user.ID(_userID.(int)))).
+					Exist(ctx)
+				if err != nil {
+					return err
+				}
+
+				if !ok {
+					return errors.New("No access to private node")
+				}
+			}
+
+			// 为创建的节点添加节点路径
+			_path = append(_path, _prev)
+
+			_nodeCreate.SetPrev(_prev).SetLevel(_prev.Level + 1).AddPath(_path...)
+		}
+
+		// 开始创建节点
+		_node, err := _nodeCreate.Save(ctx)
+
+		if err != nil {
+			return err
+		}
+
+		// 为用户添加节点
+		_archive, err := tx.Archive.
+			Create().
+			SetNode(_node).
+			SetUserID(_userID.(int)).
+			Save(ctx)
+
+		if err != nil {
+			return err
+		}
+
+		_archive.Edges.Node = _node
+
+		return c.Ok(_archive)
+	})
+
 	if err != nil {
 		return c.InternalServerError(err.Error())
 	}
 
-	return c.Ok(_node)
+	return nil
 }
