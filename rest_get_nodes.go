@@ -46,37 +46,10 @@ func getNodes(c *Context) error {
 		return c.Ok(_node)
 	}
 
-	// 获取指定节点的详细信息
-	_node, err := client.Node.Query().
-		Where(node.ID(_query.ID)).
-		WithWord().
-		First(ctx)
+	_node, ok, err := getPublicNodeIfExist(_query.ID)
 	if err != nil {
 		return c.NotFound(err.Error())
-	}
-
-	// 如果指定节点为私有节点，则返回 "MethodNotAllowed(405)"
-	if _node.Edges.Word.Status == word.StatusPrivate {
-		return c.MethodNotAllowed("No access to private methods")
-	}
-
-	// 获取指定节点的路径信息
-	_path, err := _node.QueryPath().WithWord().All(ctx)
-	if err != nil {
-		return c.NotFound(err.Error())
-	}
-
-	// 判断指定节点的路径上是否存在私有节点
-	_status := word.StatusPublic
-	for _, _pn := range _path {
-		if _pn.Edges.Word.Status == word.StatusPrivate {
-			_status = word.StatusPrivate
-			break
-		}
-	}
-
-	// 如果指定节点的路径上存在私有节点，则返回 "MethodNotAllowed(405)"
-	if _status == word.StatusPrivate {
+	} else if !ok {
 		return c.MethodNotAllowed("No access to private methods")
 	}
 
@@ -90,8 +63,47 @@ func getNodes(c *Context) error {
 		return c.NotFound(err.Error())
 	}
 
-	_node.Edges.Path = _path
 	_node.Edges.Nexts = _nexts
 
 	return c.Ok(_node)
+}
+
+func getPublicNodeIfExist(id int) (*ent.Node, bool, error) {
+	// 获取指定节点的详细信息
+	_node, err := client.Node.Query().
+		Where(node.ID(id)).
+		WithWord().
+		First(ctx)
+	if err != nil {
+		return nil, false, err
+	}
+
+	// 如果指定节点为私有节点，则返回 "MethodNotAllowed(405)"
+	if _node.Edges.Word.Status == word.StatusPrivate {
+		return nil, false, nil
+	}
+
+	// 获取指定节点的路径信息
+	_path, err := _node.QueryPath().WithWord().All(ctx)
+	if err != nil {
+		return nil, false, err
+	}
+
+	// 判断指定节点的路径上是否存在私有节点
+	_status := word.StatusPublic
+	for _, _pn := range _path {
+		if _pn.Edges.Word.Status == word.StatusPrivate {
+			_status = word.StatusPrivate
+			break
+		}
+	}
+
+	// 如果指定节点的路径上存在私有节点，则返回 "MethodNotAllowed(405)"
+	if _status == word.StatusPrivate {
+		return nil, false, nil
+	}
+
+	_node.Edges.Path = _path
+
+	return _node, true, nil
 }

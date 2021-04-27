@@ -69,36 +69,18 @@ func putNode(c *Context) error {
 		if 0 < _query.NodeID {
 			// 如果存在上级节点，则需要鉴权
 
-			_prev, err := client.Node.
-				Query().
-				Where(node.ID(_query.NodeID)).
-				WithWord().
-				WithPath(func(nq *ent.NodeQuery) {
-					nq.WithWord()
-				}).
-				First(ctx)
+			_prev, ok, err := getPublicNodeIfExist(_query.NodeID)
 			if err != nil {
-				return c.BadRequest(err.Error())
+				return c.NotFound(err.Error())
 			}
 
 			_path := _prev.Edges.Path
 
-			// 判断上级节点的路径上是否存在私有节点
-			_status := _prev.Edges.Word.Status
-			if _status == word.StatusPublic {
-				for _, _pn := range _path {
-					if _pn.Edges.Word.Status == word.StatusPrivate {
-						_status = word.StatusPrivate
-						break
-					}
-				}
-			}
-
-			if _status == word.StatusPrivate {
+			if !ok {
 				// 如果上级节点的路径中存在私有节点
 
 				// 查询用户是否拥有指定节点
-				ok, err := client.Archive.
+				ok, err = client.Archive.
 					Query().
 					Where(
 						archive.HasNodeWith(node.ID(_prev.ID)),
