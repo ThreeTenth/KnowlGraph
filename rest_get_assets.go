@@ -18,7 +18,7 @@ func (d Articles) Less(i, j int) bool {
 
 func (d Articles) Swap(i, j int) { d[i], d[j] = d[j], d[i] }
 
-func getUserArticles(c *Context) error {
+func getAssets(c *Context) error {
 	var _query struct {
 		Status asset.Status `form:"status"`
 		Lang   string       `form:"lang"`

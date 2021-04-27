@@ -38,7 +38,7 @@ const Archive = {
     let _this = this
     axios({
       method: "GET",
-      url: queryRestful("/v1/user/articles", { status: "self" }),
+      url: queryRestful("/v1/assets", { status: "self" }),
     }).then(function (resp) {
       _this.$data.__original = resp.data
     }).catch(function (resp) {

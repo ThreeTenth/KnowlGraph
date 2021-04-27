@@ -248,7 +248,7 @@ func router02() http.Handler {
 	v1.GET("/drafts", authorizeRequired, handle(getDrafts))
 	v1.GET("/draft", authorizeRequired, handle(getDraft))
 	v1.GET("/article", authorizeRequired, handle(getArticle))
-	v1.GET("/user/articles", authorizeRequired, handle(getUserArticles))
+	v1.GET("/assets", authorizeRequired, handle(getAssets))
 
 	v1.GET("/nodes", handle(getNodes))
 	v1.PUT("/node", handle(putNode))
