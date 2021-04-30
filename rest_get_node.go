@@ -11,7 +11,7 @@ import (
 // 获取指定节点的下级公开节点(nexts)。
 //
 // 需要对指定节点进行鉴权，如果指定节点为私有，则返回 405（方法拒绝访问）。
-func getNodes(c *Context) error {
+func getNode(c *Context) error {
 	var _query struct {
 		ID int `form:"id"`
 	}
