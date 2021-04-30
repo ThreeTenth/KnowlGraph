@@ -251,6 +251,7 @@ func router02() http.Handler {
 
 	v1.GET("/node", handle(getNode))
 	v1.PUT("/node", authorizeRequired, handle(putNode))
+	v1.GET("/node/articles", handle(getNodeArticles))
 
 	v1.GET("/archive", authorizeRequired, handle(getArchive))
 	v1.PUT("/archive", authorizeRequired, handle(putArchive))
@@ -263,7 +264,7 @@ func router02() http.Handler {
 	v1.GET("/vote", authorizeRequired, handle(getVote))
 	v1.POST("/vote", authorizeRequired, handle(postVote))
 
-	v1.GET("/node/articles", handle(getNodeArticles))
+	v1.GET("/word", handle(getWord))
 	v1.GET("/keyword/articles", handle(getKeywordArticles))
 
 	return router
