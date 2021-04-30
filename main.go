@@ -265,7 +265,8 @@ func router02() http.Handler {
 	v1.POST("/vote", authorizeRequired, handle(postVote))
 
 	v1.GET("/word", handle(getWord))
-	v1.GET("/keyword/articles", handle(getKeywordArticles))
+	v1.GET("/word/articles", handle(getKeywordArticles))
+	v1.GET("/word/nodes", handle(getWordNodes))
 
 	return router
 }
