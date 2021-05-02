@@ -1,6 +1,8 @@
 <div class="container">
   <h1>{{ i18n.Publish }}</h1>
   <div>
+    <label for="title">{{ i18n.Cover }}</label>
+    <input type="file" name="cover" class="publish-input" v-model="cover" v-bind:placeholder="i18n.Cover"></input>
     <label for="title">{{ i18n.Title }}</label>
     <input type="text" name="title" class="publish-input" v-model="title" v-bind:placeholder="i18n.Title"></input>
     <label for="gist">{{ i18n.Gist }}</label>

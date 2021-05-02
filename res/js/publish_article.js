@@ -6,6 +6,7 @@ const PublishArticle = {
   data: function () {
     return {
       draft: {},
+      cover: "",
       title: "",
       gist: "",
       versionName: "",
@@ -64,6 +65,7 @@ const PublishArticle = {
         data: {
           name: this.versionName,
           comment: this.comment,
+          cover: this.cover,
           title: this.title,
           gist: this.gist,
           lang: this.lang,

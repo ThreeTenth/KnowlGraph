@@ -24,6 +24,7 @@ func publishArticle(c *Context) error {
 	var _data struct {
 		Name     string   `json:"name"`
 		Comment  string   `json:"comment"`
+		Cover    string   `json:"cover"`
 		Title    string   `json:"title"`
 		Gist     string   `json:"gist"`
 		Lang     string   `json:"lang"`
