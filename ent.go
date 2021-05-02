@@ -129,7 +129,7 @@ from (
 	WHERE "versions"."state" = 'release' %v
 ) tmp
 inner join "articles"
-	on "articles".id = "tmp".article_versions
+	on "articles".id = "tmp".article_versions and "articles"."status" = 'public'
 where tmp.rownum < 2 order by tmp.created_at desc offset $2 limit $3`
 
 func queryNodeArticles(db *sql.DB, nodeID int, lang string, offset, limit int) ([]*ent.Version, error) {
