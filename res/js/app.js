@@ -35,7 +35,7 @@ const router = new VueRouter({
     { path: '/', component: Index },
     { path: '/p/:id/:code?', name: "article", component: Article, props: true },
     { path: '/drafts', name: 'drafts', component: Drafts },
-    { path: '/archive', name: 'archive', component: Archive },
+    { path: '/archive', component: Archive, children: archive_router },
     { path: '/about', name: 'about', component: About },
     { path: '/my', name: 'my', component: My },
     { path: '/new/article', name: 'newArticle', component: NewArticle },

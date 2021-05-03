@@ -1,20 +1,9 @@
 <div class="container">
   <div class="article-nav">
-    <a class="selected" href="#">{{ i18n.MyArticles }} 🔒</a>
-    <a href="#">{{ i18n.Star }} ⭐</a>
-    <a href="#">{{ i18n.Watch }} 👀</a>
-    <a href="#">{{ i18n.ReadList }}</a>
+    <router-link to="/archive" v-bind:class="status == 'achiveSelf' ? 'selected' : ''">{{ i18n.MyArticles }} 🔒</router-link>
+    <router-link to="/archive/star" v-bind:class="status == 'achiveStar' ? 'selected' : ''">{{ i18n.Star }} ⭐</router-link>
+    <router-link to="/archive/watch" v-bind:class="status == 'achiveWatch' ? 'selected' : ''">{{ i18n.Watch }} 👀</router-link>
+    <router-link to="/archive/readlist" v-bind:class="status == 'achiveReadlist' ? 'selected' : ''">{{ i18n.ReadList }}</router-link>
   </div>
-  <div v-if="articles" class="m-t22">
-    <div class="articles-item" v-for="(article, i) in articles">
-      <router-link class="articles-item-link" :to="{ name: 'article', params: { id: article.id, code: article.code }}">
-        <div class="articles-item-body">
-          <div v-if="article.title">{{ article.title }}</div>
-          <div>{{ article.gist }}</div>
-        </div>
-      </router-link>
-      <the-time v-bind:datetime="article.created_at"></the-time>
-    </div>
-  </div>
-  <div v-else>Loading</div>
+  <router-view></router-view>
 </div>

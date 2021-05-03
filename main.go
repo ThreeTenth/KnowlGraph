@@ -211,6 +211,7 @@ func router01() http.Handler {
 	router.GET("/", authentication, html(index))
 	router.GET("/drafts", authentication, html(index))
 	router.GET("/archive", authentication, html(index))
+	router.GET("/archive/*path", authentication, html(index))
 	router.GET("/about", authentication, html(index))
 	router.GET("/my", authentication, html(index))
 	router.GET("/new/article", authentication, html(index))
