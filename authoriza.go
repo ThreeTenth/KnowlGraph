@@ -17,7 +17,7 @@ func setAuthorization(c *gin.Context, userID int) error {
 		return err
 	}
 
-	c.SetCookie(CookieToken, _token, int(30*24*3600), "/", "", !config.Debug, config.Debug)
+	c.SetCookie(CookieToken, _token, int(30*24*3600), "/", "", !config.Debug, false)
 	return nil
 }
 
@@ -43,7 +43,7 @@ func deauthorize(c *gin.Context) {
 		}
 	}
 
-	c.SetCookie(CookieToken, "", -1, "/", "", !config.Debug, !config.Debug)
+	c.SetCookie(CookieToken, "", -1, "/", "", !config.Debug, false)
 	c.Next()
 }
 
