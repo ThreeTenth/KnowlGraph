@@ -1,6 +1,8 @@
 // vue_time.js
 
 Vue.component('dropdown', {
+  props: ['ignore'],
+
   data: function () {
     return {
       seen: false,
@@ -9,7 +11,7 @@ Vue.component('dropdown', {
   },
   computed: {
   },
-  mounted() { 
+  mounted() {
     this.__update()
   },
   activated() {
@@ -28,9 +30,26 @@ Vue.component('dropdown', {
       setTimeout(() => document.addEventListener('click', this.__hide), 0);
     },
 
-    __hide() {
-      this.seen = false
-      document.removeEventListener('click', this.__hide);
+    __hide(e) {
+      if (!e) return
+      if (this.ignore) {
+        var path = e.path
+        var hide = true
+        for (let index = 0; index < path.length; index++) {
+          const element = path[index];
+          if (element.className == "drop-content") {
+            hide = false
+            break
+          }
+        }
+        if (hide) {
+          this.seen = false
+          document.removeEventListener('click', this.__hide);
+        }
+      } else {
+        this.seen = false
+        document.removeEventListener('click', this.__hide);
+      }
     },
 
     __update() {

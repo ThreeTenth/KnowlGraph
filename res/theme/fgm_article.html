@@ -3,9 +3,14 @@
     <div class="article-nodes">
       <div>
         <div v-if="user.logined">
-          <button v-if="asset" class="menu-button">⭐ {{ i18n.Star }}</button>
-          <button v-else-if="asset" class="menu-button">💡 {{ i18n.Watch }}</button>
-          <button v-else="asset" class="menu-button">💡 {{ i18n.Star }} ⭐</button>
+          <button v-if="article.archive" class="menu-button">{{ i18n.Archive }}</button>
+          <dropdown class="left" v-bind:ignore="'true'" v-else-if="article.asset">
+            <button class="menu-button">💡 {{ i18n.Archive }}</button>
+            <div class="drop-content">
+              <input class="p-sm" type="text">
+            </div>
+          </dropdown>
+          <button v-else class="menu-button">⭐ {{ i18n.Star }}</button>
         </div>
       </div>
       <button class="menu-button">{{ article.lang.name }}</button>
@@ -30,14 +35,14 @@
           <div class="flex">
             <button class="reaction-button" title="+1">👍</button>
             <button class="reaction-button" title="-1">👎</button>
-            <button class="reaction-button" title="Laugh">😄</button>
-            <button class="reaction-button" title="Hooray">🎉</button>
-            <button class="reaction-button" title="Confused">😕</button>
+            <button class="reaction-button" v-bind:title="i18n.Laugh">😄</button>
+            <button class="reaction-button" v-bind:title="i18n.Hooray">🎉</button>
+            <button class="reaction-button" v-bind:title="i18n.Confused">😕</button>
           </div>
           <div class="flex">
-            <button class="reaction-button" title="Heart">❤️</button>
-            <button class="reaction-button" title="Rocket">🚀</button>
-            <button class="reaction-button" title="Eyes">👀</button>
+            <button class="reaction-button" v-bind:title="i18n.Heart">❤️</button>
+            <button class="reaction-button" v-bind:title="i18n.Rocket">🚀</button>
+            <button class="reaction-button" v-bind:title="i18n.Eyes">👀</button>
           </div>
         </div>
       </dropdown>

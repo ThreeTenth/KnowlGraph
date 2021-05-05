@@ -1,6 +1,6 @@
 {
   "__code": "zh",
-  "__version": 11,
+  "__version": 12,
   "NewArticle": "新文章",
   "Histories": "历史记录",
   "Publish": "发布",
@@ -37,6 +37,14 @@
   "Notes": "笔记",
   "Cover": "封面",
   "Translate": "翻译",
+  "Up": "顶",
+  "Down": "踩",
+  "Laugh": "大笑",
+  "Hooray": "万岁",
+  "Confused": "困惑",
+  "Heart": "比心",
+  "Rocket": "火箭",
+  "Eyes": "围观",
   "Index": "未登录时的首页",
   "Home": "首页"
 }

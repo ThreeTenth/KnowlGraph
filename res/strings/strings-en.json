@@ -1,6 +1,6 @@
 {
   "__code": "en",
-  "__version": 11,
+  "__version": 12,
   "NewArticle": "New article",
   "Histories": "Histories",
   "Publish": "Publish",
@@ -37,6 +37,14 @@
   "Notes": "Notes",
   "Cover": "Cover",
   "Translate": "Translate",
+  "Up": "Up",
+  "Down": "Down",
+  "Laugh": "Laugh",
+  "Hooray": "Hooray",
+  "Confused": "Confused",
+  "Heart": "Heart",
+  "Rocket": "Rocket",
+  "Eyes": "Eyes",
   "Index": "Index unlogin",
   "Home": "Home"
 }

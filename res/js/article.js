@@ -40,17 +40,17 @@ const Article = {
         }
       });
 
-      var reactions = [
-        { status: "up", count: "9" },
-        { status: "down", count: "99" },
-        { status: "laugh", count: "999" },
-        { status: "heart", count: "1K" },
-        { status: "hooray", count: "10K" },
-        { status: "confused", count: "100k" },
-        { status: "rocket", count: "1M" },
-        { status: "eyes", count: "10M" },
-      ]
-      reactions = article.edges.reactions
+      var reactions = article.edges.reactions
+      var assets = article.edges.assets
+      var asset = null
+      var archive = null
+      if (assets && 0 < assets.length) {
+        asset = assets[0]
+        var archives = asset.edges.archives
+        if (archives && 0 < archives.length) {
+          archive = archives[0]
+        }
+      }
 
       return {
         id: article.id,
@@ -63,11 +63,8 @@ const Article = {
         keywords: keywords,
         created_at: version.created_at,
         code: code,
-        asset: [{
-          archives: [{
-
-          }],
-        }],
+        asset: asset,
+        archive: archive,
       }
     }
   },
