@@ -1,6 +1,6 @@
 {
   "__code": "en",
-  "__version": 10,
+  "__version": 11,
   "NewArticle": "New article",
   "Histories": "Histories",
   "Publish": "Publish",
@@ -22,6 +22,7 @@
   "Edit": "Edit",
   "RestoreThisVersion": "Restore this version",
   "CreatedAt": "Created at",
+  "JustNow": "Just Now",
   "MinutesAgo": "%d minutes ago",
   "HoursAgo": "%d hours ago",
   "DaysAgo": "%d days ago",

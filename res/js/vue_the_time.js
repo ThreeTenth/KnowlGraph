@@ -15,9 +15,9 @@ Vue.component('the-time', {
       let tip = ''
 
       if (timer <= 0) {
-        tip = i18n.JustNow
+        tip = this.i18n.JustNow
       } else if (Math.floor(timer / 60) <= 0) {
-        tip = i18n.JustNow
+        tip = this.i18n.JustNow
       } else if (Math.floor(timer < 3600)) {
         tip = sprintf(this.i18n.MinutesAgo, Math.floor(timer / 60))
       } else if (timer >= 3600 && timer < 86400) {

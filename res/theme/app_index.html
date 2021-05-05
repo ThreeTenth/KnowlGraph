@@ -1,16 +1,11 @@
 <div id="app">
   <div class="nav">
     <div class="nav-start">
-      <router-link to="/">{{ i18n.Home }}</router-link>
+      <router-link class="nav-a" to="/">🏠 {{ i18n.Home }}</router-link>
     </div>
     <div>
       <button class="nav-button" v-on:click="onGitHubOAuth">{{ i18n.LoginWithGitHubOAuth }}</button>
-      <select id="userLangSelect" name="lang" v-bind:value="user.lang" v-on:change="onSelectUserLang">
-        <option v-for="(lang, i) in languages" v-bind:dir="lang.direction" v-bind:value="lang.code">{{ lang.name }}
-        </option>
-      </select>
     </div>
   </div>
   <router-view class="view"></router-view>
-  <words-input />
 </div>
