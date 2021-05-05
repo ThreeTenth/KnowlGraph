@@ -43,6 +43,14 @@
   padding: var(--x6s) var(--x5s);
 }
 
+.p-md {
+  padding: var(--md) var(--lg);
+}
+
+.p-sm {
+  padding: var(--xxs) var(--sm);
+}
+
 .m-2-4 {
   margin: var(--x6s) var(--x5s);
 }
