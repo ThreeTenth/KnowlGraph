@@ -22,10 +22,11 @@ func getArticle(c *Context) error {
 		return c.BadRequest(err.Error())
 	}
 
-	_userID, _ := c.Get(GinKeyUserID)
+	_userID, ok := c.Get(GinKeyUserID)
 
 	_article, err := GetArticle(
-		_userID.(int),
+		ok,
+		_userID,
 		_query.ID,
 		_query.NeedVersions,
 		_query.VersionID)
@@ -38,7 +39,7 @@ func getArticle(c *Context) error {
 }
 
 // GetArticle is get article
-func GetArticle(_userID int, articleID int, needVersions bool, versionID int) (*ent.Article, error) {
+func GetArticle(isLogin bool, _userID interface{}, articleID int, needVersions bool, versionID int) (*ent.Article, error) {
 	_article, err := client.Article.
 		Query().
 		Where(article.ID(articleID)).
@@ -49,7 +50,11 @@ func GetArticle(_userID int, articleID int, needVersions bool, versionID int) (*
 	}
 
 	if _article.Status == article.StatusPrivate {
-		ok, _ := _article.QueryAssets().Where(asset.HasUserWith(user.ID(_userID))).Exist(ctx)
+		if !isLogin {
+			return nil, errors.New("Unauthorized")
+		}
+
+		ok, _ := _article.QueryAssets().Where(asset.HasUserWith(user.ID(_userID.(int)))).Exist(ctx)
 		if !ok {
 			return nil, errors.New("Unauthorized")
 		}
@@ -71,19 +76,26 @@ func GetArticle(_userID int, articleID int, needVersions bool, versionID int) (*
 	}
 
 	_reactions, _ := _article.QueryReactions().All(ctx)
-	_assets, _ := _article.QueryAssets().
-		Where(asset.
-			HasUserWith(user.ID(_userID))).
-		WithArchives(func(aq *ent.ArchiveQuery) {
-			aq.WithNode(func(nq *ent.NodeQuery) {
-				nq.WithWord()
-			})
-		}).
-		All(ctx)
+
+	if isLogin {
+		_assets, _ := _article.QueryAssets().
+			Where(asset.
+				HasUserWith(user.ID(_userID.(int)))).
+			WithArchives(func(aq *ent.ArchiveQuery) {
+				aq.WithNode(func(nq *ent.NodeQuery) {
+					nq.WithWord().
+						WithPath(func(nq *ent.NodeQuery) {
+							nq.WithWord()
+						})
+				})
+			}).
+			All(ctx)
+
+		_article.Edges.Assets = _assets
+	}
 
 	_article.Edges.Versions = _versions
 	_article.Edges.Reactions = _reactions
-	_article.Edges.Assets = _assets
 
 	return _article, err
 }

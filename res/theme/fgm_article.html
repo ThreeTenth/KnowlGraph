@@ -26,8 +26,16 @@
       <dropdown>
         <button class="emoji-button">😃</button>
         <div class="drop-content">
-          <button class="menu-button">{{ i18n.Histories }}</button>
-          <button v-on:click="onEditArticle">{{ i18n.Edit }}</button>
+          <div class="flex">
+            <button class="reaction-button" title="+1">👍</button>
+            <button class="reaction-button" title="-1">👎</button>
+            <button class="reaction-button" title="-1">😄</button>
+            <button class="reaction-button">🎉</button>
+            <button class="reaction-button">😕</button>
+            <button class="reaction-button">❤️</button>
+            <button class="reaction-button">🚀</button>
+            <button class="reaction-button">👀</button>
+          </div>
         </div>
       </dropdown>
       <dropdown>
@@ -38,7 +46,8 @@
           </svg>
         </button>
         <div class="drop-content">
-          <button class="menu-button">{{ i18n.Histories }}</button>
+          <button>{{ i18n.Histories }}</button>
+          <button>{{ i18n.Translate }}</button>
           <button v-on:click="onEditArticle">{{ i18n.Edit }}</button>
         </div>
       </dropdown>

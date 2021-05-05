@@ -19,25 +19,20 @@ func articleHTML(c *Context) (int, string, interface{}) {
 		return http.StatusNotFound, TplIndexHTML, _data
 	}
 
-	if ok {
-		_user, err := client.User.Get(ctx, _userID.(int))
+	_article, err := GetArticle(ok, _userID, _query.ID, false, 0)
 
-		if err != nil {
-			return http.StatusOK, TplIndexHTML, _data
-		}
-
-		_article, err := GetArticle(_user.ID, _query.ID, false, 0)
-
-		if err != nil {
-			return http.StatusNotFound, TplIndexHTML, _data
-		}
-
-		_data.Logined = true
-		_data.User = _user
-		_data.Article = _article.Edges.Versions[0]
-
-		return http.StatusOK, TplIndexHTML, _data
+	if err != nil {
+		return http.StatusNotFound, TplIndexHTML, _data
 	}
+
+	if ok {
+		_user, _ := client.User.Get(ctx, _userID.(int))
+
+		_data.User = _user
+	}
+
+	_data.Logined = ok
+	_data.Article = _article.Edges.Versions[0]
 
 	return http.StatusOK, TplIndexHTML, _data
 }
