@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/pkg/errors"
 	"knowlgraph.com/ent"
+	"knowlgraph.com/ent/archive"
 	"knowlgraph.com/ent/article"
 	"knowlgraph.com/ent/asset"
 	"knowlgraph.com/ent/user"
@@ -78,17 +79,22 @@ func GetArticle(isLogin bool, _userID interface{}, articleID int, needVersions b
 	_reactions, _ := _article.QueryReactions().All(ctx)
 
 	if isLogin {
-		_assets, _ := _article.QueryAssets().
-			Where(asset.
-				HasUserWith(user.ID(_userID.(int)))).
+		_archives, _ := _article.
+			QueryNodes().
 			WithArchives(func(aq *ent.ArchiveQuery) {
-				aq.WithNode(func(nq *ent.NodeQuery) {
-					nq.WithWord().
-						WithPath(func(nq *ent.NodeQuery) {
-							nq.WithWord()
-						})
-				})
+				aq.Where(archive.HasUserWith(user.ID(_userID.(int))))
+				aq.WithNode()
 			}).
+			WithWord().
+			WithPath(func(nq *ent.NodeQuery) {
+				nq.WithWord()
+			}).All(ctx)
+
+		_article.Edges.Nodes = _archives
+
+		_assets, _ := _article.
+			QueryAssets().
+			Where(asset.HasUserWith(user.ID(_userID.(int)))).
 			All(ctx)
 
 		_article.Edges.Assets = _assets

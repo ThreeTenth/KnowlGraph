@@ -17,9 +17,9 @@ type Archive struct {
 func (Archive) Fields() []ent.Field {
 	return []ent.Field{
 		field.Enum("status").
-			Values("star", "watch", "self").
+			Values("star", "watch").
 			Default("star").
-			Comment("star: a node favored by the user; watch: a node followed by the user; self: a private node created by the user."),
+			Comment("star: a node favored by the user; watch: a node followed by the user."),
 		field.Time("created_at").Default(time.Now),
 	}
 }
@@ -37,7 +37,5 @@ func (Archive) Edges() []ent.Edge {
 			Ref("archives").
 			Unique().
 			Required(),
-		edge.To("assets", Asset.Type).
-			StructTag(`json:"assets,omitempty"`),
 	}
 }

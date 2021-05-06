@@ -120,6 +120,10 @@ const PublishArticle = {
     },
   },
 
+  created() {
+    this.__load(this.id, this.__draft)
+  },
+
   activated() {
     this.__load(this.id, this.__draft)
   },

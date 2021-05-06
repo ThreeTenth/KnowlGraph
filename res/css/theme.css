@@ -51,6 +51,10 @@
   padding: var(--xxs) var(--sm);
 }
 
+.m-sm {
+  margin: var(--xxs) var(--sm);
+}
+
 .m-2-4 {
   margin: var(--x6s) var(--x5s);
 }

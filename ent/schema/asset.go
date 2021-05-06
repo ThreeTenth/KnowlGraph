@@ -40,8 +40,5 @@ func (Asset) Edges() []ent.Edge {
 			Ref("assets").
 			Unique().
 			Required(),
-		edge.From("archives", Archive.Type).
-			Ref("assets").
-			StructTag(`json:"archives,omitempty"`),
 	}
 }

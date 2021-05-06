@@ -14,7 +14,7 @@ type Node struct {
 // Fields of the Node.
 func (Node) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int("level").Default(0),
+		field.Enum("status").Values("public", "private").Immutable(),
 	}
 }
 
