@@ -28,7 +28,7 @@ func getNode(c *Context) error {
 	// 如果未指定节点，则返回所有根节点
 	if 0 == _query.ID {
 		_nexts, err := client.Node.Query().
-			Where(node.Level(0)).
+			Where(node.Not(node.HasPrevWith())).
 			QueryNexts().
 			Where(_nextsWhere).
 			WithWord().

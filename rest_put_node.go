@@ -98,7 +98,7 @@ func putNode(c *Context) error {
 			// 为创建的节点添加节点路径
 			_path = append(_path, _prev)
 
-			_nodeCreate.SetPrev(_prev).SetLevel(_prev.Level + 1).AddPath(_path...)
+			_nodeCreate.SetPrev(_prev).AddPath(_path...)
 		}
 
 		// 开始创建节点
