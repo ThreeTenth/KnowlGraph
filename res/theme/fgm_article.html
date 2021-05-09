@@ -33,16 +33,12 @@
         <div class="drop-content">
           <div class="p-sm">{{ i18n.PickYourReaction }}</div>
           <div class="flex">
-            <button class="reaction-button" title="+1">👍</button>
-            <button class="reaction-button" title="-1">👎</button>
-            <button class="reaction-button" v-bind:title="i18n.Laugh">😄</button>
-            <button class="reaction-button" v-bind:title="i18n.Hooray">🎉</button>
-            <button class="reaction-button" v-bind:title="i18n.Confused">😕</button>
+            <button class="reaction-button" v-for="(reac, i) in reactions.slice(0, 5)"
+              v-on:click="onPickReaction(reac.value)" v-bind:title="i18n[reac.name]">{{ reac.emoji}}</button>
           </div>
           <div class="flex">
-            <button class="reaction-button" v-bind:title="i18n.Heart">❤️</button>
-            <button class="reaction-button" v-bind:title="i18n.Rocket">🚀</button>
-            <button class="reaction-button" v-bind:title="i18n.Eyes">👀</button>
+            <button class="reaction-button" v-for="(reac, i) in reactions.slice(5, 8)"
+              v-on:click="onPickReaction(reac.value)" v-bind:title="i18n[reac.name]">{{ reac.emoji}}</button>
           </div>
         </div>
       </dropdown>
@@ -61,7 +57,7 @@
       </dropdown>
     </div>
     <div class="article-reactions" v-if="article.reactions">
-      <button class="reaction-button" v-for="(rt, i) in article.reactions">{{ emoji[rt.status]}} {{ rt.count}}</button>
+      <button class="reaction-button" v-for="(reac, i) in article.reactions" v-on:click="onPickReaction(reac.status)">{{ emoji[reac.status]}} {{ reac.count }}</button>
     </div>
   </div>
   <div v-else>Loading</div>

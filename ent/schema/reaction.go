@@ -17,7 +17,7 @@ func (Reaction) Fields() []ent.Field {
 		field.Enum("status").
 			Values("up", "down", "laugh", "hooray", "confused", "heart", "rocket", "eyes").
 			Comment("Refer to the Reaction list on GitHub"),
-		field.Int("count"),
+		field.Int("count").Default(1),
 	}
 }
 

@@ -8,6 +8,16 @@ const Article = {
       emoji: {
         "up": "👍", "down": "👎", "laugh": "😄", "hooray": "🎉", "confused": "😕", "heart": "❤️", "rocket": "🚀", "eyes": "👀",
       },
+      reactions: [
+        { "name": "Up", "value": "up", "emoji": "👍" },
+        { "name": "Down", "value": "down", "emoji": "👎" },
+        { "name": "Laugh", "value": "laugh", "emoji": "😄" },
+        { "name": "Hooray", "value": "hooray", "emoji": "🎉" },
+        { "name": "Confused", "value": "confused", "emoji": "😕" },
+        { "name": "Heart", "value": "heart", "emoji": "❤️" },
+        { "name": "Rocket", "value": "rocket", "emoji": "🚀" },
+        { "name": "Eyes", "value": "eyes", "emoji": "👀" },
+      ],
       __original: {},
     }
   },
@@ -83,6 +93,34 @@ const Article = {
         router.push({ name: 'editDraft', params: { id: resp.data.id, __draft: resp.data } })
       }).catch(function (resp) {
         console.log(resp.status, resp.data)
+      })
+    },
+
+    onPickReaction(reaction) {
+      let _this = this
+      axios({
+        method: "PUT",
+        url: queryRestful("/v1/reaction", { articleId: this.article.id, reaction: reaction }),
+      }).then(function (resp) {
+        let reactions = _this.article.reactions
+        let ok = false
+        reactions = reactions == undefined ? [] : reactions
+        for (let index = 0; index < reactions.length; index++) {
+          const reac = reactions[index];
+          if (reac.status == reaction) {
+            reac.count += 1
+            ok = true
+            break
+          }
+        }
+
+        if (!ok) {
+          reactions.push(resp.data)
+        }
+
+        _this.$data.__original.edges.reactions = reactions
+      }).catch(function (resp) {
+        console.error(resp.status, resp.data)
       })
     },
 

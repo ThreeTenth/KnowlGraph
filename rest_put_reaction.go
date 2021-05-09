@@ -9,8 +9,8 @@ import (
 
 func putReaction(c *Context) error {
 	var _query struct {
-		ArticleID int             `form:"id" binding:"required"`
-		Status    reaction.Status `form:"status" binding:"required"`
+		ArticleID int             `form:"articleId" binding:"required"`
+		Reaction  reaction.Status `form:"reaction" binding:"required"`
 	}
 
 	err := c.ShouldBindQuery(&_query)
@@ -38,9 +38,25 @@ func putReaction(c *Context) error {
 	}
 
 	_reaction, err := client.Reaction.
-		Create().
-		SetArticleID(_query.ArticleID).
-		SetStatus(_query.Status).Save(ctx)
+		Query().
+		Where(
+			reaction.StatusEQ(_query.Reaction),
+			reaction.HasArticleWith(article.ID(_query.ArticleID))).
+		Only(ctx)
+
+	if err != nil {
+		_reaction, err = client.Reaction.
+			Create().
+			SetArticleID(_query.ArticleID).
+			SetStatus(_query.Reaction).
+			SetCount(1).
+			Save(ctx)
+	} else {
+		_reaction, err = client.Reaction.
+			UpdateOne(_reaction).
+			AddCount(1).
+			Save(ctx)
+	}
 
 	if err != nil {
 		return c.InternalServerError(err.Error())
