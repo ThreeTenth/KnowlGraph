@@ -62,6 +62,11 @@ const Article = {
         }
       }
 
+      // sort by value
+      reactions.sort(function (a, b) {
+        return (b.count - a.count)
+      });
+
       return {
         id: article.id,
         status: article.status,
