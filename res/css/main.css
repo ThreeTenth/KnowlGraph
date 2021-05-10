@@ -177,11 +177,11 @@ h6:hover .octicon {
 
 .drop.left.down .drop-content {
   left: 0px;
-  top  : 36px;
+  top : 36px;
 }
 
 .drop.left.up .drop-content {
-  left : 0px;
+  left  : 0px;
   bottom: 28px;
 }
 
@@ -425,6 +425,12 @@ h6:hover .octicon {
   text-decoration: none;
   color          : #000;
   font-size      : var(--sm);
+}
+
+@media (max-width: 480px) {
+  .article-nav a {
+    padding: 15px 5px;
+  }
 }
 
 .article-nav a.selected {
