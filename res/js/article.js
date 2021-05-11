@@ -52,13 +52,23 @@ const Article = {
 
       var reactions = article.edges.reactions
       var assets = article.edges.assets
-      var asset = null
-      var archive = null
-      if (assets && 0 < assets.length) {
-        asset = assets[0]
-        var archives = asset.edges.archives
-        if (archives && 0 < archives.length) {
-          archive = archives[0]
+      var nodes = article.edges.nodes
+      var star = false
+      var watch = false
+      var private = false
+      var browseCount = 0
+      if (assets) {
+        for (let index = 0; index < assets.length; index++) {
+          const element = assets[index];
+          if (element.status == "star") {
+            star = true
+          } else if (element.status == "watch") {
+            watch = true
+          } else if (element.status == "self") {
+            private = true
+          } else if (element.status == "browse") {
+            browseCount++
+          }
         }
       }
 
@@ -78,8 +88,11 @@ const Article = {
         keywords: keywords,
         created_at: version.created_at,
         code: code,
-        asset: asset,
-        archive: archive,
+        star: star,
+        watch: watch,
+        private: private,
+        browseCount: browseCount,
+        nodes: nodes,
       }
     }
   },

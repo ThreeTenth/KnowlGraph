@@ -6,6 +6,7 @@ import (
 	"knowlgraph.com/ent/archive"
 	"knowlgraph.com/ent/article"
 	"knowlgraph.com/ent/asset"
+	"knowlgraph.com/ent/node"
 	"knowlgraph.com/ent/user"
 	"knowlgraph.com/ent/version"
 )
@@ -78,20 +79,27 @@ func GetArticle(isLogin bool, _userID interface{}, articleID int, needVersions b
 
 	_reactions, _ := _article.QueryReactions().All(ctx)
 
+	_nodesWhere := node.StatusEQ(node.StatusPublic)
 	if isLogin {
-		_archives, _ := _article.
-			QueryNodes().
-			WithArchives(func(aq *ent.ArchiveQuery) {
-				aq.Where(archive.HasUserWith(user.ID(_userID.(int))))
-				aq.WithNode()
-			}).
-			WithWord().
-			WithPath(func(nq *ent.NodeQuery) {
-				nq.WithWord()
-			}).All(ctx)
+		// 已登录用户的私有节点查询
+		_nodesWhere = node.And(
+			_nodesWhere,
+			node.HasArchivesWith(
+				archive.HasUserWith(
+					user.ID(_userID.(int)))))
+	}
+	_nodesQuery := _article.QueryNodes().Where(_nodesWhere).WithWord()
 
-		_article.Edges.Nodes = _archives
+	if isLogin {
+		// 已登录用户的归档查询
+		_nodesQuery.WithArchives(func(aq *ent.ArchiveQuery) {
+			aq.Where(archive.HasUserWith(user.ID(_userID.(int))))
+		})
+	}
 
+	_nodes, _ := _nodesQuery.All(ctx)
+
+	if isLogin {
 		_assets, _ := _article.
 			QueryAssets().
 			Where(asset.HasUserWith(user.ID(_userID.(int)))).
@@ -102,6 +110,7 @@ func GetArticle(isLogin bool, _userID interface{}, articleID int, needVersions b
 
 	_article.Edges.Versions = _versions
 	_article.Edges.Reactions = _reactions
+	_article.Edges.Nodes = _nodes
 
 	return _article, err
 }
