@@ -79,31 +79,9 @@ func getPublicNodeIfExist(id int) (*ent.Node, bool, error) {
 	}
 
 	// 如果指定节点为私有节点，则返回 "MethodNotAllowed(405)"
-	if _node.Edges.Word.Status == word.StatusPrivate {
+	if _node.Status == node.StatusPrivate {
 		return nil, false, nil
 	}
-
-	// 获取指定节点的路径信息
-	_path, err := _node.QueryPath().WithWord().All(ctx)
-	if err != nil {
-		return nil, false, err
-	}
-
-	// 判断指定节点的路径上是否存在私有节点
-	_status := word.StatusPublic
-	for _, _pn := range _path {
-		if _pn.Edges.Word.Status == word.StatusPrivate {
-			_status = word.StatusPrivate
-			break
-		}
-	}
-
-	// 如果指定节点的路径上存在私有节点，则返回 "MethodNotAllowed(405)"
-	if _status == word.StatusPrivate {
-		return nil, false, nil
-	}
-
-	_node.Edges.Path = _path
 
 	return _node, true, nil
 }

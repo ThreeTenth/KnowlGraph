@@ -74,8 +74,6 @@ func putNode(c *Context) error {
 				return c.NotFound(err.Error())
 			}
 
-			_path := _prev.Edges.Path
-
 			if !ok {
 				// 如果上级节点的路径中存在私有节点
 
@@ -94,6 +92,8 @@ func putNode(c *Context) error {
 					return errors.New("No access to private node")
 				}
 			}
+
+			_path, _ := _prev.QueryPath().All(ctx)
 
 			// 为创建的节点添加节点路径
 			_path = append(_path, _prev)

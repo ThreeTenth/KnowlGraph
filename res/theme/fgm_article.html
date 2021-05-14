@@ -3,7 +3,7 @@
     <div class="article-nodes">
       <div>
         <div v-if="user.logined">
-          <button v-if="article.archive" class="menu-button">{{ i18n.Archive }}</button>
+          <button v-if="article.nodes.length" class="menu-button">{{ i18n.Archive }}</button>
           <dropdown class="left" v-bind:ignore="'true'" v-else-if="article.asset">
             <button class="menu-button">💡 {{ i18n.Archive }}</button>
             <div class="drop-content">
