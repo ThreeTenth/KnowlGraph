@@ -28,11 +28,13 @@ func (Node) Edges() []ent.Edge {
 			StructTag(`json:"word,omitempty"`),
 		edge.To("nexts", Node.Type).
 			Comment("nexts: the next subdivision node of this node").
+			StructTag(`json:"nexts,omitempty"`).
 			From("prev").
 			Comment("prev: belong to which node").
 			Unique().
-			StructTag(`json:"subnodes,omitempty"`),
-		edge.To("path", Node.Type),
+			StructTag(`json:"prev,omitempty"`),
+		edge.To("path", Node.Type).
+			StructTag(`json:"path,omitempty"`),
 		edge.To("archives", Archive.Type).
 			StructTag(`json:"archives,omitempty"`),
 		edge.To("articles", Article.Type).

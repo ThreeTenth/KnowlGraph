@@ -15,11 +15,11 @@ func putNode(c *Context) error {
 	// WordID: 节点指向的关键字
 	// NodeID: 上级节点，若无，则创建的节点自动为根节点
 	var _query struct {
-		WordID int `form:"wordID"`
-		NodeID int `form:"nodeId"`
+		WordID int `json:"wordId" binding:"required"`
+		NodeID int `json:"nodeId"`
 	}
 
-	err := c.ShouldBindQuery(&_query)
+	err := c.ShouldBindJSON(&_query)
 	if err != nil {
 		return c.BadRequest(err.Error())
 	}
@@ -32,6 +32,7 @@ func putNode(c *Context) error {
 	}
 
 	_userID, ok := c.Get(GinKeyUserID)
+	_nodeStatus := node.StatusPublic
 
 	if _word.Status == word.StatusPrivate {
 		// 关键字是私有的
@@ -59,6 +60,9 @@ func putNode(c *Context) error {
 
 			return c.Unauthorized("Unauthorized")
 		}
+
+		// 当节点指向的关键字为私有时，节点便为私有
+		_nodeStatus = node.StatusPrivate
 	}
 
 	err = WithTx(ctx, client, func(tx *ent.Tx) error {
@@ -99,10 +103,14 @@ func putNode(c *Context) error {
 			_path = append(_path, _prev)
 
 			_nodeCreate.SetPrev(_prev).AddPath(_path...)
+
+			if node.StatusPublic == _nodeStatus {
+				_nodeStatus = _prev.Status
+			}
 		}
 
 		// 开始创建节点
-		_node, err := _nodeCreate.Save(ctx)
+		_node, err := _nodeCreate.SetStatus(_nodeStatus).Save(ctx)
 
 		if err != nil {
 			return err
