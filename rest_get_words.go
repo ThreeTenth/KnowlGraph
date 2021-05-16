@@ -13,28 +13,27 @@ func getKeywords(c *Context) error {
 		return c.Unauthorized("Unauthorized")
 	}
 
-	_publicCreate := client.Word.Query().Where(word.StatusEQ(word.StatusPublic)).Select(word.FieldName)
+	_publicCreate := client.Word.Query().Where(word.StatusEQ(word.StatusPublic))
 
-	var _privateCreate *ent.WordSelect
+	var _privateCreate *ent.WordQuery
 
 	if ok {
 		_privateCreate = client.User.Query().
 			Where(user.IDEQ(_userID.(int))).
 			QueryWords().
-			QueryWord().
-			Select(word.FieldName)
+			QueryWord()
 	}
 
-	var _words []string
+	var _words []*ent.Word
 	var err error
 	switch _status {
 	case word.StatusPrivate.String():
-		_words, err = _privateCreate.Strings(ctx)
+		_words, err = _privateCreate.All(ctx)
 	case word.StatusPublic.String():
-		_words, err = _publicCreate.Strings(ctx)
+		_words, err = _publicCreate.All(ctx)
 	default:
-		if _words, err = _publicCreate.Strings(ctx); err == nil && ok {
-			if _privateWords, err1 := _privateCreate.Strings(ctx); err1 == nil {
+		if _words, err = _publicCreate.All(ctx); err == nil && ok {
+			if _privateWords, err1 := _privateCreate.All(ctx); err1 == nil {
 				_words = mergeArrAndUnique(_words, _privateWords)
 			}
 		}
@@ -47,16 +46,16 @@ func getKeywords(c *Context) error {
 	return c.Ok(_words)
 }
 
-func mergeArrAndUnique(a []string, b []string) []string {
-	check := make(map[string]int)
+func mergeArrAndUnique(a []*ent.Word, b []*ent.Word) []*ent.Word {
+	check := make(map[int]*ent.Word)
 	d := append(a, b...)
-	res := make([]string, 0)
+	res := make([]*ent.Word, 0)
 	for _, val := range d {
-		check[val] = 1
+		check[val.ID] = val
 	}
 
 	for letter := range check {
-		res = append(res, letter)
+		res = append(res, check[letter])
 	}
 
 	return res
