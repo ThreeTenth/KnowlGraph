@@ -18,8 +18,30 @@ const plugin = {
     Vue.prototype.user = {
       lang: userLang,
       logined: logined,
+      words: [],
+      archives: [],
     }
     Vue.prototype.i18n = i18n
+    Vue.prototype.getUserWords = function () {
+      axios({
+        method: "GET",
+        url: queryRestful("/v1/words"),
+      }).then(function (resp) {
+        Vue.prototype.user.words = resp.data
+      }).catch(function (resp) {
+        console.log(resp)
+      })
+    }
+    Vue.prototype.getArchives = function () {
+      axios({
+        method: "GET",
+        url: queryRestful("/v1/archives"),
+      }).then(function (resp) {
+        Vue.prototype.user.archives = resp.data
+      }).catch(function (resp) {
+        console.log(resp)
+      })
+    }
   }
 }
 
@@ -70,6 +92,9 @@ var app = new Vue({
         console.log(resp)
       })
     }
+
+    this.getUserWords()
+    this.getArchives()
   },
 
   methods: {
