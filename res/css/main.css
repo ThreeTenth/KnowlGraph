@@ -136,10 +136,50 @@ hr {
   display       : grid;
   width         : 100vw;
   height        : 100vh;
-  z-index       : 40;
-  background    : #fff;
+  z-index       : 1400;
   place-items   : center;
   flex-direction: column;
+}
+
+.modal.white {
+  background: white;
+}
+
+.modal.grey {
+  background: rgb(0 0 0 / 15%);
+}
+
+.modal .bg {
+  width : 100vw;
+  height: 100vh;
+}
+
+.center {
+  position : absolute;
+  left     : 50%;
+  transform: translate(-50%, 0);
+}
+
+.dialog {
+  position     : absolute;
+  left         : 50%;
+  transform    : translate(-50%, 0);
+  background   : #fff;
+  border-radius: 4px;
+  box-shadow   : 0 2px 4px rgb(0 0 0 / 25%), 0 0 2px rgb(0 0 0 / 35%);
+  color        : #000;
+  outline      : none;
+  overflow     : auto;
+  max-height   : calc(100vh - 86px);
+  min-width    : 240px;
+  padding      : 15px 20px;
+}
+
+.dialog .close {
+  position : absolute;
+  right    : 0;
+  top      : 0;
+  font-size: 1.5em;
 }
 
 .anchor {
@@ -203,15 +243,14 @@ h6:hover .octicon {
   background   : #fff;
   border-radius: 4px;
   box-shadow   : 0 1px 2px rgb(0 0 0 / 25%), 0 0 1px rgb(0 0 0 / 35%);
-  ;
-  color     : #000;
-  display   : none;
-  outline   : none;
-  overflow  : auto;
-  position  : absolute;
-  max-height: calc(100vh - 86px);
-  min-width : 180px;
-  z-index   : 1000;
+  color        : #000;
+  display      : none;
+  outline      : none;
+  overflow     : auto;
+  position     : absolute;
+  max-height   : calc(100vh - 86px);
+  min-width    : 180px;
+  z-index      : 1000;
 }
 
 .drop-content a {
@@ -220,6 +259,13 @@ h6:hover .octicon {
   text-decoration: none;
   display        : block;
   font-size      : 14px;
+}
+
+.drop-content p {
+  color     : grey;
+  display   : block;
+  font-size : 14px;
+  text-align: center;
 }
 
 .drop-content button {
@@ -270,7 +316,7 @@ h6:hover .octicon {
   margin-top: 32px;
 }
 
-.container.none {
+.container.zero {
   margin-top: 0;
   padding   : 0;
 }
@@ -454,4 +500,8 @@ h6:hover .octicon {
   border-radius   : 19px;
   padding         : 2px 8px;
   margin          : 0 2px;
+}
+
+.new-node {
+  min-width: 320px;
 }
