@@ -28,7 +28,7 @@ func getArchives(c *Context) error {
 		_archiveWhere = append(_archiveWhere, archive.StatusEQ(_query.Status))
 	}
 
-	_archive, err := client.Archive.
+	_archives, err := client.Archive.
 		Query().
 		Where(_archiveWhere...).
 		WithNode(func(nq *ent.NodeQuery) {
@@ -37,11 +37,12 @@ func getArchives(c *Context) error {
 					nq.WithWord()
 				})
 		}).
-		First(ctx)
+		Order(ent.Desc(archive.FieldCreatedAt)).
+		All(ctx)
 
 	if err != nil {
 		return c.NotFound(err.Error())
 	}
 
-	return c.Ok(_archive)
+	return c.Ok(_archives)
 }
