@@ -1,6 +1,6 @@
 {
   "__code": "en",
-  "__version": 12,
+  "__version": 13,
   "NewArticle": "New article",
   "Histories": "Histories",
   "Publish": "Publish",
@@ -15,6 +15,7 @@
   "AddAWord": "Add a keyword",
   "Logout": "Logout",
   "Login": "Login",
+  "PleaseLoginFirst": "Please log in first",
   "LoginWithGitHubOAuth": "Login with GitHub OAuth",
   "Back": "Back",
   "Compare": "Compare",

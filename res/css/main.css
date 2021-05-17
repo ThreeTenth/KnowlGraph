@@ -171,8 +171,14 @@ hr {
   outline      : none;
   overflow     : auto;
   max-height   : calc(100vh - 86px);
-  min-width    : 240px;
-  padding      : 15px 20px;
+  min-width    : 320px;
+  padding      : 5px 20px;
+}
+
+@media (max-width: 360px) {
+  .dialog {
+    min-width: 240px;
+  }
 }
 
 .dialog .close {
@@ -502,6 +508,27 @@ h6:hover .octicon {
   margin          : 0 2px;
 }
 
-.new-node {
-  min-width: 320px;
+.new-node {}
+
+.new-node .input {
+  margin : 1em 0;
+  display: flex;
+}
+
+.new-node .options {
+  padding: 1em 0;
+}
+
+ul.auto-completion {
+  list-style   : none;
+  border-radius: 2px;
+  box-shadow   : 0 1px 2px rgb(0 0 0 / 25%), 0 0 0px rgb(0 0 0 / 35%);
+  cursor       : pointer;
+  margin       : 4px 0px;
+  padding      : 3px 4px;
+  z-index      : 1800;
+}
+
+ul.auto-completion li {
+  padding: 3px 4px;
 }

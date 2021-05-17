@@ -83,3 +83,20 @@
   white-space: pre-wrap;
   word-wrap  : break-word;
 }
+
+button.option {
+  border          : none;
+  background-color: transparent;
+  border-radius   : 4px;
+  cursor          : pointer;
+  padding         : 2px 4px;
+  margin-bottom: 4px;
+}
+
+button.option.selected {
+  background-color: #7FDBFF;
+}
+
+button.option+button.option {
+  margin-left: 4px;
+}

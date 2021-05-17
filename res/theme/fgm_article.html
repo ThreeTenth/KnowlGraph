@@ -1,16 +1,28 @@
-<div class="container none">
+<div class="container zero">
   <div v-if="article">
     <div class="article-nodes">
       <div>
-        <div v-if="user.logined">
-          <button v-if="article.nodes.length" class="menu-button">{{ i18n.Archive }}</button>
-          <dropdown class="left" v-bind:ignore="'true'" v-else-if="article.asset">
-            <button class="menu-button">💡 {{ i18n.Archive }}</button>
-            <div class="drop-content">
-              <input class="p-sm" type="text">
+        <dropdown class="left" v-bind:ignore="'true'" v-if="article.nodes.length">
+          <button class="menu-button">{{ article.nodes[0].edges.word.name }}</button>
+          <div class="drop-content">
+            <div v-for="(node, i) in article.nodes">{{ node.edges.word.name }}</div>
+          </div>
+        </dropdown>
+        <dropdown class="left" v-bind:ignore="'true'" v-else>
+          <button class="menu-button">💡 {{ i18n.Archive }}</button>
+          <div class="drop-content" v-if="user.logined">
+            <div v-if="user.archives.length">
+              <button v-for="(archive, i) in user.archives">📁 {{ archive.edges.node.edges.word.name }}</button>
+              <hr>
             </div>
-          </dropdown>
-        </div>
+            <p v-else>无节点 😃</p>
+            <button v-on:click="onNewNode">新建一个节点并关注</button>
+            <button>关注更多节点</button>
+          </div>
+          <div class="drop-content" v-else>
+            <router-link to="/login">{{ i18n.PleaseLoginFirst }}</router-link>
+          </div>
+        </dropdown>
       </div>
       <button class="menu-button">⭐ {{ i18n.Star }}</button>
       <button class="menu-button">👀 {{ i18n.Watch }}</button>
@@ -64,4 +76,7 @@
     </div>
   </div>
   <div v-else>Loading</div>
+  <modal v-if="isNewNode" v-on:toggle="setNewNode">
+    <new-node></new-node>
+  </modal>
 </div>

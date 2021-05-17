@@ -19,6 +19,7 @@ const Article = {
         { "name": "Eyes", "value": "eyes", "emoji": "👀" },
       ],
       __original: {},
+      isNewNode: false,
     }
   },
 
@@ -140,6 +141,14 @@ const Article = {
       }).catch(function (resp) {
         console.error(resp.status, resp.data)
       })
+    },
+
+    onNewNode() {
+      this.isNewNode = true
+    },
+
+    setNewNode(e) {
+      this.isNewNode = e
     },
 
     __load(id) {

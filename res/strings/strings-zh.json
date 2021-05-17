@@ -1,6 +1,6 @@
 {
   "__code": "zh",
-  "__version": 12,
+  "__version": 13,
   "NewArticle": "新文章",
   "Histories": "历史记录",
   "Publish": "发布",
@@ -15,6 +15,7 @@
   "AddAWord": "添加关键字",
   "Logout": "退出",
   "Login": "登录",
+  "PleaseLoginFirst": "请先登录",
   "LoginWithGitHubOAuth": "使用 GitHub OAuth 登录",
   "Back": "返回",
   "Compare": "比较",

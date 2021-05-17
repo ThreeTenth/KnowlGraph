@@ -20,7 +20,6 @@ Vue.component('words-input', {
     }
   },
 
-  created() { console.log(this.$props) },
   methods: {
     onKeyup: function (event) {
       if ("Process" === event.key) {
