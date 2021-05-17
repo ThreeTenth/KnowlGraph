@@ -1,0 +1,18 @@
+<div class="new-node">
+  <h2>创建新节点</h2>
+  <div class="nodes">
+    <button class="option" v-bind:class="selected == archive.id ? 'selected' : ''" v-for="(archive, i) in user.archives"
+      v-on:click="onSelectPrev(archive)">📁 {{ archive.edges.node.edges.word.name }}</button>
+  </div>
+  <div class="input">
+    <label>新节点名：</label>
+    <div>
+      <autocomplet v-on:item="getWordName" v-on:select="onSelectWord" v-bind:source="user.words"
+        v-bind:placeholder="i18n.AddAWord"></autocomplet>
+    </div>
+  </div>
+  <hr>
+  <div class="options">
+    <button class="menu-button">确定</button>
+  </div>
+</div>
