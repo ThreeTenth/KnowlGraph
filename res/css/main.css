@@ -149,27 +149,20 @@ hr {
   background: rgb(0 0 0 / 15%);
 }
 
-.modal .bg {
-  width : 100vw;
-  height: 100vh;
-}
-
-.center {
-  position : absolute;
-  left     : 50%;
-  transform: translate(-50%, 0);
+.modal .center {
+  width          : 100vw;
+  height         : 100vh;
+  display        : flex;
+  align-items    : center;
+  justify-content: center;
 }
 
 .dialog {
-  position     : absolute;
-  left         : 50%;
-  transform    : translate(-50%, 0);
   background   : #fff;
   border-radius: 4px;
   box-shadow   : 0 2px 4px rgb(0 0 0 / 25%), 0 0 2px rgb(0 0 0 / 35%);
   color        : #000;
   outline      : none;
-  overflow     : auto;
   max-height   : calc(100vh - 86px);
   min-width    : 320px;
   padding      : 5px 20px;
@@ -182,10 +175,9 @@ hr {
 }
 
 .dialog .close {
-  position : absolute;
-  right    : 0;
-  top      : 0;
-  font-size: 1.5em;
+  float       : right;
+  margin-right: -10px;
+  font-size   : 1.5em;
 }
 
 .anchor {
@@ -519,7 +511,26 @@ h6:hover .octicon {
   padding: 1em 0;
 }
 
-ul.auto-completion {
+.auto-completion {
+  position: relative;
+  display : inline-block;
+}
+
+.auto-completion.up .selection {
+  bottom    : 28px;
+  max-height: calc(100vh / 2 - 10px);
+}
+
+.auto-completion.down .selection {
+  top       : 24px;
+  max-height: calc(100vh / 2 - 68px);
+}
+
+.auto-completion .selection {
+  padding: 2px 4px;
+}
+
+.auto-completion .selection {
   list-style   : none;
   border-radius: 2px;
   box-shadow   : 0 1px 2px rgb(0 0 0 / 25%), 0 0 0px rgb(0 0 0 / 35%);
@@ -527,8 +538,19 @@ ul.auto-completion {
   margin       : 4px 0px;
   padding      : 3px 4px;
   z-index      : 1800;
+  background   : #fff;
+  color        : #000;
+  outline      : none;
+  overflow     : auto;
+  position     : absolute;
+  min-width    : 180px;
+  display      : none;
 }
 
-ul.auto-completion li {
+.auto-completion .selection.block {
+  display: block;
+}
+
+.auto-completion .selection li {
   padding: 3px 4px;
 }
