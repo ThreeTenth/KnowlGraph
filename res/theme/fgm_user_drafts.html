@@ -1,5 +1,6 @@
-<div class="container">
+<div class="">
   <div v-if="drafts">
+    <h2>{{ i18n.Drafts }}</h2>
     <div class="drafts-item" v-for="(draft, i) in drafts">
       <div v-on:click="onDraft(i)">{{ draft.body }}</div>
       <the-time v-bind:datetime="draft.created_at"></the-time>
