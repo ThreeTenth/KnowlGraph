@@ -554,3 +554,7 @@ h6:hover .octicon {
 .auto-completion .selection li {
   padding: 3px 4px;
 }
+
+.auto-completion .selection li.selected {
+  background-color: #7FDBFF;
+}
