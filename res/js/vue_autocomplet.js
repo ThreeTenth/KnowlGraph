@@ -8,7 +8,9 @@ Vue.component('autocomplet', {
       input: "",
       items: [],
       auto: false,
+      selected: 0,
       pos: 'down',
+      watchTime: 0,
     }
   },
 
@@ -25,17 +27,58 @@ Vue.component('autocomplet', {
       this.$emit('item', item, val => {
         this.input = val
       })
-      this.auto = false
       this.$emit('select', item)
+      this.items = []
     },
 
-    onKeyup() {
-      this.auto = "" != this.input
+    onKeyTab() {
+      console.log("on tab")
+    },
 
-      // if (!this.auto) return
+    onHotKey(e) {
+      switch (e.keyCode) {
+        case 38:  // up
+          if (0 == this.items.length) return
+          if (0 < this.selected) {
+            this.selected -= 1
+          } else {
+            this.selected = this.items.length - 1
+          }
+          this.$refs.selection.children[this.selected].scrollIntoView()
+          e.preventDefault()
+          break;
+        case 9:   // tab
+        case 40:  // down
+          if (0 == this.items.length) return
+          if (this.items.length <= this.selected + 1) {
+            this.selected = 0
+          } else {
+            this.selected += 1
+          }
+          this.$refs.selection.children[this.selected].scrollIntoView()
+          e.preventDefault()
+          break;
+        case 13:  // enter
+          if (0 == this.items.length) return
+          this.onSelect(this.items[this.selected])
+          e.preventDefault()
+          break;
+      }
+    },
+
+    onChanged(e) {
+      // console.log("onChanged", e.code, e.key, e.keyCode, e.target.value)
+
+      switch (e.keyCode) {
+        case 38:  // up
+        case 9:   // tab
+        case 40:  // down
+        case 13:  // enter
+          return
+      }
 
       const items = []
-      const regex = new RegExp('^' + this.input)
+      const regex = new RegExp('^' + e.target.value)
       this.source.forEach(item => {
         let value = item
         this.$emit('item', item, val => {
@@ -46,24 +89,22 @@ Vue.component('autocomplet', {
           items.push(item)
         }
       });
-      this.items = items
-      this.auto = 0 != items.length
 
+      this.items = items
+      this.selected = 0
       this.__update()
     },
 
     __update() {
       let len = this.items.length
 
-      if (0 == len ) return
+      if (0 == len) return
 
       let autocomplete = this.$refs.autocomplete
       let top = autocomplete.getBoundingClientRect().top
       let bottom = autocomplete.getBoundingClientRect().bottom
 
       let preHeight = len * 30
-
-      console.log(top, bottom, preHeight)
 
       if (preHeight < bottom) {
         this.pos = "down"
