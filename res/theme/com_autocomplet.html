@@ -1,6 +1,6 @@
-<div class="auto-completion" v-bind:class="pos" ref="autocomplete">
+<div class="auto-completion" v-bind:class="pos">
   <input autofocus type="text" v-model="input" class="p-2-4" v-on:keydown="onHotKey" v-on:keyup="onChanged"
-    v-bind:placeholder="placeholder">
+    v-bind:placeholder="placeholder" ref="autocomplete">
   <ul class="selection" v-bind:class="items.length ? 'block' : ''" ref="selection">
     <li v-for="(item, i) in items" v-bind:class="selected == i ? 'selected' : ''" v-on:click="onSelect(item)"
       v-bind:key="item.id">{{ item.name }}</li>

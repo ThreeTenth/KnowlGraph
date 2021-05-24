@@ -3,14 +3,14 @@
 Vue.component('new-node', {
   data: function () {
     return {
-      selected: 0,
+      selected: null,
       value: "",
     }
   },
 
   methods: {
     onSelectPrev: function (archive) {
-      this.selected = this.selected == archive.id ? 0 : archive.id
+      this.selected = this.selected == archive ? null : archive
     },
 
     onSelectWord(word) {

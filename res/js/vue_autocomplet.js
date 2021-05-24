@@ -101,7 +101,6 @@ Vue.component('autocomplet', {
       if (0 == len) return
 
       let autocomplete = this.$refs.autocomplete
-      let top = autocomplete.getBoundingClientRect().top
       let bottom = autocomplete.getBoundingClientRect().bottom
 
       let preHeight = len * 30
