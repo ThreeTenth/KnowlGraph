@@ -10,6 +10,7 @@ const Index = {
   computed: {
     articles: function () {
       let original = this.$data.__original
+      if (!original) return []
       var _articles = []
       for (let index = 0; index < original.length; index++) {
         const version = original[index];
