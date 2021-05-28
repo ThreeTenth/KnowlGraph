@@ -42,7 +42,7 @@ hr {
   border-top: 1px solid #f1f1f1;
 }
 
-#app {
+.app {
   max-width: var(--body-w);
   margin   : auto;
   padding  : var(--body-pw);

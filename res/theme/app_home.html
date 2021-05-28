@@ -1,4 +1,4 @@
-<div id="app">
+<div id="app" class="app">
   <nav class="nav">
     <div class="nav-start">
       <router-link class="nav-a" to="/">🏠 {{ i18n.Home }}</router-link>
@@ -34,7 +34,7 @@
   <div class="modal white" v-if="ras">
     <div>
       <div>{{ ras.edges.version.gist }}</div>
-      <div class="m-t10">{{ ras.edges.version.edges.content.body }}</div>
+      <div class="m-t10" v-html="ras.edges.version.edges.content.body"></div>
       <div class="m-t10" v-if="ras.edges.version.edges.keywords">
         <span v-for="(keyword, i) in ras.edges.version.edges.keywords">{{ keyword.name }}</span>
       </div>

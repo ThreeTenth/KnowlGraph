@@ -73,7 +73,7 @@ var app = new Vue({
   data: {
     ras: null,
     languages: languages,
-    profilePicture: getLink("icon")
+    profilePicture: getLink("icon"),
   },
   router,
   template: logined ? app_home : app_index,
@@ -156,6 +156,17 @@ var app = new Vue({
         _this.user.lang = old
         setUserLang(old.code)
       })
+    },
+    md2html(md) {
+      var converter = new showdown.Converter({
+        'disableForced4SpacesIndentedSublists': 'true',
+        'tasklists': 'true',
+        'tables': 'true',
+        'extensions': ['video', 'audio', 'catalog', 'anchor']
+      })
+      // KaTeX: math regex: /\$\$([^$]+)\$\$/gm
+
+      return converter.makeHtml(md);
     },
     __postVote(status) {
       var _this = this
