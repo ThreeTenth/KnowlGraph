@@ -139,6 +139,7 @@ hr {
   z-index       : 1400;
   place-items   : center;
   flex-direction: column;
+  overflow      : auto;
 }
 
 .modal.white {
