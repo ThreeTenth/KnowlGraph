@@ -1,4 +1,4 @@
-// vue_time.js
+// vue_modal.js
 
 Vue.component('modal', {
   methods: {

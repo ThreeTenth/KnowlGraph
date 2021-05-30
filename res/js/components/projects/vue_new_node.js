@@ -1,4 +1,4 @@
-// vue_time.js
+// vue_new_node.js
 
 Vue.component('new-node', {
   data: function () {

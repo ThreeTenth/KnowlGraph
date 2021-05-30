@@ -1,4 +1,4 @@
-// fgm_home.js
+// index.js
 
 const Index = {
   data: function () {

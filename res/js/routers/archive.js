@@ -1,4 +1,4 @@
-// fgm_home.js
+// archive.js
 
 const Archive = {
   data: function () {

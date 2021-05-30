@@ -1,4 +1,4 @@
-// vue_time.js
+// vue_dropdown.js
 
 Vue.component('dropdown', {
   props: ['ignore'],

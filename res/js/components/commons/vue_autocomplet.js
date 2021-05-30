@@ -1,4 +1,4 @@
-// vue_time.js
+// vue_autocomplet.js
 
 Vue.component('autocomplet', {
   props: ["placeholder", "source"],
