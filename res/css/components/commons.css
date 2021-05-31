@@ -1,0 +1,280 @@
+/* commons.css */
+
+.modal {
+  -webkit-box-sizing: border-box;
+  box-sizing        : border-box;
+  position          : fixed;
+  left              : 0px;
+  top               : 0px;
+  z-index           : var(--vs-zindex-2);
+  display           : flex;
+  align-items       : flex-start;
+  justify-content   : center;
+  width             : 100%;
+  height            : 100%;
+  max-height        : 100vh;
+  overflow-y        : auto;
+  overflow-x        : hidden;
+  padding-top       : 80px;
+  padding-bottom    : 80px;
+  background: rgb(0 0 0 / 15%);
+}
+
+.dialog {
+  background        : rgba(var(--vs-background), 1);
+  color             : rgba(var(--vs-text), 1);
+  position          : relative;
+  min-width         : 400px;
+  border-radius     : var(--vs-radius);
+  -webkit-transition: all 0.25s ease;
+  transition        : all 0.25s ease;
+  -webkit-box-shadow: 0px 5px 30px 0px rgba(0, 0, 0, var(--vs-shadow-opacity));
+  box-shadow        : 0px 5px 30px 0px rgba(0, 0, 0, var(--vs-shadow-opacity));
+  max-width         : 800px;
+  margin            : auto;
+}
+
+.dialog__content {
+  padding      : 10px 16px;
+  width        : 100%;
+  position     : relative;
+  border-radius: inherit;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 360px) {
+  .dialog {
+    min-width: 240px;
+  }
+}
+
+.dialog .close {
+  position         : absolute;
+  top              : -10px;
+  right            : -10px;
+  padding          : 0;
+  margin           : 0;
+  display          : -webkit-box;
+  display          : -ms-flexbox;
+  display          : flex;
+  -webkit-box-align: center;
+  -ms-flex-align   : center;
+  align-items      : center;
+  -webkit-box-pack : center;
+  -ms-flex-pack    : center;
+  justify-content  : center;
+  background       : inherit;
+  border-radius    : 12px;
+  z-index          : 200;
+  border           : 0;
+  color            : #000;
+  width            : 34px;
+  height           : 34px;
+  font-size        : 1.5em;
+}
+
+.drop {
+  position: relative;
+  display : inline-block;
+}
+
+.drop.left.down .drop-content {
+  left: 0px;
+  top : 36px;
+}
+
+.drop.left.up .drop-content {
+  left  : 0px;
+  bottom: 28px;
+}
+
+.drop.down .drop-content {
+  right: 0px;
+  top  : 36px;
+}
+
+.drop.up .drop-content {
+  right : 0px;
+  bottom: 28px;
+}
+
+.drop.block .drop-content {
+  display: block;
+}
+
+.drop-content {
+  background   : #fff;
+  border-radius: 4px;
+  box-shadow   : 0 1px 2px rgb(0 0 0 / 25%), 0 0 1px rgb(0 0 0 / 35%);
+  color        : #000;
+  display      : none;
+  outline      : none;
+  overflow     : auto;
+  position     : absolute;
+  max-height   : calc(100vh - 86px);
+  min-width    : 180px;
+  z-index      : 1000;
+}
+
+.drop-content a {
+  color          : black;
+  padding        : 12px 16px;
+  text-decoration: none;
+  display        : block;
+  font-size      : 14px;
+}
+
+.drop-content p {
+  color     : grey;
+  display   : block;
+  font-size : 14px;
+  text-align: center;
+}
+
+.drop-content button {
+  font-size       : 14px;
+  border          : none;
+  color           : black;
+  width           : 100%;
+  background-color: transparent;
+  display         : block;
+  padding         : 12px 16px;
+  text-align      : inherit;
+}
+
+.drop-content a:hover,
+.drop-content button:hover,
+.drop-content .selected {
+  background-color: #f1f1f1
+}
+
+.drop-content.block {
+  display: block;
+}
+
+.auto-completion {
+  position: relative;
+  display : inline-block;
+}
+
+.auto-completion.up .selection {
+  bottom    : 28px;
+  max-height: calc(100vh / 2 - 10px);
+}
+
+.auto-completion.down .selection {
+  top       : 24px;
+  max-height: calc(100vh / 2 - 68px);
+}
+
+.auto-completion .selection {
+  padding: 2px 4px;
+}
+
+.auto-completion .selection {
+  list-style   : none;
+  border-radius: 2px;
+  box-shadow   : 0 1px 2px rgb(0 0 0 / 25%), 0 0 0px rgb(0 0 0 / 35%);
+  cursor       : pointer;
+  margin       : 4px 0px;
+  padding      : 3px 4px;
+  z-index      : 1800;
+  background   : #fff;
+  color        : #000;
+  outline      : none;
+  overflow     : auto;
+  position     : absolute;
+  min-width    : 180px;
+  display      : none;
+}
+
+.auto-completion .selection.block {
+  display: block;
+}
+
+.auto-completion .selection li {
+  padding: 3px 4px;
+}
+
+.auto-completion .selection li.selected {
+  background-color: #7FDBFF;
+}
+
+.word-layout {
+  width     : 100%;
+  max-width : none;
+  background: transparent;
+  position  : relative;
+  box-sizing: border-box;
+  display   : block;
+  margin    : 10px 0;
+}
+
+.word-input {
+  border       : none;
+  border-bottom: 1px solid var(--fg-c);
+  padding      : 4px 0;
+}
+
+.words {
+  display        : flex;
+  flex-wrap      : wrap;
+  width          : 100%;
+  line-height    : 1em;
+  margin         : 0px;
+  padding        : 0px;
+  list-style-type: none;
+  box-sizing     : border-box;
+}
+
+.words li {
+  margin: 2px 4px;
+}
+
+.word {
+  padding         : 5px 8px;
+  background-color: var(--fg-c);
+  color           : var(--bg-c);
+  border-radius   : 2px;
+  display         : flex;
+  box-sizing      : border-box;
+  text-align      : -webkit-match-parent;
+}
+
+.word.del {
+  background-color: var(--red);
+  color           : #fff;
+}
+
+.new-word {
+  padding   : 5px 8px;
+  margin    : 2px;
+  display   : flex;
+  flex      : 1 0 auto;
+  font-size : 1em;
+  box-sizing: border-box;
+}
+
+.new-word input {
+  background : transparent;
+  color      : var(--fg-c);
+  flex       : 1 0 auto;
+  min-width  : 100px;
+  border     : none;
+  outline    : medium;
+  padding    : 0px;
+  margin     : 0px;
+  line-height: initial;
+  box-sizing : border-box;
+}
+
+.word-autocomplete {
+  background: var(--bg-c);
+  border    : 1px solid var(--bg-c);
+  border-top: none;
+  width     : 100%;
+  position  : absolute;
+  z-index   : 20;
+  box-sizing: border-box;
+  color     : var(--text-c);
+}

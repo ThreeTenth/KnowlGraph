@@ -48,139 +48,6 @@ hr {
   padding  : var(--body-pw);
 }
 
-.word-layout {
-  width     : 100%;
-  max-width : none;
-  background: transparent;
-  position  : relative;
-  box-sizing: border-box;
-  display   : block;
-  margin    : 10px 0;
-}
-
-.word-input {
-  border       : none;
-  border-bottom: 1px solid var(--fg-c);
-  padding      : 4px 0;
-}
-
-.words {
-  display        : flex;
-  flex-wrap      : wrap;
-  width          : 100%;
-  line-height    : 1em;
-  margin         : 0px;
-  padding        : 0px;
-  list-style-type: none;
-  box-sizing     : border-box;
-}
-
-.words li {
-  margin: 2px 4px;
-}
-
-.word {
-  padding         : 5px 8px;
-  background-color: var(--fg-c);
-  color           : var(--bg-c);
-  border-radius   : 2px;
-  display         : flex;
-  box-sizing      : border-box;
-  text-align      : -webkit-match-parent;
-}
-
-.word.del {
-  background-color: var(--red);
-  color           : #fff;
-}
-
-.new-word {
-  padding   : 5px 8px;
-  margin    : 2px;
-  display   : flex;
-  flex      : 1 0 auto;
-  font-size : 1em;
-  box-sizing: border-box;
-}
-
-.new-word input {
-  background : transparent;
-  color      : var(--fg-c);
-  flex       : 1 0 auto;
-  min-width  : 100px;
-  border     : none;
-  outline    : medium;
-  padding    : 0px;
-  margin     : 0px;
-  line-height: initial;
-  box-sizing : border-box;
-}
-
-.word-autocomplete {
-  background: var(--bg-c);
-  border    : 1px solid var(--bg-c);
-  border-top: none;
-  width     : 100%;
-  position  : absolute;
-  z-index   : 20;
-  box-sizing: border-box;
-  color     : var(--text-c);
-}
-
-.modal {
-  bottom        : 0;
-  left          : 0;
-  position      : fixed;
-  right         : 0;
-  top           : 0;
-  display       : grid;
-  width         : 100vw;
-  height        : 100vh;
-  z-index       : 1400;
-  place-items   : center;
-  flex-direction: column;
-  overflow      : auto;
-}
-
-.modal.white {
-  background: white;
-}
-
-.modal.grey {
-  background: rgb(0 0 0 / 15%);
-}
-
-.modal .center {
-  width          : 100vw;
-  height         : 100vh;
-  display        : flex;
-  align-items    : center;
-  justify-content: center;
-}
-
-.dialog {
-  background   : #fff;
-  border-radius: 4px;
-  box-shadow   : 0 2px 4px rgb(0 0 0 / 25%), 0 0 2px rgb(0 0 0 / 35%);
-  color        : #000;
-  outline      : none;
-  max-height   : calc(100vh - 86px);
-  min-width    : 320px;
-  padding      : 5px 20px;
-}
-
-@media (max-width: 360px) {
-  .dialog {
-    min-width: 240px;
-  }
-}
-
-.dialog .close {
-  float       : right;
-  margin-right: -10px;
-  font-size   : 1.5em;
-}
-
 .anchor {
   float        : left;
   line-height  : 1;
@@ -207,85 +74,6 @@ h4:hover .octicon,
 h5:hover .octicon,
 h6:hover .octicon {
   visibility: visible;
-}
-
-.drop {
-  position: relative;
-  display : inline-block;
-}
-
-.drop.left.down .drop-content {
-  left: 0px;
-  top : 36px;
-}
-
-.drop.left.up .drop-content {
-  left  : 0px;
-  bottom: 28px;
-}
-
-.drop.down .drop-content {
-  right: 0px;
-  top  : 36px;
-}
-
-.drop.up .drop-content {
-  right : 0px;
-  bottom: 28px;
-}
-
-.drop.block .drop-content {
-  display: block;
-}
-
-.drop-content {
-  background   : #fff;
-  border-radius: 4px;
-  box-shadow   : 0 1px 2px rgb(0 0 0 / 25%), 0 0 1px rgb(0 0 0 / 35%);
-  color        : #000;
-  display      : none;
-  outline      : none;
-  overflow     : auto;
-  position     : absolute;
-  max-height   : calc(100vh - 86px);
-  min-width    : 180px;
-  z-index      : 1000;
-}
-
-.drop-content a {
-  color          : black;
-  padding        : 12px 16px;
-  text-decoration: none;
-  display        : block;
-  font-size      : 14px;
-}
-
-.drop-content p {
-  color     : grey;
-  display   : block;
-  font-size : 14px;
-  text-align: center;
-}
-
-.drop-content button {
-  font-size       : 14px;
-  border          : none;
-  color           : black;
-  width           : 100%;
-  background-color: transparent;
-  display         : block;
-  padding         : 12px 16px;
-  text-align      : inherit;
-}
-
-.drop-content a:hover,
-.drop-content button:hover,
-.drop-content .selected {
-  background-color: #f1f1f1
-}
-
-.drop-content.block {
-  display: block;
 }
 
 .menu-button,
@@ -501,7 +289,9 @@ h6:hover .octicon {
   margin          : 0 2px;
 }
 
-.new-node {}
+.new-node {
+  padding : 0 20px;
+}
 
 .new-node .input {
   margin : 1em 0;
@@ -510,52 +300,4 @@ h6:hover .octicon {
 
 .new-node .options {
   padding: 0 0 8px 0;
-}
-
-.auto-completion {
-  position: relative;
-  display : inline-block;
-}
-
-.auto-completion.up .selection {
-  bottom    : 28px;
-  max-height: calc(100vh / 2 - 10px);
-}
-
-.auto-completion.down .selection {
-  top       : 24px;
-  max-height: calc(100vh / 2 - 68px);
-}
-
-.auto-completion .selection {
-  padding: 2px 4px;
-}
-
-.auto-completion .selection {
-  list-style   : none;
-  border-radius: 2px;
-  box-shadow   : 0 1px 2px rgb(0 0 0 / 25%), 0 0 0px rgb(0 0 0 / 35%);
-  cursor       : pointer;
-  margin       : 4px 0px;
-  padding      : 3px 4px;
-  z-index      : 1800;
-  background   : #fff;
-  color        : #000;
-  outline      : none;
-  overflow     : auto;
-  position     : absolute;
-  min-width    : 180px;
-  display      : none;
-}
-
-.auto-completion .selection.block {
-  display: block;
-}
-
-.auto-completion .selection li {
-  padding: 3px 4px;
-}
-
-.auto-completion .selection li.selected {
-  background-color: #7FDBFF;
 }
