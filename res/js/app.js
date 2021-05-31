@@ -42,6 +42,18 @@ const plugin = {
         console.log(resp)
       })
     }
+
+    Vue.prototype.md2html = function (md) {
+      var converter = new showdown.Converter({
+        'disableForced4SpacesIndentedSublists': 'true',
+        'tasklists': 'true',
+        'tables': 'true',
+        'extensions': ['video', 'audio', 'catalog', 'anchor']
+      })
+      // KaTeX: math regex: /\$\$([^$]+)\$\$/gm
+
+      return converter.makeHtml(md);
+    }
   }
 }
 
@@ -71,7 +83,10 @@ const router = new VueRouter({
 
 var app = new Vue({
   data: {
-    ras: null,
+    vote: {
+      has: false,
+      ras: null,
+    },
     languages: languages,
     profilePicture: getLink("icon"),
   },
@@ -86,7 +101,8 @@ var app = new Vue({
         url: queryRestful("/v1/vote"),
       }).then(function (resp) {
         if (200 == resp.status) {
-          _this.ras = resp.data
+          _this.vote.ras = resp.data
+          _this.vote.has = true
         }
       }).catch(function (resp) {
         console.log(resp)
@@ -157,17 +173,6 @@ var app = new Vue({
         setUserLang(old.code)
       })
     },
-    md2html(md) {
-      var converter = new showdown.Converter({
-        'disableForced4SpacesIndentedSublists': 'true',
-        'tasklists': 'true',
-        'tables': 'true',
-        'extensions': ['video', 'audio', 'catalog', 'anchor']
-      })
-      // KaTeX: math regex: /\$\$([^$]+)\$\$/gm
-
-      return converter.makeHtml(md);
-    },
     __postVote(status) {
       var _this = this
       axios({
@@ -184,4 +189,4 @@ var app = new Vue({
       })
     },
   }
-}).$mount('#app')
+}).$mount('#application--wrap')

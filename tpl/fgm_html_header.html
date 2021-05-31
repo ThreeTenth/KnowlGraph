@@ -3,8 +3,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
 <meta name="github_client_id" content="{{.GithubClientID}}" />
-<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ThreeTenth/css-theme@v0.1.2/colours.css" /> -->
-<link rel="stylesheet" href="{{.StaticDomain}}/static/css/theme.css,main.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ThreeTenth/css-theme@v0.1.2/colours.css" />
+<link rel="stylesheet" href="{{.StaticDomain}}/static/css/components,theme.css,main.css" />
 {{ if .Debug }}
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script>
@@ -13,7 +13,11 @@
 <script src="https://cdn.jsdelivr.net/npm/vue-router/dist/vue-router.js"></script>
 <script src="https://cdn.jsdelivr.net/combine/npm/showdown@1.5.0"></script>
 <script src="https://cdn.jsdelivr.net/gh/excing/showdown-extensions@v1.2.2/showdown-full-extensions.js"></script>
+<link href="https://unpkg.com/vuesax@4.0.1-alpha.16/dist/vuesax.css" rel="stylesheet">
+<script src="https://unpkg.com/vuesax@4.0.1-alpha.16/dist/vuesax.js"></script>
 {{ else }}
+<link href="https://unpkg.com/vuesax@4.0.1-alpha.16/dist/vuesax.min.css" rel="stylesheet">
+<script src="https://unpkg.com/vuesax@4.0.1-alpha.16/dist/vuesax.min.js"></script>
 <script src="https://cdn.jsdelivr.net/combine/npm/vue,npm/vue-router,npm/axios/dist/axios.min.js,npm/js-cookie/dist/js.cookie.min.js,npm/sprintf-js@1.1.2/dist/sprintf.min.js,npm/showdown@1.5.0,gh/excing/showdown-extensions@v1.2.2/showdown-full-extensions.min.js"></script>
 {{ end }}
 {{ end }}

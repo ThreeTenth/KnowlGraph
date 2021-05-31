@@ -1,4 +1,4 @@
-<div id="app" class="app">
+<div class="app">
   <nav class="nav">
     <div class="nav-start">
       <router-link class="nav-a" to="/">🏠 {{ i18n.Home }}</router-link>
@@ -31,12 +31,12 @@
     </dropdown>
   </nav>
   <router-view></router-view>
-  <div class="modal white" v-if="ras">
-    <div>
-      <div>{{ ras.edges.version.gist }}</div>
-      <div class="m-t10" v-html="ras.edges.version.edges.content.body"></div>
-      <div class="m-t10" v-if="ras.edges.version.edges.keywords">
-        <span v-for="(keyword, i) in ras.edges.version.edges.keywords">{{ keyword.name }}</span>
+  <vs-dialog overflow-hidden v-model="vote.has">
+    <div style="margin: 16px 10px;" v-if="vote.has">
+      <div>{{ vote.ras.edges.version.gist }}</div>
+      <div class="m-t10" v-html="md2html(vote.ras.edges.version.edges.content.body)"></div>
+      <div class="m-t10" v-if="vote.ras.edges.version.edges.keywords">
+        <span v-for="(keyword, i) in vote.ras.edges.version.edges.keywords">{{ keyword.name }}</span>
       </div>
       <div class="m-t22">是否同意该文章发布？</div>
       <div class="m-t10">
@@ -44,5 +44,5 @@
         <button class="nav-button" v-on:click="onRejecte">反对发布</button>
       </div>
     </div>
-  </div>
+  </vs-dialog>
 </div>

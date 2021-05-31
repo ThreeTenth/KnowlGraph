@@ -76,7 +76,7 @@
     </div>
   </div>
   <div v-else>Loading</div>
-  <modal v-if="isNewNode" v-on:toggle="setNewNode">
+  <modal v-model="isNewNode">
     <new-node></new-node>
   </modal>
 </div>

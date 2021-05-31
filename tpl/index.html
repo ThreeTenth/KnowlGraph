@@ -37,9 +37,11 @@
 
 <body>
 	<div id="app">
-		{{ if .Body.Article }}
-		<div id="article_md">{{ .Body.Article.Edges.Content.Body }}</div>
-		{{ end }}
+		<div id="application--wrap">
+			{{ if .Body.Article }}
+			<div id="article_md">{{ .Body.Article.Edges.Content.Body }}</div>
+			{{ end }}
+		</div>
 	</div>
 
 	{{ if .Body.Logined }}

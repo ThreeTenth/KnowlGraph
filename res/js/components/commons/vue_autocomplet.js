@@ -29,6 +29,7 @@ Vue.component('autocomplet', {
       })
       this.$emit('select', item)
       this.items = []
+      this.auto = false
     },
 
     onKeyTab() {
@@ -92,6 +93,7 @@ Vue.component('autocomplet', {
 
       this.items = items
       this.selected = 0
+      this.auto = true
       this.__update()
     },
 

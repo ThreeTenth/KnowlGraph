@@ -144,11 +144,7 @@ const Article = {
     },
 
     onNewNode() {
-      this.isNewNode = true
-    },
-
-    setNewNode(e) {
-      this.isNewNode = e
+      this.isNewNode = !this.isNewNode
     },
 
     __load(id) {

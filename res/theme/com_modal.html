@@ -1,8 +1,11 @@
-<div class="modal grey">
-  <div class="center">
-    <div class="dialog">
-      <button class="emoji-button close" v-on:click="toggle">✖</button>
-      <slot></slot>
+<span>
+  <transition name="vs-dialog">
+    <div v-on:click.stop="close" class="modal" v-if="seen" ref="dialog-content">
+      <div class="dialog" v-on:click.stop>
+        <button class="close" v-on:click="close">✖</button>
+        <div class="dialog__content notFooter">
+        </div>
+      </div>
     </div>
-  </div>
-</div>
+  </transition>
+</span>
