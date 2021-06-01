@@ -14,12 +14,39 @@ Vue.component('autocomplet', {
     }
   },
 
+  watch: {
+    items: function (val, oldVal) {
+      let len = val.length
+
+      if (0 == len) return
+
+      this.$refs.selection.style.maxHeight = ''
+      this.pos = "down"
+
+      this.$nextTick(() => {
+        let selection = this.$refs.selection
+        let rect = selection.getBoundingClientRect()
+        let windowHeight = document.documentElement.clientHeight
+        let top = rect.top
+        let preHeight = rect.height
+
+        if (top + preHeight < windowHeight) {
+          this.pos = "down"
+        } else {
+          this.pos = "up"
+
+          selection.style.maxHeight = rect.top + 'px'
+        }
+      })
+    },
+  },
+
   mounted() {
-    this.__update()
+    // this.__update()
   },
 
   activated() {
-    this.__update()
+    // this.__update()
   },
 
   methods: {
@@ -94,25 +121,25 @@ Vue.component('autocomplet', {
       this.items = items
       this.selected = 0
       this.auto = true
-      this.__update()
+      // this.__update()
     },
 
-    __update() {
-      let len = this.items.length
+    // __update() {
+    //   let len = this.items.length
 
-      if (0 == len) return
+    //   if (0 == len) return
 
-      let autocomplete = this.$refs.autocomplete
-      let bottom = autocomplete.getBoundingClientRect().bottom
+    //   let autocomplete = this.$refs.autocomplete
+    //   let bottom = autocomplete.getBoundingClientRect().bottom
 
-      let preHeight = len * 30
+    //   let preHeight = len * 30
 
-      if (preHeight < bottom) {
-        this.pos = "down"
-      } else {
-        this.pos = "up"
-      }
-    },
+    //   if (preHeight < bottom) {
+    //     this.pos = "down"
+    //   } else {
+    //     this.pos = "up"
+    //   }
+    // },
   },
 
   template: com_autocomplet,

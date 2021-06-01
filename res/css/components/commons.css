@@ -159,12 +159,12 @@
 
 .auto-completion.up .selection {
   bottom    : 28px;
-  max-height: calc(100vh / 2 - 10px);
+  /* max-height: calc(100vh / 2 - 10px); */
 }
 
 .auto-completion.down .selection {
   top       : 24px;
-  max-height: calc(100vh / 2 - 68px);
+  /* max-height: calc(100vh / 2 - 68px); */
 }
 
 .auto-completion .selection {

@@ -50,10 +50,10 @@ Vue.component('modal', {
     ])
 
     const dialog = h('div', {
-      staticClass: 'vs-dialog',
-      style: {
-        width: this.width
-      },
+      staticClass: 'modal-content',
+      // style: {
+      //   width: this.width
+      // },
       // class: {
       //   'vs-dialog--fullScreen': this.fullScreen,
       //   'vs-dialog--rebound': this.rebound,
@@ -68,12 +68,12 @@ Vue.component('modal', {
       // this.loading && loading,
       // !this.notClose && close,
       // this.$slots.header && header,
-      content,
+      this.$slots.default,
       // this.$slots.footer && footer
     ])
 
     const dialogContent = h('div', {
-      staticClass: 'vs-dialog-content',
+      staticClass: 'modal',
       ref: 'dialog-content',
       // class: {
       //   blur: this.blur,
@@ -81,7 +81,7 @@ Vue.component('modal', {
       // },
       on: {
         click: (evt) => {
-          if (!evt.target.closest('.vs-dialog') && !this.preventClose) {
+          if (!evt.target.closest('.modal-content') && !this.preventClose) {
             this.$emit('toggle', !this.seen)
             this.$emit('close')
           }
