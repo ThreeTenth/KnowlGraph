@@ -48,5 +48,7 @@ func (Version) Edges() []ent.Edge {
 			Unique().
 			Required().
 			StructTag(`json:"article,omitempty"`),
+		edge.From("assets", Asset.Type).
+			Ref("version"),
 	}
 }

@@ -24,6 +24,7 @@ func (Asset) Fields() []ent.Field {
 			Comment("watch: a article followed by the user.").
 			Comment("self: a private article created by the user."),
 		field.Time("created_at").Default(time.Now),
+		field.Time("updated_at").Default(time.Now).UpdateDefault(time.Now),
 	}
 }
 
@@ -41,5 +42,8 @@ func (Asset) Edges() []ent.Edge {
 			Unique().
 			Required().
 			StructTag(`json:"article,omitempty"`),
+		edge.To("version", Version.Type).
+			Unique().
+			StructTag(`json:"version,omitempty"`),
 	}
 }
