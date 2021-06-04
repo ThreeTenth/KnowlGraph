@@ -147,6 +147,33 @@ const Article = {
       this.isNewNode = !this.isNewNode
     },
 
+    onStar() {
+      this.__putAsset('star')
+    },
+
+    onWatch() {
+      this.__putAsset('watch')
+    },
+
+    switchLang() { },
+
+    __putAsset(status) {
+      let _this = this
+      axios({
+        method: "PUT",
+        url: queryRestful("/v1/asset", { articleId: this.article.id, status: status }),
+      }).then(function (resp) {
+        
+      }).catch(function (resp) {
+        _this.$vs.notification({
+          color: 'danger',
+          position: 'bottom-center',
+          title: "Failure",
+          text: resp.data
+        })
+      })
+    },
+
     __load(id) {
       if (this.$data.__original.id == this.id) {
         return
@@ -166,6 +193,9 @@ const Article = {
             }
           })
         }
+        _this.$nextTick(() => {
+          _this.__putAsset("browse")
+        })
       }).catch(function (resp) {
         console.log(resp)
       })

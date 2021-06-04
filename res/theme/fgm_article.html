@@ -24,10 +24,14 @@
           </div>
         </dropdown>
       </div>
-      <button class="menu-button">⭐ {{ i18n.Star }}</button>
-      <button class="menu-button">👀 {{ i18n.Watch }}</button>
-      <button v-if="article.private" class="menu-button">🔒</button>
-      <button v-else class="menu-button">🌍 {{ article.lang.name }}</button>
+      <template v-if="article.private">
+        <button class="menu-button">🔒</button>
+      </template>
+      <template v-else>
+        <button class="menu-button" v-on:click="onStar">⭐ {{ article.star ? i18n.Unstar : i18n.Star }}</button>
+        <button class="menu-button" v-on:click="onWatch">👀 {{ article.watch ? i18n.Unwatch : i18n.Watch }}</button>
+        <button class="menu-button" v-on:click="switchLang">🌍 {{ article.lang.name }}</button>
+      </template>
     </div>
     <div class="article-nav">
       <a class="selected" href="#">{{ i18n.Body }}</a>
