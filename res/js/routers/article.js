@@ -148,11 +148,19 @@ const Article = {
     },
 
     onStar() {
-      this.__putAsset('star')
+      if (this.user.logined) {
+        this.__putAsset('star')
+      } else {
+        router.push({ name: 'login' })
+      }
     },
 
     onWatch() {
-      this.__putAsset('watch')
+      if (this.user.logined) {
+        this.__putAsset('watch')
+      } else {
+        router.push({ name: 'login' })
+      }
     },
 
     switchLang() { },
@@ -163,8 +171,9 @@ const Article = {
         method: "PUT",
         url: queryRestful("/v1/asset", { articleId: this.article.id, status: status }),
       }).then(function (resp) {
-        
+
       }).catch(function (resp) {
+        if (status == "browse") return
         _this.$vs.notification({
           color: 'danger',
           position: 'bottom-center',
@@ -193,9 +202,11 @@ const Article = {
             }
           })
         }
-        _this.$nextTick(() => {
-          _this.__putAsset("browse")
-        })
+        if (_this.user.logined) {
+          _this.$nextTick(() => {
+            _this.__putAsset("browse")
+          })
+        }
       }).catch(function (resp) {
         console.log(resp)
       })
