@@ -1,7 +1,4 @@
 {
-  "__code": "en",
-  "__version": 14,
-
   "Personalize": "Personalize",
   "NewArticle": "New article",
   "Histories": "Histories",
@@ -54,5 +51,10 @@
   "Index": "Index unlogin",
   "Home": "Home",
 
-  "CurrentUserLang": "Current language：%s"
+  "CurrentUserLang": "Current language：%s",
+  "SetUserLangSuccess": "Set language success",
+  "SetUserLangFailure": "Set language failure",
+
+  "__code": "en",
+  "__version": 16
 }

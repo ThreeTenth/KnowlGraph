@@ -1,7 +1,4 @@
 {
-  "__code": "zh",
-  "__version": 14,
-
   "Personalize": "个性化",
   "NewArticle": "新文章",
   "Histories": "历史记录",
@@ -54,5 +51,10 @@
   "Index": "未登录时的首页",
   "Home": "首页",
 
-  "CurrentUserLang": "当前语言：%s"
+  "CurrentUserLang": "当前语言：%s",
+  "SetUserLangSuccess": "语言设置成功",
+  "SetUserLangFailure": "语言设置失败",
+
+  "__code": "zh",
+  "__version": 16
 }

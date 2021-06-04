@@ -2,7 +2,7 @@
 
 const Personalize = {
   computed: {
-    currentLang: function() {
+    currentLang: function () {
       return sprintf(this.i18n.CurrentUserLang, this.user.lang.name)
     },
   },
@@ -17,16 +17,16 @@ const Personalize = {
       setUserLang(langCode)
 
       if (langCode == defaultLang.__code) {
-        Object.assign(i18n, defaultLang)
+        this.__setUserLangSuccessed(defaultLang)
         return
       } else if (i18ns.has(langCode)) {
-        Object.assign(i18n, i18ns.get(langCode))
+        this.__setUserLangSuccessed(i18ns.get(langCode))
         return
       } else {
         let strings = getI18nStrings(langCode)
         if (null != strings && strings.__version == defaultLang.__version) {
           i18ns.set(langCode, strings)
-          Object.assign(i18n, strings)
+          this.__setUserLangSuccessed(strings)
           return
         }
         removeI18nStrings(langCode)
@@ -40,12 +40,26 @@ const Personalize = {
       }).then(function (resp) {
         i18ns.set(langCode, resp.data)
         setI18nStrings(langCode, resp.data)
-        Object.assign(i18n, resp.data)
+        _this.__setUserLangSuccessed(resp.data)
       }).catch(function (resp) {
         _this.user.lang = old
         setUserLang(old.code)
+        _this.$vs.notification({
+          color: 'danger',
+          position: 'top-right',
+          title: _this.i18n.SetUserLangFailure,
+        })
       })
     },
+
+    __setUserLangSuccessed(stringI18N) {
+      Object.assign(i18n, stringI18N)
+      this.$vs.notification({
+        color: 'success',
+        position: 'top-right',
+        title: this.i18n.SetUserLangSuccess,
+      })
+    }
   },
 
   template: fgm_personalize
