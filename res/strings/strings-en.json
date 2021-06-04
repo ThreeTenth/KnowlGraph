@@ -1,6 +1,8 @@
 {
   "__code": "en",
-  "__version": 13,
+  "__version": 14,
+
+  "Personalize": "Personalize",
   "NewArticle": "New article",
   "Histories": "Histories",
   "Publish": "Publish",
@@ -50,5 +52,7 @@
   "Eyes": "Eyes",
   "PickYourReaction": "Pick your reaction",
   "Index": "Index unlogin",
-  "Home": "Home"
+  "Home": "Home",
+
+  "CurrentUserLang": "Current language：%s"
 }

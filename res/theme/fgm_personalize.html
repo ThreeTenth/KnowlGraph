@@ -1,0 +1,12 @@
+<div>
+  <h2>{{ i18n.Personalize }}</h2>
+  <h3>{{ currentLang }}</h3>
+  <div class="center grid">
+    <vs-row>
+      <vs-col v-for="(lang, i) in languages" :key="lang.code" vs-type="flex" vs-justify="center" vs-align="center" w="3"
+        v-bind:dir="lang.direction">
+        <vs-button v-on:click="onSelectUserLang(lang)">{{ lang.name }}</vs-button>
+      </vs-col>
+    </vs-row>
+  </div>
+</div>

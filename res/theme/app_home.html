@@ -4,14 +4,6 @@
       <router-link class="nav-a" to="/">🏠 {{ i18n.Home }}</router-link>
     </div>
     <dropdown>
-      <button class="nav-button">{{ user.lang.name }}<span></span>👇</button>
-      <div class="drop-content">
-        <button v-for="(lang, i) in languages" v-bind:class="user.lang.code == lang.code ? 'selected' : ''"
-          v-bind:dir="lang.direction" v-on:click="onSelectUserLang(lang)"> {{ lang.name }}</button>
-      </div>
-    </dropdown>
-    <span class="nav-space"></span>
-    <dropdown>
       <button class="nav-img">
         <img alt="" v-bind:src="profilePicture">
       </button>
@@ -21,9 +13,10 @@
             i18n.NewArticle }}</router-link>
           <router-link v-bind:to="{ path: '/new/article', query: { status: 'private' }}">🔒</router-link>
         </div>
-        <hr />
         <router-link to="/drafts">{{ i18n.Drafts }}</router-link>
         <router-link to="/archive">{{ i18n.Archive }}</router-link>
+        <hr />
+        <router-link to="/settings/personalize">{{ i18n.Personalize }}</router-link>
         <router-link to="/about">{{ i18n.About }}</router-link>
         <hr />
         <a href="/signout">{{ i18n.Logout }}</a>

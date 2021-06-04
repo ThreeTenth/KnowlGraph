@@ -21,6 +21,7 @@ const plugin = {
       words: [],
       archives: [],
     }
+    Vue.prototype.languages = languages
     Vue.prototype.i18n = i18n
     Vue.prototype.getUserWords = function () {
       axios({
@@ -72,6 +73,7 @@ const router = new VueRouter({
     { path: '/archive', component: Archive, children: archive_router },
     { path: '/about', name: 'about', component: About },
     { path: '/my', name: 'my', component: My },
+    { path: '/settings/personalize', name: 'personalize', component: Personalize },
     { path: '/new/article', name: 'newArticle', component: NewArticle },
     { path: '/d/:id/edit', name: 'editDraft', component: EditDraft, props: true },
     { path: '/d/:id/history', name: 'draftHistories', component: DraftHistories, props: true },
@@ -87,7 +89,6 @@ var app = new Vue({
       has: false,
       ras: null,
     },
-    languages: languages,
     profilePicture: getLink("icon"),
   },
   router,
@@ -134,44 +135,6 @@ var app = new Vue({
     onSignout: function () {
       const githubOAuthAPI = "/signout"
       window.open(githubOAuthAPI, "_self")
-    },
-    onSelectUserLang: function (lang) {
-      // const lang = event.target.value
-      const old = this.user.lang
-      const langCode = lang.code
-
-      this.user.lang = lang
-      setUserLang(langCode)
-
-      if (langCode == defaultLang.__code) {
-        Object.assign(i18n, defaultLang)
-        return
-      } else if (i18ns.has(langCode)) {
-        Object.assign(i18n, i18ns.get(langCode))
-        return
-      } else {
-        let strings = getI18nStrings(langCode)
-        if (null != strings && strings.__version == defaultLang.__version) {
-          i18ns.set(langCode, strings)
-          Object.assign(i18n, strings)
-          return
-        }
-        removeI18nStrings(langCode)
-      }
-
-      let _this = this
-
-      axios({
-        method: "GET",
-        url: queryStatic("/static/strings/strings-" + langCode + ".json"),
-      }).then(function (resp) {
-        i18ns.set(langCode, resp.data)
-        setI18nStrings(langCode, resp.data)
-        Object.assign(i18n, resp.data)
-      }).catch(function (resp) {
-        _this.user.lang = old
-        setUserLang(old.code)
-      })
     },
     __postVote(status) {
       var _this = this

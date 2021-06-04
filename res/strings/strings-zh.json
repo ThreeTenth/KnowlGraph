@@ -1,6 +1,8 @@
 {
   "__code": "zh",
-  "__version": 13,
+  "__version": 14,
+
+  "Personalize": "个性化",
   "NewArticle": "新文章",
   "Histories": "历史记录",
   "Publish": "发布",
@@ -50,5 +52,7 @@
   "Eyes": "围观",
   "PickYourReaction": "选择你的反应",
   "Index": "未登录时的首页",
-  "Home": "首页"
+  "Home": "首页",
+
+  "CurrentUserLang": "当前语言：%s"
 }
