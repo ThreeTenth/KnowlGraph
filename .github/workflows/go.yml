@@ -30,6 +30,7 @@ jobs:
       # working-directory: ./
       run:  |
         go get -v -t -d ./...
+        go get -u github.com/gobuffalo/packr/v2/...
         go get -u github.com/gobuffalo/packr/v2/packr2
         if [ -f Gopkg.toml ]; then
             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
