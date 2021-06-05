@@ -41,7 +41,7 @@ jobs:
       run:  | 
         echo ${{ env.TAG }}
         go generate ./ent
-        packr build --legacy --ldflags="-w -s" -o "./knowlgraph"
+        packr build --ldflags="-w -s" -o "./knowlgraph"
 
     - name: Deploy to Server
       # 服务地址: https://github.com/AEnterprise/rsync-deploy
