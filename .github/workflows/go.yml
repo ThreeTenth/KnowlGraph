@@ -29,6 +29,7 @@ jobs:
     - name: Get service dependencies
       # working-directory: ./
       run:  |
+        apt-get install upx
         go get -v -t -d ./...
         if [ -f Gopkg.toml ]; then
             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
@@ -40,6 +41,7 @@ jobs:
       run:  | 
         echo ${{ env.TAG }}
         go generate ./ent
+        packr2
         go build --ldflags="-w -s" -o "./knowlgraph"
 
     - name: Deploy to Server
