@@ -29,7 +29,6 @@ jobs:
     - name: Get service dependencies
       # working-directory: ./
       run:  |
-        apt-get install upx
         go get -v -t -d ./...
         if [ -f Gopkg.toml ]; then
             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
