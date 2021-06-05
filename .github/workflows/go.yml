@@ -38,6 +38,7 @@ jobs:
       # working-directory: ./
       run:  | 
         echo ${{ env.TAG }}
+        go generate ./ent
         go build --ldflags="-w -s" -o "./knowlgraph"
 
     - name: Deploy to Server
