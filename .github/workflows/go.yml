@@ -29,8 +29,8 @@ jobs:
     - name: Get service dependencies
       working-directory: ./
       run:  |
-        go get -v -t -d ./...
         go get -u github.com/gobuffalo/packr/v2/packr2
+        go get -v -t -d ./...
         if [ -f Gopkg.toml ]; then
             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
             dep ensure
@@ -41,8 +41,7 @@ jobs:
       run:  | 
         echo ${{ env.TAG }}
         go generate ./ent
-        packr2
-        go build --ldflags="-w -s" -o "./knowlgraph"
+        packr2 build --ldflags="-w -s" -o "./knowlgraph"
 
     - name: Deploy to Server
       # 服务地址: https://github.com/AEnterprise/rsync-deploy
