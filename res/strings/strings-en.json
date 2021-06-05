@@ -55,6 +55,8 @@
   "SetUserLangSuccess": "Set language success",
   "SetUserLangFailure": "Set language failure",
 
+  "DiscoverANewArticle": "Discover a new article",
+
   "__code": "en",
   "__version": 16
 }

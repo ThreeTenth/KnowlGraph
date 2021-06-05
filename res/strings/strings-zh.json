@@ -55,6 +55,8 @@
   "SetUserLangSuccess": "语言设置成功",
   "SetUserLangFailure": "语言设置失败",
 
+  "DiscoverANewArticle": "发现一个新文章",
+
   "__code": "zh",
   "__version": 16
 }
