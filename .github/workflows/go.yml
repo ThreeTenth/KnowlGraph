@@ -40,8 +40,10 @@ jobs:
       working-directory: ./
       run:  | 
         echo ${{ env.TAG }}
+        go env -w GO111MODULE=off
         go generate ./ent
-        packr2 build --ldflags="-w -s" -o "./knowlgraph"
+        packr2
+        go build --ldflags="-w -s" -o "./knowlgraph"
 
     - name: Deploy to Server
       # 服务地址: https://github.com/AEnterprise/rsync-deploy
