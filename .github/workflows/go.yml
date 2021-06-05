@@ -1,0 +1,65 @@
+name: Go
+
+on:
+  push:
+    tags:
+      - v[01].[0-9]+.[0-9]+
+
+jobs:
+
+  build_service:
+    name: Build service
+    runs-on: ubuntu-18.04
+    steps:
+
+    - name: Get the tag name
+      run: |
+        echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+
+    - name: Set up Go 1.x
+      uses: actions/setup-go@v2
+      with:
+        go-version: ^1.15
+      id: go
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v2
+
+    - name: Get service dependencies
+      # working-directory: ./
+      run:  |
+        go get -v -t -d ./...
+        if [ -f Gopkg.toml ]; then
+            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+            dep ensure
+        fi
+
+    - name: Build service
+      # working-directory: ./
+      run:  | 
+        go build --ldflags="-w -s" -o "./knowlgraph-amd64-linux-${{ env.TAG }}"
+
+    - name: Deploy to Server
+      # 服务地址: https://github.com/AEnterprise/rsync-deploy
+      uses: AEnterprise/rsync-deploy@v1.0
+      env:
+        DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+        ARGS: -avz
+        SERVER_PORT: ${{ secrets.SSH_PORT }}
+        FOLDER: ./knowlgraph-amd64-linux-${{ env.TAG }}
+        SERVER_IP: ${{ secrets.SSH_HOST }}
+        USERNAME: ${{ secrets.SSH_USERNAME }}
+        SERVER_DESTINATION: /user/local/bin
+
+    - name: Restart Server
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        port: ${{ secrets.SSH_PORT }}
+        key: ${{ secrets.DEPLOY_KEY }}
+        script: |
+          systemctl stop knowlgraph
+          systemctl daemon-reload
+          systemctl enable knowlgraph
+          systemctl start knowlgraph
