@@ -31,6 +31,8 @@ jobs:
       run:  |
         go get -u github.com/gobuffalo/packr/v2/packr2
         go get -v -t -d ./...
+        packr2
+        go get -v -t -d ./...
         if [ -f Gopkg.toml ]; then
             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
             dep ensure
@@ -40,9 +42,7 @@ jobs:
       working-directory: ./
       run:  | 
         echo ${{ env.TAG }}
-        go env -w GO111MODULE=off
         go generate ./ent
-        packr2
         go build --ldflags="-w -s" -o "./knowlgraph"
 
     - name: Deploy to Server
