@@ -30,7 +30,7 @@ jobs:
       working-directory: ./
       run:  |
         go get -u github.com/gobuffalo/packr/v2/packr2
-        go get -v -t -d ./...
+        echo "packr2 start"
         packr2
         go get -v -t -d ./...
         if [ -f Gopkg.toml ]; then
