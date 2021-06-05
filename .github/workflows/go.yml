@@ -37,7 +37,8 @@ jobs:
     - name: Build service
       # working-directory: ./
       run:  | 
-        go build --ldflags="-w -s" -o "./knowlgraph-amd64-linux-${{ env.TAG }}"
+        echo ${{ env.TAG }}
+        go build --ldflags="-w -s" -o "./knowlgraph"
 
     - name: Deploy to Server
       # 服务地址: https://github.com/AEnterprise/rsync-deploy
@@ -46,7 +47,7 @@ jobs:
         DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
         ARGS: -avz
         SERVER_PORT: ${{ secrets.SSH_PORT }}
-        FOLDER: ./knowlgraph-amd64-linux-${{ env.TAG }}
+        FOLDER: ./knowlgraph
         SERVER_IP: ${{ secrets.SSH_HOST }}
         USERNAME: ${{ secrets.SSH_USERNAME }}
         SERVER_DESTINATION: /user/local/bin
