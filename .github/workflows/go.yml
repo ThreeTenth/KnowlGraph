@@ -46,7 +46,7 @@ jobs:
     - name: Build service
       working-directory: ./
       run:  | 
-        go build --ldflags="-w -s" -o "./knowlgraph"
+        go build -v --ldflags="-w -s" -o "./knowlgraph"
 
     - name: Deploy to Server
       # 服务地址: https://github.com/AEnterprise/rsync-deploy
