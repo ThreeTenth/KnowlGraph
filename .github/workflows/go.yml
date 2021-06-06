@@ -16,6 +16,10 @@ jobs:
     - name: Get the tag name
       run: |
         echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+        pwd
+        echo ${GOPATH}
+        echo ${GOROOT}
+        echo ${{ env.TAG }}
 
     - name: Set up Go 1.x
       uses: actions/setup-go@v2
@@ -32,11 +36,14 @@ jobs:
         go get -u github.com/gobuffalo/packr/v2/packr2
         packr2
         go get -v -t -d ./...
+        if [ -f Gopkg.toml ]; then
+            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+            dep ensure
+        fi
 
     - name: Build service
       working-directory: ./
       run:  | 
-        echo ${{ env.TAG }}
         go generate ./ent
         go build --ldflags="-w -s" -o "./knowlgraph"
 
