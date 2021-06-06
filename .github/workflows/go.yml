@@ -29,6 +29,7 @@ jobs:
     - name: Get service dependencies
       working-directory: ./
       run:  |
+        go env -w GO111MODULE=on
         go get -u github.com/gobuffalo/packr/v2/packr2
         packr2
         go generate ./ent
