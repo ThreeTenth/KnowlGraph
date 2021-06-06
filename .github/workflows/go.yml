@@ -30,21 +30,22 @@ jobs:
       working-directory: ./
       run:  |
         go get -u github.com/gobuffalo/packr/v2/packr2
-        # packr2
+        packr2
+        go generate ./ent
+        pwd
+        ls
+        echo ${GOPATH}
+        echo ${GOROOT}
+        echo ${{ env.TAG }}
         go get -v -t -d ./...
         if [ -f Gopkg.toml ]; then
             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
             dep ensure
         fi
-        pwd
-        echo ${GOPATH}
-        echo ${GOROOT}
-        echo ${{ env.TAG }}
 
     - name: Build service
       working-directory: ./
       run:  | 
-        # go generate ./ent
         go build --ldflags="-w -s" -o "./knowlgraph"
 
     - name: Deploy to Server
