@@ -30,7 +30,7 @@ jobs:
       working-directory: ./
       run:  |
         go get -u github.com/gobuffalo/packr/v2/packr2
-        packr2
+        # packr2
         go get -v -t -d ./...
         if [ -f Gopkg.toml ]; then
             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
@@ -44,7 +44,7 @@ jobs:
     - name: Build service
       working-directory: ./
       run:  | 
-        go generate ./ent
+        # go generate ./ent
         go build --ldflags="-w -s" -o "./knowlgraph"
 
     - name: Deploy to Server
