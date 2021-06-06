@@ -31,6 +31,7 @@ jobs:
       run:  |
         go get -u github.com/gobuffalo/packr/v2/packr2
         packr2
+        go get -v -t -d ./...
 
     - name: Build service
       working-directory: ./
