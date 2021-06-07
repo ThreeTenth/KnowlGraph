@@ -338,6 +338,9 @@ func router03() http.Handler {
 
 	if config.Debug {
 		router.Use(cors)
+		router.Static("/", "./build")
+	} else {
+		router.Static("/", "./")
 	}
 
 	// router.GET("/favicon.ico", getFavicon)
@@ -345,7 +348,6 @@ func router03() http.Handler {
 	// router.GET("/theme/theme.js", getStaticTheme)
 	// router.GET("/theme/theme@:id.js", getStaticTheme)
 	// router.GET("/lang/:id", getStaticLang)
-	router.Static("/", "./build")
 
 	return router
 }
