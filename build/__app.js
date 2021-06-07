@@ -1722,10 +1722,7 @@ axios.defaults.headers.common['Authorization'] = Cookies.get("access_token")
 const plugin = {
   install: function (Vue, options) {
     Vue.prototype.user = {
-      lang: {
-        code: "en",
-        name: "English",
-      },
+      lang: userLang,
       logined: logined,
       words: [],
       archives: [],

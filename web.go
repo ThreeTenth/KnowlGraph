@@ -13,6 +13,7 @@ type Header struct {
 	RestfulDomain  string
 	UserLang       string
 	Debug          bool
+	VersionName    string
 }
 
 func html(fn func(p *Context) (int, string, interface{})) gin.HandlerFunc {
@@ -61,5 +62,6 @@ func header() Header {
 	header.StaticDomain = config.Ssd
 	header.RestfulDomain = config.Rad
 	header.Debug = config.Debug
+	header.VersionName = VersionName
 	return header
 }
