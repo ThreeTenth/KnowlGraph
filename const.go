@@ -6,7 +6,7 @@ const (
 	// Version is current version number
 	Version = 4
 	// VersionName is current version name
-	VersionName = "v0.0.4"
+	VersionName = "0.0.4"
 	// DBVersion is current database version number
 	DBVersion = 1
 )

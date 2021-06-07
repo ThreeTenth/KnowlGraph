@@ -45,6 +45,7 @@ var config *Config
 var db *sql.DB
 
 func init() {
+	fmt.Printf("The current version: v%v, the version name: %v", Version, VersionName)
 	time.FixedZone("CST", 8*3600) // China Standard Timzone
 
 	config = &Config{Port: 8080, Ssd: "http://localhost:20012", Rad: "http://localhost:20011"}
@@ -166,7 +167,6 @@ func loadTemplates(router *gin.Engine) {
 
 func main() {
 	goflag.Parse("config", "Configuration file path")
-	fmt.Printf("The current version: %v, the version name: %v", Version, VersionName)
 
 	// 开发阶段时执行预编译本地资源
 	// 正式版本使用编译后的资源
