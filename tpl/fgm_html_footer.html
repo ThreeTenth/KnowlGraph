@@ -2,8 +2,10 @@
 {{ if .Debug }}
 <script src="{{.StaticDomain}}/__default_theme.js"></script>
 <script src="{{.StaticDomain}}/__app.js"></script>
+<script src="https://unpkg.com/vuesax@4.0.1-alpha.16/dist/vuesax.js"></script>
 {{ else }}
 <script src="https://cdn.jsdelivr.net/gh/ThreeTenth/KnowlGraph@{{ .VersionName }}/build/__default_theme.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/ThreeTenth/KnowlGraph@{{ .VersionName }}/build/__app.js"></script>
+<script src="https://unpkg.com/vuesax@4.0.1-alpha.16/dist/vuesax.js"></script>
 {{end}}
 {{end}}
