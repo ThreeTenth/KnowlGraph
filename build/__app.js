@@ -1345,7 +1345,7 @@ const Personalize = {
 
       axios({
         method: "GET",
-        url: queryStatic("/static/strings/strings-" + langCode + ".json"),
+        url: queryStatic("/strings/strings-" + langCode + ".json"),
       }).then(function (resp) {
         i18ns.set(langCode, resp.data)
         setI18nStrings(langCode, resp.data)
