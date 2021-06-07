@@ -70,16 +70,11 @@ func preHandle() {
 	// 拼接以上字符串
 	// 生成 JS 文件，并保存到 build 目录
 
-	appJsConst := ` // domain url
-const restfulDomain = '%v'
-const staticDomain = '%v'
-`
-	appJsConst = fmt.Sprintf(appJsConst, config.Rad, config.Ssd)
 	appJsPath := path.Join(BuildPath, "__app.js")
 	languagesFormat := "// %v, %v \n const languages = %v"
 
 	panicIfErrNotNil(MergeFiles(path.Join(ResPath, "languages.json"), appJsPath, "", "", languagesFormat, "\n\n"))
-	panicIfErrNotNil(MergeFiles(path.Join(ResPath, "js"), appJsPath, appJsConst, "", "", "\n\n", "js/app.js"))
+	panicIfErrNotNil(MergeFiles(path.Join(ResPath, "js"), appJsPath, "", "", "", "\n\n", "js/app.js"))
 	panicIfErrNotNil(AppendFile(path.Join(ResPath, "js/app.js"), appJsPath))
 
 	// # pre: div+css theme

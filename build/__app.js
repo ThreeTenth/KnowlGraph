@@ -108,9 +108,6 @@
   {"code":"zh","name":"中文", "direction": "ltr", "comment": "Chinese"}
 ]
 
- // domain url
-const restfulDomain = 'http://10.0.0.254:20011'
-const staticDomain = 'http://10.0.0.254:20012'
 // vue_autocomplet.js
 
 Vue.component('autocomplet', {
