@@ -30,17 +30,17 @@ jobs:
       working-directory: ./
       run:  |
         go get -u github.com/gobuffalo/packr/packr
-        # go get -v -t -d ./...
-        # if [ -f Gopkg.toml ]; then
-        #     curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-        #     dep ensure
-        # fi
+        go get -v -t -d ./...
+        if [ -f Gopkg.toml ]; then
+            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+            dep ensure
+        fi
 
     - name: Build service
       working-directory: ./
       run:  | 
         go generate ./ent
-        packr build -v --ldflags="-w -s" -o "./knowlgraph"
+        packr build -v --ldflags="-w -s" -o "./build/knowlgraph"
 
     - name: Deploy to Server
       # 服务地址: https://github.com/AEnterprise/rsync-deploy
@@ -49,10 +49,10 @@ jobs:
         DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
         ARGS: -avz
         SERVER_PORT: ${{ secrets.SSH_PORT }}
-        FOLDER: ./knowlgraph
+        FOLDER: ./build
         SERVER_IP: ${{ secrets.SSH_HOST }}
         USERNAME: ${{ secrets.SSH_USERNAME }}
-        SERVER_DESTINATION: /usr/local/bin
+        SERVER_DESTINATION: /usr/local/bin/knowlgraph
 
     - name: Restart Server
       uses: appleboy/ssh-action@master
