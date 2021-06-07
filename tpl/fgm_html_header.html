@@ -6,19 +6,9 @@
 <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ThreeTenth/css-theme@v0.1.2/colours.css" /> -->
 {{ if .Debug }}
 <link rel="stylesheet" href="{{.StaticDomain}}/__main.css" />
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sprintf-js@1.1.2/dist/sprintf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vue-router/dist/vue-router.js"></script>
-<script src="https://cdn.jsdelivr.net/combine/npm/showdown@1.5.0"></script>
-<script src="https://cdn.jsdelivr.net/gh/excing/showdown-extensions@v1.2.2/showdown-full-extensions.js"></script>
 <link href="https://unpkg.com/vuesax@4.0.1-alpha.16/dist/vuesax.css" rel="stylesheet">
 {{ else }}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ThreeTenth/KnowlGraph@{{ .VersionName }}/build/__main.css" />
-<!-- <link href="https://unpkg.com/vuesax@4.0.1-alpha.16/dist/vuesax.min.css" rel="stylesheet">
-<script src="https://unpkg.com/vuesax@4.0.1-alpha.16/dist/vuesax.min.js"></script> -->
-<link href="https://unpkg.com/vuesax@4.0.1-alpha.16/dist/vuesax.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/combine/npm/vue,npm/vue-router,npm/axios/dist/axios.min.js,npm/js-cookie/dist/js.cookie.min.js,npm/sprintf-js@1.1.2/dist/sprintf.min.js,npm/showdown@1.5.0,gh/excing/showdown-extensions@v1.2.2/showdown-full-extensions.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ThreeTenth/KnowlGraph@{{ .VersionName }}/build/__main.min.css" />
+<link href="https://unpkg.com/vuesax@4.0.1-alpha.16/dist/vuesax.min.css" rel="stylesheet">
 {{ end }}
 {{ end }}
