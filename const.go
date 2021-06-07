@@ -4,9 +4,9 @@ import "time"
 
 const (
 	// Version is current version number
-	Version = 1
+	Version = 2
 	// VersionName is current version name
-	VersionName = "v0.0.1"
+	VersionName = "v0.0.2"
 	// DBVersion is current database version number
 	DBVersion = 1
 )
