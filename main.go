@@ -72,8 +72,10 @@ func preHandle() {
 
 	appJsPath := path.Join(BuildPath, "__app.js")
 	languagesFormat := "// %v, %v \n const languages = %v"
+	defaultStringsFormat := "// %v, %v \n const defaultLang = %v"
 
 	panicIfErrNotNil(MergeFiles(path.Join(ResPath, "languages.json"), appJsPath, "", "", languagesFormat, "\n\n"))
+	panicIfErrNotNil(MergeFiles(path.Join(ResPath, "strings/strings-en.json"), appJsPath, "", "", defaultStringsFormat, "\n\n"))
 	panicIfErrNotNil(MergeFiles(path.Join(ResPath, "js"), appJsPath, "", "", "", "\n\n", "js/app.js"))
 	panicIfErrNotNil(AppendFile(path.Join(ResPath, "js/app.js"), appJsPath))
 

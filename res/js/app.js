@@ -13,7 +13,6 @@ languages.forEach(element => {
   }
 });
 
-var defaultLang = {}
 const i18n = Vue.observable({
   ...defaultLang,
 })
@@ -159,22 +158,30 @@ var app = new Vue({
   }
 })
 
-var langCode = getUserLang()
-var url = queryStatic("/strings/strings-" + langCode + ".json")
-
-axios({
-  method: "GET",
-  url: url,
-}).then(function (resp) {
-  i18ns.set(langCode, resp.data)
-  setI18nStrings(langCode, resp.data)
-  Object.assign(i18n, resp.data)
-
+function runApp() {
   Vue.use(plugin)
   app.$mount('#application--wrap')
 
   app.getUserWords()
   app.getArchives()
-}).catch(function (resp) {
-  console.log(resp)
-})
+}
+
+var langCode = getUserLang()
+if (langCode == defaultLang.__code) {
+  runApp()
+} else {
+  var url = queryStatic("/strings/strings-" + langCode + ".json")
+
+  axios({
+    method: "GET",
+    url: url,
+  }).then(function (resp) {
+    i18ns.set(langCode, resp.data)
+    setI18nStrings(langCode, resp.data)
+    Object.assign(i18n, resp.data)
+
+    runApp()
+  }).catch(function (resp) {
+    console.log(resp)
+  })
+}

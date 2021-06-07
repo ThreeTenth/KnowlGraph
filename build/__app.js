@@ -108,6 +108,70 @@
   {"code":"zh","name":"中文", "direction": "ltr", "comment": "Chinese"}
 ]
 
+// strings-en.json, strings-en 
+ const defaultLang = {
+  "Personalize": "Personalize",
+  "NewArticle": "New article",
+  "Histories": "Histories",
+  "Publish": "Publish",
+  "Drafts": "Drafts",
+  "Articles": "Articles",
+  "Archive": "Archive",
+  "About": "About",
+  "Title": "Title",
+  "Gist": "Gist",
+  "VersionName": "Version name",
+  "Comment": "Version comment",
+  "AddAWord": "Add a keyword",
+  "Logout": "Logout",
+  "Login": "Login",
+  "PleaseLoginFirst": "Please log in first",
+  "LoginWithGitHubOAuth": "Login with GitHub OAuth",
+  "Back": "Back",
+  "Compare": "Compare",
+  "Preview": "Preview",
+  "Edit": "Edit",
+  "RestoreThisVersion": "Restore this version",
+  "CreatedAt": "Created at",
+  "JustNow": "Just Now",
+  "MinutesAgo": "%d minutes ago",
+  "HoursAgo": "%d hours ago",
+  "DaysAgo": "%d days ago",
+  "ChooseALanguage": "Choose a language",
+  "My": "My",
+  "MyArticles": "My Articles",
+  "Star": "Star",
+  "Unstar": "Unstar",
+  "Watch": "Watch",
+  "Unwatch": "Unwatch",
+  "ReadList": "Read list",
+  "Body": "Body",
+  "Issues": "Issues",
+  "Notes": "Notes",
+  "Cover": "Cover",
+  "Translate": "Translate",
+  "Up": "Up",
+  "Down": "Down",
+  "Laugh": "Laugh",
+  "Hooray": "Hooray",
+  "Confused": "Confused",
+  "Heart": "Heart",
+  "Rocket": "Rocket",
+  "Eyes": "Eyes",
+  "PickYourReaction": "Pick your reaction",
+  "Index": "Index unlogin",
+  "Home": "Home",
+
+  "CurrentUserLang": "Current language：%s",
+  "SetUserLangSuccess": "Set language success",
+  "SetUserLangFailure": "Set language failure",
+
+  "DiscoverANewArticle": "Discover a new article",
+
+  "__code": "en",
+  "__version": 16
+}
+
 // vue_autocomplet.js
 
 Vue.component('autocomplet', {
@@ -1706,7 +1770,6 @@ languages.forEach(element => {
   }
 });
 
-var defaultLang = {}
 const i18n = Vue.observable({
   ...defaultLang,
 })
@@ -1852,22 +1915,30 @@ var app = new Vue({
   }
 })
 
-var langCode = getUserLang()
-var url = queryStatic("/strings/strings-" + langCode + ".json")
-
-axios({
-  method: "GET",
-  url: url,
-}).then(function (resp) {
-  i18ns.set(langCode, resp.data)
-  setI18nStrings(langCode, resp.data)
-  Object.assign(i18n, resp.data)
-
+function runApp() {
   Vue.use(plugin)
   app.$mount('#application--wrap')
 
   app.getUserWords()
   app.getArchives()
-}).catch(function (resp) {
-  console.log(resp)
-})
+}
+
+var langCode = getUserLang()
+if (langCode == defaultLang.__code) {
+  runApp()
+} else {
+  var url = queryStatic("/strings/strings-" + langCode + ".json")
+
+  axios({
+    method: "GET",
+    url: url,
+  }).then(function (resp) {
+    i18ns.set(langCode, resp.data)
+    setI18nStrings(langCode, resp.data)
+    Object.assign(i18n, resp.data)
+
+    runApp()
+  }).catch(function (resp) {
+    console.log(resp)
+  })
+}
