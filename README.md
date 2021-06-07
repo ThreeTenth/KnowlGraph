@@ -6,11 +6,8 @@ A publishing platform where people can read professional and in-depth knowledge 
 ```
 set GOARCH=amd64
 set GOOS=linux
-packr2 clean
-packr2
-go build --ldflags="-w -s" -o "knowlgraph.com"
+packr build --ldflags="-w -s" -o "knowlgraph.com"
 upx -9 knowlgraph.com
-packr2 clean
 echo "finished"
 ```
 

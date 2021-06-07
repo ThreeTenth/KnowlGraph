@@ -3,16 +3,18 @@ package main
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"html/template"
 	"io"
 	"net/http"
 	"os"
+	"path"
 	"time"
 
 	"github.com/excing/goflag"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
-	"github.com/gobuffalo/packr/v2"
+	"github.com/gobuffalo/packr"
 	"golang.org/x/sync/errgroup"
 	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/migrate"
@@ -47,6 +49,62 @@ func init() {
 
 	config = &Config{Port: 8080, Ssd: "http://localhost:20012", Rad: "http://localhost:20011"}
 	goflag.Var(config)
+}
+
+func panicIfErrNotNil(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+
+func preHandle() {
+	const ResPath = "./res"
+	const BuildPath = "./build"
+
+	panicIfErrNotNil(os.RemoveAll(BuildPath))
+	panicIfErrNotNil(os.Mkdir(BuildPath, os.ModeDir))
+
+	// # pre: js
+	// 获取后端 Domain
+	// 获取所有 JS 文件内容
+	// 拼接以上字符串
+	// 生成 JS 文件，并保存到 build 目录
+
+	appJsConst := ` // domain url
+const restfulDomain = '%v'
+const staticDomain = '%v'
+`
+	appJsConst = fmt.Sprintf(appJsConst, config.Rad, config.Ssd)
+	appJsPath := path.Join(BuildPath, "__app.js")
+	languagesFormat := "// %v, %v \n const languages = %v"
+
+	panicIfErrNotNil(MergeFiles(path.Join(ResPath, "languages.json"), appJsPath, "", "", languagesFormat, "\n\n"))
+	panicIfErrNotNil(MergeFiles(path.Join(ResPath, "js"), appJsPath, appJsConst, "", "", "\n\n", "js/app.js"))
+	panicIfErrNotNil(AppendFile(path.Join(ResPath, "js/app.js"), appJsPath))
+
+	// # pre: div+css theme
+	// 获取所有 CSS 文件
+	// 生成唯一 CSS 文件并保存到 build 目录
+	// 获取所有前面 html 模板
+	// 用 map[string]string 结构存储
+	// 并输出到 build 目录
+
+	themeFormat := "// %v \n const %v = `%v`"
+	panicIfErrNotNil(MergeFiles(path.Join(ResPath, "css"), path.Join(BuildPath, "__main.css"), "", "", "", "\n\n"))
+	panicIfErrNotNil(MergeFiles(path.Join(ResPath, "theme"), path.Join(BuildPath, "__default_theme.js"), "", "", themeFormat, "\n\n"))
+
+	// # pre: common resources
+	// 拷贝到 build 目录
+
+	builds := []string{
+		"strings",
+		"code-of-conduct",
+		"favicon",
+	}
+
+	for _, item := range builds {
+		panicIfErrNotNil(CpDir(path.Join(ResPath, item), path.Join(BuildPath, item)))
+	}
 }
 
 func openPostgreSQL() {
@@ -112,11 +170,16 @@ func loadTemplates(router *gin.Engine) {
 func main() {
 	goflag.Parse("config", "Configuration file path")
 
+	preHandle()
 	openPostgreSQL()
 	openRedis()
 
 	defer db.Close()
 
+	startServer()
+}
+
+func startServer() {
 	/////////////////////// router code ////////////////////
 	//
 	//
@@ -201,12 +264,7 @@ func router01() http.Handler {
 		router.Use(cors)
 	}
 
-	router.GET("/favicon.ico", getFavicon)
-	router.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
+	router.StaticFile("/favicon.ico", "./build/favicon/favicon-32x32.png")
 
 	router.GET("/", authentication, html(index))
 	router.GET("/drafts", authentication, html(index))
@@ -235,7 +293,7 @@ func router02() http.Handler {
 		router.Use(cors)
 	}
 
-	router.GET("/favicon.ico", getFavicon)
+	router.StaticFile("/favicon.ico", "./build/favicon/favicon-32x32.png")
 
 	v1 := router.Group("/v1")
 
@@ -281,11 +339,12 @@ func router03() http.Handler {
 		router.Use(cors)
 	}
 
-	router.GET("/favicon.ico", getFavicon)
-	router.GET("/static/*paths", getStaticServerFiles)
-	router.GET("/theme/theme.js", getStaticTheme)
-	router.GET("/theme/theme@:id.js", getStaticTheme)
-	router.GET("/lang/:id", getStaticLang)
+	// router.GET("/favicon.ico", getFavicon)
+	// router.GET("/static/*paths", getStaticServerFiles)
+	// router.GET("/theme/theme.js", getStaticTheme)
+	// router.GET("/theme/theme@:id.js", getStaticTheme)
+	// router.GET("/lang/:id", getStaticLang)
+	router.Static("/", "./build")
 
 	return router
 }

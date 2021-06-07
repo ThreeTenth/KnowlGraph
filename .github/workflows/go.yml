@@ -29,15 +29,7 @@ jobs:
     - name: Get service dependencies
       working-directory: ./
       run:  |
-        go env -w GO111MODULE=on
-        go get -u github.com/gobuffalo/packr/v2/packr2
-        packr2
-        go generate ./ent
-        pwd
-        ls
-        echo ${GOPATH}
-        echo ${GOROOT}
-        echo ${{ env.TAG }}
+        go get -u github.com/gobuffalo/packr/packr
         # go get -v -t -d ./...
         # if [ -f Gopkg.toml ]; then
         #     curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
@@ -47,7 +39,8 @@ jobs:
     - name: Build service
       working-directory: ./
       run:  | 
-        go build -v --ldflags="-w -s" -o "./knowlgraph"
+        go generate ./ent
+        packr build -v --ldflags="-w -s" -o "./knowlgraph"
 
     - name: Deploy to Server
       # 服务地址: https://github.com/AEnterprise/rsync-deploy

@@ -13,6 +13,16 @@ languages.forEach(element => {
   }
 });
 
+var defaultLang = {}
+const i18n = Vue.observable({
+  ...defaultLang,
+})
+
+let i18ns = new Map();
+i18ns.set(defaultLang.language, defaultLang)
+
+axios.defaults.headers.common['Authorization'] = Cookies.get("access_token")
+
 const plugin = {
   install: function (Vue, options) {
     Vue.prototype.user = {
@@ -57,8 +67,6 @@ const plugin = {
     }
   }
 }
-
-Vue.use(plugin)
 
 const About = { template: fgm_about }
 const My = { template: fgm_my }
@@ -109,9 +117,6 @@ var app = new Vue({
         console.log(resp)
       })
     }
-
-    this.getUserWords()
-    this.getArchives()
   },
 
   methods: {
@@ -152,4 +157,24 @@ var app = new Vue({
       })
     },
   }
-}).$mount('#application--wrap')
+})
+
+var langCode = getUserLang()
+var url = queryStatic("/strings/strings-" + langCode + ".json")
+
+axios({
+  method: "GET",
+  url: url,
+}).then(function (resp) {
+  i18ns.set(langCode, resp.data)
+  setI18nStrings(langCode, resp.data)
+  Object.assign(i18n, resp.data)
+
+  Vue.use(plugin)
+  app.$mount('#application--wrap')
+
+  app.getUserWords()
+  app.getArchives()
+}).catch(function (resp) {
+  console.log(resp)
+})

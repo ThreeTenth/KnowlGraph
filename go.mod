@@ -7,7 +7,7 @@ require (
 	github.com/facebook/ent v0.5.4
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-redis/redis/v8 v8.4.11
-	github.com/gobuffalo/packr/v2 v2.8.1
+	github.com/gobuffalo/packr v1.30.1
 	github.com/gofrs/uuid v4.0.0+incompatible // indirect
 	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/google/uuid v1.2.0 // indirect

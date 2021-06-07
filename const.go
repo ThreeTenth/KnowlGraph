@@ -3,6 +3,15 @@ package main
 import "time"
 
 const (
+	// Version is current version number
+	Version = 1
+	// VersionName is current version name
+	VersionName = "v0.0.1"
+	// DBVersion is current database version number
+	DBVersion = 1
+)
+
+const (
 	// ExpireTimeToken is token expire time
 	ExpireTimeToken = 30 * 24 * time.Hour
 )
@@ -11,7 +20,6 @@ const (
 const (
 	// TplIndexHTML is index html template
 	TplIndexHTML = "index.html"
-	TplThemeJS   = "theme.const"
 )
 
 const (
