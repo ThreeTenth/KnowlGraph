@@ -139,6 +139,11 @@ func openRedis() {
 	}
 
 	rdb = redis.NewClient(opt)
+
+	sfkeys, err := rdb.Keys(ctx, SF+"*").Result()
+	panicIfErrNotNil(err)
+	_, err = rdb.Del(ctx, sfkeys...).Result()
+	panicIfErrNotNil(err)
 }
 
 func loadTemplates(router *gin.Engine) {
@@ -342,7 +347,8 @@ func router03() http.Handler {
 		router.Use(cors)
 		router.Static("/", "./build")
 	} else {
-		router.Static("/", "./")
+		router.GET("/*filepath", getStaticFile)
+		router.HEAD("/*filepath", getStaticFile)
 	}
 
 	// router.GET("/favicon.ico", getFavicon)

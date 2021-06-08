@@ -60,3 +60,9 @@ const (
 	// GinKeyUserID means gin context keys `access_token` field
 	GinKeyUserID = "user_id"
 )
+
+// Redis Key
+const (
+	// SF is static file short word
+	SF = "sf:"
+)
