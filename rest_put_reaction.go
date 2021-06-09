@@ -18,15 +18,19 @@ func putReaction(c *Context) error {
 		return c.BadRequest(err.Error())
 	}
 
-	_userID, _ := c.Get(GinKeyUserID)
+	_userID, ok := c.Get(GinKeyUserID)
 
-	ok, err := client.Article.
-		Query().
-		Where(article.Or(
-			article.StatusNEQ(article.StatusPrivate),
+	_where := article.StatusNEQ(article.StatusPrivate)
+	if ok {
+		_where = article.Or(
+			_where,
 			article.HasAssetsWith(
-				asset.HasUserWith(
-					user.ID(_userID.(int)))))).
+				asset.HasUserWith(user.ID(_userID.(int)))))
+	}
+
+	ok, err = client.Article.
+		Query().
+		Where(_where).
 		Exist(ctx)
 
 	if err != nil {
