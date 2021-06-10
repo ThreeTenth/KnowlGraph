@@ -65,4 +65,6 @@ const (
 const (
 	// SF is static file short word
 	SF = "sf:"
+	// SFVersion is current static file version code
+	SFVersion = "sf_version"
 )

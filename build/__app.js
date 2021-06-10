@@ -1919,8 +1919,10 @@ function runApp() {
   Vue.use(plugin)
   app.$mount('#application--wrap')
 
-  app.getUserWords()
-  app.getArchives()
+  if (logined) {
+    app.getUserWords()
+    app.getArchives()
+  }
 }
 
 var langCode = getUserLang()

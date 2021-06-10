@@ -8,7 +8,6 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"path"
 	"time"
 
 	"github.com/excing/goflag"
@@ -32,6 +31,7 @@ type Config struct {
 	Redis string `flag:"redis source name, Please enter in the format: redis://localhost:6379/<db>"`
 	Log   string `flag:"logcat file path"`
 	Debug bool   `flag:"Is debug mode"`
+	Build bool   `flag:"Is build mode. This mode will start pre-compiling static resource files to build directory"`
 	Gci   string `flag:"GitHub client ID, see https://docs.github.com/en/developers/apps/creating-an-oauth-app"`
 	Gcs   string `flag:"GitHub client secrets"`
 	Ssd   string `flag:"static server domain"`
@@ -55,53 +55,6 @@ func init() {
 func panicIfErrNotNil(err error) {
 	if err != nil {
 		panic(err)
-	}
-}
-
-func preHandle() {
-	const ResPath = "./res"
-	const BuildPath = "./build"
-
-	panicIfErrNotNil(os.RemoveAll(BuildPath))
-	panicIfErrNotNil(os.Mkdir(BuildPath, os.ModeDir))
-
-	// # pre: js
-	// 获取后端 Domain
-	// 获取所有 JS 文件内容
-	// 拼接以上字符串
-	// 生成 JS 文件，并保存到 build 目录
-
-	appJsPath := path.Join(BuildPath, "__app.js")
-	languagesFormat := "// %v, %v \n const languages = %v"
-	defaultStringsFormat := "// %v, %v \n const defaultLang = %v"
-
-	panicIfErrNotNil(MergeFiles(path.Join(ResPath, "languages.json"), appJsPath, "", "", languagesFormat, "\n\n"))
-	panicIfErrNotNil(MergeFiles(path.Join(ResPath, "strings/strings-en.json"), appJsPath, "", "", defaultStringsFormat, "\n\n"))
-	panicIfErrNotNil(MergeFiles(path.Join(ResPath, "js"), appJsPath, "", "", "", "\n\n", "js/app.js"))
-	panicIfErrNotNil(AppendFile(path.Join(ResPath, "js/app.js"), appJsPath))
-
-	// # pre: div+css theme
-	// 获取所有 CSS 文件
-	// 生成唯一 CSS 文件并保存到 build 目录
-	// 获取所有前面 html 模板
-	// 用 map[string]string 结构存储
-	// 并输出到 build 目录
-
-	themeFormat := "// %v \n const %v = `%v`"
-	panicIfErrNotNil(MergeFiles(path.Join(ResPath, "css"), path.Join(BuildPath, "__main.css"), "", "", "", "\n\n"))
-	panicIfErrNotNil(MergeFiles(path.Join(ResPath, "theme"), path.Join(BuildPath, "__default_theme.js"), "", "", themeFormat, "\n\n"))
-
-	// # pre: common resources
-	// 拷贝到 build 目录
-
-	builds := []string{
-		"strings",
-		"code-of-conduct",
-		"favicon",
-	}
-
-	for _, item := range builds {
-		panicIfErrNotNil(CpDir(path.Join(ResPath, item), path.Join(BuildPath, item)))
 	}
 }
 
@@ -140,8 +93,24 @@ func openRedis() {
 
 	rdb = redis.NewClient(opt)
 
+	// 获取当前缓存的静态资源版本名称，
+	// 并与应用程序（Knowlgraph 服务端程序）的版本进行比较，
+	// 如果一致，则返回，
+	// 如果不一致，则删除所有静态资源的缓存。
+	// 缓存静态资源 @see getJsdeliverFile(_filepath)
+	_versionName, _ := rdb.Get(ctx, SFVersion).Result()
+	if _versionName == VersionName {
+		return
+	}
+
+	err = rdb.Set(ctx, SFVersion, VersionName, ExpireTimeToken).Err()
+	panicIfErrNotNil(err)
 	sfkeys, err := rdb.Keys(ctx, SF+"*").Result()
 	panicIfErrNotNil(err)
+	if 0 == len(sfkeys) {
+		return
+	}
+
 	_, err = rdb.Del(ctx, sfkeys...).Result()
 	panicIfErrNotNil(err)
 }
@@ -172,11 +141,13 @@ func loadTemplates(router *gin.Engine) {
 
 func main() {
 	goflag.Parse("config", "Configuration file path")
+	config.Ssd += "/" + VersionName
 
-	// 开发阶段时执行预编译本地资源
+	// 开发阶段时使用本地资源,
 	// 正式版本使用编译后的资源
-	if config.Debug {
-		preHandle()
+	if config.Build {
+		buildStaticFile()
+		return
 	}
 
 	openPostgreSQL()
@@ -255,7 +226,7 @@ func cors(c *gin.Context) {
 	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 	c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, ResponseType, accept, origin, Cache-Control, X-Requested-With")
-	c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE")
+	c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE, HEAD")
 
 	if c.Request.Method == "OPTIONS" {
 		c.AbortWithStatus(204)
@@ -272,7 +243,7 @@ func router01() http.Handler {
 		router.Use(cors)
 	}
 
-	router.StaticFile("/favicon.ico", "./build/favicon/favicon-32x32.png")
+	router.GET("/favicon.ico", getFavicon)
 
 	router.GET("/", authentication, html(index))
 	router.GET("/drafts", authentication, html(index))
@@ -301,7 +272,7 @@ func router02() http.Handler {
 		router.Use(cors)
 	}
 
-	router.StaticFile("/favicon.ico", "./build/favicon/favicon-32x32.png")
+	router.GET("/favicon.ico", getFavicon)
 
 	v1 := router.Group("/v1")
 
@@ -328,7 +299,7 @@ func router02() http.Handler {
 	v1.PUT("/asset", authorizeRequired, handle(putAsset))
 	v1.DELETE("/asset", authorizeRequired, handle(deleteAsset))
 
-	v1.PUT("reaction", authorizeRequired, handle(putReaction))
+	v1.PUT("reaction", authentication, handle(putReaction))
 
 	v1.GET("/vote", authorizeRequired, handle(getVote))
 	v1.POST("/vote", authorizeRequired, handle(postVote))
@@ -342,16 +313,76 @@ func router02() http.Handler {
 
 func router03() http.Handler {
 	router := gin.Default()
+	group := router.Group("/" + VersionName)
 
 	if config.Debug {
 		router.Use(cors)
-		router.Static("/", "./build")
+		group.Static("/code-of-conduct", "./res/code-of-conduct")
+		group.Static("/strings", "./res/strings")
+		// group.GET("/strings/*filepath", func(c *gin.Context) {
+
+		// 	file := c.Param("filepath")
+
+		// 	c.Status(http.StatusOK)
+		// 	c.Writer.Header().Set("Content-Type", "application/javascript; charset=utf-8")
+
+		// 	_, err := CopyFile(c.Writer, filepath.Join("./res/strings", file), "")
+		// 	if err != nil {
+		// 		c.AbortWithError(http.StatusInternalServerError, err)
+		// 	}
+		// })
+		group.GET("/__app.js", func(c *gin.Context) {
+
+			languagesFormat := "// %v, %v \n const languages = %v"
+			defaultStringsFormat := "// %v, %v \n const defaultLang = %v"
+
+			c.Status(http.StatusOK)
+			c.Writer.Header().Set("Content-Type", "application/javascript; charset=utf-8")
+
+			_, err := CopyFile(c.Writer, "./res/languages.json", languagesFormat)
+			_, err = CopyFile(c.Writer, "./res/strings/strings-zh.json", defaultStringsFormat)
+			_, err = CopyDir(c.Writer, "./res/js/components", "")
+			_, err = CopyDir(c.Writer, "./res/js/routers", "")
+			_, err = CopyDir(c.Writer, "./res/js/utils", "")
+			_, err = CopyFile(c.Writer, "./res/js/app.js", "")
+			if err != nil {
+				c.AbortWithError(http.StatusInternalServerError, err)
+			} else {
+				c.Abort()
+			}
+		})
+		group.GET("/__default_theme.js", func(c *gin.Context) {
+
+			themeFormat := "// %v \n const %v = `%v`"
+
+			c.Status(http.StatusOK)
+			c.Writer.Header().Set("Content-Type", "application/javascript; charset=utf-8")
+
+			_, err := CopyDir(c.Writer, "./res/theme", themeFormat)
+			if err != nil {
+				c.AbortWithError(http.StatusInternalServerError, err)
+			} else {
+				c.Abort()
+			}
+		})
+		group.GET("/__main.css", func(c *gin.Context) {
+
+			c.Status(http.StatusOK)
+			c.Writer.Header().Set("Content-Type", "text/css; charset=utf-8")
+
+			_, err := CopyDir(c.Writer, "./res/css", "")
+			if err != nil {
+				c.AbortWithError(http.StatusInternalServerError, err)
+			} else {
+				c.Abort()
+			}
+		})
 	} else {
-		router.GET("/*filepath", getStaticFile)
-		router.HEAD("/*filepath", getStaticFile)
+		group.GET("/*filepath", getStaticFile)
+		group.HEAD("/*filepath", getStaticFile)
 	}
 
-	// router.GET("/favicon.ico", getFavicon)
+	router.GET("/favicon.ico", getFavicon)
 	// router.GET("/static/*paths", getStaticServerFiles)
 	// router.GET("/theme/theme.js", getStaticTheme)
 	// router.GET("/theme/theme@:id.js", getStaticTheme)
