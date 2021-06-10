@@ -313,24 +313,16 @@ func router02() http.Handler {
 
 func router03() http.Handler {
 	router := gin.Default()
-	group := router.Group("/" + VersionName)
 
 	if config.Debug {
 		router.Use(cors)
+	}
+
+	group := router.Group("/" + VersionName)
+
+	if config.Debug {
 		group.Static("/code-of-conduct", "./res/code-of-conduct")
 		group.Static("/strings", "./res/strings")
-		// group.GET("/strings/*filepath", func(c *gin.Context) {
-
-		// 	file := c.Param("filepath")
-
-		// 	c.Status(http.StatusOK)
-		// 	c.Writer.Header().Set("Content-Type", "application/javascript; charset=utf-8")
-
-		// 	_, err := CopyFile(c.Writer, filepath.Join("./res/strings", file), "")
-		// 	if err != nil {
-		// 		c.AbortWithError(http.StatusInternalServerError, err)
-		// 	}
-		// })
 		group.GET("/__app.js", func(c *gin.Context) {
 
 			languagesFormat := "// %v, %v \n const languages = %v"
@@ -339,17 +331,12 @@ func router03() http.Handler {
 			c.Status(http.StatusOK)
 			c.Writer.Header().Set("Content-Type", "application/javascript; charset=utf-8")
 
-			_, err := CopyFile(c.Writer, "./res/languages.json", languagesFormat)
-			_, err = CopyFile(c.Writer, "./res/strings/strings-zh.json", defaultStringsFormat)
-			_, err = CopyDir(c.Writer, "./res/js/components", "")
-			_, err = CopyDir(c.Writer, "./res/js/routers", "")
-			_, err = CopyDir(c.Writer, "./res/js/utils", "")
-			_, err = CopyFile(c.Writer, "./res/js/app.js", "")
-			if err != nil {
-				c.AbortWithError(http.StatusInternalServerError, err)
-			} else {
-				c.Abort()
-			}
+			CopyFile(c.Writer, "./res/languages.json", languagesFormat)
+			CopyFile(c.Writer, "./res/strings/strings-en.json", defaultStringsFormat)
+			CopyDir(c.Writer, "./res/js/components", "")
+			CopyDir(c.Writer, "./res/js/routers", "")
+			CopyDir(c.Writer, "./res/js/utils", "")
+			CopyFile(c.Writer, "./res/js/app.js", "")
 		})
 		group.GET("/__default_theme.js", func(c *gin.Context) {
 
@@ -358,24 +345,14 @@ func router03() http.Handler {
 			c.Status(http.StatusOK)
 			c.Writer.Header().Set("Content-Type", "application/javascript; charset=utf-8")
 
-			_, err := CopyDir(c.Writer, "./res/theme", themeFormat)
-			if err != nil {
-				c.AbortWithError(http.StatusInternalServerError, err)
-			} else {
-				c.Abort()
-			}
+			CopyDir(c.Writer, "./res/theme", themeFormat)
 		})
 		group.GET("/__main.css", func(c *gin.Context) {
 
 			c.Status(http.StatusOK)
 			c.Writer.Header().Set("Content-Type", "text/css; charset=utf-8")
 
-			_, err := CopyDir(c.Writer, "./res/css", "")
-			if err != nil {
-				c.AbortWithError(http.StatusInternalServerError, err)
-			} else {
-				c.Abort()
-			}
+			CopyDir(c.Writer, "./res/css", "")
 		})
 	} else {
 		group.GET("/*filepath", getStaticFile)

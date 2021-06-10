@@ -208,11 +208,14 @@ func CopyDir(dst io.Writer, src string, format string) (int64, error) {
 	var count int64
 	for _, fd := range fds {
 		fdPath := path.Join(src, fd.Name())
-		if fd.IsDir() {
-			return CopyDir(dst, fdPath, format)
-		}
 
-		i, err := CopyFile(dst, fdPath, format)
+		var i int64
+		var err error
+		if fd.IsDir() {
+			i, err = CopyDir(dst, fdPath, format)
+		} else {
+			i, err = CopyFile(dst, fdPath, format)
+		}
 
 		if err != nil {
 			return count, err
