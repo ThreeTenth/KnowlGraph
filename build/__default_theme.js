@@ -158,8 +158,13 @@
 </div>`
 
 // fgm_archive_articles.html 
- const fgm_archive_articles = `<div v-if="articles" class="m-t22">
-  <div v-if="articles.length == 0">Nobody</div>
+ const fgm_archive_articles = `<div v-if="!loading" class="m-t22">
+  <div v-if="articles.length == 0" style="text-align: center; margin-top: 120px;">
+    <div>
+      <span style="font-size: 2em; margin: 30px 0;">{{ statusIcon }}</span>
+      <h3>There are not any {{status}} articles.</h3>
+    </div>
+  </div>
   <div v-else class="articles-item" v-for="(article, i) in articles">
     <router-link class="articles-item-link" :to="{ name: 'article', params: { id: article.id, code: article.code }}">
       <div class="articles-item-body">
@@ -170,7 +175,9 @@
     <the-time v-bind:datetime="article.created_at"></the-time>
   </div>
 </div>
-<div v-else>Loading</div>`
+<div v-else style="text-align: center; margin-top: 120px;">
+  <div class="classic-1"></div>
+</div>`
 
 // fgm_article.html 
  const fgm_article = `<div class="container zero">

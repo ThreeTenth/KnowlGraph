@@ -123,7 +123,6 @@ const Article = {
       }).then(function (resp) {
         let reactions = _this.article.reactions
         let ok = false
-        reactions = reactions == undefined ? [] : reactions
         for (let index = 0; index < reactions.length; index++) {
           const reac = reactions[index];
           if (reac.status == reaction) {
@@ -149,7 +148,11 @@ const Article = {
 
     onStar() {
       if (this.user.logined) {
-        this.__putAsset('star')
+        if (this.article.star) {
+          this.__deleteAsset('star')
+        } else {
+          this.__putAsset('star')
+        }
       } else {
         router.push({ name: 'login' })
       }
@@ -157,7 +160,11 @@ const Article = {
 
     onWatch() {
       if (this.user.logined) {
-        this.__putAsset('watch')
+        if (this.article.watch) {
+          this.__deleteAsset('watch')
+        } else {
+          this.__putAsset('watch')
+        }
       } else {
         router.push({ name: 'login' })
       }
@@ -165,18 +172,57 @@ const Article = {
 
     switchLang() { },
 
+    __deleteAsset(status) {
+      var assets = this.$data.__original.edges.assets
+      var assetID = 0
+      var index = 0
+      for (; index < assets.length; index++) {
+        const element = assets[index];
+        if (element.status == status) {
+          assetID = element.id
+          break
+        }
+      }
+      let _this = this
+      axios({
+        method: "DELETE",
+        url: queryRestful("/v1/asset", { assetId: assetID }),
+      }).then(function (resp) {
+        assets.splice(index)
+        _this.$vs.notification({
+          color: 'success',
+          position: 'bottom-right',
+          title: "Success",
+        })
+      }).catch(function (resp) {
+        _this.$vs.notification({
+          color: 'danger',
+          position: 'bottom-right',
+          title: "Failure",
+          text: resp.data
+        })
+      })
+    },
+
     __putAsset(status) {
       let _this = this
       axios({
         method: "PUT",
         url: queryRestful("/v1/asset", { articleId: this.article.id, status: status }),
       }).then(function (resp) {
-
+        var assets = _this.$data.__original.edges.assets
+        assets.push(resp.data)
+        if (status == "browse") return
+        _this.$vs.notification({
+          color: 'success',
+          position: 'bottom-right',
+          title: "Success",
+        })
       }).catch(function (resp) {
         if (status == "browse") return
         _this.$vs.notification({
           color: 'danger',
-          position: 'bottom-center',
+          position: 'bottom-right',
           title: "Failure",
           text: resp.data
         })

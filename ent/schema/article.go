@@ -33,7 +33,7 @@ func (Article) Edges() []ent.Edge {
 		edge.To("reactions", Reaction.Type).
 			StructTag(`json:"reactions"`),
 		edge.To("assets", Asset.Type).
-			StructTag(`json:"assets,omitempty"`),
+			StructTag(`json:"assets"`),
 		edge.To("quotes", Quote.Type).
 			StructTag(`json:"quotes,omitempty"`),
 		edge.From("nodes", Node.Type).
