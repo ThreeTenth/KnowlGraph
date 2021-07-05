@@ -1971,11 +1971,11 @@ var app = new Vue({
         method: "POST",
         url: queryRestful("/v1/vote"),
         data: {
-          id: this.ras.id,
+          id: this.vote.ras.id,
           status: status,
         },
       }).then(function (resp) {
-        _this.ras = null
+        _this.vote.ras = null
       }).catch(function (resp) {
         console.log(resp)
       })
