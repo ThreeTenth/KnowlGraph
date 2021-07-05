@@ -172,7 +172,23 @@
         <div>{{ article.gist }}</div>
       </div>
     </router-link>
-    <the-time v-bind:datetime="article.created_at"></the-time>
+    <div class="flex">
+      <the-time class="flex-1" v-bind:datetime="article.created_at"></the-time>
+      <!-- <button class="emoji-button" v-on:click="onDelete">
+        <svg width="25" height="25" viewBox="0 0 25 25" fill="#757575">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M20.48 7.45H3.46v10.13H16a.47.47 0 1 1 0 .94H3.46c-.54 0-.99-.42-.99-.94V7.45c0-.52.45-.93 1-.93h17c.55 0 1 .41 1 .93v5.57a.5.5 0 0 1-1 0V7.45zM5.47 10.02c0-.28.22-.5.5-.5h9.11a.5.5 0 1 1 0 1H5.97a.5.5 0 0 1-.5-.5zm.51 2.5a.5.5 0 0 0-.51.5c0 .27.23.5.51.5h5.98a.5.5 0 0 0 .51-.5.5.5 0 0 0-.51-.5H5.98zm12.52 3.02c.2-.2.5-.2.7 0l1.77 1.77 1.77-1.77a.5.5 0 1 1 .7.7l-1.76 1.78 1.76 1.76a.5.5 0 1 1-.7.71l-1.77-1.77-1.77 1.77a.5.5 0 0 1-.7-.7l1.76-1.77-1.76-1.77a.5.5 0 0 1 0-.7z">
+          </path>
+        </svg>
+      </button>
+      <button class="emoji-button">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="#757575">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M8.25 12a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm5.25 0a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm3.75 1.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3z">
+          </path>
+        </svg>
+      </button> -->
+    </div>
   </div>
 </div>
 <div v-else style="text-align: center; margin-top: 120px;">
