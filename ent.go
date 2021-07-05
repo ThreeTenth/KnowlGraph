@@ -107,6 +107,37 @@ func queryUserAssets(db *sql.DB, userID int, status asset.Status, lang string, o
 	return scanArticleRows(rows)
 }
 
+const queryReadListSQL = `SELECT *
+FROM "versions" 
+INNER JOIN "assets" ON "assets"."owner_id" = 51539607552 and "assets"."status" = 'browse' and "versions"."id" = "assets"."asset_version"
+inner join "articles" on "articles".id = "versions".article_versions
+WHERE "versions"."state" = 'release'
+order by versions.created_at desc offset 0 limit 10;`
+
+func queryReadList(db *sql.DB, userID int, lang string, offset, limit int) ([]*ent.Version, error) {
+	_sql := QueryUserAssetsSQL
+	_args := []interface{}{
+		userID, offset, limit,
+	}
+	if lang != "" {
+		_sql = fmt.Sprintf(_sql, `and "versions"."lang" = $5`)
+		_args = append(_args, lang)
+	} else {
+		_sql = fmt.Sprintf(_sql, "")
+	}
+	if config.Debug {
+		log.Printf("sql:Query: query=%v args=%v", _sql, _args)
+	}
+
+	rows, err := db.Query(_sql, _args...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	return scanArticleRows(rows)
+}
+
 // QueryNodeArticles is query node articles
 const QueryNodeArticles = `select 
 "tmp".id as version_id,

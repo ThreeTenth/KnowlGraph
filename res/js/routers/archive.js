@@ -90,6 +90,10 @@ function getArchiveArticles(status) {
             code: code
           }
         })
+      },
+
+      onDelete() {
+
       }
     },
 

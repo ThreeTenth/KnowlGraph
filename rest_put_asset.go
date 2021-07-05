@@ -9,6 +9,7 @@ import (
 func putAsset(c *Context) error {
 	var _query struct {
 		ArticleID int          `form:"articleId" binding:"required"`
+		VersionID int          `form:"versionId"`
 		Status    asset.Status `form:"status" binding:"required"`
 	}
 
@@ -62,6 +63,7 @@ func putAsset(c *Context) error {
 	_asset, err := client.Asset.
 		Create().
 		SetArticle(_article).
+		SetVersionID(_query.VersionID).
 		SetUserID(_userID.(int)).
 		SetStatus(_query.Status).
 		Save(ctx)

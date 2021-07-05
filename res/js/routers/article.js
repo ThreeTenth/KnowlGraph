@@ -80,6 +80,7 @@ const Article = {
 
       return {
         id: article.id,
+        versionId: version.id,
         status: article.status,
         title: title,
         gist: gist,
@@ -206,9 +207,13 @@ const Article = {
 
     __putAsset(status) {
       let _this = this
+      let params = { articleId: this.article.id, status: status }
+      if (status == "browse") {
+        params.versionId = this.article.versionId
+      }
       axios({
         method: "PUT",
-        url: queryRestful("/v1/asset", { articleId: this.article.id, status: status }),
+        url: queryRestful("/v1/asset", params),
       }).then(function (resp) {
         var assets = _this.$data.__original.edges.assets
         assets.push(resp.data)
