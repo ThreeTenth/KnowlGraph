@@ -120,12 +120,12 @@ var app = new Vue({
 
   methods: {
     onAllow() {
-      if (!this.ras) return
+      if (!this.vote.ras) return
 
       this.__postVote("allowed")
     },
     onRejecte() {
-      if (!this.ras) return
+      if (!this.vote.ras) return
 
       this.__postVote("rejected")
     },
