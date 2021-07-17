@@ -151,6 +151,7 @@ var app = new Vue({
         },
       }).then(function (resp) {
         _this.vote.ras = null
+        _this.vote.has = false
       }).catch(function (resp) {
         console.log(resp)
       })

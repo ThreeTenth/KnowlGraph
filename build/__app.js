@@ -653,7 +653,7 @@ Vue.component('new-node', {
   },
 
   methods: {
-    onSelectPrev: function (archive) {
+    onSelectPrev(archive) {
       this.selected = this.selected == archive ? null : archive
     },
 
@@ -663,7 +663,37 @@ Vue.component('new-node', {
 
     getWordName(word, callback) {
       callback(word.name)
-    }
+    },
+
+    onSubmit() {
+      const _this = this;
+      if (!this.selected || !this.selected.edges || !this.selected.edges.node) return;
+      if (!this.value) return;
+
+      axios({
+        method: "PUT",
+        url: queryRestful("/v1/node"),
+        data: {
+          wordId: this.value.id,
+          nodeId: this.selected.edges.node.id,
+        },
+      }).then(function (resp) {
+        _this.$vs.notification({
+          color: 'success',
+          position: 'bottom-right',
+          title: "Success",
+        })
+        _this.$emit('successed')
+      }).catch(function (resp) {
+        _this.$vs.notification({
+          color: 'danger',
+          position: 'bottom-right',
+          title: "Failure",
+          text: resp.data
+        })
+        _this.$emit('failured')
+      })
+    },
   },
 
   template: com_new_node,
@@ -1976,6 +2006,7 @@ var app = new Vue({
         },
       }).then(function (resp) {
         _this.vote.ras = null
+        _this.vote.has = false
       }).catch(function (resp) {
         console.log(resp)
       })

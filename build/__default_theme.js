@@ -111,7 +111,8 @@
   </div>
   <hr>
   <div class="options">
-    <button class="menu-button">确定</button>
+    <div style="flex: 1;"></div>
+    <button class="menu-button" v-on:click="onSubmit">确定</button>
   </div>
 </div>`
 
@@ -279,7 +280,7 @@
   </div>
   <div v-else>Loading</div>
   <modal v-model="isNewNode">
-    <new-node></new-node>
+    <new-node v-on:successed="isNewNode = false" v-on:failured="isNewNode = false"></new-node>
   </modal>
 </div>`
 

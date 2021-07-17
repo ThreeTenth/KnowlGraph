@@ -37,7 +37,7 @@
 	<div id="app">
 		<div id="application--wrap">
 			{{ if .Body.Article }}
-			<div id="article_md">{{ .Body.Article.Edges.Content.Body }}</div>
+			<div style="white-space: pre-wrap;" id="article_md">{{ .Body.Article.Edges.Content.Body }}</div>
 			{{ end }}
 		</div>
 	</div>

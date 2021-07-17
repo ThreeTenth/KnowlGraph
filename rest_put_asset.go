@@ -60,13 +60,19 @@ func putAsset(c *Context) error {
 		}
 	}
 
-	_asset, err := client.Asset.
-		Create().
-		SetArticle(_article).
-		SetVersionID(_query.VersionID).
-		SetUserID(_userID.(int)).
-		SetStatus(_query.Status).
-		Save(ctx)
+	_assetCreate := client.Asset.Create().SetArticle(_article).SetUserID(_userID.(int)).SetStatus(_query.Status)
+	if 0 < _query.VersionID {
+		_assetCreate.SetVersionID(_query.VersionID)
+	}
+	_asset, err := _assetCreate.Save(ctx)
+
+	// _asset, err := client.Asset.
+	// 	Create().
+	// 	SetArticle(_article).
+	// 	SetVersionID(_query.VersionID).
+	// 	SetUserID(_userID.(int)).
+	// 	SetStatus(_query.Status).
+	// 	Save(ctx)
 
 	if err != nil {
 		return c.InternalServerError(err.Error())

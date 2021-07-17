@@ -571,7 +571,9 @@ h6:hover .octicon {
 }
 
 .new-node {
-  padding : 0 20px;
+  padding : 10px 20px;
+  background-color: #fff;
+  border-radius: 10px;
 }
 
 .new-node .input {
@@ -581,6 +583,7 @@ h6:hover .octicon {
 
 .new-node .options {
   padding: 0 0 8px 0;
+  display: flex;
 }
 .classic-1 {
   font-weight: bold;
