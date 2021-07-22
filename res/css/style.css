@@ -1,0 +1,56 @@
+.loading-container {
+	text-align: center; margin-top: 120px;
+}
+
+.loading {
+	font-weight: bold;
+	font-family: monospace;
+	font-size  : 30px;
+	display    : grid;
+}
+
+.loading:before,
+.loading:after {
+	content     : "Loading...";
+	grid-area   : 1/1;
+	-webkit-mask: linear-gradient(90deg, #000 50%, #0000 0) 0 50%/2ch 100%;
+	mask        : linear-gradient(90deg, #000 50%, #0000 0) 0 50%/2ch 100%;
+	animation   : c1 1s infinite cubic-bezier(0.5, 220, 0.5, -220);
+}
+
+.loading:after {
+	-webkit-mask-position: 1ch 50%;
+	mask-position        : 1ch 50%;
+	--s                  : -1;
+}
+
+@keyframes c1 {
+	100% {
+		transform: translateY(calc(var(--s, 1)*0.1%));
+	}
+}
+
+.list-1 {
+	box-sizing : border-box;
+	display    : block;
+	text-align : -webkit-match-parent;
+	padding    : 3px 4px;
+	line-height: 26px;
+}
+
+.list-1+.list-1 {
+	margin-top: 10px;
+}
+
+.list-1 .list-1-link {
+	text-decoration: none;
+	color          : var(--text-c);
+}
+
+.list-1 .list-1-title {
+	font-weight: 800;
+}
+
+.list-1 .list-1-text {
+	font-weight: 400;
+}

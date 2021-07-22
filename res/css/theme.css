@@ -17,6 +17,13 @@
   --grey   : #e6e6e6;
   --black  : #262626;
 
+  --primary: ;
+  --success: ;
+  --danger : ;
+  --warn   : ;
+  --dark   : ;
+  --text-c : ;
+
   --x7s : 0px;
   --x6s : 2px;
   --x5s : 4px;
@@ -90,7 +97,7 @@ button.option {
   border-radius   : 4px;
   cursor          : pointer;
   padding         : 2px 4px;
-  margin-bottom: 4px;
+  margin-bottom   : 4px;
 }
 
 button.option.selected {
