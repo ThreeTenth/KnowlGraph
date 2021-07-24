@@ -37,7 +37,7 @@ Vue.component('dropdown', {
         var hide = true
         for (let index = 0; index < path.length; index++) {
           const element = path[index];
-          if (element.className == "drop-content") {
+          if (element.className == "menu") {
             hide = false
             break
           }

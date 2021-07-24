@@ -1,5 +1,10 @@
+/*******************************************************************
+ loading style
+*******************************************************************/
+
 .loading-container {
-	text-align: center; margin-top: 120px;
+	text-align: center;
+	margin-top: 120px;
 }
 
 .loading {
@@ -30,6 +35,10 @@
 	}
 }
 
+/*******************************************************************
+ list style
+*******************************************************************/
+
 .list-1 {
 	box-sizing : border-box;
 	display    : block;
@@ -53,4 +62,100 @@
 
 .list-1 .list-1-text {
 	font-weight: 400;
+}
+
+/*******************************************************************
+ overlay style
+*******************************************************************/
+
+.overlay {
+	position: relative;
+	display : inline-block;
+}
+
+/*******************************************************************
+ menu style
+*******************************************************************/
+
+.overlay.left .menu {
+	left: 0;
+}
+
+.overlay:not(.left) .menu,
+.overlay.right .menu {
+	right: 0;
+}
+
+.overlay:not(.up) .menu,
+.overlay.down .menu {
+	top: 36px;
+}
+
+.overlay.up .menu {
+	bottom: 28px;
+}
+
+.overlay.block .menu {
+	display: block;
+}
+
+.menu {
+	background   : #fff;
+	border-radius: 4px;
+	box-shadow   : 0 1px 2px rgb(0 0 0 / 25%), 0 0 1px rgb(0 0 0 / 35%);
+	color        : #000;
+	display      : none;
+	outline      : none;
+	overflow     : auto;
+	position     : absolute;
+	max-height   : calc(100vh - 86px);
+	min-width    : 180px;
+	z-index      : 1000;
+}
+
+.menu .menu-subheader {
+	padding: var(--xxs) var(--sm);
+}
+
+.menu .menu-tip {
+	color     : grey;
+	display   : block;
+	font-size : 14px;
+	text-align: center;
+	padding   : 12px;
+}
+
+.menu .menu-flex {
+	display   : flex;
+	flex-wrap : wrap;
+	width     : 100%;
+	box-sizing: border-box;
+}
+
+.menu .menu-item,
+.menu .menu-item-a {
+	color          : black;
+	padding        : 12px 12px;
+	text-decoration: none;
+	display        : block;
+	font-size      : 14px;
+}
+
+.menu .menu-item {
+	border          : none;
+	width           : 100%;
+	background-color: transparent;
+	text-align      : inherit;
+	cursor          : pointer;
+}
+
+.menu .menu-flex .menu-item {
+	display: inline-block;
+	width  : auto;
+}
+
+.menu .selected,
+.menu .menu-item:hover,
+.menu .menu-item-a:hover {
+	background-color: #f1f1f1
 }

@@ -4,23 +4,24 @@
       <div>
         <dropdown class="left" v-bind:ignore="'true'" v-if="article.nodes.length">
           <button class="menu-button">{{ article.nodes[0].edges.word.name }}</button>
-          <div class="drop-content">
-            <div v-for="(node, i) in article.nodes">{{ node.edges.word.name }}</div>
+          <div class="menu">
+            <div class="menu-item" v-for="(node, i) in article.nodes">{{ node.edges.word.name }}</div>
           </div>
         </dropdown>
-        <dropdown class="left" v-bind:ignore="'true'" v-else>
+        <dropdown class="left" v-else>
           <button class="menu-button">💡 {{ i18n.Archive }}</button>
-          <div class="drop-content" v-if="user.logined">
+          <div class="menu" v-if="user.logined">
             <div v-if="user.archives.length">
-              <button v-for="(archive, i) in user.archives">📁 {{ archive.edges.node.edges.word.name }}</button>
+              <button class="menu-item" v-for="(archive, i) in user.archives">📁 {{ archive.edges.node.edges.word.name
+                }}</button>
               <hr>
             </div>
-            <p v-else>无节点 😃</p>
-            <button v-on:click="onNewNode">新建一个节点并关注</button>
-            <button>关注更多节点</button>
+            <div class="menu-tip" v-else>无节点 😃</div>
+            <button class="menu-item" v-on:click="onNewNode">新建一个节点并关注</button>
+            <button class="menu-item">关注更多节点</button>
           </div>
-          <div class="drop-content" v-else>
-            <router-link to="/login">{{ i18n.PleaseLoginFirst }}</router-link>
+          <div class="menu" v-else>
+            <router-link class="menu-item-a" to="/login">{{ i18n.PleaseLoginFirst }}</router-link>
           </div>
         </dropdown>
       </div>
@@ -48,16 +49,16 @@
       </div>
       <dropdown>
         <button class="emoji-button">😃</button>
-        <div class="drop-content">
-          <div class="p-sm">{{ i18n.PickYourReaction }}</div>
-          <div class="flex">
-            <button class="reaction-button" v-for="(reac, i) in reactions.slice(0, 5)"
-              v-on:click="onPickReaction(reac.value)" v-bind:title="i18n[reac.name]">{{ reac.emoji}}</button>
+        <div class="menu">
+          <div class="menu-subheader">{{ i18n.PickYourReaction }}</div>
+          <div class="menu-flex" style="width: 214px;">
+            <button class="menu-item" v-for="(reac, i) in reactions" v-on:click="onPickReaction(reac.value)"
+              v-bind:title="i18n[reac.name]">{{ reac.emoji}}</button>
           </div>
-          <div class="flex">
+          <!-- <div class="menu-line">
             <button class="reaction-button" v-for="(reac, i) in reactions.slice(5, 8)"
               v-on:click="onPickReaction(reac.value)" v-bind:title="i18n[reac.name]">{{ reac.emoji}}</button>
-          </div>
+          </div> -->
         </div>
       </dropdown>
       <dropdown>
@@ -67,10 +68,10 @@
               d="M16,12C16,10.9 16.9,10 18,10C19.1,10 20,10.9 20,12C20,13.1 19.1,14 18,14C16.9,14 16,13.1 16,12M10,12C10,10.9 10.9,10 12,10C13.1,10 14,10.9 14,12C14,13.1 13.1,14 12,14C10.9,14 10,13.1 10,12M4,12C4,10.9 4.9,10 6,10C7.1,10 8,10.9 8,12C8,13.1 7.1,14 6,14C4.9,14 4,13.1 4,12Z" />
           </svg>
         </button>
-        <div class="drop-content">
-          <button>{{ i18n.Histories }}</button>
-          <button>{{ i18n.Translate }}</button>
-          <button v-on:click="onEditArticle">{{ i18n.Edit }}</button>
+        <div class="menu">
+          <button class="menu-item">{{ i18n.Histories }}</button>
+          <button class="menu-item">{{ i18n.Translate }}</button>
+          <button class="menu-item" v-on:click="onEditArticle">{{ i18n.Edit }}</button>
         </div>
       </dropdown>
     </div>

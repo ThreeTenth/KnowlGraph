@@ -1,47 +1,48 @@
 <v-app>
-<div class="app">
-  <nav class="nav">
-    <div class="nav-start">
-      <router-link class="nav-a" to="/">🏠 {{ i18n.Home }}</router-link>
-    </div>
-    <dropdown>
-      <button class="nav-img">
-        <img alt="" v-bind:src="profilePicture">
-      </button>
-      <div class="drop-content">
-        <div class="flex">
-          <router-link class="flex-1" v-bind:to="{ name: 'newArticle', query: { status: 'public' }}">{{
-            i18n.NewArticle }}</router-link>
-          <router-link v-bind:to="{ path: '/new/article', query: { status: 'private' }}">🔒</router-link>
+  <div class="app">
+    <nav class="nav">
+      <div class="nav-start">
+        <router-link class="nav-a" to="/">🏠 {{ i18n.Home }}</router-link>
+      </div>
+      <dropdown>
+        <button class="nav-img">
+          <img alt="" v-bind:src="profilePicture">
+        </button>
+        <div class="menu">
+          <div class="menu-flex">
+            <router-link class="flex-1 menu-item-a" v-bind:to="{ name: 'newArticle', query: { status: 'public' }}">{{
+              i18n.NewArticle }}</router-link>
+            <router-link class="menu-item-a" v-bind:to="{ path: '/new/article', query: { status: 'private' }}">🔒
+            </router-link>
+          </div>
+          <router-link class="menu-item-a" to="/drafts">{{ i18n.Drafts }}</router-link>
+          <router-link class="menu-item-a" to="/archive">{{ i18n.Archive }}</router-link>
+          <hr />
+          <router-link class="menu-item-a" to="/settings/personalize">{{ i18n.Personalize }}</router-link>
+          <router-link class="menu-item-a" to="/about">{{ i18n.About }}</router-link>
+          <hr />
+          <a class="menu-item-a" href="/signout">{{ i18n.Logout }}</a>
         </div>
-        <router-link to="/drafts">{{ i18n.Drafts }}</router-link>
-        <router-link to="/archive">{{ i18n.Archive }}</router-link>
+      </dropdown>
+    </nav>
+    <router-view></router-view>
+    <vs-dialog overflow-hidden v-model="vote.has">
+      <div style="margin: 16px 10px;" v-if="vote.has">
+        <h1>{{ i18n.DiscoverANewArticle }}</h1>
+        <h2 v-if="vote.ras.edges.version.title">{{ vote.ras.edges.version.title }}</h2>
+        <p>{{ vote.ras.edges.version.gist }}</p>
         <hr />
-        <router-link to="/settings/personalize">{{ i18n.Personalize }}</router-link>
-        <router-link to="/about">{{ i18n.About }}</router-link>
+        <div v-html="md2html(vote.ras.edges.version.edges.content.body)"></div>
+        <div class="article-keywords" v-if="vote.ras.edges.version.edges.keywords">
+          <span v-for="(keyword, i) in vote.ras.edges.version.edges.keywords">{{ keyword.name }}</span>
+        </div>
         <hr />
-        <a href="/signout">{{ i18n.Logout }}</a>
+        <div class="m-t22">是否同意该文章发布？</div>
+        <div class="m-t10">
+          <button class="nav-button" v-on:click="onAllow">同意发布</button>
+          <button class="nav-button" v-on:click="onRejecte">反对发布</button>
+        </div>
       </div>
-    </dropdown>
-  </nav>
-  <router-view></router-view>
-  <vs-dialog overflow-hidden v-model="vote.has">
-    <div style="margin: 16px 10px;" v-if="vote.has">
-      <h1>{{ i18n.DiscoverANewArticle }}</h1>
-      <h2 v-if="vote.ras.edges.version.title">{{ vote.ras.edges.version.title }}</h2>
-      <p>{{ vote.ras.edges.version.gist }}</p>
-      <hr />
-      <div v-html="md2html(vote.ras.edges.version.edges.content.body)"></div>
-      <div class="article-keywords" v-if="vote.ras.edges.version.edges.keywords">
-        <span v-for="(keyword, i) in vote.ras.edges.version.edges.keywords">{{ keyword.name }}</span>
-      </div>
-      <hr />
-      <div class="m-t22">是否同意该文章发布？</div>
-      <div class="m-t10">
-        <button class="nav-button" v-on:click="onAllow">同意发布</button>
-        <button class="nav-button" v-on:click="onRejecte">反对发布</button>
-      </div>
-    </div>
-  </vs-dialog>
-</div>
+    </vs-dialog>
+  </div>
 </v-app>
