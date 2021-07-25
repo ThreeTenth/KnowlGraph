@@ -1,8 +1,7 @@
-<div clss="word-layout">
+<div class="word-layout">
   <div class="word-input">
     <ul class="words">
-      <li class="word" v-for="(word, i) in values"
-        v-bind:class="i == deleteMark ? 'del' : ''"
+      <li class="word" v-for="(word, i) in values" v-bind:class="i == deleteMark ? 'del' : ''"
         v-on:click="onRemoveWord(word)">{{ word }} X
       </li>
       <li class="new-word">
@@ -12,11 +11,9 @@
       </li>
     </ul>
   </div>
-  <div class="word-autocomplete" v-if="auto">
-    <ul class="">
-      <li class="" v-for="item in items">
-        <div>{{ item }}</div>
-      </li>
-    </ul>
+  <div class="menu" style="width: 100%;" v-bind:class="items.length ? 'block' : ''">
+    <div class="menu-item" v-for="item in items">
+      {{ item.name }}
+    </div>
   </div>
 </div>

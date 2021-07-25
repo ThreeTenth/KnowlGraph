@@ -10,7 +10,6 @@ Vue.component('words-input', {
 
   data: function () {
     return {
-      auto: false,
       values: this.keywords ? this.keywords : [],
       input: "",
       newInput: "",
@@ -90,23 +89,20 @@ Vue.component('words-input', {
     input: function (val, oldVal) {
       window.setTimeout(() => { this.newInput = val }, 100)
       if ("" == val) {
-        this.auto = false
+        this.items = []
       } else {
         this.deleteMark = null
         if (this.words) {
           if (2 <= val.length) {
             const items = []
             const regex = new RegExp('^' + val)
-            this.words.forEach(item => {
-              if (regex.test(item)) {
-                items.push(item)
+            this.words.forEach(word => {
+              if (regex.test(word.name)) {
+                items.push(word)
               }
             });
             this.items = items
-            this.auto = 0 != items.length
-          } else {
-            this.auto = false
-          }
+         }
         }
       }
     },

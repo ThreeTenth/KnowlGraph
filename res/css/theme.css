@@ -17,13 +17,6 @@
   --grey   : #e6e6e6;
   --black  : #262626;
 
-  --primary: ;
-  --success: ;
-  --danger : ;
-  --warn   : ;
-  --dark   : ;
-  --text-c : ;
-
   --x7s : 0px;
   --x6s : 2px;
   --x5s : 4px;
@@ -48,10 +41,6 @@
 
 .p-2-4 {
   padding: var(--x6s) var(--x5s);
-}
-
-.p-md {
-  padding: var(--md) var(--lg);
 }
 
 .p-sm {

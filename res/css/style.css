@@ -73,6 +73,24 @@
 	display : inline-block;
 }
 
+/* .overlay .left {
+	left: 0;
+}
+
+.overlay :not(.left),
+.overlay .right {
+	right: 0;
+}
+
+.overlay :not(.up),
+.overlay .down {
+	top: 36px;
+}
+
+.overlay .up {
+	bottom: 28px;
+} */
+
 /*******************************************************************
  menu style
 *******************************************************************/
@@ -113,8 +131,12 @@
 	z-index      : 1000;
 }
 
+.menu.block {
+	display: block;
+}
+
 .menu .menu-subheader {
-	padding: var(--xxs) var(--sm);
+	padding: 10px 14px;
 }
 
 .menu .menu-tip {
@@ -134,8 +156,9 @@
 
 .menu .menu-item,
 .menu .menu-item-a {
+	box-sizing     : border-box;
 	color          : black;
-	padding        : 12px 12px;
+	padding        : 12px;
 	text-decoration: none;
 	display        : block;
 	font-size      : 14px;
@@ -159,3 +182,7 @@
 .menu .menu-item-a:hover {
 	background-color: #f1f1f1
 }
+
+/*******************************************************************
+ autocomplet and autocomplet label style
+*******************************************************************/
