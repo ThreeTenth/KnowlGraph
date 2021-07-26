@@ -10,7 +10,7 @@
     </template>
   </ul>
   <div class="nodes">
-    <button class="option" v-bind:class="selected == archive ? 'selected' : ''" v-for="(archive, i) in user.archives"
+    <button class="option" v-bind:class="{'selected': selected == archive}" v-for="(archive, i) in user.archives"
       v-on:click="onSelectPrev(archive)">📁 {{ archive.edges.node.edges.word.name }}</button>
   </div>
   <div class="input">

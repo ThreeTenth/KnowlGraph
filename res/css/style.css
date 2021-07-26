@@ -73,24 +73,6 @@
 	display : inline-block;
 }
 
-/* .overlay .left {
-	left: 0;
-}
-
-.overlay :not(.left),
-.overlay .right {
-	right: 0;
-}
-
-.overlay :not(.up),
-.overlay .down {
-	top: 36px;
-}
-
-.overlay .up {
-	bottom: 28px;
-} */
-
 /*******************************************************************
  menu style
 *******************************************************************/

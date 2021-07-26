@@ -1,8 +1,8 @@
 <div class="overlay" v-bind:class="pos">
   <input autofocus type="text" v-model="input" class="p-2-4" v-on:keydown="onHotKey" v-on:keyup="onChanged"
     v-bind:placeholder="placeholder" ref="autocomplete">
-  <div class="menu" v-bind:class="items.length ? 'block' : ''" ref="selection">
-    <div class="menu-item" v-for="(item, i) in items" v-bind:class="selected == i ? 'selected' : ''" v-on:click.stop="onSelect(item)"
-      v-bind:key="item.id">{{ item.name }}</div>
+  <div class="menu" v-bind:class="{'block': items.length}" ref="selection">
+    <div class="menu-item" v-for="(item, i) in items" v-bind:class="{'selected' : selected == i}"
+      v-on:click.stop="onSelect(item)" v-bind:key="item.id">{{ item.name }}</div>
   </div>
 </div>
