@@ -1,6 +1,6 @@
 <div class="container">
   <ol>
-    <li class="draft-histories-item" v-for="(snapshot, i) in snapshots" v-on:click="onHistory(snapshot)">
+    <li class="list-1" v-for="(snapshot, i) in snapshots" v-on:click="onHistory(snapshot)">
       <the-time v-bind:datetime="snapshot.created_at"></the-time>
     </li>
   </ol>

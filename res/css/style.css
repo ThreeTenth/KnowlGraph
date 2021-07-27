@@ -168,3 +168,95 @@
 /*******************************************************************
  autocomplet and autocomplet label style
 *******************************************************************/
+
+/*******************************************************************
+ button and a (link) style
+*******************************************************************/
+
+.icon {
+	margin         : 0;
+	padding        : 0;
+	border         : none;
+	text-decoration: none;
+}
+
+.icon img {
+	width        : 32px;
+	height       : 32px;
+	border-radius: 1000px;
+	margin       : 0;
+}
+
+.text {
+	border         : none;
+	border-radius  : 12px;
+	text-decoration: none;
+	color          : #313131;
+	font-weight    : 400;
+	padding        : 0;
+	margin         : 0;
+	font-size      : 16px;
+}
+
+.label {
+	text-decoration : none;
+	font-size       : 12px;
+	color           : whitesmoke;
+	background-color: green;
+	border-radius   : 1000px;
+	padding         : 2px 8px;
+}
+
+.label+.label {
+	margin-left: 4px;
+}
+
+.btn {
+	cursor          : pointer;
+	background-color: transparent;
+}
+
+.btn.border {
+	border : 2px solid #3131317a;
+	padding: 6px 16px;
+}
+
+.btn.border:hover {
+	border: 2px solid #313131;
+}
+
+.btn.text:hover {
+	color: #000000;
+}
+
+/*******************************************************************
+ text style
+*******************************************************************/
+
+.p {
+	font-size: 16px;
+}
+
+.p.wrap {
+	white-space: pre-wrap;
+}
+
+/*******************************************************************
+ flex style
+*******************************************************************/
+
+.flex {
+	display: flex;
+}
+
+.flex.wrap {
+	flex-wrap: wrap;
+}
+
+.flex-auto {
+	flex: auto;
+}
+
+.flex-1 {
+	flex: 1;
+}

@@ -108,59 +108,6 @@ h6:hover .octicon {
   padding   : 0;
 }
 
-.nav {
-  display    : flex;
-  align-items: center;
-  height     : var(--nav-h);
-}
-
-.nav-start {
-  flex: auto;
-}
-
-.nav-space {
-  width: 14px;
-}
-
-.nav-a {
-  text-decoration: none;
-  color          : var(--text-c);
-  padding        : 6px 0;
-  margin         : 0;
-  border-radius  : 4px;
-  font-size      : var(--md);
-}
-
-.nav-img {
-  width        : 32px;
-  height       : 32px;
-  border       : none;
-  border-radius: 1000px;
-  margin       : 0;
-  padding      : 0;
-  cursor       : pointer;
-}
-
-.nav-img img {
-  width        : 32px;
-  height       : 32px;
-  border-radius: 1000px;
-  margin       : 0;
-}
-
-.nav-button {
-  border          : #b0aec0 solid 1px;
-  background-color: white;
-  margin          : 0;
-  padding         : 6px 24px;
-  border-radius   : 4px;
-  cursor          : pointer;
-}
-
-.nav-button span {
-  margin: 0 4px;
-}
-
 .bar {
   height     : var(--bar-h);
   display    : flex;
@@ -177,53 +124,12 @@ h6:hover .octicon {
   height: calc(100vh - var(--bar-h) - var(--nav-h) - var(--xxl) - var(--xxs) - 24px);
 }
 
-.drafts-item,
-.draft-histories-item {
-  box-sizing : border-box;
-  display    : block;
-  text-align : -webkit-match-parent;
-  word-wrap  : break-word;
-  padding    : 3px 4px;
-  line-height: 26px;
-}
-
-.drafts-item+.drafts-item,
-.draft-histories-item+.draft-histories-item,
-.articles-item+.articles-item {
-  margin-top: 10px;
-}
-
-.drafts-item div,
-.draft-histories-item div {
-  cursor    : pointer;
-  width     : 100%;
-  box-sizing: border-box;
-  display   : block;
-}
-
 .publish-input {
   display      : block;
   margin-top   : 6px;
   margin-bottom: 12px;
   padding      : 4px 0;
   width        : 100%;
-}
-
-.articles-item {
-  box-sizing : border-box;
-  display    : block;
-  text-align : -webkit-match-parent;
-  padding    : 3px 4px;
-  line-height: 26px;
-}
-
-.articles-item-link {
-  text-decoration: none;
-  color          : var(--text-c);
-}
-
-.articles-item-body div:first-child {
-  font-weight: 800;
 }
 
 .article-content {

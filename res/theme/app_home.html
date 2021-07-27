@@ -1,12 +1,12 @@
 <v-app>
   <div class="app">
-    <nav class="nav">
-      <div class="nav-start">
-        <router-link class="nav-a" to="/">🏠 {{ i18n.Home }}</router-link>
+    <nav class="flex">
+      <div class="flex-auto">
+        <router-link class="btn text" to="/">🏠 {{ i18n.Home }}</router-link>
       </div>
       <dropdown>
-        <button class="nav-img">
-          <img alt="" v-bind:src="profilePicture">
+        <button class="btn icon" title="user info">
+          <img title="user avatar" v-bind:src="profilePicture">
         </button>
         <div class="menu">
           <div class="menu-flex">
@@ -26,23 +26,5 @@
       </dropdown>
     </nav>
     <router-view></router-view>
-    <vs-dialog overflow-hidden v-model="vote.has">
-      <div style="margin: 16px 10px;" v-if="vote.has">
-        <h1>{{ i18n.DiscoverANewArticle }}</h1>
-        <h2 v-if="vote.ras.edges.version.title">{{ vote.ras.edges.version.title }}</h2>
-        <p>{{ vote.ras.edges.version.gist }}</p>
-        <hr />
-        <div v-html="md2html(vote.ras.edges.version.edges.content.body)"></div>
-        <div class="article-keywords" v-if="vote.ras.edges.version.edges.keywords">
-          <span v-for="(keyword, i) in vote.ras.edges.version.edges.keywords">{{ keyword.name }}</span>
-        </div>
-        <hr />
-        <div class="m-t22">是否同意该文章发布？</div>
-        <div class="m-t10">
-          <button class="nav-button" v-on:click="onAllow">同意发布</button>
-          <button class="nav-button" v-on:click="onRejecte">反对发布</button>
-        </div>
-      </div>
-    </vs-dialog>
   </div>
 </v-app>

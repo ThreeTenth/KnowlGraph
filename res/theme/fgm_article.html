@@ -40,8 +40,8 @@
       <a href="#">{{ i18n.Notes }}</a>
     </div>
     <article class="article-content" v-html="article.body"></article>
-    <div class="article-keywords" v-if="article.keywords">
-      <a href="#" v-for="(keyword, i) in article.keywords">#{{keyword.name}}</a>
+    <div v-if="article.keywords">
+      <a href="#" class="label" v-for="(keyword, i) in article.keywords">#{{keyword.name}}</a>
     </div>
     <div class="bar">
       <div>
@@ -80,7 +80,9 @@
         emoji[reac.status]}} {{ reac.count }}</button>
     </div>
   </div>
-  <div v-else>Loading</div>
+  <div class="loading-container" v-else>
+    <div class="loading"></div>
+  </div>
   <modal v-model="isNewNode">
     <new-node v-on:successed="isNewNode = false" v-on:failured="isNewNode = false"></new-node>
   </modal>
