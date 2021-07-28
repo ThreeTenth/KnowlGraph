@@ -1,5 +1,5 @@
 <div class="container">
-  <textarea class="draft-area" v-on:keyup="onChanged" v-on:blur="onBlur" v-model="body"></textarea>
+  <textarea class="input draft-area" v-on:keyup="onChanged" v-on:blur="onBlur" v-model="body"></textarea>
   <div class="bar">
     <div></div>
     <button class="menu-button" v-on:click="onPublish">{{ i18n.Publish }}<span v-if="status=='private'">

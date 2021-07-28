@@ -1,30 +1,28 @@
-<v-app>
-  <div class="app">
-    <nav class="flex">
-      <div class="flex-auto">
-        <router-link class="btn text" to="/">🏠 {{ i18n.Home }}</router-link>
-      </div>
-      <dropdown>
-        <button class="btn icon" title="user info">
-          <img title="user avatar" v-bind:src="profilePicture">
-        </button>
-        <div class="menu">
-          <div class="menu-flex">
-            <router-link class="flex-1 menu-item-a" v-bind:to="{ name: 'newArticle', query: { status: 'public' }}">{{
-              i18n.NewArticle }}</router-link>
-            <router-link class="menu-item-a" v-bind:to="{ path: '/new/article', query: { status: 'private' }}">🔒
-            </router-link>
-          </div>
-          <router-link class="menu-item-a" to="/drafts">{{ i18n.Drafts }}</router-link>
-          <router-link class="menu-item-a" to="/archive">{{ i18n.Archive }}</router-link>
-          <hr />
-          <router-link class="menu-item-a" to="/settings/personalize">{{ i18n.Personalize }}</router-link>
-          <router-link class="menu-item-a" to="/about">{{ i18n.About }}</router-link>
-          <hr />
-          <a class="menu-item-a" href="/signout">{{ i18n.Logout }}</a>
+<div class="app">
+  <nav class="flex">
+    <div class="flex-auto">
+      <router-link class="btn text" to="/">🏠 {{ i18n.Home }}</router-link>
+    </div>
+    <dropdown>
+      <button class="btn icon" title="user info">
+        <img title="user avatar" v-bind:src="profilePicture">
+      </button>
+      <div class="menu">
+        <div class="menu-flex">
+          <router-link class="flex-1 menu-item-a" v-bind:to="{ name: 'newArticle', query: { status: 'public' }}">{{
+            i18n.NewArticle }}</router-link>
+          <router-link class="menu-item-a" v-bind:to="{ path: '/new/article', query: { status: 'private' }}">🔒
+          </router-link>
         </div>
-      </dropdown>
-    </nav>
-    <router-view></router-view>
-  </div>
-</v-app>
+        <router-link class="menu-item-a" to="/drafts">{{ i18n.Drafts }}</router-link>
+        <router-link class="menu-item-a" to="/archive">{{ i18n.Archive }}</router-link>
+        <hr />
+        <router-link class="menu-item-a" to="/settings/personalize">{{ i18n.Personalize }}</router-link>
+        <router-link class="menu-item-a" to="/about">{{ i18n.About }}</router-link>
+        <hr />
+        <a class="menu-item-a" href="/signout">{{ i18n.Logout }}</a>
+      </div>
+    </dropdown>
+  </nav>
+  <router-view></router-view>
+</div>

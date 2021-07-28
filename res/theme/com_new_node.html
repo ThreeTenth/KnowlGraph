@@ -13,7 +13,7 @@
     <button class="option" v-bind:class="{'selected': selected == archive}" v-for="(archive, i) in user.archives"
       v-on:click="onSelectPrev(archive)">📁 {{ archive.edges.node.edges.word.name }}</button>
   </div>
-  <div class="input">
+  <div class="flex margin-y">
     <label>新建节点名：</label>
     <div>
       <autocomplet v-on:item="getWordName" v-on:select="onSelectWord" v-bind:source="user.words"
