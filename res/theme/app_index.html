@@ -1,10 +1,10 @@
 <div class="app">
   <div class="flex">
     <div class="flex-auto">
-      <router-link class="btn text" to="/">🏠 {{ i18n.Home }}</router-link>
+      <router-link class="btn link" to="/">🏠 {{ i18n.Home }}</router-link>
     </div>
     <div>
-      <button class="btn text" v-on:click="onGitHubOAuth">{{ i18n.LoginWithGitHubOAuth }}</button>
+      <button class="btn link" v-on:click="onGitHubOAuth">{{ i18n.LoginWithGitHubOAuth }}</button>
     </div>
   </div>
   <router-view class="view"></router-view>

@@ -1,7 +1,7 @@
 <div>
   <h2>{{ i18n.Personalize }}</h2>
   <h3>{{ currentLang }}</h3>
-  <div class="center grid">
-    <button class="reaction-button" v-for="(lang, i) in languages" :key="lang.code" v-on:click="onSelectUserLang(lang)">{{ lang.name }}</button>
+  <div>
+    <button class="btn text md margin-y" v-for="(lang, i) in languages" :key="lang.code" v-on:click="onSelectUserLang(lang)">{{ lang.name }}</button>
   </div>
 </div>

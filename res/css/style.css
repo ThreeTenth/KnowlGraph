@@ -65,6 +65,55 @@
 }
 
 /*******************************************************************
+ layout style
+*******************************************************************/
+
+.layout-1 {
+	padding         : 10px var(--body-pw);
+	margin-top      : 10px;
+	background-color: #f1f1f1;
+	align-items     : center;
+}
+
+.layout-2 {
+	padding         : 4px 6px;
+	background-color: var(--highlight);
+	align-items     : center;
+}
+
+.layout-3 {
+	padding         : 15px 0;
+	background-color: transparent;
+	align-items     : center;
+}
+
+/*******************************************************************
+ tabs style
+*******************************************************************/
+
+.tabs {
+	padding      : 20px 0 15px 0;
+	border-bottom: #f1f1f1 solid 1px;
+}
+
+.tabs a {
+	padding        : 15px 20px;
+	text-decoration: none;
+	color          : #000;
+	font-size      : var(--sm);
+}
+
+@media (max-width: 480px) {
+	.tabs a {
+		padding: 15px 5px;
+	}
+}
+
+.tabs a.selected {
+	border-bottom: green solid 3px;
+}
+
+/*******************************************************************
  input and textarea style
 *******************************************************************/
 
@@ -201,15 +250,37 @@
 	margin       : 0;
 }
 
-.text {
+.text,
+.link {
 	border         : none;
 	border-radius  : 12px;
 	text-decoration: none;
-	color          : #313131;
-	font-weight    : 400;
-	padding        : 0;
 	margin         : 0;
-	font-size      : 16px;
+}
+
+.text {
+	color      : #000000;
+	font-weight: 500;
+	padding    : 1px 6px;
+}
+
+.text+.text {
+	margin-left: 8px;
+}
+
+.text.md {
+	font-size: 1.0rem;
+}
+
+.text.lg {
+	font-size: 1.1rem;
+}
+
+.link {
+	color      : #313131;
+	font-weight: 400;
+	font-size  : 16px;
+	padding    : 0;
 }
 
 .label {
@@ -239,7 +310,7 @@
 	border: 2px solid #313131;
 }
 
-.btn.text:hover {
+.btn.link:hover {
 	color: #000000;
 }
 
@@ -267,6 +338,10 @@
 	flex-wrap: wrap;
 }
 
+.flex-end {
+	align-self: flex-end;
+}
+
 .flex-auto {
 	flex: auto;
 }
@@ -276,9 +351,55 @@
 }
 
 /*******************************************************************
- margin style
+ margin and padding style
 *******************************************************************/
 
 .margin-y {
 	margin: 16px 0;
+}
+
+.padding-y {
+	padding: 6px 0;
+}
+
+/*******************************************************************
+ margin and padding style
+*******************************************************************/
+
+.markdown {
+	word-wrap: break-word;
+	padding  : 0 var(--body-pw);
+}
+
+.markdown:first-child {
+	margin-top : 0;
+	padding-top: 0;
+}
+
+.markdown .anchor {
+	float        : left;
+	line-height  : 1;
+	margin-left  : -20px;
+	padding-right: 4px;
+}
+
+.markdown .anchor:focus .octicon {
+	visibility: visible;
+}
+
+.markdown .octicon {
+	display       : inline-block;
+	fill          : currentColor;
+	color         : #1b1f23;
+	vertical-align: middle;
+	visibility    : hidden;
+}
+
+.markdown h1:hover .octicon,
+.markdown h2:hover .octicon,
+.markdown h3:hover .octicon,
+.markdown h4:hover .octicon,
+.markdown h5:hover .octicon,
+.markdown h6:hover .octicon {
+	visibility: visible;
 }
