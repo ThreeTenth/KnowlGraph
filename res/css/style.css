@@ -87,6 +87,12 @@
 	align-items     : center;
 }
 
+.layout-4 {
+	padding         : 10px 20px;
+	background-color: #fff;
+	border-radius   : 18px;
+}
+
 /*******************************************************************
  tabs style
 *******************************************************************/
@@ -253,7 +259,7 @@
 .text,
 .link {
 	border         : none;
-	border-radius  : 12px;
+	border-radius  : 8px;
 	text-decoration: none;
 	margin         : 0;
 }
@@ -274,6 +280,11 @@
 
 .text.lg {
 	font-size: 1.1rem;
+}
+
+.text.fill {
+	background-color: green;
+	color           : #fff;
 }
 
 .link {
@@ -324,6 +335,7 @@
 
 .p.wrap {
 	white-space: pre-wrap;
+	word-wrap  : break-word;
 }
 
 /*******************************************************************

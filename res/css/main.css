@@ -25,17 +25,6 @@ time {
   font-size: 0.85em;
 }
 
-/* input,
-textarea {
-  padding      : 0px;
-  margin       : 0px;
-  font-size    : 15px !important;
-  font-family  : "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
-  border       : none;
-  outline      : medium;
-  border-bottom: 1px solid var(--fg-c);
-} */
-
 hr {
   color     : #f1f1f1;
   border    : none;
@@ -46,34 +35,6 @@ hr {
   max-width: var(--body-w);
   margin   : auto;
   padding  : var(--body-pw);
-}
-
-.anchor {
-  float        : left;
-  line-height  : 1;
-  margin-left  : -20px;
-  padding-right: 4px;
-}
-
-.anchor:focus .octicon {
-  visibility: visible;
-}
-
-.octicon {
-  display       : inline-block;
-  fill          : currentColor;
-  color         : #1b1f23;
-  vertical-align: middle;
-  visibility    : hidden;
-}
-
-h1:hover .octicon,
-h2:hover .octicon,
-h3:hover .octicon,
-h4:hover .octicon,
-h5:hover .octicon,
-h6:hover .octicon {
-  visibility: visible;
 }
 
 .container {
@@ -97,15 +58,4 @@ h6:hover .octicon {
   margin-bottom: 12px;
   padding      : 4px 0;
   width        : 100%;
-}
-
-.new-node {
-  padding : 10px 20px;
-  background-color: #fff;
-  border-radius: 10px;
-}
-
-.new-node .options {
-  padding: 0 0 8px 0;
-  display: flex;
 }
