@@ -73,54 +73,6 @@
   font-size        : 1.5em;
 }
 
-.auto-completion {
-  position: relative;
-  display : inline-block;
-}
-
-.auto-completion.up .selection {
-  bottom    : 28px;
-  /* max-height: calc(100vh / 2 - 10px); */
-}
-
-.auto-completion.down .selection {
-  top       : 24px;
-  /* max-height: calc(100vh / 2 - 68px); */
-}
-
-.auto-completion .selection {
-  padding: 2px 4px;
-}
-
-.auto-completion .selection {
-  list-style   : none;
-  border-radius: 2px;
-  box-shadow   : 0 1px 2px rgb(0 0 0 / 25%), 0 0 0px rgb(0 0 0 / 35%);
-  cursor       : pointer;
-  margin       : 4px 0px;
-  padding      : 3px 4px;
-  z-index      : 1800;
-  background   : #fff;
-  color        : #000;
-  outline      : none;
-  overflow     : auto;
-  position     : absolute;
-  min-width    : 180px;
-  display      : none;
-}
-
-.auto-completion .selection.block {
-  display: block;
-}
-
-.auto-completion .selection li {
-  padding: 3px 4px;
-}
-
-.auto-completion .selection li.selected {
-  background-color: #7FDBFF;
-}
-
 .word-layout {
   width     : 100%;
   max-width : none;
@@ -187,15 +139,4 @@
   margin     : 0px;
   line-height: initial;
   box-sizing : border-box;
-}
-
-.word-autocomplete {
-  background: var(--bg-c);
-  border    : 1px solid var(--bg-c);
-  border-top: none;
-  width     : 100%;
-  position  : absolute;
-  z-index   : 20;
-  box-sizing: border-box;
-  color     : var(--text-c);
 }
