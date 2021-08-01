@@ -2,19 +2,18 @@
   <h1>{{ i18n.Publish }}</h1>
   <div>
     <label for="title">{{ i18n.Cover }}</label>
-    <input type="file" name="cover" class="publish-input" v-on:change="cover" v-bind:placeholder="i18n.Cover"></input>
+    <input type="file" name="cover" class="input-3" v-on:change="cover" v-bind:placeholder="i18n.Cover"></input>
     <label for="title">{{ i18n.Title }}</label>
-    <input type="text" name="title" class="publish-input" v-model="title" v-bind:placeholder="i18n.Title"></input>
+    <input type="text" name="title" class="input-3" v-model="title" v-bind:placeholder="i18n.Title"></input>
     <label for="gist">{{ i18n.Gist }}</label>
-    <textarea type="text" name="gist" class="publish-input" v-model="gist" v-bind:placeholder="i18n.Gist"></textarea>
+    <textarea type="text" name="gist" class="input-3" v-model="gist" v-bind:placeholder="i18n.Gist"></textarea>
     <label for="gist">{{ i18n.VersionName }}</label>
-    <input type="text" name="versionName" class="publish-input" v-model="versionName"
+    <input type="text" name="versionName" class="input-3" v-model="versionName"
       v-bind:placeholder="i18n.VersionName"></input>
     <label for="gist">{{ i18n.Comment }}</label>
-    <textarea type="text" name="comment" class="publish-input" v-model="comment"
-      v-bind:placeholder="i18n.Comment"></textarea>
+    <textarea type="text" name="comment" class="input-3" v-model="comment" v-bind:placeholder="i18n.Comment"></textarea>
     <label for="gist">{{ i18n.ChooseALanguage }}</label>
-    <select id="userLangSelect" name="lang" class="publish-input" v-model="lang">
+    <select id="userLangSelect" name="lang" class="input-3" v-model="lang">
       <option v-for="(lang, i) in languages" v-bind:dir="lang.direction" v-bind:value="lang.code">{{ lang.name }}
       </option>
     </select>

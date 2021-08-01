@@ -99,6 +99,12 @@
 	margin : 10px 0;
 }
 
+.draft-area {
+	margin: var(--xxl) 0 var(--xxs) 0;
+	width : 100%;
+	height: calc(100vh - 160px);
+}
+
 /*******************************************************************
  tabs style
 *******************************************************************/
@@ -129,8 +135,9 @@
  input and textarea style
 *******************************************************************/
 
-.input,
-.input-2 {
+.input-1,
+.input-2,
+.input-3 {
 	font-size  : 16px;
 	font-family: "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
 	outline    : medium;
@@ -138,25 +145,112 @@
 	color      : var(--text-c);
 }
 
-.input {
+.input-1 {
 	padding      : 2px 4px;
-	border-bottom: 1px solid var(--fg-c);
 	margin       : 0px;
+	border-bottom: 1px solid var(--fg-c);
 }
 
 .input-2 {
 	background : transparent;
 	flex       : 1 0 auto;
 	min-width  : 100px;
-	padding    : 5px 8px;
+	padding    : 5px 0px;
 	margin     : 2px;
 	line-height: initial;
 	box-sizing : border-box;
 }
 
+.input-3 {
+	display      : block;
+	margin       : 6px 0 12px 0;
+	padding      : 4px 0;
+	width        : 100%;
+	border-bottom: 1px solid var(--fg-c);
+}
+
+.input-3 {
+	margin: var(--xxl) 0 var(--xxs) 0;
+	width : 100%;
+	height: calc(100vh - var(--bar-h) - var(--nav-h) - var(--xxl) - var(--xxs) - 24px);
+}
+
 /*******************************************************************
- overlay style
+ modal, dialog and overlay style
 *******************************************************************/
+
+.modal {
+	-webkit-box-sizing: border-box;
+	box-sizing        : border-box;
+	position          : fixed;
+	left              : 0px;
+	top               : 0px;
+	z-index           : var(--vs-zindex-2);
+	display           : flex;
+	align-items       : flex-start;
+	justify-content   : center;
+	width             : 100%;
+	height            : 100%;
+	max-height        : 100vh;
+	overflow-y        : auto;
+	overflow-x        : hidden;
+	padding-top       : 80px;
+	padding-bottom    : 80px;
+	background        : rgb(0 0 0 / 15%);
+}
+
+.dialog {
+	background        : rgba(var(--vs-background), 1);
+	color             : rgba(var(--vs-text), 1);
+	position          : relative;
+	min-width         : 400px;
+	border-radius     : var(--vs-radius);
+	-webkit-transition: all 0.25s ease;
+	transition        : all 0.25s ease;
+	-webkit-box-shadow: 0px 5px 30px 0px rgba(0, 0, 0, var(--vs-shadow-opacity));
+	box-shadow        : 0px 5px 30px 0px rgba(0, 0, 0, var(--vs-shadow-opacity));
+	max-width         : 800px;
+	margin            : auto;
+}
+
+.dialog__content {
+	padding      : 10px 16px;
+	width        : 100%;
+	position     : relative;
+	border-radius: inherit;
+	margin-bottom: 20px;
+}
+
+@media (max-width: 360px) {
+	.dialog {
+		min-width: 240px;
+	}
+}
+
+.dialog .close {
+	position         : absolute;
+	top              : -10px;
+	right            : -10px;
+	padding          : 0;
+	margin           : 0;
+	display          : -webkit-box;
+	display          : -ms-flexbox;
+	display          : flex;
+	-webkit-box-align: center;
+	-ms-flex-align   : center;
+	align-items      : center;
+	-webkit-box-pack : center;
+	-ms-flex-pack    : center;
+	justify-content  : center;
+	background       : inherit;
+	border-radius    : 12px;
+	z-index          : 200;
+	border           : 0;
+	color            : #000;
+	width            : 34px;
+	height           : 34px;
+	font-size        : 1.5em;
+}
 
 .overlay {
 	position: relative;
@@ -295,10 +389,7 @@
 	display         : flex;
 	box-sizing      : border-box;
 	text-align      : -webkit-match-parent;
-}
-
-.label-2+.label-2 {
-	margin: 2px 4px;
+	margin          : 3px 6px 3px 0;
 }
 
 .label-2.del {
@@ -335,11 +426,14 @@
 .text {
 	color      : #000000;
 	font-weight: 500;
-	padding    : 1px 6px;
 }
 
 .text+.text {
 	margin-left: 8px;
+}
+
+.text.sm {
+	font-size: 0.85em;
 }
 
 .text.md {
@@ -365,6 +459,7 @@
 .btn {
 	cursor          : pointer;
 	background-color: transparent;
+	padding         : 1px 6px;
 }
 
 .btn.border {
@@ -401,12 +496,14 @@
 	display: flex;
 }
 
-.flex.wrap {
+.flex-wrap {
+	display  : flex;
 	flex-wrap: wrap;
 }
 
-.flex-end {
-	align-self: flex-end;
+.flex-v {
+	display    : flex;
+	align-items: center;
 }
 
 .flex-auto {
@@ -420,6 +517,10 @@
 /*******************************************************************
  margin and padding style
 *******************************************************************/
+
+.margin-0 {
+	margin: 0;
+}
 
 .margin-y {
 	margin: 16px 0;
@@ -469,4 +570,10 @@
 .markdown h5:hover .octicon,
 .markdown h6:hover .octicon {
 	visibility: visible;
+}
+
+hr {
+	color     : #f1f1f1;
+	border    : none;
+	border-top: 1px solid #f1f1f1;
 }

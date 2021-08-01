@@ -1,5 +1,5 @@
 <div class="container">
-  <textarea class="input draft-area" v-on:keyup="onChanged" v-on:blur="onBlur" v-model="body"></textarea>
+  <textarea class="input-2 draft-area" v-on:keyup="onChanged" v-on:blur="onBlur" v-model="body"></textarea>
   <div class="layout-3 flex">
     <div class="flex-1"></div>
     <button class="btn text" v-on:click="onPublish">{{ i18n.Publish }}<span v-if="status=='private'">

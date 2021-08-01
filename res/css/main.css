@@ -17,20 +17,6 @@
   font-family     : "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
 }
 
-body {
-  margin: 0;
-}
-
-time {
-  font-size: 0.85em;
-}
-
-hr {
-  color     : #f1f1f1;
-  border    : none;
-  border-top: 1px solid #f1f1f1;
-}
-
 .app {
   max-width: var(--body-w);
   margin   : auto;
@@ -39,23 +25,4 @@ hr {
 
 .container {
   margin-top: 32px;
-}
-
-.container.zero {
-  margin-top: 0;
-  padding   : 0;
-}
-
-.draft-area {
-  margin: var(--xxl) 0 var(--xxs) 0;
-  width : 100%;
-  height: calc(100vh - var(--bar-h) - var(--nav-h) - var(--xxl) - var(--xxs) - 24px);
-}
-
-.publish-input {
-  display      : block;
-  margin-top   : 6px;
-  margin-bottom: 12px;
-  padding      : 4px 0;
-  width        : 100%;
 }
