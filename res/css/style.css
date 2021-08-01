@@ -68,6 +68,16 @@
  layout style
 *******************************************************************/
 
+.app {
+	max-width: var(--body-w);
+	margin   : auto;
+	padding  : var(--body-pw);
+}
+
+.container {
+	margin-top: 32px;
+}
+
 .layout-1 {
 	padding         : 10px var(--body-pw);
 	margin-top      : 10px;

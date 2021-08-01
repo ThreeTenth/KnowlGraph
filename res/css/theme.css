@@ -37,4 +37,19 @@
   --x8l : 36px;
   --x9l : 42px;
   --xxxl: 48px;
+
+  --primary  : var(--blue);
+  --fg-c     : var(--primary);
+  --bg-c     : var(--white);
+  --text-c   : var(--black);
+  --highlight: #00000010;
+  --theme    : var(--primary);
+
+  --body-w        : 720px;
+  --body-pw       : 10px;
+  --nav-h         : 56px;
+  --nav-w         : 720px;
+  --bar-h         : 56px;
+  --textarea-min-h: 20px;
+  font-family     : "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
 }
