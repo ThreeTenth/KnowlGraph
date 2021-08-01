@@ -17,7 +17,7 @@
   overflow-x        : hidden;
   padding-top       : 80px;
   padding-bottom    : 80px;
-  background: rgb(0 0 0 / 15%);
+  background        : rgb(0 0 0 / 15%);
 }
 
 .dialog {
@@ -71,72 +71,4 @@
   width            : 34px;
   height           : 34px;
   font-size        : 1.5em;
-}
-
-.word-layout {
-  width     : 100%;
-  max-width : none;
-  background: transparent;
-  position  : relative;
-  box-sizing: border-box;
-  display   : block;
-  margin    : 10px 0;
-}
-
-.word-input {
-  border       : none;
-  border-bottom: 1px solid var(--fg-c);
-  padding      : 4px 0;
-}
-
-.words {
-  display        : flex;
-  flex-wrap      : wrap;
-  width          : 100%;
-  line-height    : 1em;
-  margin         : 0px;
-  padding        : 0px;
-  list-style-type: none;
-  box-sizing     : border-box;
-}
-
-.words li {
-  margin: 2px 4px;
-}
-
-.word {
-  padding         : 5px 8px;
-  background-color: var(--fg-c);
-  color           : var(--bg-c);
-  border-radius   : 2px;
-  display         : flex;
-  box-sizing      : border-box;
-  text-align      : -webkit-match-parent;
-}
-
-.word.del {
-  background-color: var(--red);
-  color           : #fff;
-}
-
-.new-word {
-  padding   : 5px 8px;
-  margin    : 2px;
-  display   : flex;
-  flex      : 1 0 auto;
-  font-size : 1em;
-  box-sizing: border-box;
-}
-
-.new-word input {
-  background : transparent;
-  color      : var(--fg-c);
-  flex       : 1 0 auto;
-  min-width  : 100px;
-  border     : none;
-  outline    : medium;
-  padding    : 0px;
-  margin     : 0px;
-  line-height: initial;
-  box-sizing : border-box;
 }

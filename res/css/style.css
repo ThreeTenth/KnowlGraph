@@ -93,6 +93,12 @@
 	border-radius   : 18px;
 }
 
+.layout-5 {
+	width  : 100%;
+	display: block;
+	margin : 10px 0;
+}
+
 /*******************************************************************
  tabs style
 *******************************************************************/
@@ -106,7 +112,7 @@
 	padding        : 15px 20px;
 	text-decoration: none;
 	color          : #000;
-	font-size      : var(--sm);
+	font-size      : 14px;
 }
 
 @media (max-width: 480px) {
@@ -123,14 +129,29 @@
  input and textarea style
 *******************************************************************/
 
+.input,
+.input-2 {
+	font-size  : 16px;
+	font-family: "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
+	outline    : medium;
+	border     : none;
+	color      : var(--text-c);
+}
+
 .input {
 	padding      : 2px 4px;
-	margin       : 0px;
-	font-size    : 16px !important;
-	font-family  : "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
-	border       : none;
-	outline      : medium;
 	border-bottom: 1px solid var(--fg-c);
+	margin       : 0px;
+}
+
+.input-2 {
+	background : transparent;
+	flex       : 1 0 auto;
+	min-width  : 100px;
+	padding    : 5px 8px;
+	margin     : 2px;
+	line-height: initial;
+	box-sizing : border-box;
 }
 
 /*******************************************************************
@@ -142,9 +163,9 @@
 	display : inline-block;
 }
 
-/*******************************************************************
- menu style
-*******************************************************************/
+.overlay.layout-5 .menu {
+	width: 100%;
+}
 
 .overlay.left .menu {
 	left: 0;
@@ -157,16 +178,20 @@
 
 .overlay:not(.up) .menu,
 .overlay.down .menu {
-	top: 36px;
+	top: auto;
 }
 
 .overlay.up .menu {
-	bottom: 28px;
+	bottom: 32px;
 }
 
 .overlay.block .menu {
 	display: block;
 }
+
+/*******************************************************************
+ menu style
+*******************************************************************/
 
 .menu {
 	background   : #fff;
@@ -238,6 +263,49 @@
  autocomplet and autocomplet label style
 *******************************************************************/
 
+.layout-label {
+	display        : flex;
+	flex-wrap      : wrap;
+	width          : 100%;
+	margin         : 0px;
+	border-bottom  : 1px solid var(--fg-c);
+	padding        : 4px 0;
+	list-style-type: none;
+	box-sizing     : border-box;
+}
+
+.label-1 {
+	text-decoration : none;
+	font-size       : 12px;
+	color           : whitesmoke;
+	background-color: green;
+	border-radius   : 1000px;
+	padding         : 2px 8px;
+}
+
+.label-1+.label-1 {
+	margin-left: 4px;
+}
+
+.label-2 {
+	padding         : 5px 8px;
+	background-color: var(--fg-c);
+	color           : var(--bg-c);
+	border-radius   : 2px;
+	display         : flex;
+	box-sizing      : border-box;
+	text-align      : -webkit-match-parent;
+}
+
+.label-2+.label-2 {
+	margin: 2px 4px;
+}
+
+.label-2.del {
+	background-color: var(--red);
+	color           : #fff;
+}
+
 /*******************************************************************
  button and a (link) style
 *******************************************************************/
@@ -292,19 +360,6 @@
 	font-weight: 400;
 	font-size  : 16px;
 	padding    : 0;
-}
-
-.label {
-	text-decoration : none;
-	font-size       : 12px;
-	color           : whitesmoke;
-	background-color: green;
-	border-radius   : 1000px;
-	padding         : 2px 8px;
-}
-
-.label+.label {
-	margin-left: 4px;
 }
 
 .btn {
