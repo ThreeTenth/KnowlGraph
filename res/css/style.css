@@ -469,7 +469,6 @@
 .btn {
 	cursor          : pointer;
 	background-color: transparent;
-	padding         : 1px 6px;
 }
 
 .btn.border {
