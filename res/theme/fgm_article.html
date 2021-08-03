@@ -1,15 +1,15 @@
-<div>
+<template>
   <div v-if="article">
-    <div class="layout-1 flex">
+    <div class="layout-1 flex margin-y9">
       <div class="flex-1">
         <dropdown class="left" v-bind:ignore="'true'" v-if="article.nodes.length">
-          <button class="btn text">{{ bZticle.nodes[0].edges.word.name }}</button>
+          <button class="btn text padding-9">{{ bZticle.nodes[0].edges.word.name }}</button>
           <div class="menu">
             <div class="menu-item" v-for="(node, i) in article.nodes">{{ node.edges.word.name }}</div>
           </div>
         </dropdown>
         <dropdown class="left" v-else>
-          <button class="btn text">💡 {{ i18n.Archive }}</button>
+          <button class="btn text padding-9">💡 {{ i18n.Archive }}</button>
           <div class="menu" v-if="user.logined">
             <div v-if="user.archives.length">
               <button class="menu-item" v-for="(archive, i) in user.archives">📁 {{ archive.edges.node.edges.word.name
@@ -26,13 +26,14 @@
         </dropdown>
       </div>
       <template v-if="article.private">
-        <button class="btn text">🔒</button>
+        <button class="btn text padding-y9">🔒</button>
       </template>
-      <template v-else>
-        <button class="btn text" v-on:click="onStar">⭐ {{ article.star ? i18n.Unstar : i18n.Star }}</button>
-        <button class="btn text" v-on:click="onWatch">👀 {{ article.watch ? i18n.Unwatch : i18n.Watch }}</button>
-        <button class="btn text" v-on:click="switchLang">🌍 {{ article.lang.name }}</button>
-      </template>
+      <div class="padding-x9" v-else>
+        <button class="btn text padding-y9" v-on:click="onStar">⭐ {{ article.star ? i18n.Unstar : i18n.Star }}</button>
+        <button class="btn text padding-y9" v-on:click="onWatch">👀 {{ article.watch ? i18n.Unwatch : i18n.Watch
+          }}</button>
+        <button class="btn text padding-y9" v-on:click="switchLang">🌍 {{ article.lang.name }}</button>
+      </div>
     </div>
     <div class="tabs">
       <a class="selected" href="#">{{ i18n.Body }}</a>
@@ -71,15 +72,15 @@
         </div>
       </dropdown>
     </div>
-    <div class="layout-2" v-if="article.reactions.length">
-      <button class="btn text md" v-for="(reac, i) in article.reactions" v-on:click="onPickReaction(reac.status)">{{
+    <div class="layout-1 padding-9" v-if="article.reactions.length">
+      <button class="btn text" v-for="(reac, i) in article.reactions" v-on:click="onPickReaction(reac.status)">{{
         emoji[reac.status]}} {{ reac.count }}</button>
     </div>
+    <modal v-model="isNewNode">
+      <new-node v-on:successed="isNewNode = false" v-on:failured="isNewNode = false"></new-node>
+    </modal>
   </div>
   <div class="loading-container" v-else>
     <div class="loading"></div>
   </div>
-  <modal v-model="isNewNode">
-    <new-node v-on:successed="isNewNode = false" v-on:failured="isNewNode = false"></new-node>
-  </modal>
-</div>
+</template>

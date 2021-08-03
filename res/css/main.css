@@ -22,10 +22,15 @@
 	--black  : #262626;
 
 	--primary  : var(--blue);
-	--fg-c     : var(--primary);
-	--bg-c     : var(--white);
+	--fgc      : var(--primary);
+	--bgc      : var(--white);
 	--text-c   : var(--black);
 	--highlight: #00000010;
+
+	--success: var(--olive);
+	--danger : var(--red);
+	--warn   : var(--orange);
+	--dark   : var(--black);
 
 	--md : 1rem;
 	--sm : calc(var(--md) * 0.5);
@@ -144,22 +149,20 @@ html {
 .app {
 	max-width: var(--body-w);
 	margin   : auto;
-	padding  : var(--x10);
 }
 
 .container {
-	margin-top: var(--x30);
+	padding-top: var(--x18);
 }
 
 .layout-1 {
-	padding         : var(--x10);
-	margin-top      : var(--x10);
-	background-color: #f1f1f1;
+	border-radius   : var(--x3);
+	background-color: var(--highlight);
 	align-items     : center;
 }
 
 .layout-2 {
-	padding         : var(--x4) var(--x6);
+	border-radius   : var(--x3);
 	background-color: var(--highlight);
 	align-items     : center;
 }
@@ -193,12 +196,12 @@ html {
 *******************************************************************/
 
 .tabs {
-	padding      : var(--x18) 0 var(--x14) 0;
+	padding      : var(--x9) 0 var(--x9) 0;
 	border-bottom: #f1f1f1 solid var(--x1);
 }
 
 .tabs a {
-	padding        : var(--x14) var(--x18);
+	padding        : var(--x9) var(--x18);
 	text-decoration: none;
 	color          : #000;
 	font-size      : var(--x14);
@@ -211,7 +214,7 @@ html {
 }
 
 .tabs a.selected {
-	border-bottom: green solid var(--x3);
+	border-bottom: green solid var(--x4);
 }
 
 /*******************************************************************
@@ -231,7 +234,7 @@ html {
 .input-1 {
 	padding      : var(--x2) var(--x4);
 	margin       : 0;
-	border-bottom: var(--x1) solid var(--fg-c);
+	border-bottom: var(--x1) solid var(--fgc);
 }
 
 .input-2 {
@@ -249,7 +252,7 @@ html {
 	margin       : var(--x6) 0 var(--x12) 0;
 	padding      : var(--x4) 0;
 	width        : 100%;
-	border-bottom: var(--x1) solid var(--fg-c);
+	border-bottom: var(--x1) solid var(--fgc);
 }
 
 /*******************************************************************
@@ -439,7 +442,7 @@ html {
 	flex-wrap      : wrap;
 	width          : 100%;
 	margin         : 0;
-	border-bottom  : var(--x1) solid var(--fg-c);
+	border-bottom  : var(--x1) solid var(--fgc);
 	padding        : var(--x4) 0;
 	list-style-type: none;
 	box-sizing     : border-box;
@@ -460,8 +463,8 @@ html {
 
 .label-2 {
 	padding         : var(--x5) var(--x8);
-	background-color: var(--fg-c);
-	color           : var(--bg-c);
+	background-color: var(--fgc);
+	color           : var(--bgc);
 	border-radius   : var(--x2);
 	display         : flex;
 	box-sizing      : border-box;
@@ -503,6 +506,7 @@ html {
 .text {
 	color      : #000000;
 	font-weight: 500;
+	font-size  : var(--x14);
 }
 
 .text+.text {
@@ -602,8 +606,28 @@ html {
 	margin: var(--md) 0;
 }
 
+.margin-y9 {
+	margin: var(--x9) 0;
+}
+
+.margin-t9 {
+	margin-top: var(--x9);
+}
+
+.padding-x9 {
+	padding: 0 var(--x9);
+}
+
 .padding-y {
-	padding: var(--x6) 0;
+	padding: var(--md) 0;
+}
+
+.padding-y9 {
+	padding: var(--x9) 0;
+}
+
+.padding-9 {
+	padding: var(--x9);
 }
 
 /*******************************************************************

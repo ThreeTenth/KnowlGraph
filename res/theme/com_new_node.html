@@ -1,14 +1,11 @@
 <div class="layout-4">
   <h3>创建新节点</h3>
-  <ul class="words" style="margin-bottom: 15px;">
-    <li>></li>
+  <div class="layout-5" style="margin-bottom: 15px;">
+    <span>></span>
     <template v-if="selected">
-      <li>
-        {{ selected.edges.node.edges.word.name }}
-      </li>
-      <li>></li>
+      <span> {{ selected.edges.node.edges.word.name }} > </span>
     </template>
-  </ul>
+  </div>
   <div>
     <button class="btn text" v-bind:class="{'fill': selected == archive}" v-for="(archive, i) in user.archives"
       v-on:click="onSelectPrev(archive)">📁 {{ archive.edges.node.edges.word.name }}</button>
