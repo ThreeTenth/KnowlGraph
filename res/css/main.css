@@ -1,16 +1,89 @@
 /*******************************************************************
+ Define variables and default styles
+*******************************************************************/
+
+:root {
+	--navy   : #001F3F;
+	--aqua   : #7FDBFF;
+	--teal   : #39CCCC;
+	--olive  : #3D9970;
+	--lime   : #01FF70;
+	--fuchsia: #F012BE;
+	--purple : #B10DC9;
+	--maroon : #85144B;
+	--yellow : #FFDC00;
+	--green  : #06847d;
+	--blue   : #4a69bd;
+	--orange : #a46313;
+	--red    : #e02e06;
+	--white  : #ffffff;
+	--silver : #DDDDDD;
+	--grey   : #e6e6e6;
+	--black  : #262626;
+
+	--primary  : var(--blue);
+	--fg-c     : var(--primary);
+	--bg-c     : var(--white);
+	--text-c   : var(--black);
+	--highlight: #00000010;
+
+	--md : 1rem;
+	--sm : calc(var(--md) * 0.5);
+	--xs : calc(var(--sm) * 0.5);
+	--xxs: calc(var(--xs) * 0.5);
+	--lg : calc(var(--md) * 2.0);
+	--xl : calc(var(--lg) * 2.0);
+	--xxl: calc(var(--xl) * 2.0);
+
+	--x1 : calc(var(--md) / 16);
+	--x2 : var(--xxs);
+	--x3 : calc(var(--x2) + var(--x1));
+	--x4 : var(--xs);
+	--x5 : calc(var(--x4) + var(--x1));
+	--x6 : calc(var(--x5) + var(--x1));
+	--x7 : calc(var(--x6) + var(--x1));
+	--x8 : var(--sm);
+	--x9 : calc(var(--x8) + var(--x1));
+	--x10: calc(var(--x9) + var(--x1));
+	--x12: calc(var(--x10) + var(--x2));
+	--x14: calc(var(--x12) + var(--x2));
+	--x18: calc(var(--x14) + var(--x4));
+	--x24: calc(var(--x18) + var(--x6));
+	--x30: calc(var(--x24) + var(--x6));
+	--x36: calc(var(--x30) + var(--x6));
+	--x48: calc(var(--x36) + var(--x12));
+	--x60: calc(var(--x48) + var(--x12));
+	--x72: calc(var(--x60) + var(--x12));
+	--x96: calc(var(--x72) + var(--x24));
+
+	--body-w: calc(100vw - 480px);
+
+	font-family: "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
+}
+
+@media (max-width: 1200px) {
+	:root {
+		--body-w: 720px;
+	}
+}
+
+html {
+	font-size: 18px;
+}
+
+/*******************************************************************
  loading style
 *******************************************************************/
 
 .loading-container {
 	text-align: center;
-	margin-top: 120px;
+	margin-top: var(--xxl);
 }
 
 .loading {
 	font-weight: bold;
 	font-family: monospace;
-	font-size  : 30px;
+	font-size  : var(--x30);
 	display    : grid;
 }
 
@@ -43,12 +116,12 @@
 	box-sizing : border-box;
 	display    : block;
 	text-align : -webkit-match-parent;
-	padding    : 3px 4px;
-	line-height: 26px;
+	padding    : var(--x3) var(--x4);
+	line-height: var(--x24);
 }
 
 .list-1+.list-1 {
-	margin-top: 10px;
+	margin-top: var(--x10);
 }
 
 .list-1 .list-1-link {
@@ -71,46 +144,46 @@
 .app {
 	max-width: var(--body-w);
 	margin   : auto;
-	padding  : var(--body-pw);
+	padding  : var(--x10);
 }
 
 .container {
-	margin-top: 32px;
+	margin-top: var(--x30);
 }
 
 .layout-1 {
-	padding         : 10px var(--body-pw);
-	margin-top      : 10px;
+	padding         : var(--x10);
+	margin-top      : var(--x10);
 	background-color: #f1f1f1;
 	align-items     : center;
 }
 
 .layout-2 {
-	padding         : 4px 6px;
+	padding         : var(--x4) var(--x6);
 	background-color: var(--highlight);
 	align-items     : center;
 }
 
 .layout-3 {
-	padding         : 15px 0;
+	padding         : var(--md) 0;
 	background-color: transparent;
 	align-items     : center;
 }
 
 .layout-4 {
-	padding         : 10px 20px;
+	padding         : var(--x10) var(--x18);
 	background-color: #fff;
-	border-radius   : 18px;
+	border-radius   : var(--x18);
 }
 
 .layout-5 {
 	width  : 100%;
 	display: block;
-	margin : 10px 0;
+	margin : var(--x10) 0;
 }
 
 .draft-area {
-	margin: var(--xxl) 0 var(--xxs) 0;
+	margin: var(--sm) 0;
 	width : 100%;
 	height: calc(100vh - 160px);
 }
@@ -120,25 +193,25 @@
 *******************************************************************/
 
 .tabs {
-	padding      : 20px 0 15px 0;
-	border-bottom: #f1f1f1 solid 1px;
+	padding      : var(--x18) 0 var(--x14) 0;
+	border-bottom: #f1f1f1 solid var(--x1);
 }
 
 .tabs a {
-	padding        : 15px 20px;
+	padding        : var(--x14) var(--x18);
 	text-decoration: none;
 	color          : #000;
-	font-size      : 14px;
+	font-size      : var(--x14);
 }
 
 @media (max-width: 480px) {
 	.tabs a {
-		padding: 15px 5px;
+		padding: var(--x14) var(--x8);
 	}
 }
 
 .tabs a.selected {
-	border-bottom: green solid 3px;
+	border-bottom: green solid var(--x3);
 }
 
 /*******************************************************************
@@ -148,7 +221,7 @@
 .input-1,
 .input-2,
 .input-3 {
-	font-size  : 16px;
+	font-size  : var(--md);
 	font-family: "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
 	outline    : medium;
 	border     : none;
@@ -156,33 +229,27 @@
 }
 
 .input-1 {
-	padding      : 2px 4px;
-	margin       : 0px;
-	border-bottom: 1px solid var(--fg-c);
+	padding      : var(--x2) var(--x4);
+	margin       : 0;
+	border-bottom: var(--x1) solid var(--fg-c);
 }
 
 .input-2 {
 	background : transparent;
 	flex       : 1 0 auto;
-	min-width  : 100px;
-	padding    : 5px 0px;
-	margin     : 2px;
+	min-width  : var(--x96);
+	padding    : var(--x5) 0;
+	margin     : var(--x2);
 	line-height: initial;
 	box-sizing : border-box;
 }
 
 .input-3 {
 	display      : block;
-	margin       : 6px 0 12px 0;
-	padding      : 4px 0;
+	margin       : var(--x6) 0 var(--x12) 0;
+	padding      : var(--x4) 0;
 	width        : 100%;
-	border-bottom: 1px solid var(--fg-c);
-}
-
-.input-3 {
-	margin: var(--xxl) 0 var(--xxs) 0;
-	width : 100%;
-	height: calc(100vh - var(--bar-h) - var(--nav-h) - var(--xxl) - var(--xxs) - 24px);
+	border-bottom: var(--x1) solid var(--fg-c);
 }
 
 /*******************************************************************
@@ -193,9 +260,9 @@
 	-webkit-box-sizing: border-box;
 	box-sizing        : border-box;
 	position          : fixed;
-	left              : 0px;
-	top               : 0px;
-	z-index           : var(--vs-zindex-2);
+	left              : 0;
+	top               : 0;
+	z-index           : 1000;
 	display           : flex;
 	align-items       : flex-start;
 	justify-content   : center;
@@ -204,31 +271,31 @@
 	max-height        : 100vh;
 	overflow-y        : auto;
 	overflow-x        : hidden;
-	padding-top       : 80px;
-	padding-bottom    : 80px;
+	padding-top       : var(--x72);
+	padding-bottom    : var(--x72);
 	background        : rgb(0 0 0 / 15%);
 }
 
 .dialog {
-	background        : rgba(var(--vs-background), 1);
-	color             : rgba(var(--vs-text), 1);
+	background        : rgba(var(--white), 1);
+	color             : rgba(var(--text-c), 1);
 	position          : relative;
 	min-width         : 400px;
-	border-radius     : var(--vs-radius);
+	border-radius     : var(--x24);
 	-webkit-transition: all 0.25s ease;
 	transition        : all 0.25s ease;
-	-webkit-box-shadow: 0px 5px 30px 0px rgba(0, 0, 0, var(--vs-shadow-opacity));
-	box-shadow        : 0px 5px 30px 0px rgba(0, 0, 0, var(--vs-shadow-opacity));
+	-webkit-box-shadow: 0 var(--x5) var(--x30) 0 rgba(0, 0, 0, .05);
+	box-shadow        : 0 var(--x5) var(--x30) 0 rgba(0, 0, 0, .05);
 	max-width         : 800px;
 	margin            : auto;
 }
 
 .dialog__content {
-	padding      : 10px 16px;
+	padding      : var(--x10) var(--md);
 	width        : 100%;
 	position     : relative;
 	border-radius: inherit;
-	margin-bottom: 20px;
+	margin-bottom: var(--x18);
 }
 
 @media (max-width: 360px) {
@@ -239,8 +306,8 @@
 
 .dialog .close {
 	position         : absolute;
-	top              : -10px;
-	right            : -10px;
+	top              : calc(0px - var(--x10));
+	right            : calc(0px - var(--x10));
 	padding          : 0;
 	margin           : 0;
 	display          : -webkit-box;
@@ -253,13 +320,13 @@
 	-ms-flex-pack    : center;
 	justify-content  : center;
 	background       : inherit;
-	border-radius    : 12px;
+	border-radius    : var(--x12);
 	z-index          : 200;
 	border           : 0;
 	color            : #000;
-	width            : 34px;
-	height           : 34px;
-	font-size        : 1.5em;
+	width            : var(--x36);
+	height           : var(--x36);
+	font-size        : var(--x24);
 }
 
 .overlay {
@@ -286,7 +353,7 @@
 }
 
 .overlay.up .menu {
-	bottom: 32px;
+	bottom: var(--x30);
 }
 
 .overlay.block .menu {
@@ -299,15 +366,15 @@
 
 .menu {
 	background   : #fff;
-	border-radius: 4px;
-	box-shadow   : 0 1px 2px rgb(0 0 0 / 25%), 0 0 1px rgb(0 0 0 / 35%);
+	border-radius: var(--x4);
+	box-shadow   : 0 var(--x1) var(--x2) rgb(0 0 0 / 25%), 0 0 var(--x1) rgb(0 0 0 / 35%);
 	color        : #000;
 	display      : none;
 	outline      : none;
 	overflow     : auto;
 	position     : absolute;
-	max-height   : calc(100vh - 86px);
-	min-width    : 180px;
+	max-height   : calc(100vh - var(--x96));
+	min-width    : calc(var(--x96) * 2);
 	z-index      : 1000;
 }
 
@@ -316,15 +383,15 @@
 }
 
 .menu .menu-subheader {
-	padding: 10px 14px;
+	padding: var(--x10) var(--x14);
 }
 
 .menu .menu-tip {
 	color     : grey;
 	display   : block;
-	font-size : 14px;
+	font-size : var(--x14);
 	text-align: center;
-	padding   : 12px;
+	padding   : var(--x12);
 }
 
 .menu .menu-flex {
@@ -338,10 +405,10 @@
 .menu .menu-item-a {
 	box-sizing     : border-box;
 	color          : black;
-	padding        : 12px;
+	padding        : var(--x12);
 	text-decoration: none;
 	display        : block;
-	font-size      : 14px;
+	font-size      : var(--x14);
 }
 
 .menu .menu-item {
@@ -371,35 +438,35 @@
 	display        : flex;
 	flex-wrap      : wrap;
 	width          : 100%;
-	margin         : 0px;
-	border-bottom  : 1px solid var(--fg-c);
-	padding        : 4px 0;
+	margin         : 0;
+	border-bottom  : var(--x1) solid var(--fg-c);
+	padding        : var(--x4) 0;
 	list-style-type: none;
 	box-sizing     : border-box;
 }
 
 .label-1 {
 	text-decoration : none;
-	font-size       : 12px;
+	font-size       : var(--x12);
 	color           : whitesmoke;
 	background-color: green;
 	border-radius   : 1000px;
-	padding         : 2px 8px;
+	padding         : var(--x2) var(--x8);
 }
 
 .label-1+.label-1 {
-	margin-left: 4px;
+	margin-left: var(--x4);
 }
 
 .label-2 {
-	padding         : 5px 8px;
+	padding         : var(--x5) var(--x8);
 	background-color: var(--fg-c);
 	color           : var(--bg-c);
-	border-radius   : 2px;
+	border-radius   : var(--x2);
 	display         : flex;
 	box-sizing      : border-box;
 	text-align      : -webkit-match-parent;
-	margin          : 3px 6px 3px 0;
+	margin          : var(--x3) var(--x6) var(--x3) 0;
 }
 
 .label-2.del {
@@ -419,16 +486,16 @@
 }
 
 .icon img {
-	width        : 32px;
-	height       : 32px;
-	border-radius: 1000px;
+	width        : var(--x36);
+	height       : var(--x36);
+	border-radius: var(--xxl);
 	margin       : 0;
 }
 
 .text,
 .link {
 	border         : none;
-	border-radius  : 8px;
+	border-radius  : var(--x8);
 	text-decoration: none;
 	margin         : 0;
 }
@@ -439,11 +506,11 @@
 }
 
 .text+.text {
-	margin-left: 8px;
+	margin-left: var(--x8);
 }
 
 .text.sm {
-	font-size: 0.85em;
+	font-size: 0.85rem;
 }
 
 .text.md {
@@ -462,7 +529,7 @@
 .link {
 	color      : #313131;
 	font-weight: 400;
-	font-size  : 16px;
+	font-size  : var(--md);
 	padding    : 0;
 }
 
@@ -472,12 +539,12 @@
 }
 
 .btn.border {
-	border : 2px solid #3131317a;
-	padding: 6px 16px;
+	border : var(--x2) solid #3131317a;
+	padding: var(--x6) var(--md);
 }
 
 .btn.border:hover {
-	border: 2px solid #313131;
+	border: var(--x2) solid #313131;
 }
 
 .btn.link:hover {
@@ -489,7 +556,7 @@
 *******************************************************************/
 
 .p {
-	font-size: 16px;
+	font-size: var(--md);
 }
 
 .p.wrap {
@@ -532,11 +599,11 @@
 }
 
 .margin-y {
-	margin: 16px 0;
+	margin: var(--md) 0;
 }
 
 .padding-y {
-	padding: 6px 0;
+	padding: var(--x6) 0;
 }
 
 /*******************************************************************
@@ -545,7 +612,7 @@
 
 .markdown {
 	word-wrap: break-word;
-	padding  : 0 var(--body-pw);
+	padding  : 0 var(--x10);
 }
 
 .markdown:first-child {
@@ -556,8 +623,8 @@
 .markdown .anchor {
 	float        : left;
 	line-height  : 1;
-	margin-left  : -20px;
-	padding-right: 4px;
+	margin-left  : calc(0px - var(--x18));
+	padding-right: var(--x4);
 }
 
 .markdown .anchor:focus .octicon {
@@ -584,5 +651,5 @@
 hr {
 	color     : #f1f1f1;
 	border    : none;
-	border-top: 1px solid #f1f1f1;
+	border-top: var(--x1) solid #f1f1f1;
 }
