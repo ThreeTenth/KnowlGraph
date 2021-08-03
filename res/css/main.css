@@ -22,9 +22,8 @@
 	--black  : #262626;
 
 	--primary  : var(--blue);
-	--fgc      : var(--primary);
-	--bgc      : var(--white);
-	--text-c   : var(--black);
+	--text     : var(--black);
+	--text-r   : var(--white);
 	--highlight: #00000010;
 
 	--success: var(--olive);
@@ -96,8 +95,8 @@ html {
 .loading:after {
 	content     : "Loading...";
 	grid-area   : 1/1;
-	-webkit-mask: linear-gradient(90deg, #000 50%, #0000 0) 0 50%/2ch 100%;
-	mask        : linear-gradient(90deg, #000 50%, #0000 0) 0 50%/2ch 100%;
+	-webkit-mask: linear-gradient(90deg, var(--black) 50%, #0000 0) 0 50%/2ch 100%;
+	mask        : linear-gradient(90deg, var(--black) 50%, #0000 0) 0 50%/2ch 100%;
 	animation   : c1 1s infinite cubic-bezier(0.5, 220, 0.5, -220);
 }
 
@@ -111,6 +110,26 @@ html {
 	100% {
 		transform: translateY(calc(var(--s, 1)*0.1%));
 	}
+}
+
+/*******************************************************************
+ list style
+*******************************************************************/
+
+.logo {
+	width: auto;
+}
+
+.logo::before {
+	content      : "KnowlGraph";
+	font-weight  : 700;
+	font-size    : calc(var(--x18) + var(--x2));
+	padding      : var(--x8);
+	border-radius: var(--x3);
+}
+
+.logo:hover::before {
+	background-color: var(--highlight);
 }
 
 /*******************************************************************
@@ -131,7 +150,7 @@ html {
 
 .list-1 .list-1-link {
 	text-decoration: none;
-	color          : var(--text-c);
+	color          : var(--text);
 }
 
 .list-1 .list-1-title {
@@ -161,12 +180,6 @@ html {
 	align-items     : center;
 }
 
-.layout-2 {
-	border-radius   : var(--x3);
-	background-color: var(--highlight);
-	align-items     : center;
-}
-
 .layout-3 {
 	padding         : var(--md) 0;
 	background-color: transparent;
@@ -175,7 +188,7 @@ html {
 
 .layout-4 {
 	padding         : var(--x10) var(--x18);
-	background-color: #fff;
+	background-color: var(--white);
 	border-radius   : var(--x18);
 }
 
@@ -197,13 +210,13 @@ html {
 
 .tabs {
 	padding      : var(--x9) 0 var(--x9) 0;
-	border-bottom: #f1f1f1 solid var(--x1);
+	border-bottom: var(--highlight) solid var(--x1);
 }
 
 .tabs a {
 	padding        : var(--x9) var(--x18);
 	text-decoration: none;
-	color          : #000;
+	color          : var(--black);
 	font-size      : var(--x14);
 }
 
@@ -228,13 +241,13 @@ html {
 	font-family: "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
 	outline    : medium;
 	border     : none;
-	color      : var(--text-c);
+	color      : var(--text);
 }
 
 .input-1 {
 	padding      : var(--x2) var(--x4);
 	margin       : 0;
-	border-bottom: var(--x1) solid var(--fgc);
+	border-bottom: var(--x1) solid var(--primary);
 }
 
 .input-2 {
@@ -252,7 +265,7 @@ html {
 	margin       : var(--x6) 0 var(--x12) 0;
 	padding      : var(--x4) 0;
 	width        : 100%;
-	border-bottom: var(--x1) solid var(--fgc);
+	border-bottom: var(--x1) solid var(--primary);
 }
 
 /*******************************************************************
@@ -281,7 +294,7 @@ html {
 
 .dialog {
 	background        : rgba(var(--white), 1);
-	color             : rgba(var(--text-c), 1);
+	color             : rgba(var(--text), 1);
 	position          : relative;
 	min-width         : 400px;
 	border-radius     : var(--x24);
@@ -326,7 +339,7 @@ html {
 	border-radius    : var(--x12);
 	z-index          : 200;
 	border           : 0;
-	color            : #000;
+	color            : var(--black);
 	width            : var(--x36);
 	height           : var(--x36);
 	font-size        : var(--x24);
@@ -368,10 +381,10 @@ html {
 *******************************************************************/
 
 .menu {
-	background   : #fff;
+	background   : var(--white);
 	border-radius: var(--x4);
 	box-shadow   : 0 var(--x1) var(--x2) rgb(0 0 0 / 25%), 0 0 var(--x1) rgb(0 0 0 / 35%);
-	color        : #000;
+	color        : var(--black);
 	display      : none;
 	outline      : none;
 	overflow     : auto;
@@ -430,7 +443,7 @@ html {
 .menu .selected,
 .menu .menu-item:hover,
 .menu .menu-item-a:hover {
-	background-color: #f1f1f1
+	background-color: var(--highlight);
 }
 
 /*******************************************************************
@@ -442,7 +455,7 @@ html {
 	flex-wrap      : wrap;
 	width          : 100%;
 	margin         : 0;
-	border-bottom  : var(--x1) solid var(--fgc);
+	border-bottom  : var(--x1) solid var(--primary);
 	padding        : var(--x4) 0;
 	list-style-type: none;
 	box-sizing     : border-box;
@@ -463,8 +476,8 @@ html {
 
 .label-2 {
 	padding         : var(--x5) var(--x8);
-	background-color: var(--fgc);
-	color           : var(--bgc);
+	background-color: var(--primary);
+	color           : var(--text-r);
 	border-radius   : var(--x2);
 	display         : flex;
 	box-sizing      : border-box;
@@ -474,7 +487,7 @@ html {
 
 .label-2.del {
 	background-color: var(--red);
-	color           : #fff;
+	color           : var(--white);
 }
 
 /*******************************************************************
@@ -504,7 +517,7 @@ html {
 }
 
 .text {
-	color      : #000000;
+	color      : var(--black);
 	font-weight: 500;
 	font-size  : var(--x14);
 }
@@ -526,12 +539,12 @@ html {
 }
 
 .text.fill {
-	background-color: green;
-	color           : #fff;
+	background-color: var(--primary);
+	color           : var(--white);
 }
 
 .link {
-	color      : #313131;
+	color      : var(--black);
 	font-weight: 400;
 	font-size  : var(--md);
 	padding    : 0;
@@ -543,12 +556,12 @@ html {
 }
 
 .btn.border {
-	border : var(--x2) solid #3131317a;
+	border : var(--x2) solid var(--highlight);
 	padding: var(--x6) var(--md);
 }
 
 .btn.border:hover {
-	border: var(--x2) solid #313131;
+	border: var(--x2) solid var(--highlight);
 }
 
 .btn.link:hover {
@@ -618,6 +631,10 @@ html {
 	padding: 0 var(--x9);
 }
 
+.padding-y12 {
+	padding: var(--x12) 0;
+}
+
 .padding-y {
 	padding: var(--md) 0;
 }
@@ -658,7 +675,7 @@ html {
 .markdown .octicon {
 	display       : inline-block;
 	fill          : currentColor;
-	color         : #1b1f23;
+	color         : var(--black);
 	vertical-align: middle;
 	visibility    : hidden;
 }
@@ -673,7 +690,7 @@ html {
 }
 
 hr {
-	color     : #f1f1f1;
+	color     : var(--highlight);
 	border    : none;
-	border-top: var(--x1) solid #f1f1f1;
+	border-top: var(--x1) solid var(--highlight);
 }

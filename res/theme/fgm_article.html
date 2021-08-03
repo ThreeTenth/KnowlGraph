@@ -26,7 +26,7 @@
         </dropdown>
       </div>
       <template v-if="article.private">
-        <button class="btn text padding-y9">🔒</button>
+        <span class="text padding-9">🔒</span>
       </template>
       <div class="padding-x9" v-else>
         <button class="btn text padding-y9" v-on:click="onStar">⭐ {{ article.star ? i18n.Unstar : i18n.Star }}</button>
@@ -52,7 +52,7 @@
         <button class="btn text lg">😃</button>
         <div class="menu">
           <div class="menu-subheader">{{ i18n.PickYourReaction }}</div>
-          <div class="menu-flex" style="width: 214px;">
+          <div class="menu-flex" style="width: calc(var(--x96) * 2 + var(--x24));">
             <button class="menu-item" v-for="(reac, i) in reactions" v-on:click="onPickReaction(reac.value)"
               v-bind:title="i18n[reac.name]">{{ reac.emoji}}</button>
           </div>
