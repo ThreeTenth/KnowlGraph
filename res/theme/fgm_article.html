@@ -1,6 +1,6 @@
 <template>
   <div class="container" v-if="article">
-    <div class="layout-1 flex margin-y9">
+    <div class="layout-1 flex margin-t18b9">
       <div class="flex-1">
         <dropdown class="left" v-bind:ignore="'true'" v-if="article.nodes.length">
           <button class="btn text padding-9">{{ bZticle.nodes[0].edges.word.name }}</button>
@@ -72,7 +72,7 @@
         </div>
       </dropdown>
     </div>
-    <div class="layout-1 padding-9" v-if="article.reactions.length">
+    <div class="layout-1 padding-9 margin-y9" v-if="article.reactions.length">
       <button class="btn text" v-for="(reac, i) in article.reactions" v-on:click="onPickReaction(reac.status)">{{
         emoji[reac.status]}} {{ reac.count }}</button>
     </div>

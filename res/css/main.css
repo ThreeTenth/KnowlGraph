@@ -189,7 +189,7 @@ html {
 }
 
 .layout-3 {
-	padding         : var(--md) 0;
+	padding         : var(--x9) 0;
 	background-color: transparent;
 	align-items     : center;
 }
@@ -236,6 +236,7 @@ html {
 
 .tabs a:hover {
 	background-color: var(--highlight);
+	border-radius   : var(--x4) var(--x4) 0 0;
 }
 
 .tabs a.selected {
@@ -264,13 +265,14 @@ html {
 }
 
 .input-2 {
-	background : transparent;
-	flex       : 1 0 auto;
-	min-width  : var(--x96);
-	padding    : var(--x5) 0;
-	margin     : var(--x2);
-	line-height: initial;
-	box-sizing : border-box;
+	background   : var(--white);
+	border-radius: var(--x4);
+	flex         : 1 0 auto;
+	min-width    : var(--x96);
+	padding      : var(--x9);
+	margin       : var(--x2);
+	line-height  : initial;
+	box-sizing   : border-box;
 }
 
 .input-3 {
@@ -661,8 +663,13 @@ html {
 	margin-top: var(--x9);
 }
 
-.margin-t18 {
-	margin-top: var(--x18);
+.margin-t30 {
+	margin-top: var(--x30);
+}
+
+.margin-t18b9 {
+	margin-top   : var(--x18);
+	margin-bottom: var(--x9);
 }
 
 .padding-x9 {
