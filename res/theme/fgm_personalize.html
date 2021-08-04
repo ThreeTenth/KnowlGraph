@@ -1,5 +1,5 @@
-<div>
-  <h2>{{ i18n.Personalize }}</h2>
+<div class="container">
+  <h2 class="padding-x9">{{ i18n.Personalize }}</h2>
   <h3>{{ currentLang }}</h3>
   <div>
     <button class="btn text md margin-y" v-for="(lang, i) in languages" :key="lang.code" v-on:click="onSelectUserLang(lang)">{{ lang.name }}</button>

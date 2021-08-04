@@ -1,5 +1,5 @@
-<div class="container">
-  <template v-if="articles.length != 0">
+<template>
+  <div class="container" v-if="articles.length != 0">
     <div class="list-1" v-for="(article, i) in articles">
       <router-link class="list-1-link" :to="{ name: 'article', params: { id: article.id, code: article.code }}">
         <div>
@@ -13,4 +13,4 @@
   <div class="loading-container" v-else>
     <div class="loading"></div>
   </div>
-</div>
+</template>

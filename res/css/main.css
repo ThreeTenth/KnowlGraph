@@ -13,7 +13,7 @@
 	--maroon : #85144B;
 	--yellow : #FFDC00;
 	--green  : #06847d;
-	--blue   : #4a69bd;
+	--blue   : rgb(26, 92, 255);
 	--orange : #a46313;
 	--red    : #e02e06;
 	--white  : #ffffff;
@@ -72,7 +72,10 @@
 }
 
 html {
-	font-size: 18px;
+	color           : var(--black);
+	font-size       : 18px;
+	background-color: var(--grey);
+	overflow-y      : scroll;
 }
 
 /*******************************************************************
@@ -121,15 +124,17 @@ html {
 }
 
 .logo::before {
-	content      : "KnowlGraph";
-	font-weight  : 700;
-	font-size    : calc(var(--x18) + var(--x2));
-	padding      : var(--x8);
-	border-radius: var(--x3);
+	content         : "KnowlGraph";
+	font-weight     : 800;
+	font-size       : calc(var(--x18) + var(--x2));
+	padding         : var(--x6);
+	border-radius   : var(--x3);
+	background-color: #000;
+	color           : var(--white);
 }
 
 .logo:hover::before {
-	background-color: var(--highlight);
+	background-color: var(--black);
 }
 
 /*******************************************************************
@@ -137,15 +142,13 @@ html {
 *******************************************************************/
 
 .list-1 {
-	box-sizing : border-box;
-	display    : block;
-	text-align : -webkit-match-parent;
-	padding    : var(--x3) var(--x4);
-	line-height: var(--x24);
-}
-
-.list-1+.list-1 {
-	margin-top: var(--x10);
+	box-sizing   : border-box;
+	display      : block;
+	text-align   : -webkit-match-parent;
+	padding      : var(--x9);
+	line-height  : var(--x24);
+	margin       : var(--x18) 0;
+	border-radius: var(--x5);
 }
 
 .list-1 .list-1-link {
@@ -165,13 +168,18 @@ html {
  layout style
 *******************************************************************/
 
-.app {
-	max-width: var(--body-w);
-	margin   : auto;
+.nav {
+	display         : flex;
+	align-items     : center;
+	padding         : var(--x9);
+	background-color: var(--white);
+	max-width       : var(--body-w);
+	margin          : auto;
 }
 
 .container {
-	padding-top: var(--x18);
+	max-width: var(--body-w);
+	margin   : auto;
 }
 
 .layout-1 {
@@ -211,23 +219,27 @@ html {
 .tabs {
 	padding      : var(--x9) 0 var(--x9) 0;
 	border-bottom: var(--highlight) solid var(--x1);
+	font-size    : var(--x14);
 }
 
 .tabs a {
-	padding        : var(--x9) var(--x18);
+	padding        : var(--x9) var(--x14);
 	text-decoration: none;
 	color          : var(--black);
-	font-size      : var(--x14);
 }
 
 @media (max-width: 480px) {
 	.tabs a {
-		padding: var(--x14) var(--x8);
+		padding: var(--x9) var(--x5);
 	}
 }
 
+.tabs a:hover {
+	background-color: var(--highlight);
+}
+
 .tabs a.selected {
-	border-bottom: green solid var(--x4);
+	border-bottom: var(--black) solid var(--x4);
 }
 
 /*******************************************************************
@@ -236,7 +248,8 @@ html {
 
 .input-1,
 .input-2,
-.input-3 {
+.input-3,
+.input-4 {
 	font-size  : var(--md);
 	font-family: "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
 	outline    : medium;
@@ -266,6 +279,26 @@ html {
 	padding      : var(--x4) 0;
 	width        : 100%;
 	border-bottom: var(--x1) solid var(--primary);
+}
+
+.input-4 {
+	border-radius: var(--x4);
+	border       : var(--highlight) solid var(--x1);
+	padding      : var(--x7);
+	margin       : 0 var(--x9);
+	color        : var(--black);
+}
+
+.input-4::placeholder {
+	color: var(--highlight);
+}
+
+.input-4:hover {
+	border: var(--black) solid var(--x1);
+}
+
+.input-4:hover::placeholder {
+	color: var(--grey);
 }
 
 /*******************************************************************
@@ -502,8 +535,8 @@ html {
 }
 
 .icon img {
-	width        : var(--x36);
-	height       : var(--x36);
+	width        : var(--x30);
+	height       : var(--x30);
 	border-radius: var(--xxl);
 	margin       : 0;
 }
@@ -620,27 +653,36 @@ html {
 }
 
 .margin-y9 {
-	margin: var(--x9) 0;
+	margin-top   : var(--x9);
+	margin-bottom: var(--x9);
 }
 
 .margin-t9 {
 	margin-top: var(--x9);
 }
 
+.margin-t18 {
+	margin-top: var(--x18);
+}
+
 .padding-x9 {
-	padding: 0 var(--x9);
+	padding-left : var(--x9);
+	padding-right: var(--x9);
 }
 
 .padding-y12 {
-	padding: var(--x12) 0;
+	padding-top   : var(--x12);
+	padding-bottom: var(--x12);
 }
 
 .padding-y {
-	padding: var(--md) 0;
+	padding-top   : var(--md);
+	padding-bottom: var(--md);
 }
 
 .padding-y9 {
-	padding: var(--x9) 0;
+	padding-top   : var(--x9);
+	padding-bottom: var(--x9);
 }
 
 .padding-9 {
