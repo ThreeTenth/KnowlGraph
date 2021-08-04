@@ -60,12 +60,12 @@
 	--x72: calc(var(--x60) + var(--x12));
 	--x96: calc(var(--x72) + var(--x24));
 
-	--body-w: calc(100vw - 480px);
+	--body-w: calc(100vw - 320px);
 
 	font-family: "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1040px) {
 	:root {
 		--body-w: 720px;
 	}
@@ -534,6 +534,8 @@ html {
 	padding        : 0;
 	border         : none;
 	text-decoration: none;
+	width          : var(--x30);
+	height         : var(--x30);
 }
 
 .icon img {
@@ -555,6 +557,7 @@ html {
 	color      : var(--black);
 	font-weight: 500;
 	font-size  : var(--x14);
+	padding    : var(--x1) var(--x4);
 }
 
 .text+.text {
@@ -650,6 +653,11 @@ html {
 	margin: 0;
 }
 
+.margin-x18 {
+	margin-left : var(--x18);
+	margin-right: var(--x18);
+}
+
 .margin-y {
 	margin: var(--md) 0;
 }
@@ -701,8 +709,10 @@ html {
 *******************************************************************/
 
 .markdown {
-	word-wrap: break-word;
-	padding  : 0 var(--x10);
+	word-wrap       : break-word;
+	margin          : var(--x9) 0;
+	padding         : var(--x2) var(--x10);
+	border-radius   : var(--x5);
 }
 
 .markdown:first-child {

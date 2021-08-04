@@ -3,9 +3,14 @@
     <nav class="nav">
       <div class="flex-auto">
         <router-link class="btn link logo" to="/"></router-link>
-        <input class="input-4" placeholder="搜索……" hidden/>
+        <input class="input-4" placeholder="搜索……" hidden />
       </div>
-      <dropdown>
+      <div class="margin-x18">
+        <button class="btn text">🔍</button>
+        <button class="btn text">⭐</button>
+        <button class="btn text">🔔</button>
+      </div>
+      <dropdown style="height: var(--x30);">
         <button class="btn icon" title="user info">
           <img title="user avatar" v-bind:src="profilePicture">
         </button>
