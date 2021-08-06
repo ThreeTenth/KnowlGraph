@@ -22,6 +22,8 @@ const EditDraft = {
 
   data: function () {
     return {
+      showSnapshots: false,
+      snapshots: [],
       draft: this.__draft,
       __last: { body: "" },
     }
@@ -47,7 +49,23 @@ const EditDraft = {
 
   methods: {
     onHistories() {
-      router.push({ name: 'draftHistories', params: { id: this.id } })
+      // router.push({ name: 'draftHistories', params: { id: this.id } })
+      let _this = this
+      axios({
+        method: "GET",
+        url: queryRestful("/v1/draft", { id: this.id, needHistory: true }),
+      }).then(function (resp) {
+        _this.snapshots = resp.data.edges.snapshots
+        _this.showSnapshots = true
+      }).catch(function (resp) {
+        console.log(resp)
+      })
+    },
+
+    onDafteHistory(snapshot) {
+      this.showSnapshots = false
+
+      setTimeout(() => router.push({ name: 'draftHistory', params: { id: this.id, hid: snapshot.id, __snapshot: snapshot } }), 0);
     },
 
     onPublish() {

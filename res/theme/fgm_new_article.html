@@ -16,4 +16,14 @@
       </div>
     </dropdown>
   </div>
+  <modal v-model="showSnapshots">
+    <div class="padding-9">
+      <template v-for="(snapshot, i) in snapshots">
+        <div class="padding-9" v-on:click="onDafteHistory(snapshot)">
+          <the-time class="btn" v-bind:datetime="snapshot.created_at">
+          </the-time>
+        </div>
+      </template>
+    </div>
+  </modal>
 </div>

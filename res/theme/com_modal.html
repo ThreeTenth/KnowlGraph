@@ -1,11 +1,10 @@
 <span>
-  <transition name="vs-dialog">
-    <div v-on:click.stop="close" class="modal" v-if="seen" ref="dialog-content">
-      <div class="dialog" v-on:click.stop>
-        <button class="close" v-on:click="close">✖</button>
-        <div class="dialog__content notFooter">
-        </div>
+  <div v-on:click.stop="close" class="modal" v-if="seen" ref="dialog-content">
+    <div class="dialog" v-on:click.stop>
+      <button class="close" v-on:click="close">✖</button>
+      <div class="dialog__content">
+        <slot></slot>
       </div>
     </div>
-  </transition>
+  </div>
 </span>

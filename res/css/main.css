@@ -72,8 +72,11 @@
 }
 
 html {
+	font-size: 18px;
+}
+
+body {
 	color           : var(--black);
-	font-size       : 18px;
 	background-color: var(--grey);
 	overflow-y      : scroll;
 }
@@ -328,8 +331,8 @@ html {
 }
 
 .dialog {
-	background        : rgba(var(--white), 1);
-	color             : rgba(var(--text), 1);
+	background        : var(--white);
+	color             : var(--text);
 	position          : relative;
 	min-width         : 400px;
 	border-radius     : var(--x24);
@@ -342,7 +345,6 @@ html {
 }
 
 .dialog__content {
-	padding      : var(--x10) var(--md);
 	width        : 100%;
 	position     : relative;
 	border-radius: inherit;
@@ -378,6 +380,7 @@ html {
 	width            : var(--x36);
 	height           : var(--x36);
 	font-size        : var(--x24);
+	cursor           : pointer;
 }
 
 .overlay {
@@ -529,20 +532,18 @@ html {
  button and a (link) style
 *******************************************************************/
 
-.icon {
+.avatar {
 	margin         : 0;
 	padding        : 0;
 	border         : none;
 	text-decoration: none;
-	width          : var(--x30);
-	height         : var(--x30);
 }
 
-.icon img {
+.avatar img {
 	width        : var(--x30);
 	height       : var(--x30);
-	border-radius: var(--xxl);
 	margin       : 0;
+	border-radius: var(--xxl);
 }
 
 .text,
@@ -558,6 +559,8 @@ html {
 	font-weight: 500;
 	font-size  : var(--x14);
 	padding    : var(--x1) var(--x4);
+	display    : flex;
+	align-items: center;
 }
 
 .text+.text {
@@ -659,7 +662,8 @@ html {
 }
 
 .margin-y {
-	margin: var(--md) 0;
+	margin-top   : var(--md);
+	margin-bottom: var(--md);
 }
 
 .margin-y9 {
@@ -709,10 +713,10 @@ html {
 *******************************************************************/
 
 .markdown {
-	word-wrap       : break-word;
-	margin          : var(--x9) 0;
-	padding         : var(--x2) var(--x10);
-	border-radius   : var(--x5);
+	word-wrap    : break-word;
+	margin       : var(--x9) 0;
+	padding      : var(--x2) var(--x10);
+	border-radius: var(--x5);
 }
 
 .markdown:first-child {

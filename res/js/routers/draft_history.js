@@ -1,55 +1,5 @@
 // draft_history.js
 
-const DraftHistories = {
-  props: ['id'],
-
-  data: function () {
-    return {
-      snapshots: [],
-    }
-  },
-
-  methods: {
-    onHistory: function (snapshot) {
-      router.push({ name: 'draftHistory', params: { id: this.id, hid: snapshot.id, __snapshot: snapshot } })
-    },
-
-    __load(id) {
-      let _this = this
-      axios({
-        method: "GET",
-        url: queryRestful("/v1/draft", { id: id, needHistory: true }),
-      }).then(function (resp) {
-        _this.snapshots = resp.data.edges.snapshots
-      }).catch(function (resp) {
-        console.log(resp)
-      })
-    },
-  },
-
-  beforeRouteEnter(to, from, next) {
-    if (!logined) {
-      router.push({ name: "login" })
-      return
-    }
-
-    if (from.name === "draftHistory") {
-      next()
-    } else {
-      next(vm => {
-        vm.__load(to.params.id)
-      })
-    }
-  },
-
-  beforeRouteUpdate(to, from, next) {
-    next()
-    this.__load(to.params.id)
-  },
-
-  template: fgm_draft_histories,
-}
-
 const DraftHistory = {
   props: ['id', 'hid', '__snapshot'],
 

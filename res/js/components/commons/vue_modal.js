@@ -20,7 +20,7 @@ Vue.component('modal', {
         })
         document.body.style.overflow = 'hidden'
       } else {
-        document.body.style.overflow = ''
+        document.body.style['overflow-y'] = 'scroll'
       }
     },
   },
@@ -37,66 +37,42 @@ Vue.component('modal', {
     },
   },
 
-  // template: com_modal,
+  template: com_modal,
 
-  render(h) {
-    const content = h('div', {
-      staticClass: 'vs-dialog__content',
-      // class: {
-      //   notFooter: !this.$slots.footer
-      // }
-    }, [
-      this.$slots.default
-    ])
+  // render(h) {
+  //   const content = h('div', {
+  //     staticClass: 'dialog__content',
+  //   }, [
+  //     this.$slots.default
+  //   ])
 
-    const dialog = h('div', {
-      staticClass: 'modal-content',
-      // style: {
-      //   width: this.width
-      // },
-      // class: {
-      //   'vs-dialog--fullScreen': this.fullScreen,
-      //   'vs-dialog--rebound': this.rebound,
-      //   'vs-dialog--notPadding': this.notPadding,
-      //   'vs-dialog--square': this.square,
-      //   'vs-dialog--autoWidth': this.autoWidth,
-      //   'vs-dialog--scroll': this.scroll,
-      //   'vs-dialog--loading': this.loading,
-      //   'vs-dialog--notCenter': this.notCenter,
-      // }
-    }, [
-      // this.loading && loading,
-      // !this.notClose && close,
-      // this.$slots.header && header,
-      this.$slots.default,
-      // this.$slots.footer && footer
-    ])
+  //   const dialog = h('div', {
+  //     staticClass: 'modal-content',
+  //   }, [
+  //     this.$slots.default,
+  //   ])
 
-    const dialogContent = h('div', {
-      staticClass: 'modal',
-      ref: 'dialog-content',
-      // class: {
-      //   blur: this.blur,
-      //   fullScreen: this.fullScreen,
-      // },
-      on: {
-        click: (evt) => {
-          if (!evt.target.closest('.modal-content') && !this.preventClose) {
-            this.$emit('toggle', !this.seen)
-            this.$emit('close')
-          }
-        }
-      }
-    }, [
-      dialog
-    ])
+  //   const dialogContent = h('div', {
+  //     staticClass: 'modal',
+  //     ref: 'dialog-content',
+  //     on: {
+  //       click: (evt) => {
+  //         if (!evt.target.closest('.modal-content') && !this.preventClose) {
+  //           this.$emit('toggle', !this.seen)
+  //           this.$emit('close')
+  //         }
+  //       }
+  //     }
+  //   }, [
+  //     dialog
+  //   ])
 
-    const modalTransition = h('transition', {
-      props: {
-        name: 'vs-dialog'
-      },
-    }, [this.seen && dialogContent])
+  //   const modalTransition = h('transition', {
+  //     props: {
+  //       name: 'vs-dialog'
+  //     },
+  //   }, [this.seen && dialogContent])
 
-    return h('span', [modalTransition])
-  },
+  //   return h('span', [modalTransition])
+  // },
 })
