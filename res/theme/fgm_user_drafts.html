@@ -2,7 +2,7 @@
   <h2 class="padding-x9">{{ i18n.Drafts }}</h2>
   <template v-if="drafts.length != 0">
     <div class="list-1" v-for="(draft, i) in drafts">
-      <div class="list-1-text" v-on:click="onDraft(i)">{{ draft.body }}</div>
+      <div class="btn list-1-text" v-on:click="onDraft(i)">{{ draft.body }}</div>
       <the-time v-bind:datetime="draft.created_at"></the-time>
     </div>
   </template>

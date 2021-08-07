@@ -20,7 +20,7 @@
     </div>
     <the-time v-bind:datetime="snapshot.created_at"></the-time>
   </div>
-  <div v-else>
-    Loading
+  <div class="loading-container" v-else>
+    <div class="loading"></div>
   </div>
 </div>
