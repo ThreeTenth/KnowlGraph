@@ -7,6 +7,15 @@ const Archive = {
     }
   },
 
+  beforeRouteEnter(to, from, next) {
+    if (!logined) {
+      router.push({ name: "login" })
+      return
+    }
+
+    next()
+  },
+
   created() {
     this.status = this.$router.history.current.name
   },

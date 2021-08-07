@@ -1,4 +1,4 @@
-<template>
+<div>
   <div class="container" v-if="articles.length != 0">
     <div class="list-1" v-for="(article, i) in articles">
       <router-link class="list-1-link" :to="{ name: 'article', params: { id: article.id, code: article.code }}">
@@ -9,8 +9,8 @@
       </router-link>
       <the-time v-bind:datetime="article.created_at"></the-time>
     </div>
-  </template>
+  </div>
   <div class="loading-container" v-else>
     <div class="loading"></div>
   </div>
-</template>
+</div>

@@ -8,7 +8,7 @@ const NewArticle = {
       method: "PUT",
       url: queryRestful("/v1/article", { status: to.query.status }),
     }).then(function (resp) {
-      router.push({ name: 'editDraft', params: { id: resp.data.id, __draft: resp.data } })
+      router.push({ name: 'editDraft', params: { id: resp.data.id } })
     }).catch(function (resp) {
       console.log(resp.status, resp.data)
     })
@@ -18,13 +18,13 @@ const NewArticle = {
 }
 
 const EditDraft = {
-  props: ['id', "__draft"],
+  props: ['id'],
 
   data: function () {
     return {
       showSnapshots: false,
       snapshots: [],
-      draft: this.__draft,
+      draft: null,
       __last: { body: "" },
     }
   },
@@ -69,7 +69,7 @@ const EditDraft = {
     },
 
     onPublish() {
-      router.push({ name: 'publishArticle', params: { id: this.id, __draft: this.draft } })
+      router.push({ name: 'publishArticle', params: { id: this.id } })
     },
 
     onChanged: function () {
@@ -108,30 +108,6 @@ const EditDraft = {
       })
     },
 
-    __load(__id, __draft) {
-      if (__draft) {
-        this.__setDraft(__draft)
-        this.__setLast(__draft)
-        return
-      }
-
-      if (this.draft && __id == this.draft.id) {
-        this.__setLast(this.draft)
-        return
-      }
-
-      let _this = this
-      axios({
-        method: "GET",
-        url: queryRestful("/v1/draft", { id: __id }),
-      }).then(function (resp) {
-        _this.__setDraft(resp.data)
-        _this.__setLast(resp.data)
-      }).catch(function (resp) {
-        console.log(resp)
-      })
-    },
-
     __setDraft(__draft) {
       this.draft = __draft
       if (!this.draft.edges.snapshots) {
@@ -144,14 +120,6 @@ const EditDraft = {
     }
   },
 
-  created() {
-    this.__load(this.id, this.__draft)
-  },
-
-  activated() {
-    this.__load(this.id, this.__draft)
-  },
-
   beforeRouteEnter(to, from, next) {
     if (!logined) {
       router.push({ name: "login" })
@@ -161,9 +129,17 @@ const EditDraft = {
     next()
   },
 
-  beforeRouteUpdate(to, from, next) {
-    next()
-    this.__load(to.params.id, to.params.__draft)
+  created() {
+    let _this = this
+    axios({
+      method: "GET",
+      url: queryRestful("/v1/draft", { id: this.id }),
+    }).then(function (resp) {
+      _this.__setDraft(resp.data)
+      _this.__setLast(resp.data)
+    }).catch(function (resp) {
+      console.log(resp)
+    })
   },
 
   template: fgm_new_article,

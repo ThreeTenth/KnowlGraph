@@ -1,7 +1,7 @@
 // publish_article.js
 
 const PublishArticle = {
-  props: ['id', '__draft'],
+  props: ['id'],
 
   data: function () {
     return {
@@ -32,7 +32,7 @@ const PublishArticle = {
       } else {
         gist = text
       }
-      
+
       gist = gist.replace(/[\r|\n]/g, ' ')
 
       this.status = val.edges.article.status
@@ -88,44 +88,6 @@ const PublishArticle = {
         console.log(resp)
       })
     },
-
-    __load(__id, __draft) {
-      if (__draft) {
-        this.draft = __draft
-        return
-      }
-
-      if (this.draft && __id == this.draft.id) {
-        return
-      }
-
-      let _this = this
-      axios({
-        method: "GET",
-        url: queryRestful("/v1/draft", { id: __id }),
-      }).then(function (resp) {
-        _this.draft = resp.data
-      }).catch(function (resp) {
-        console.log(resp)
-      })
-
-      axios({
-        method: "GET",
-        url: queryRestful("/v1/words"),
-      }).then(function (resp) {
-        _this.words = resp.data
-      }).catch(function (resp) {
-        console.log(resp)
-      })
-    },
-  },
-
-  created() {
-    this.__load(this.id, this.__draft)
-  },
-
-  activated() {
-    this.__load(this.id, this.__draft)
   },
 
   beforeRouteEnter(to, from, next) {
@@ -137,9 +99,25 @@ const PublishArticle = {
     next()
   },
 
-  beforeRouteUpdate(to, from, next) {
-    next()
-    this.__load(to.params.id, to.params.__draft)
+  created() {
+    let _this = this
+    axios({
+      method: "GET",
+      url: queryRestful("/v1/draft", { id: this.id }),
+    }).then(function (resp) {
+      _this.draft = resp.data
+    }).catch(function (resp) {
+      console.log(resp)
+    })
+
+    axios({
+      method: "GET",
+      url: queryRestful("/v1/words"),
+    }).then(function (resp) {
+      _this.words = resp.data
+    }).catch(function (resp) {
+      console.log(resp)
+    })
   },
 
   template: fgm_publish_article,

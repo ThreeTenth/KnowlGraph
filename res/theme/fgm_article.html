@@ -1,4 +1,4 @@
-<template>
+<div>
   <div class="container" v-if="article">
     <div class="layout-1 flex margin-t18b9">
       <div class="flex-1">
@@ -80,7 +80,8 @@
       <new-node v-on:successed="isNewNode = false" v-on:failured="isNewNode = false"></new-node>
     </modal>
   </div>
-  <div class="loading-container" v-else>
+  <div class="loading-container" v-else-if="0 == status">
     <div class="loading"></div>
   </div>
-</template>
+  <div class="loading-container" v-else>没有权限</div>
+</div>

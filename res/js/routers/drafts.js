@@ -25,6 +25,22 @@ const Drafts = {
     }
   },
 
+  methods: {
+    onDraft(i) {
+      let draft = this.$data.__original[i]
+      router.push({ name: 'editDraft', params: { id: draft.id, __draft: draft } })
+    }
+  },
+
+  beforeRouteEnter(to, from, next) {
+    if (!logined) {
+      router.push({ name: "login" })
+      return
+    }
+
+    next()
+  },
+
   created() {
     let _this = this
     axios({
@@ -35,13 +51,6 @@ const Drafts = {
     }).catch(function (resp) {
       console.log(resp)
     })
-  },
-
-  methods: {
-    onDraft(i) {
-      let draft = this.$data.__original[i]
-      router.push({ name: 'editDraft', params: { id: draft.id, __draft: draft } })
-    }
   },
 
   template: fgm_user_drafts,

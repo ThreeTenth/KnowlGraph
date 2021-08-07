@@ -20,6 +20,7 @@ const Article = {
       ],
       __original: {},
       isNewNode: false,
+      status: 0,
     }
   },
 
@@ -233,46 +234,36 @@ const Article = {
         })
       })
     },
+  },
 
-    __load(id) {
-      if (this.$data.__original.id == this.id) {
+  created() {
+    let _this = this
+    axios({
+      method: "GET",
+      url: queryRestful("/v1/article", { id: this.id }),
+    }).then(function (resp) {
+      _this.$data.__original = resp.data
+      if (!_this.code) {
+        router.replace({
+          name: 'article', params: {
+            id: _this.id,
+            code: _this.article.code,
+          }
+        })
+      }
+      if (_this.user.logined) {
+        _this.$nextTick(() => {
+          _this.__putAsset("browse")
+        })
+      }
+    }).catch(function (err) {
+      var status = err.response.status
+      if (401 == status && !logined) {
+        router.push({ name: "login" })
         return
       }
-
-      let _this = this
-      axios({
-        method: "GET",
-        url: queryRestful("/v1/article", { id: id }),
-      }).then(function (resp) {
-        _this.$data.__original = resp.data
-        if (!_this.code) {
-          router.replace({
-            name: 'article', params: {
-              id: _this.id,
-              code: _this.article.code,
-            }
-          })
-        }
-        if (_this.user.logined) {
-          _this.$nextTick(() => {
-            _this.__putAsset("browse")
-          })
-        }
-      }).catch(function (resp) {
-        console.log(resp)
-      })
-    },
-  },
-
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      vm.__load(to.params.id)
+      _this.status = err.response.status
     })
-  },
-
-  beforeRouteUpdate(to, from, next) {
-    next()
-    this.__load(to.params.id)
   },
 
   template: fgm_article,

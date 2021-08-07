@@ -64,6 +64,14 @@ const plugin = {
 
       return converter.makeHtml(md);
     }
+
+    Vue.prototype.onGitHubOAuth = function () {
+      const github_client_id = getMeta("github_client_id")
+      const state = Math.random().toString(36).slice(2)
+      const githubOAuthAPI = "https://github.com/login/oauth/authorize?client_id=" + github_client_id + "&state=" + state
+      Cookies.set('github_oauth_state', state)
+      window.open(githubOAuthAPI, "_self")
+    }
   }
 }
 
@@ -127,13 +135,6 @@ var app = new Vue({
       if (!this.vote.ras) return
 
       this.__postVote("rejected")
-    },
-    onGitHubOAuth: function () {
-      const github_client_id = getMeta("github_client_id")
-      const state = Math.random().toString(36).slice(2)
-      const githubOAuthAPI = "https://github.com/login/oauth/authorize?client_id=" + github_client_id + "&state=" + state
-      Cookies.set('github_oauth_state', state)
-      window.open(githubOAuthAPI, "_self")
     },
     onSignout: function () {
       const githubOAuthAPI = "/signout"

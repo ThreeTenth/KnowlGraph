@@ -1,6 +1,8 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/pkg/errors"
 	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/archive"
@@ -26,39 +28,44 @@ func getArticle(c *Context) error {
 
 	_userID, ok := c.Get(GinKeyUserID)
 
-	_article, err := GetArticle(
+	_article, status, err := GetArticle(
 		ok,
 		_userID,
 		_query.ID,
 		_query.NeedVersions,
 		_query.VersionID)
 
-	if err != nil {
+	switch status {
+	case http.StatusOK:
+		return c.Ok(&_article)
+	case http.StatusNotFound:
 		return c.NotFound(err.Error())
+	case http.StatusUnauthorized:
+		return c.Unauthorized(err.Error())
 	}
 
-	return c.Ok(&_article)
+	return c.NotFound(err.Error())
 }
 
 // GetArticle is get article
-func GetArticle(isLogin bool, _userID interface{}, articleID int, needVersions bool, versionID int) (*ent.Article, error) {
+func GetArticle(isLogin bool, _userID interface{}, articleID int, needVersions bool, versionID int) (*ent.Article, int, error) {
 	_article, err := client.Article.
 		Query().
 		Where(article.ID(articleID)).
 		First(ctx)
 
 	if err != nil {
-		return nil, err
+		return nil, http.StatusNotFound, err
 	}
 
 	if _article.Status == article.StatusPrivate {
 		if !isLogin {
-			return nil, errors.New("Unauthorized")
+			return nil, http.StatusUnauthorized, errors.New("Unauthorized")
 		}
 
 		ok, _ := _article.QueryAssets().Where(asset.HasUserWith(user.ID(_userID.(int)))).Exist(ctx)
 		if !ok {
-			return nil, errors.New("Unauthorized")
+			return nil, http.StatusUnauthorized, errors.New("Unauthorized")
 		}
 	}
 
@@ -74,7 +81,7 @@ func GetArticle(isLogin bool, _userID interface{}, articleID int, needVersions b
 
 	_versions, err := vq.WithContent().WithKeywords().WithQuotes().All(ctx)
 	if err != nil {
-		return nil, err
+		return nil, http.StatusNotFound, err
 	}
 
 	_reactions, _ := _article.QueryReactions().All(ctx)
@@ -112,5 +119,5 @@ func GetArticle(isLogin bool, _userID interface{}, articleID int, needVersions b
 	_article.Edges.Reactions = _reactions
 	_article.Edges.Nodes = _nodes
 
-	return _article, err
+	return _article, http.StatusOK, err
 }

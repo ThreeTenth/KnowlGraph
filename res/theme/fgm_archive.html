@@ -1,10 +1,15 @@
 <div class="container">
   <h2 class="padding-x9">{{ i18n.Archive }}</h2>
   <div class="tabs padding-x9">
-    <router-link to="/archive" v-bind:class="{'selected': status == 'achiveSelf'}">{{ i18n.MyArticles }} 🔒</router-link>
+    <router-link to="/archive" v-bind:class="{'selected': status == 'achiveSelf'}">{{ i18n.MyArticles }} 🔒
+    </router-link>
     <router-link to="/archive/star" v-bind:class="{'selected': status == 'achiveStar'}">{{ i18n.Star }} ⭐</router-link>
-    <router-link to="/archive/watch" v-bind:class="{'selected': status == 'achiveWatch'}">{{ i18n.Watch }} 👀</router-link>
-    <router-link to="/archive/readlist" v-bind:class="{'selected': status == 'achiveReadlist'}">{{ i18n.ReadList }} 🕒</router-link>
+    <router-link to="/archive/watch" v-bind:class="{'selected': status == 'achiveWatch'}">{{ i18n.Watch }} 👀
+    </router-link>
+    <router-link to="/archive/readlist" v-bind:class="{'selected': status == 'achiveReadlist'}">{{ i18n.ReadList }} 🕒
+    </router-link>
   </div>
-  <router-view></router-view>
+  <keep-alive>
+    <router-view></router-view>
+  </keep-alive>
 </div>
