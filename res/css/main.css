@@ -176,6 +176,8 @@ body {
 
 .list-1 .list-1-title {
 	font-weight: 800;
+	margin     : 0;
+	padding    : var(--x4) 0;
 }
 
 .list-1 .list-1-text {
@@ -229,6 +231,7 @@ body {
 	border-radius   : var(--x3);
 	background-color: var(--highlight);
 	align-items     : center;
+	box-sizing      : border-box;
 }
 
 .layout-3 {
@@ -388,7 +391,7 @@ body {
 	width        : 100%;
 	position     : relative;
 	border-radius: inherit;
-	margin-bottom: var(--x18);
+	margin-bottom: var(--x9);
 }
 
 @media (max-width: 360px) {
@@ -421,6 +424,7 @@ body {
 	height           : var(--x36);
 	font-size        : var(--x24);
 	cursor           : pointer;
+	box-shadow       : var(--x2) var(--x2) var(--x4) var(--highlight);
 }
 
 .overlay {
@@ -433,7 +437,7 @@ body {
 }
 
 .overlay.left .menu {
-	left: 0;
+	left: auto;
 }
 
 .overlay:not(.left) .menu,
@@ -797,6 +801,11 @@ body {
 .markdown:first-child {
 	margin-top : 0;
 	padding-top: 0;
+}
+
+.markdown p {
+	font-size  : 1rem;
+	text-indent: var(--lg);
 }
 
 .markdown .anchor {

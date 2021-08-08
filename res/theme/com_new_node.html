@@ -1,18 +1,18 @@
 <div class="padding-9">
   <h3>创建新节点</h3>
-  <div class="layout-5" style="margin-bottom: 15px;">
+  <div class="layout-1 layout-5" style="padding: var(--x9);">
     <span>></span>
     <template v-if="selected">
       <span> {{ selected.edges.node.edges.word.name }} > </span>
     </template>
   </div>
-  <div>
+  <div class="flex">
     <button class="btn text" v-bind:class="{'fill': selected == archive}" v-for="(archive, i) in user.archives"
       v-on:click="onSelectPrev(archive)">📁 {{ archive.edges.node.edges.word.name }}</button>
   </div>
   <div class="flex margin-y">
     <label>新建节点名：</label>
-    <div>
+    <div class="flex-1">
       <autocomplet v-on:item="getWordName" v-on:select="onSelectWord" v-bind:source="user.words"
         v-bind:placeholder="i18n.AddAWord"></autocomplet>
     </div>
