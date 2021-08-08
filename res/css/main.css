@@ -39,46 +39,67 @@
 	--xl : calc(var(--lg) * 2.0);
 	--xxl: calc(var(--xl) * 2.0);
 
-	--x1 : calc(var(--md) / 16);
-	--x2 : var(--xxs);
-	--x3 : calc(var(--x2) + var(--x1));
-	--x4 : var(--xs);
-	--x5 : calc(var(--x4) + var(--x1));
-	--x6 : calc(var(--x5) + var(--x1));
-	--x7 : calc(var(--x6) + var(--x1));
-	--x8 : var(--sm);
-	--x9 : calc(var(--x8) + var(--x1));
-	--x10: calc(var(--x9) + var(--x1));
-	--x12: calc(var(--x10) + var(--x2));
-	--x14: calc(var(--x12) + var(--x2));
-	--x18: calc(var(--x14) + var(--x4));
-	--x24: calc(var(--x18) + var(--x6));
-	--x30: calc(var(--x24) + var(--x6));
-	--x36: calc(var(--x30) + var(--x6));
-	--x48: calc(var(--x36) + var(--x12));
-	--x60: calc(var(--x48) + var(--x12));
-	--x72: calc(var(--x60) + var(--x12));
-	--x96: calc(var(--x72) + var(--x24));
+	--x1  : calc(var(--md) / 16);
+	--x2  : var(--xxs);
+	--x3  : calc(var(--x2) + var(--x1));
+	--x4  : var(--xs);
+	--x5  : calc(var(--x4) + var(--x1));
+	--x6  : calc(var(--x5) + var(--x1));
+	--x7  : calc(var(--x6) + var(--x1));
+	--x8  : var(--sm);
+	--x9  : calc(var(--x8) + var(--x1));
+	--x10 : calc(var(--x9) + var(--x1));
+	--x12 : calc(var(--x10) + var(--x2));
+	--x14 : calc(var(--x12) + var(--x2));
+	--x18 : calc(var(--x14) + var(--x4));
+	--x24 : calc(var(--x18) + var(--x6));
+	--x30 : calc(var(--x24) + var(--x6));
+	--x36 : calc(var(--x30) + var(--x6));
+	--x48 : calc(var(--x36) + var(--x12));
+	--x60 : calc(var(--x48) + var(--x12));
+	--x72 : calc(var(--x60) + var(--x12));
+	--x96 : calc(var(--x72) + var(--x24));
+	--x120: calc(var(--x96) + var(--x24));
+	--x156: calc(var(--x120) + var(--x36));
+	--x216: calc(var(--x156) + var(--x60));
 
-	--body-w: calc(100vw - 320px);
+	--body-w: 1280px;
+	--main-w: 320px;
+	--side-w: 260px;
 
 	font-family: "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
 }
 
-@media (max-width: 1040px) {
+@media (max-width: 1280px) {
 	:root {
-		--body-w: 720px;
+		--body-w: 100vw;
+	}
+}
+
+@media (max-width: 1280px) {
+	:root {
+		--body-w: 100vw;
 	}
 }
 
 html {
-	font-size: 18px;
+	box-sizing: border-box;
+	font-size : 18px;
+
 }
 
 body {
 	color           : var(--black);
-	background-color: var(--grey);
+	background-color: var(--white);
 	overflow-y      : scroll;
+}
+
+/*******************************************************************
+ color style
+*******************************************************************/
+
+.bgc.white {
+	background-color: var(--white);
 }
 
 /*******************************************************************
@@ -172,17 +193,36 @@ body {
 *******************************************************************/
 
 .nav {
-	display         : flex;
-	align-items     : center;
-	padding         : var(--x9);
-	background-color: var(--white);
-	max-width       : var(--body-w);
-	margin          : auto;
+	display    : flex;
+	align-items: center;
+	padding    : var(--x9);
+	width      : var(--body-w);
+	box-sizing : border-box;
+	margin     : auto;
 }
 
 .container {
-	max-width: var(--body-w);
-	margin   : auto;
+	width     : var(--body-w);
+	margin    : auto;
+	box-sizing: border-box;
+}
+
+.layout-side {
+	border-radius: var(--x4);
+	padding      : 0 var(--x9);
+	margin       : var(--x18) 0;
+	width        : var(--side-w);
+}
+
+@media (max-width: 840px) {
+	.layout-side {
+		display: none;
+	}
+}
+
+.layout-main {
+	min-width: var(--main-w);
+	margin   : 0 var(--x12);
 }
 
 .layout-1 {
@@ -506,10 +546,10 @@ body {
 	background-color: green;
 	border-radius   : 1000px;
 	padding         : var(--x2) var(--x8);
-}
-
-.label-1+.label-1 {
-	margin-left: var(--x4);
+	display         : flex;
+	align-items     : center;
+	margin-right    : var(--x6);
+	margin-bottom   : var(--x4);
 }
 
 .label-2 {
@@ -565,6 +605,11 @@ body {
 
 .text+.text {
 	margin-left: var(--x8);
+}
+
+.text.time {
+	padding-left : 0;
+	padding-right: 0;
 }
 
 .text.sm {
@@ -640,6 +685,11 @@ body {
 	align-items: center;
 }
 
+.flex-start {
+	display    : flex;
+	align-items: flex-start;
+}
+
 .flex-auto {
 	flex: auto;
 }
@@ -648,12 +698,32 @@ body {
 	flex: 1;
 }
 
+.flex-2 {
+	flex: 2;
+}
+
+.flex-3 {
+	flex: 3;
+}
+
+.flex-4 {
+	flex: 4;
+}
+
+.flex-5 {
+	flex: 5;
+}
+
 /*******************************************************************
  margin and padding style
 *******************************************************************/
 
 .margin-0 {
 	margin: 0;
+}
+
+.margin-9 {
+	margin: var(--x9);
 }
 
 .margin-x18 {
@@ -715,7 +785,7 @@ body {
 .markdown {
 	word-wrap    : break-word;
 	margin       : var(--x9) 0;
-	padding      : var(--x2) var(--x10);
+	padding      : var(--x2) 0;
 	border-radius: var(--x5);
 }
 

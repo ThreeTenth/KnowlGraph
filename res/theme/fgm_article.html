@@ -1,5 +1,5 @@
 <div>
-  <div class="container" v-if="article">
+  <div class="container padding-9" v-if="article">
     <div class="layout-1 flex margin-t18b9">
       <div class="flex-1">
         <dropdown class="left" v-bind:ignore="'true'" v-if="article.nodes.length">
@@ -28,7 +28,7 @@
       <template v-if="article.private">
         <span class="text padding-9">🔒</span>
       </template>
-      <div class="padding-x9" v-else>
+      <div class="flex padding-x9" v-else>
         <button class="btn text padding-y9" v-on:click="onStar">⭐ {{ article.star ? i18n.Unstar : i18n.Star }}</button>
         <button class="btn text padding-y9" v-on:click="onWatch">👀 {{ article.watch ? i18n.Unwatch : i18n.Watch
           }}</button>
@@ -41,7 +41,7 @@
       <a href="#">{{ i18n.Notes }}</a>
     </div>
     <article class="markdown" v-html="article.body"></article>
-    <div v-if="article.keywords">
+    <div class="flex-wrap" v-if="article.keywords">
       <a href="#" class="label-1" v-for="(keyword, i) in article.keywords">#{{keyword.name}}</a>
     </div>
     <div class="layout-3 flex">
@@ -72,7 +72,7 @@
         </div>
       </dropdown>
     </div>
-    <div class="layout-1 padding-9 margin-y9" v-if="article.reactions.length">
+    <div class="layout-1 flex padding-9 margin-y9" v-if="article.reactions.length">
       <button class="btn text" v-for="(reac, i) in article.reactions" v-on:click="onPickReaction(reac.status)">{{
         emoji[reac.status]}} {{ reac.count }}</button>
     </div>
