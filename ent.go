@@ -26,7 +26,7 @@ const QueryNoPrivateArticlesSQL = `select
 from (
 	select "id", "name", "comment", "title", "gist", "state", "lang", "created_at", "article_versions", row_number() 
 	over (
-		partition by article_versions order by created_at)
+		partition by article_versions order by created_at desc)
 	as rownum 
 	from  "versions"
 	WHERE "state" = 'release' %v
