@@ -50,6 +50,7 @@
   "PickYourReaction": "选择你的反应",
   "Index": "未登录时的首页",
   "Home": "首页",
+  "Recommend": "推荐",
 
   "CurrentUserLang": "当前语言：%s",
   "SetUserLangSuccess": "语言设置成功",
