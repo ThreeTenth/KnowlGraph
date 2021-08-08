@@ -11,7 +11,8 @@ Vue.component('the-time', {
     },
     timetonow: function () {
       let now = new Date()
-      let timer = (now - new Date(this.datetime)) / 1000
+      let local = new Date(this.datetime)
+      let timer = (now - local) / 1000
       let tip = ''
 
       if (timer <= 0) {
@@ -24,8 +25,14 @@ Vue.component('the-time', {
         tip = sprintf(this.i18n.HoursAgo, Math.floor(timer / 3600))
       } else if (timer / 86400 <= 31) {
         tip = sprintf(this.i18n.DaysAgo, Math.floor(timer / 86400))
+      } else if (now.getFullYear() == local.getFullYear()) {
+        let lang = this.i18n.__code
+        var options = { month: "short", day: "numeric" };
+        tip = local.toLocaleString(lang, options)
       } else {
-        tip = this.fulltime
+        let lang = this.i18n.__code
+        var options = { year: "numeric", month: "short", day: "numeric" };
+        tip = local.toLocaleString(lang, options)
       }
       return tip
     },
