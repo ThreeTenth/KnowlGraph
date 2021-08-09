@@ -1,10 +1,12 @@
-<div class="container">
-  <h2 class="padding-x9">{{ i18n.Drafts }}</h2>
+<div class="container padding-x9">
+  <h2>{{ i18n.Drafts }}</h2>
   <template v-if="drafts.length != 0">
-    <div class="list-1" v-for="(draft, i) in drafts">
-      <div class="btn list-1-text" v-on:click="onDraft(i)">{{ draft.body }}</div>
+    <article class="list-1" v-for="(draft, i) in drafts">
+      <router-link class="list-1-link" :to="{ name: 'editDraft', params: { id: draft.id }}">
+        <div class="list-1-text">{{ draft.body }}</div>
+      </router-link>
       <the-time v-bind:datetime="draft.created_at"></the-time>
-    </div>
+    </article>
   </template>
   <div class="loading-container" v-else>
     <div class="loading"></div>

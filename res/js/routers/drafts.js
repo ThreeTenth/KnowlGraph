@@ -19,7 +19,7 @@ const Drafts = {
           body = body.substr(0, 120).trim() + '...'
         }
 
-        _drafts[index] = { body: body, created_at: snapshot.created_at }
+        _drafts[index] = { id: element.id, body: body, created_at: snapshot.created_at }
       }
       return _drafts
     }

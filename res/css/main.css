@@ -215,6 +215,20 @@ body {
 	width        : var(--side-w);
 }
 
+.layout-main {
+	min-width: var(--main-w);
+	margin   : 0 var(--x12);
+}
+
+.layout-search {
+	margin : 0 var(--x9);
+	display: inline-flex;
+}
+
+.mobile-search {
+	display: none;
+}
+
 @media (max-width: 960px) {
 	.layout-side-right {
 		display: none;
@@ -222,14 +236,16 @@ body {
 }
 
 @media (max-width: 680px) {
-	.layout-side-left {
+
+	.layout-side-left,
+	.layout-search {
 		display: none;
 	}
-}
 
-.layout-main {
-	min-width: var(--main-w);
-	margin   : 0 var(--x12);
+	.mobile-search {
+		display    : flex;
+		align-items: center;
+	}
 }
 
 .layout-1 {
@@ -337,7 +353,6 @@ body {
 	border-radius: var(--x18);
 	border       : var(--deep) solid var(--x1);
 	padding      : var(--x7) var(--x18);
-	margin       : 0 var(--x9);
 	color        : #000;
 }
 
@@ -610,6 +625,10 @@ body {
 	margin         : 0;
 }
 
+.icon {
+	padding: 0;
+}
+
 .text {
 	color      : var(--black);
 	font-weight: 500;
@@ -617,10 +636,6 @@ body {
 	padding    : var(--x1) var(--x4);
 	display    : flex;
 	align-items: center;
-}
-
-.icon+.icon {
-	margin-left: var(--x18);
 }
 
 .text+.text {
@@ -736,7 +751,7 @@ body {
 }
 
 /*******************************************************************
- margin and padding style
+ margin, padding and spacing style
 *******************************************************************/
 
 .margin-0 {
@@ -812,6 +827,10 @@ body {
 
 .padding-9 {
 	padding: var(--x9);
+}
+
+.spacing-18+.spacing-18 {
+	margin-left: var(--x18);
 }
 
 /*******************************************************************
