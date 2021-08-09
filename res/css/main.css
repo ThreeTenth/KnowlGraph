@@ -601,6 +601,7 @@ body {
 	border-radius: var(--xxl);
 }
 
+.icon,
 .text,
 .link {
 	border         : none;
@@ -616,6 +617,10 @@ body {
 	padding    : var(--x1) var(--x4);
 	display    : flex;
 	align-items: center;
+}
+
+.icon+.icon {
+	margin-left: var(--x18);
 }
 
 .text+.text {
