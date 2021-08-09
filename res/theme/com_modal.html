@@ -1,5 +1,5 @@
 <span>
-  <div v-on:click.stop="close" class="modal" v-if="seen" ref="dialog-content">
+  <div v-on:click.stop="close" v-on:keyup.esc="close" tabindex="0" class="modal" v-if="seen" ref="dialog-content">
     <div class="dialog" v-on:click.stop>
       <button class="close" v-on:click="close">✖</button>
       <div class="dialog__content">

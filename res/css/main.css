@@ -301,7 +301,7 @@ body {
 .input-1,
 .input-2,
 .input-3,
-.input-4 {
+.input-search {
 	font-size  : var(--md);
 	font-family: "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
 	outline    : medium;
@@ -316,7 +316,6 @@ body {
 }
 
 .input-2 {
-	background   : var(--white);
 	border-radius: var(--x4);
 	flex         : 1 0 auto;
 	min-width    : var(--x96);
@@ -334,24 +333,31 @@ body {
 	border-bottom: var(--x1) solid var(--primary);
 }
 
-.input-4 {
-	border-radius: var(--x4);
-	border       : var(--highlight) solid var(--x1);
-	padding      : var(--x7);
+.input-search {
+	border-radius: var(--x18);
+	border       : var(--deep) solid var(--x1);
+	padding      : var(--x7) var(--x18);
 	margin       : 0 var(--x9);
-	color        : var(--black);
+	color        : #000;
 }
 
-.input-4::placeholder {
-	color: var(--highlight);
+.input-search::placeholder {
+	color: var(--deep);
 }
 
-.input-4:hover {
-	border: var(--black) solid var(--x1);
+.input-search:hover {
+	border: #000 solid var(--x1);
 }
 
-.input-4:hover::placeholder {
-	color: var(--grey);
+.input-search:hover::placeholder {
+	color: #000;
+}
+
+.input-search.focus {
+	border    : none;
+	color     : #000;
+	width     : 100%;
+	box-sizing: border-box;
 }
 
 /*******************************************************************

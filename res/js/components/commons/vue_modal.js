@@ -38,41 +38,4 @@ Vue.component('modal', {
   },
 
   template: com_modal,
-
-  // render(h) {
-  //   const content = h('div', {
-  //     staticClass: 'dialog__content',
-  //   }, [
-  //     this.$slots.default
-  //   ])
-
-  //   const dialog = h('div', {
-  //     staticClass: 'modal-content',
-  //   }, [
-  //     this.$slots.default,
-  //   ])
-
-  //   const dialogContent = h('div', {
-  //     staticClass: 'modal',
-  //     ref: 'dialog-content',
-  //     on: {
-  //       click: (evt) => {
-  //         if (!evt.target.closest('.modal-content') && !this.preventClose) {
-  //           this.$emit('toggle', !this.seen)
-  //           this.$emit('close')
-  //         }
-  //       }
-  //     }
-  //   }, [
-  //     dialog
-  //   ])
-
-  //   const modalTransition = h('transition', {
-  //     props: {
-  //       name: 'vs-dialog'
-  //     },
-  //   }, [this.seen && dialogContent])
-
-  //   return h('span', [modalTransition])
-  // },
 })
