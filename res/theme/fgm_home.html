@@ -1,7 +1,29 @@
 <div>
   <div class="container flex-start" v-if="articles.length != 0">
     <div class="layout-side-left">
-      <h4>Knowladge Graph</h4>
+      <h4>社区 Community</h4>
+      <a class="block btn link sm margin-y3">首页 Home</a>
+      <a class="block btn link sm margin-y3">阅读清单 ReadList</a>
+      <a class="block btn link sm margin-y3">表决 Votes</a>
+      <a class="block btn link sm margin-y3">词条 Dictionary</a>
+      <a class="block btn link sm margin-y3">节点 Nodes</a>
+      <a class="block btn link sm margin-y3">仪表盘 Dashboard</a>
+      <a class="block btn link sm margin-y3">广告和收入 Ad and income</a>
+      <a class="block btn link sm margin-y3">赞助商 Sponsors</a>
+      <a class="block btn link sm margin-y3">资源中心 Resource center</a>
+      <a class="block btn link sm margin-y3">个性化 Personalize</a>
+      <h4>FAQ</h4>
+      <a class="block btn link sm margin-y3">行为守则 Code of conduct</a>
+      <a class="block btn link sm margin-y3">隐私 Privacy</a>
+      <a class="block btn link sm margin-y3">条款 Terms</a>
+      <a class="block btn link sm margin-y3">帮助 Help</a>
+      <a class="block btn link sm margin-y3">联系 Contact</a>
+      <a class="block btn link sm margin-y3">关于 About</a>
+      <hr>
+      <div class="flex">
+        <a class="btn text">Twitter</a>
+        <a class="btn text">GitHub</a>
+      </div>
     </div>
     <main class="layout-main flex-1">
       <h4>{{ i18n.Recommend }}</h4>
@@ -14,7 +36,18 @@
       </article>
     </main>
     <div class="layout-side-right">
-      <h4>{{ i18n.ReadList }}</h4>
+      <div>
+        <h4>推荐节点</h4>
+      </div>
+      <div>
+        <h4>快速访问</h4>
+      </div>
+      <div>
+        <h4>常用节点</h4>
+      </div>
+      <div>
+        <h4>最近阅读</h4>
+      </div>
     </div>
   </div>
   <div class="loading-container" v-else>

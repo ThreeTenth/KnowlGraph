@@ -19,6 +19,7 @@
 	--white  : #ffffff;
 	--silver : #DDDDDD;
 	--grey   : #e6e6e6;
+	--deep   : #666666;
 	--black  : #262626;
 
 	--primary  : var(--blue);
@@ -86,6 +87,10 @@ body {
 	color           : var(--black);
 	background-color: var(--white);
 	overflow-y      : scroll;
+}
+
+.block {
+	display: block;
 }
 
 /*******************************************************************
@@ -616,6 +621,7 @@ body {
 	padding-right: 0;
 }
 
+.link.sm,
 .text.sm {
 	font-size: 0.85rem;
 }
@@ -634,10 +640,10 @@ body {
 }
 
 .link {
-	color      : var(--black);
+	color      : var(--deep);
 	font-weight: 400;
 	font-size  : var(--md);
-	padding    : 0;
+	padding    : var(--x5) 0;
 }
 
 .btn {
@@ -745,6 +751,11 @@ body {
 	margin-bottom: var(--md);
 }
 
+.margin-y3 {
+	margin-top   : var(--x3);
+	margin-bottom: var(--x3);
+}
+
 .margin-y9 {
 	margin-top   : var(--x9);
 	margin-bottom: var(--x9);
@@ -768,19 +779,24 @@ body {
 	padding-right: var(--x9);
 }
 
-.padding-y12 {
-	padding-top   : var(--x12);
-	padding-bottom: var(--x12);
-}
-
 .padding-y {
 	padding-top   : var(--md);
 	padding-bottom: var(--md);
 }
 
+.padding-y4 {
+	padding-top   : var(--x4);
+	padding-bottom: var(--x4);
+}
+
 .padding-y9 {
 	padding-top   : var(--x9);
 	padding-bottom: var(--x9);
+}
+
+.padding-y12 {
+	padding-top   : var(--x12);
+	padding-bottom: var(--x12);
 }
 
 .padding-9 {

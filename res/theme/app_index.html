@@ -1,11 +1,13 @@
 <div class="app">
-  <div class="flex-v">
-    <div class="flex-auto">
-      <router-link class="btn link logo" to="/"></router-link>
-    </div>
-    <div>
-      <button class="btn link" v-on:click="onGitHubOAuth">{{ i18n.LoginWithGitHubOAuth }}</button>
-    </div>
+  <div class="bgc white">
+    <nav class="nav">
+      <div class="flex-auto">
+        <router-link class="btn link logo" to="/"></router-link>
+      </div>
+      <div>
+        <button class="btn link" v-on:click="onGitHubOAuth">{{ i18n.LoginWithGitHubOAuth }}</button>
+      </div>
+    </nav>
   </div>
   <router-view class="view"></router-view>
 </div>
