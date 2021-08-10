@@ -1,5 +1,5 @@
 <div class="container">
-  <template v-if="!showSnapshots">
+  <template>
     <textarea class="input-2 draft-area margin-t" v-on:keyup="onChanged" v-on:blur="onBlur" v-model="body"></textarea>
     <div class="layout-3 flex">
       <div class="flex-1"></div>
@@ -16,7 +16,7 @@
       </dropdown>
     </div>
   </template>
-  <div class="modal bgc white" v-else>
+  <overlay class="bgc white" v-if="showSnapshots">
     <div class="container flex">
       <div class="layout-history-snap">
         <div class="flex-v">
@@ -81,5 +81,5 @@
         </div>
       </div>
     </div>
-  </div>
+  </overlay>
 </div>
