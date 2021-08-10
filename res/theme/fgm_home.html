@@ -8,7 +8,7 @@
           <h4 class="list-1-title" v-if="article.title">{{ article.title }}</h4>
           <div class="list-1-text">{{ article.gist }}</div>
         </router-link>
-        <the-time v-bind:datetime="article.created_at"></the-time>
+        <the-time class="text sm padding-0" v-bind:datetime="article.created_at" />
       </article>
     </main>
     <div class="layout-side-right">

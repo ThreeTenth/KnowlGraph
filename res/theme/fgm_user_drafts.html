@@ -5,7 +5,7 @@
       <router-link class="list-1-link" :to="{ name: 'editDraft', params: { id: draft.id }}">
         <div class="list-1-text">{{ draft.body }}</div>
       </router-link>
-      <the-time v-bind:datetime="draft.created_at"></the-time>
+      <the-time class="text sm padding-0" v-bind:datetime="draft.created_at" /></the-time>
     </article>
   </template>
   <div class="loading-container" v-else>

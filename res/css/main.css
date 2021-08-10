@@ -67,11 +67,12 @@
 	--body-w: 1280px;
 	--main-w: 320px;
 	--side-w: 260px;
+	--log-w : 220px;
 
 	font-family: "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
 }
 
-@media (max-width: 1280px) {
+@media (max-width: 1300px) {
 	:root {
 		--body-w: 100%;
 	}
@@ -99,6 +100,10 @@ body {
 
 .bgc.white {
 	background-color: var(--white);
+}
+
+.bgc.highlight {
+	background-color: var(--highlight);
 }
 
 /*******************************************************************
@@ -204,7 +209,7 @@ body {
 
 .container {
 	width     : var(--body-w);
-	margin    : auto;
+	margin    : 0 auto;
 	box-sizing: border-box;
 }
 
@@ -225,7 +230,21 @@ body {
 	display: inline-flex;
 }
 
-.mobile-nav {
+.layout-history-snap {
+	width: calc(var(--body-w) - var(--log-w));
+}
+
+.layout-history-list div {
+	overflow-y: auto;
+	height    : calc(100vh - 82px);
+	width     : var(--log-w);
+	left      : 0;
+	position  : absolute;
+	display   : block;
+	outline   : none;
+}
+
+.is-mobile {
 	display: none;
 }
 
@@ -237,12 +256,17 @@ body {
 
 @media (max-width: 680px) {
 
+	.layout-history-snap {
+		width: 100%;
+	}
+
+	.layout-history-list,
 	.layout-side-left,
 	.layout-search {
 		display: none;
 	}
 
-	.mobile-nav {
+	.is-mobile {
 		display    : flex;
 		align-items: center;
 	}
@@ -336,7 +360,6 @@ body {
 	flex         : 1 0 auto;
 	min-width    : var(--x96);
 	padding      : var(--x9);
-	margin       : var(--x2);
 	line-height  : initial;
 	box-sizing   : border-box;
 }
@@ -382,21 +405,17 @@ body {
 .modal {
 	-webkit-box-sizing: border-box;
 	box-sizing        : border-box;
-	position          : fixed;
+	position          : absolute;
 	left              : 0;
 	top               : 0;
 	z-index           : 1000;
 	display           : flex;
 	align-items       : flex-start;
-	justify-content   : center;
 	width             : 100%;
 	height            : 100%;
 	max-height        : 100vh;
 	overflow-y        : auto;
 	overflow-x        : hidden;
-	padding-top       : var(--x72);
-	padding-bottom    : var(--x72);
-	background        : rgb(0 0 0 / 15%);
 }
 
 .dialog {
@@ -410,7 +429,7 @@ body {
 	-webkit-box-shadow: 0 var(--x5) var(--x30) 0 rgba(0, 0, 0, .05);
 	box-shadow        : 0 var(--x5) var(--x30) 0 rgba(0, 0, 0, .05);
 	max-width         : 800px;
-	margin            : auto;
+	margin            : var(--x72) auto;
 }
 
 .dialog__content {
@@ -642,11 +661,6 @@ body {
 	margin-left: var(--x8);
 }
 
-.text.time {
-	padding-left : 0;
-	padding-right: 0;
-}
-
 .link.sm,
 .text.sm {
 	font-size: 0.85rem;
@@ -791,13 +805,29 @@ body {
 	margin-top: var(--x9);
 }
 
-.margin-t30 {
-	margin-top: var(--x30);
+.margin-t {
+	margin-top: var(--md);
+}
+
+.margin-b {
+	margin-bottom: var(--md);
+}
+
+.margin-l {
+	margin-left: var(--md);
+}
+
+.margin-r {
+	margin-right: var(--md);
 }
 
 .margin-t18b9 {
 	margin-top   : var(--x18);
 	margin-bottom: var(--x9);
+}
+
+.padding-0 {
+	padding: 0;
 }
 
 .padding-x9 {
