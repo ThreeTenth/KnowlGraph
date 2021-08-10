@@ -2,7 +2,7 @@
 
 Vue.component('the-time', {
   props: {
-    datetime: Number,
+    datetime: String,
     full: Boolean,
   },
 
