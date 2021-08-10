@@ -67,10 +67,11 @@
 	--x156: calc(var(--x120) + var(--x36));
 	--x216: calc(var(--x156) + var(--x60));
 
-	--body-w: 1280px;
-	--main-w: 320px;
-	--side-w: 260px;
-	--log-w : 220px;
+	--body-w  : 1280px;
+	--main-w  : 320px;
+	--side-w  : 260px;
+	--snaps-w : 220px;
+	--search-w: 480px;
 
 	font-family: "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
 }
@@ -250,13 +251,13 @@ body {
 }
 
 .layout-history-snap {
-	width: calc(var(--body-w) - var(--log-w));
+	width: calc(var(--body-w) - var(--snaps-w));
 }
 
 .layout-history-list div {
 	overflow-y: auto;
 	height    : calc(100vh - 82px);
-	width     : var(--log-w);
+	width     : var(--snaps-w);
 	left      : 0;
 	position  : absolute;
 	display   : block;
@@ -268,6 +269,10 @@ body {
 }
 
 @media (max-width: 960px) {
+	:root {
+		--search-w: 320px;
+	}
+
 	.layout-side-right {
 		display: none;
 	}
@@ -392,8 +397,10 @@ body {
 }
 
 .input-search {
+	width        : var(--search-w);
+	box-sizing   : border-box;
 	border-radius: var(--x18);
-	border       : var(--deep) solid var(--x1);
+	border       : var(--grey) solid var(--x1);
 	padding      : var(--x7) var(--x18);
 	color        : #000;
 }
@@ -544,11 +551,11 @@ body {
 	display: block;
 }
 
-.menu .menu-subheader {
+.menu-subheader {
 	padding: var(--x10) var(--x14);
 }
 
-.menu .menu-tip {
+.menu-tip {
 	color     : grey;
 	display   : block;
 	font-size : var(--x14);
@@ -556,15 +563,15 @@ body {
 	padding   : var(--x12);
 }
 
-.menu .menu-flex {
+.menu-flex {
 	display   : flex;
 	flex-wrap : wrap;
 	width     : 100%;
 	box-sizing: border-box;
 }
 
-.menu .menu-item,
-.menu .menu-item-a {
+.menu-item,
+.menu-item-a {
 	box-sizing     : border-box;
 	color          : black;
 	padding        : var(--x12);
@@ -573,7 +580,7 @@ body {
 	font-size      : var(--x14);
 }
 
-.menu .menu-item {
+.menu-item {
 	border          : none;
 	width           : 100%;
 	background-color: transparent;
@@ -586,9 +593,9 @@ body {
 	width  : auto;
 }
 
-.menu .selected,
-.menu .menu-item:hover,
-.menu .menu-item-a:hover {
+.menu-item.selected,
+.menu-item:hover,
+.menu-item-a:hover {
 	background-color: var(--highlight);
 }
 
