@@ -1,12 +1,26 @@
 // vue_time.js
 
 Vue.component('the-time', {
-  props: ['datetime'],
+  props: {
+    datetime: Number,
+    full: Boolean,
+  },
 
   computed: {
-    fulltime: function () {
+    reminder: function () {
       let lang = this.i18n.__code
       var options = { weekday: "long", year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric", hour12: false };
+      return new Date(this.datetime).toLocaleString(lang, options)
+    },
+    fulltime: function () {
+      let now = new Date()
+      let local = new Date(this.datetime)
+      let lang = this.i18n.__code
+
+      var options = { month: "short", day: "numeric", hour: "numeric", minute: "numeric", hour12: false };
+      if (now.getFullYear() != local.getFullYear()) {
+        options.year = "numeric"
+      }
       return new Date(this.datetime).toLocaleString(lang, options)
     },
     timetonow: function () {
