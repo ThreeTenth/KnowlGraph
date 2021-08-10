@@ -1,29 +1,95 @@
-<div class="container margin-t30">
-  <textarea class="input-2 draft-area" v-on:keyup="onChanged" v-on:blur="onBlur" v-model="body"></textarea>
-  <div class="layout-3 flex">
-    <div class="flex-1"></div>
-    <button class="btn text" v-on:click="onPublish">{{ i18n.Publish }}<span v-if="status=='private'">
-        🔒</span></button>
-    <dropdown>
-      <button class="btn text lg">
-        <svg version="1.1" width="24" height="24" viewBox="0 0 24 24">
-          <path
-            d="M16,12C16,10.9 16.9,10 18,10C19.1,10 20,10.9 20,12C20,13.1 19.1,14 18,14C16.9,14 16,13.1 16,12M10,12C10,10.9 10.9,10 12,10C13.1,10 14,10.9 14,12C14,13.1 13.1,14 12,14C10.9,14 10,13.1 10,12M4,12C4,10.9 4.9,10 6,10C7.1,10 8,10.9 8,12C8,13.1 7.1,14 6,14C4.9,14 4,13.1 4,12Z" />
-        </svg>
-      </button>
-      <div class="menu">
-        <button class="menu-item" v-on:click="onHistories">{{ i18n.Histories }}</button>
-      </div>
-    </dropdown>
-  </div>
-  <modal v-model="showSnapshots">
-    <div class="padding-9">
-      <template v-for="(snapshot, i) in snapshots">
-        <div class="padding-9" v-on:click="onDafteHistory(snapshot)">
-          <the-time class="btn" v-bind:datetime="snapshot.created_at">
-          </the-time>
+<div class="container">
+  <template v-if="!showSnapshots">
+    <textarea class="input-2 draft-area margin-t" v-on:keyup="onChanged" v-on:blur="onBlur" v-model="body"></textarea>
+    <div class="layout-3 flex">
+      <div class="flex-1"></div>
+      <button class="btn text" v-on:click="onPublish">{{ i18n.Publish }}<span v-if="status=='private'">
+          🔒</span></button>
+      <dropdown>
+        <button class="btn text lg">
+          <svg version="1.1" width="24" height="24" viewBox="0 0 24 24">
+            <path
+              d="M16,12C16,10.9 16.9,10 18,10C19.1,10 20,10.9 20,12C20,13.1 19.1,14 18,14C16.9,14 16,13.1 16,12M10,12C10,10.9 10.9,10 12,10C13.1,10 14,10.9 14,12C14,13.1 13.1,14 12,14C10.9,14 10,13.1 10,12M4,12C4,10.9 4.9,10 6,10C7.1,10 8,10.9 8,12C8,13.1 7.1,14 6,14C4.9,14 4,13.1 4,12Z" />
+          </svg>
+        </button>
+        <div class="menu">
+          <button class="menu-item" v-on:click="onHistories">{{ i18n.Histories }}</button>
         </div>
-      </template>
+      </dropdown>
     </div>
-  </modal>
+  </template>
+  <div class="modal bgc white" v-else>
+    <div class="container flex">
+      <div class="layout-history-snap">
+        <div class="flex-v">
+          <div class="flex-auto flex-v">
+            <button class="btn text" v-on:click="showSnapshots = false">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </button>
+            <h2>
+              <the-time full v-bind:datetime="snapshots[snapshotIndex].created_at" />
+            </h2>
+          </div>
+          <button class="btn text" i v-on:click="onHistoryPrev">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="18 15 12 9 6 15" />
+            </svg>
+          </button>
+          <button class="btn text margin-r" v-on:click="onHistoryNext">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+          <dropdown>
+            <button class="btn icon margin-r is-mobile">
+              <svg version="1.1" width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M1.643 3.143L.427 1.927A.25.25 0 000 2.104V5.75c0 .138.112.25.25.25h3.646a.25.25 0 00.177-.427L2.715 4.215a6.5 6.5 0 11-1.18 4.458.75.75 0 10-1.493.154 8.001 8.001 0 101.6-5.684zM7.75 4a.75.75 0 01.75.75v2.992l2.028.812a.75.75 0 01-.557 1.392l-2.5-1A.75.75 0 017 8.25v-3.5A.75.75 0 017.75 4z" />
+              </svg>
+            </button>
+            <div class="menu">
+              <template v-for="(snapshot, i) in snapshots">
+                <button class="menu-item" v-on:click="onDafteHistory(i)">
+                  <the-time v-bind:datetime="snapshot.created_at" />
+                </button>
+              </template>
+            </div>
+          </dropdown>
+        </div>
+        <div></div>
+        <div class="margin-x18">
+          <div class="flex-h">
+            <div class="padding-x24 padding-y9 shadow radius-3">
+              查看版本差异 · 恢复此版本 · 删除
+            </div>
+          </div>
+          <p class="p wrap">
+            <template v-for="(part, i) in diff">
+              <span v-if="part.added" class="bgc-green-light c-green">{{ part.value }}</span>
+              <del v-else-if="part.removed" class="bgc-red-light c-red">{{ part.value }}</del>
+              <template v-else>{{ part.value }}</template>
+            </template>
+          </p>
+        </div>
+      </div>
+      <div class="overlay ">
+        <div class="layout-history-list">
+          <h2> {{ i18n.Histories }}</h2>
+          <div>
+            <template v-for="(snapshot, i) in snapshots">
+              <span class="block padding-y9" v-on:click="onDafteHistory(i)">
+                <the-time class="btn text sm padding-0" v-bind:datetime="snapshot.created_at" />
+              </span>
+            </template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

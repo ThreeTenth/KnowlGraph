@@ -12,8 +12,8 @@
 	--purple : #B10DC9;
 	--maroon : #85144B;
 	--yellow : #FFDC00;
-	--green  : #06847d;
-	--blue   : rgb(26, 92, 255);
+	--green  : #018101;
+	--blue   : #1a5cff;
 	--orange : #a46313;
 	--red    : #e02e06;
 	--white  : #ffffff;
@@ -21,6 +21,9 @@
 	--grey   : #e6e6e6;
 	--deep   : #666666;
 	--black  : #262626;
+
+	--green-light: #01810142;
+	--red-light  : #e02e0642;
 
 	--primary  : var(--blue);
 	--text     : var(--black);
@@ -104,6 +107,22 @@ body {
 
 .bgc.highlight {
 	background-color: var(--highlight);
+}
+
+.bgc-red-light {
+	background-color: var(--red-light);
+}
+
+.bgc-green-light {
+	background-color: var(--green-light);
+}
+
+.c-green {
+	color: var(--green);
+}
+
+.c-red {
+	color: var(--red);
 }
 
 /*******************************************************************
@@ -718,6 +737,22 @@ body {
 }
 
 /*******************************************************************
+ borad and box-shadow style
+*******************************************************************/
+
+.border-none {
+	border: none;
+}
+
+.shadow {
+	box-shadow: 0 var(--x1) var(--x2) rgb(0 0 0 / 25%), 0 0 var(--x1) rgb(0 0 0 / 35%);
+}
+
+.radius-3 {
+	border-radius: var(--x3);
+}
+
+/*******************************************************************
  flex style
 *******************************************************************/
 
@@ -733,6 +768,11 @@ body {
 .flex-v {
 	display    : flex;
 	align-items: center;
+}
+
+.flex-h {
+	display        : flex;
+	justify-content: center;
 }
 
 .flex-start {
@@ -833,6 +873,11 @@ body {
 .padding-x9 {
 	padding-left : var(--x9);
 	padding-right: var(--x9);
+}
+
+.padding-x24 {
+	padding-left : var(--x24);
+	padding-right: var(--x24);
 }
 
 .padding-y {

@@ -24,6 +24,8 @@ const EditDraft = {
     return {
       showSnapshots: false,
       snapshots: [],
+      snapdiff: [],
+      snapshotIndex: 0,
       draft: null,
       __last: { body: "" },
     }
@@ -49,23 +51,56 @@ const EditDraft = {
 
   methods: {
     onHistories() {
-      // router.push({ name: 'draftHistories', params: { id: this.id } })
       let _this = this
       axios({
         method: "GET",
         url: queryRestful("/v1/draft", { id: this.id, needHistory: true }),
       }).then(function (resp) {
         _this.snapshots = resp.data.edges.snapshots
+        _this.snapshotIndex = 0
         _this.showSnapshots = true
+        _this.__snapDiff(_this.snapshotIndex, 1)
       }).catch(function (resp) {
         console.log(resp)
       })
     },
 
-    onDafteHistory(snapshot) {
-      this.showSnapshots = false
+    onDafteHistory(i) {
+      this.snapshotIndex = i
+      this.__snapDiff(i, i + 1)
+    },
 
-      setTimeout(() => router.push({ name: 'draftHistory', params: { id: this.id, hid: snapshot.id, __snapshot: snapshot } }), 0);
+    onHistoryPrev() {
+      var i = this.snapshotIndex
+      i--
+      if (i < 0) {
+        i = this.snapshots.length - 1
+      }
+      this.snapshotIndex = i
+      this.__snapDiff(i, i + 1)
+    },
+
+    onHistoryNext() {
+      var i = this.snapshotIndex
+      i++
+      if (this.snapshots.length <= i) {
+        i = 0
+      }
+      this.snapshotIndex = i
+      this.__snapDiff(i, i + 1)
+    },
+
+    __snapDiff(i, j) {
+      var maxLen = this.snapshots.length
+      var _new = i < maxLen ? this.snapshots[i].body : ''
+      var _old = j < maxLen ? this.snapshots[j].body : ''
+      var diff = Diff.diffChars(_old, _new)
+      diff.forEach(part => {
+        if (part.added || part.removed) {
+          part.value = part.value.replace(/\n(?!.)/g, "\n ")
+        }
+      });
+      this.diff = diff
     },
 
     onPublish() {
