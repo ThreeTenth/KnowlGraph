@@ -71,7 +71,7 @@
 	--main-w  : 320px;
 	--side-w  : 260px;
 	--snaps-w : 220px;
-	--search-w: 480px;
+	--search-w: 420px;
 
 	font-family: "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
 }
@@ -268,7 +268,7 @@ body {
 	display: none;
 }
 
-@media (max-width: 960px) {
+@media (max-width: 1000px) {
 	:root {
 		--search-w: 320px;
 	}
@@ -278,7 +278,7 @@ body {
 	}
 }
 
-@media (max-width: 680px) {
+@media (max-width: 720px) {
 
 	.layout-history-snap {
 		width: 100%;
@@ -322,9 +322,11 @@ body {
 }
 
 .draft-area {
-	margin: var(--sm) 0;
-	width : 100%;
-	height: calc(100vh - 160px);
+	padding    : var(--x9);
+	margin-top : var(--x9);
+	width      : 100%;
+	height     : calc(100vh - 130px);
+	line-height: 150%;
 }
 
 /*******************************************************************
@@ -383,7 +385,6 @@ body {
 	border-radius: var(--x4);
 	flex         : 1 0 auto;
 	min-width    : var(--x96);
-	padding      : var(--x9);
 	line-height  : initial;
 	box-sizing   : border-box;
 }
@@ -606,10 +607,8 @@ body {
 .layout-label {
 	display        : flex;
 	flex-wrap      : wrap;
-	width          : 100%;
 	margin         : 0;
-	border-bottom  : var(--x1) solid var(--primary);
-	padding        : var(--x4) 0;
+	padding        : 0;
 	list-style-type: none;
 	box-sizing     : border-box;
 }
@@ -921,7 +920,8 @@ body {
 
 .markdown {
 	word-wrap    : break-word;
-	margin       : var(--x9) 0;
+	margin-top   : var(--x9);
+	margin-bottom: var(--x9);
 	padding      : var(--x2) 0;
 	border-radius: var(--x5);
 }
@@ -932,8 +932,7 @@ body {
 }
 
 .markdown p {
-	font-size  : 1rem;
-	text-indent: var(--lg);
+	font-size: 1rem;
 }
 
 .markdown .anchor {

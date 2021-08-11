@@ -26,26 +26,91 @@ const EditDraft = {
       snapshots: [],
       snapdiff: [],
       snapshotIndex: 0,
+
+      showPreview: false,
+      showPublish: false,
+
+      content: '',
       draft: null,
       __last: { body: "" },
     }
   },
 
   computed: {
-    body: {
-      get: function () {
-        if (this.draft && this.draft.edges.snapshots)
-          return this.draft.edges.snapshots[0].body
-        return ""
-      },
-      set: function (newValue) {
-        this.draft.edges.snapshots[0].body = newValue
-      }
-    },
-
     status: function () {
       if (!this.draft) { return "" }
       return this.draft.edges.article.status
+    },
+
+    preview: function () {
+      return this.md2html(this.content)
+    },
+
+    version: function () {
+      if (!this.content) return {
+        title: "",
+        gist: "",
+      }
+
+      let title
+      let gist
+
+      let found = this.content.match(/^# (.*)/m)
+
+      if (found) {
+        title = found[1]
+      } else {
+        found = this.content.match(/^#+ (.*)/m)
+
+        if (found) {
+          title = found[1]
+        }
+      }
+
+      var content = this.content.replace(/#+ .*/g, '')
+      content = content.replace(/\n- .*/g, '')
+      content = content.replace(/\n([123456789]+\.) .*/g, '')
+      let text = removeMarkdown(content)
+
+      if (!title) {
+        var index = text.indexOf("\n")
+        if (index === -1) index = text.length
+        title = text.substring(0, index);
+      }
+
+      var index = text.indexOf(title)
+      var gistStart = 0, gistEnd = 0
+
+      if (index === -1) {
+        gistStart = 0
+        gistEnd = 120
+      } else if (0 == index) {
+        gistStart = title.length
+        gistEnd = gistStart + 120
+      } else {
+        gistStart = 0
+        gistEnd = index
+      }
+
+      if (text.length <= gistEnd) {
+        gist = text.substr(gistStart, text.length).trim()
+      } else {
+        gist = text.substr(gistStart, gistEnd).trim() + '...'
+      }
+
+      index = gist.indexOf("\n")
+      if (-1 < index) {
+        gist = text.substring(0, index)
+      }
+
+      if (!gist) {
+        gist = title
+      }
+
+      return {
+        title: title,
+        gist: gist,
+      }
     },
   },
 
@@ -104,10 +169,14 @@ const EditDraft = {
     },
 
     onPublish() {
-      router.push({ name: 'publishArticle', params: { id: this.id } })
+      this.showPreview = true
+      // this.showPublish = true
+      // router.push({ name: 'publishArticle', params: { id: this.id } })
     },
 
-    onChanged: function () {
+    onChanged: function (e) {
+      this.content = e.target.value
+      this.draft.edges.snapshots[0].body = e.target.value
       let _this = this
       window.clearTimeout(postChangedTimeoutID)
       postChangedTimeoutID = window.setTimeout(function () { _this.onSaveDraft() }, 2000)
@@ -120,9 +189,9 @@ const EditDraft = {
 
     onSaveDraft: function () {
       // console.trace()
-      let content = this.draft.edges.snapshots[0]
-      if ("" === content.body) return
-      if (this.__last && content.body && content.body === this.__last) {
+      // let content = this.draft.edges.snapshots[0]
+      if ("" === this.content) return
+      if (this.__last && this.content && this.content === this.__last) {
         return
       }
 
@@ -131,7 +200,7 @@ const EditDraft = {
         method: "PUT",
         url: queryRestful("/v1/article/content"),
         data: {
-          body: content.body,
+          body: this.content,
           draft_id: this.draft.id,
         },
       }).then(function (resp) {
@@ -148,6 +217,7 @@ const EditDraft = {
       if (!this.draft.edges.snapshots) {
         this.draft.edges.snapshots = [{ body: "" }]
       }
+      this.content = this.draft.edges.snapshots[0].body
     },
 
     __setLast(__draft) {
@@ -175,6 +245,11 @@ const EditDraft = {
     }).catch(function (resp) {
       console.log(resp)
     })
+    document.body.style.overflow = 'hidden'
+  },
+
+  beforeDestroy() {
+    document.body.style['overflow-y'] = 'scroll'
   },
 
   template: fgm_new_article,
