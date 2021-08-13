@@ -1,14 +1,18 @@
-<div class="container padding-x9">
-  <h2>{{ i18n.Drafts }}</h2>
-  <template v-if="drafts.length != 0">
-    <article class="list-1" v-for="(draft, i) in drafts">
-      <router-link class="list-1-link" :to="{ name: 'editDraft', params: { id: draft.id }}">
-        <div class="list-1-text">{{ draft.body }}</div>
-      </router-link>
-      <the-time class="text sm padding-0" v-bind:datetime="draft.created_at" /></the-time>
-    </article>
-  </template>
-  <div class="loading-container" v-else>
-    <div class="loading"></div>
+<div>
+  <main-nav></main-nav>
+  <div class="container padding-x9">
+    <h2>{{ i18n.Drafts }}</h2>
+    <template v-if="drafts.length != 0">
+      <article class="list-1" v-for="(draft, i) in drafts">
+        <router-link class="list-1-link" :to="{ name: 'editDraft', params: { id: draft.id }}">
+          <div class="list-1-text">{{ draft.body }}</div>
+        </router-link>
+        <the-time class="text sm padding-0" v-bind:datetime="draft.created_at" />
+        </the-time>
+      </article>
+    </template>
+    <div class="loading-container" v-else>
+      <div class="loading"></div>
+    </div>
   </div>
 </div>

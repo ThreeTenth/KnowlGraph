@@ -2,7 +2,16 @@
 <html lang="{{ .Header.UserLang }}">
 
 <head>
-	{{ template "fgm_html_header" .Header }}
+	<!-- {{ template "fgm_html_header" .Header }} -->
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+	<meta name="github_client_id" content="{{.GithubClientID}}" />
+	<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ThreeTenth/css-theme@v0.1.2/colours.css" /> -->
+	{{ if .Debug }}
+	<link rel="stylesheet" href="{{.StaticDomain}}/__main.css" />
+	{{ else }}
+	<link rel="stylesheet"
+		href="https://cdn.jsdelivr.net/combine/gh/ThreeTenth/KnowlGraph@{{ .VersionName }}/build/__main.min.css">
 
 	{{ if .Body.Article }}
 	<title>{{ .Body.Article.Title}} - KnowlGraph</title>
@@ -35,11 +44,9 @@
 
 <body class="margin-0">
 	<div id="app">
-		<div id="application--wrap">
-			{{ if .Body.Article }}
-			<div class="p wrap" id="article_md">{{ .Body.Article.Edges.Content.Body }}</div>
-			{{ end }}
-		</div>
+		{{ if .Body.Article }}
+		<div class="p wrap" id="article_md">{{ .Body.Article.Edges.Content.Body }}</div>
+		{{ end }}
 	</div>
 
 	{{ if .Body.Logined }}
@@ -51,7 +58,29 @@
 		const restfulDomain = '{{ .Header.RestfulDomain }}';
 		const staticDomain = '{{ .Header.StaticDomain }}';
 	</script>
-	{{ template "fgm_html_footer" .Header }}
+	// {{ template "fgm_html_footer" .Header }}
+	{{ if .Debug }}
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sprintf-js@1.1.2/dist/sprintf.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue-router/dist/vue-router.js"></script>
+	<script src="https://cdn.jsdelivr.net/combine/npm/showdown@1.5.0"></script>
+	<script src="https://cdn.jsdelivr.net/gh/excing/showdown-extensions@v1.2.2/showdown-full-extensions.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jsdiff/5.0.0/diff.js"
+		integrity="sha512-jaeQJDM6wDsWMgWNRmJ5w7LF1Ttk3lXCAzm0QWJw+pmEndef3y3aB4+sLLT3tZ2Bqu2g/BD+UN3kUhXXVpMQFw=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="{{.StaticDomain}}/__default_theme.js"></script>
+	<script src="{{.StaticDomain}}/__app.js"></script>
+	{{ else }}
+	<script
+		src="https://cdn.jsdelivr.net/combine/npm/vue,npm/vue-router,npm/axios/dist/axios.min.js,npm/js-cookie@rc/dist/js.cookie.min.js,npm/sprintf-js@1.1.2/dist/sprintf.min.js,npm/showdown@1.5.0,gh/excing/showdown-extensions@v1.2.2/showdown-full-extensions.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jsdiff/5.0.0/diff.min.js"
+		integrity="sha512-Rjml7/E2zETyVFhzIQnTEjW7PBCH5/Y4ac2uu9MGqh1JclCVHbvT1lIlcVmvAGFipi/L16eA6Jr9km2zit9Tfg=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script
+		src="https://cdn.jsdelivr.net/combine/gh/ThreeTenth/KnowlGraph@{{ .VersionName }}/build/__default_theme.min.js,gh/ThreeTenth/KnowlGraph@{{ .VersionName }}/build/__app.min.js"></script>
+	{{end}}
 </body>
 
 </html>

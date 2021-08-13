@@ -103,18 +103,9 @@ var app = new Vue({
       has: false,
       ras: null,
     },
-    showSearch: false,
   },
   router,
   template: logined ? app_home : app_index,
-
-  watch: {
-    showSearch: function (val, oldVal) {
-      if (val) {
-        setTimeout(() => this.$refs.search.focus(), 0);
-      }
-    },
-  },
 
   created() {
     var _this = this
@@ -131,19 +122,9 @@ var app = new Vue({
         console.log(resp)
       })
     }
-
-    document.onkeydown = function (e) {
-      let key = window.event.keyCode
-      if (key == 191 && !e.target.type) {
-        _this.onSearch()
-      }
-    }
   },
 
   methods: {
-    onSearch() {
-      this.showSearch = true
-    },
     onAllow() {
       if (!this.vote.ras) return
 
@@ -179,7 +160,7 @@ var app = new Vue({
 
 function runApp() {
   Vue.use(plugin)
-  app.$mount('#application--wrap')
+  app.$mount('#app')
 
   if (logined) {
     app.getUserWords()
