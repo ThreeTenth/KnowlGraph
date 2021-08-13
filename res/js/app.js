@@ -91,8 +91,6 @@ const router = new VueRouter({
     { path: '/settings/personalize', name: 'personalize', component: Personalize },
     { path: '/new/article', name: 'newArticle', component: NewArticle },
     { path: '/d/:id/edit', name: 'editDraft', component: EditDraft, props: true },
-    { path: '/d/:id/history/:hid', name: 'draftHistory', component: DraftHistory, props: true },
-    { path: '/d/:id/publish', name: 'publishArticle', component: PublishArticle, props: true },
     { path: '/login', name: 'login', component: Login },
   ]
 })
