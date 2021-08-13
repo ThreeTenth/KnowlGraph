@@ -191,10 +191,41 @@ const EditDraft = {
       this.diff = diff
     },
 
-    onPublish() {
+    onShowPublish() {
       this.showPreview = true
-      // this.showPublish = true
-      // router.push({ name: 'publishArticle', params: { id: this.id } })
+    },
+
+    onPublish() {
+      var _this = this
+
+      axios({
+        method: "PUT",
+        url: queryRestful("/v1/publish/article"),
+        data: {
+          name: this.versionName,
+          comment: this.comment,
+          cover: this.cover,
+          title: this.title,
+          gist: this.gist,
+          lang: this.lang,
+          keywords: this.keywords,
+          draft_id: this.draft.id,
+        },
+      }).then(function (resp) {
+        // todo this content is published and notify home page and drafts page
+        if (204 == resp.status) {
+          router.push({ path: '/' })
+          return
+        }
+        router.push({
+          name: 'article', params: {
+            id: resp.data.edges.article.id,
+            code: encodeURLTitle(_this.title)
+          }
+        })
+      }).catch(function (resp) {
+        console.log(resp)
+      })
     },
 
     onChanged: function (e) {

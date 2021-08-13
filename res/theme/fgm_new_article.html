@@ -12,7 +12,7 @@
         v-model="content"></textarea>
       <div class="layout-3 flex">
         <div class="flex-1"></div>
-        <button class="btn text" v-on:click="onPublish">预览并发布<span v-if="status=='private'">
+        <button class="btn text" v-on:click="onShowPublish">预览并发布<span v-if="status=='private'">
             🔒</span></button>
         <dropdown>
           <button class="btn text lg margin-x9"><svg version="1.1" width="24" height="24" viewBox="0 0 24 24">
@@ -25,7 +25,7 @@
         </dropdown>
       </div>
       <div class="layout-1 flex">
-        <button class="btn text sm">预览</button>
+        <button class="btn text sm">{{ .i18n.Preview }}</button>
       </div>
     </div>
     <div class="layout-side-right">
