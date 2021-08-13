@@ -35,9 +35,22 @@ func getDraft(c *Context) error {
 			}
 		}).
 		WithArticle().
+		WithOriginal(func(vq *ent.VersionQuery) {
+			vq.WithContent().WithKeywords()
+		}).
 		Only(ctx)
 	if err != nil {
 		return c.NotFound(err.Error())
+	}
+
+	snapshots := _draft.Edges.Snapshots
+	if nil == snapshots {
+		snapshots = make([]*ent.Content, 0)
+	}
+
+	if 0 == len(snapshots) {
+		snapshots = append(snapshots, _draft.Edges.Original.Edges.Content)
+		_draft.Edges.Snapshots = snapshots
 	}
 
 	return c.Ok(&_draft)

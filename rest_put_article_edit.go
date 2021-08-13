@@ -1,7 +1,6 @@
 package main
 
 import (
-	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/draft"
 	"knowlgraph.com/ent/user"
 	"knowlgraph.com/ent/version"
@@ -35,10 +34,6 @@ func editArticle(c *Context) error {
 		Where(draft.And(
 			draft.HasOriginalWith(version.ID(_version.ID)),
 			draft.StateEQ(draft.StateWrite))).
-		WithOriginal(func(vq *ent.VersionQuery) {
-			vq.WithContent()
-		}).
-		WithSnapshots().
 		First(ctx)
 
 	if err != nil {
@@ -53,14 +48,6 @@ func editArticle(c *Context) error {
 		}
 
 	}
-
-	if 0 == len(_draft.Edges.Snapshots) {
-		_draft.Edges.Snapshots = []*ent.Content{
-			_version.Edges.Content,
-		}
-	}
-
-	_draft.Edges.Article = _version.Edges.Article
 
 	return c.Ok(&_draft)
 }
