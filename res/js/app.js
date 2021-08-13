@@ -105,7 +105,7 @@ var app = new Vue({
     },
   },
   router,
-  template: logined ? app_home : app_index,
+  // template: logined ? app_home : app_index,
 
   created() {
     var _this = this
