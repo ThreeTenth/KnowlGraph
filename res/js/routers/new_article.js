@@ -50,6 +50,10 @@ const EditDraft = {
       if (!this.content) return {
         title: "",
         gist: "",
+        lang: "",
+        keywords: null,
+        name: "",
+        comment: "",
       }
 
       let title
@@ -100,16 +104,35 @@ const EditDraft = {
 
       index = gist.indexOf("\n")
       if (-1 < index) {
-        gist = text.substring(0, index)
+        gist = gist.substring(0, index)
       }
 
       if (!gist) {
         gist = title
       }
 
+      var lang = getUserLang()
+      var name = "v1.0.0"
+      var keywords = null
+      var comment = "初次提交："
+      var _original = this.draft.edges.original
+      if (_original) {
+        lang = _original.lang
+        name = _original.versionName ? _original.versionName : name
+        keywords = []
+        _original.edges.keywords.forEach(element => {
+          keywords.push(element.name)
+        });
+        comment = ""
+      }
+
       return {
         title: title,
         gist: gist,
+        lang: lang,
+        keywords: keywords,
+        name: name,
+        comment: comment,
       }
     },
   },
@@ -188,8 +211,6 @@ const EditDraft = {
     },
 
     onSaveDraft: function () {
-      // console.trace()
-      // let content = this.draft.edges.snapshots[0]
       if ("" === this.content) return
       if (this.__last && this.content && this.content === this.__last) {
         return

@@ -103,7 +103,6 @@ var app = new Vue({
       has: false,
       ras: null,
     },
-    profilePicture: getLink("icon"),
     showSearch: false,
   },
   router,

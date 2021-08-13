@@ -72,8 +72,12 @@
 	--side-w  : 260px;
 	--snaps-w : 220px;
 	--search-w: 420px;
+	--draft-w : 720px;
 
-	font-family: "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
+	--px-720: 720px;
+
+	--font     : "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
+	font-family: var(--font);
 }
 
 @media (max-width: 1300px) {
@@ -137,8 +141,8 @@ body {
 
 .loading {
 	font-weight: bold;
-	font-family: monospace;
-	font-size  : var(--x30);
+	font-family: var(--font);
+	font-size  : 30px;
 	display    : grid;
 }
 
@@ -280,6 +284,10 @@ body {
 
 @media (max-width: 720px) {
 
+	:root {
+		--px-720: 100%;
+	}
+
 	.layout-history-snap {
 		width: 100%;
 	}
@@ -322,11 +330,17 @@ body {
 }
 
 .draft-area {
-	padding    : var(--x9);
-	margin-top : var(--x9);
-	width      : 100%;
-	height     : calc(100vh - 130px);
-	line-height: 150%;
+	outline      : medium;
+	font-size    : var(--md);
+	font-family  : var(--font);
+	resize       : none;
+	color        : var(--text);
+	border       : none;
+	border-bottom: var(--x1) solid var(--red);
+	box-sizing   : border-box;
+	padding      : var(--x9);
+	width        : 100%;
+	height       : calc(100vh - 210px);
 }
 
 /*******************************************************************
@@ -369,7 +383,7 @@ body {
 .input-3,
 .input-search {
 	font-size  : var(--md);
-	font-family: "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
+	font-family: var(--font);
 	outline    : medium;
 	border     : none;
 	color      : var(--text);
@@ -423,6 +437,42 @@ body {
 	color     : #000;
 	width     : 100%;
 	box-sizing: border-box;
+}
+
+/*******************************************************************
+ font style
+*******************************************************************/
+
+.font-md {
+	font-size: var(--md);
+}
+
+.font-lg {
+	font-size: var(--lg);
+}
+
+.font-bold {
+	font-weight: bold;
+}
+
+/*******************************************************************
+ scroll style
+*******************************************************************/
+
+.scroll {
+	overflow: scroll;
+}
+
+.scroll-x {
+	overflow-x: scroll;
+}
+
+.scroll-y {
+	overflow-y: scroll;
+}
+
+.scroll-auto {
+	overflow: auto;
 }
 
 /*******************************************************************
@@ -497,6 +547,12 @@ body {
 	font-size        : var(--x24);
 	cursor           : pointer;
 	box-shadow       : var(--x2) var(--x2) var(--x4) var(--highlight);
+}
+
+.abs-bl {
+	position: absolute;
+	bottom  : 0;
+	left    : auto;
 }
 
 .overlay {
@@ -627,14 +683,14 @@ body {
 }
 
 .label-2 {
-	padding         : var(--x5) var(--x8);
+	padding         : 0 var(--x8);
 	background-color: var(--primary);
 	color           : var(--text-r);
 	border-radius   : var(--x2);
 	display         : flex;
 	box-sizing      : border-box;
 	text-align      : -webkit-match-parent;
-	margin          : var(--x3) var(--x6) var(--x3) 0;
+	margin-right    : var(--x6);
 }
 
 .label-2.del {
@@ -746,11 +802,20 @@ body {
  borad and box-shadow style
 *******************************************************************/
 
+.box-border {
+	box-sizing: border-box;
+}
+
 .border-none {
 	border: none;
 }
 
+.border-1 {
+	border: var(--x1) solid var(--black);
+}
+
 .shadow {
+	border    : none;
 	box-shadow: 0 var(--x1) var(--x2) rgb(0 0 0 / 25%), 0 0 var(--x1) rgb(0 0 0 / 35%);
 }
 
@@ -811,8 +876,24 @@ body {
 }
 
 /*******************************************************************
+ width and height style
+*******************************************************************/
+
+.w-100 {
+	width: 100%;
+}
+
+.w-720p {
+	width: var(--px-720);
+}
+
+/*******************************************************************
  margin, padding and spacing style
 *******************************************************************/
+
+.margin-auto {
+	margin: 0 auto;
+}
 
 .margin-0 {
 	margin: 0;

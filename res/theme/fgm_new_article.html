@@ -1,21 +1,36 @@
 <div class="container">
-  <template>
-    <textarea class="input-2 draft-area" v-on:keyup="onChanged" v-on:blur="onBlur" v-model="content"></textarea>
-    <div class="layout-3 flex">
-      <div class="flex-1"></div>
-      <button class="btn text" v-on:click="onPublish">预览并发布<span v-if="status=='private'">
-          🔒</span></button>
-      <dropdown>
-        <button class="btn text lg margin-x9"><svg version="1.1" width="24" height="24" viewBox="0 0 24 24">
-            <path
-              d="M16,12C16,10.9 16.9,10 18,10C19.1,10 20,10.9 20,12C20,13.1 19.1,14 18,14C16.9,14 16,13.1 16,12M10,12C10,10.9 10.9,10 12,10C13.1,10 14,10.9 14,12C14,13.1 13.1,14 12,14C10.9,14 10,13.1 10,12M4,12C4,10.9 4.9,10 6,10C7.1,10 8,10.9 8,12C8,13.1 7.1,14 6,14C4.9,14 4,13.1 4,12Z" />
-          </svg></button>
-        <div class="menu">
-          <button class="menu-item" v-on:click="onHistories">{{ i18n.Histories }}</button>
-        </div>
-      </dropdown>
+  <div class="flex-start">
+    <div class="layout-side-left">
+      <h2>草稿箱</h2>
     </div>
-  </template>
+    <div class="layout-main flex-1">
+      <div class="layout-1 flex margin-t18b9">
+        <button class="btn text padding-9">预览</button>
+      </div>
+      <textarea autofocus class="draft-area" placeholder="在这里书写你的文章" v-on:keyup="onChanged" v-on:blur="onBlur"
+        v-model="content"></textarea>
+      <div class="layout-3 flex">
+        <div class="flex-1"></div>
+        <button class="btn text" v-on:click="onPublish">预览并发布<span v-if="status=='private'">
+            🔒</span></button>
+        <dropdown>
+          <button class="btn text lg margin-x9"><svg version="1.1" width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M16,12C16,10.9 16.9,10 18,10C19.1,10 20,10.9 20,12C20,13.1 19.1,14 18,14C16.9,14 16,13.1 16,12M10,12C10,10.9 10.9,10 12,10C13.1,10 14,10.9 14,12C14,13.1 13.1,14 12,14C10.9,14 10,13.1 10,12M4,12C4,10.9 4.9,10 6,10C7.1,10 8,10.9 8,12C8,13.1 7.1,14 6,14C4.9,14 4,13.1 4,12Z" />
+            </svg></button>
+          <div class="menu">
+            <button class="menu-item" v-on:click="onHistories">{{ i18n.Histories }}</button>
+          </div>
+        </dropdown>
+      </div>
+      <div class="layout-1 flex">
+        <button class="btn text sm">预览</button>
+      </div>
+    </div>
+    <div class="layout-side-right">
+      <h2>说明</h2>
+    </div>
+  </div>
   <overlay class="bgc white" v-if="showSnapshots">
     <div class="container flex">
       <div class="layout-history-snap">
@@ -90,7 +105,7 @@
               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="15 18 9 12 15 6" />
             </svg>
-            预览
+            {{ i18n.Preview }}
           </h2>
         </div>
         <button class="margin-x9 btn text fill padding-x24 padding-y9" v-on:click="showPublish = true">发布</button>
@@ -106,13 +121,14 @@
               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="15 18 9 12 15 6" />
             </svg>
-            发布
+            {{ i18n.Publish }}
           </h2>
         </div>
       </div>
       <div class="flex-h flex-wrap">
-        <div class="margin-x9" style="width: 400px;">
-          <input type="text" name="title" class="input-3" v-model="version.title" v-bind:placeholder="i18n.Title"></input>
+        <div class="margin-x9" style="width: 480px;">
+          <input type="text" name="title" class="input-3 font-lg font-bold" v-model="version.title"
+            v-bind:placeholder="i18n.Title"></input>
           <input contenteditable="true" type="text" name="gist" class="input-3" v-model="version.gist"
             v-bind:placeholder="i18n.Gist"></input>
           <select id="userLangSelect" name="lang" class="input-3" v-model="version.lang">
@@ -120,11 +136,12 @@
             </option>
           </select>
         </div>
-        <div class="margin-x9" style="width: 400px;">
-          <words-input class="input-3" v-bind:keywords="keywords" v-bind:words="user.words" />
-          <input type="text" name="versionName" class="input-3" v-model="version.versionName"
+        <div class="margin-x9" style="width: 480px;">
+          <words-input class="input-3" v-bind:keywords="version.keywords" v-bind:words="user.words" />
+          <input type="text" name="versionName" class="input-3" v-model="version.name"
             v-bind:placeholder="i18n.VersionName"></input>
-          <input type="text" name="comment" class="input-3" v-model="version.comment" v-bind:placeholder="i18n.Comment"></input>
+          <input type="text" name="comment" class="input-3" v-model="version.comment"
+            v-bind:placeholder="i18n.Comment"></input>
           <div class="layout-3 flex">
             <div class="flex-1"></div>
             <button class="btn text" v-on:click="onPublish">{{ i18n.Publish }}<span v-if="status=='private'">

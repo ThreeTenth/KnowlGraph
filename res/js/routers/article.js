@@ -111,7 +111,7 @@ const Article = {
         method: "PUT",
         url: queryRestful("/v1/article/edit", { id: version.id }),
       }).then(function (resp) {
-        router.push({ name: 'editDraft', params: { id: resp.data.id, __draft: resp.data } })
+        router.push({ name: 'editDraft', params: { id: resp.data.id } })
       }).catch(function (resp) {
         console.log(resp.status, resp.data)
       })
