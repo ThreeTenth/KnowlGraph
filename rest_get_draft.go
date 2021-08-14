@@ -45,11 +45,15 @@ func getDraft(c *Context) error {
 
 	snapshots := _draft.Edges.Snapshots
 	if nil == snapshots {
-		snapshots = make([]*ent.Content, 0)
+		snapshots = make([]*ent.Content, 0, 1)
 	}
 
 	if 0 == len(snapshots) {
-		snapshots = append(snapshots, _draft.Edges.Original.Edges.Content)
+		if nil != _draft.Edges.Original {
+			snapshots = append(snapshots, _draft.Edges.Original.Edges.Content)
+		} else {
+			snapshots = append(snapshots, &ent.Content{Body: ""})
+		}
 		_draft.Edges.Snapshots = snapshots
 	}
 
