@@ -1,0 +1,19 @@
+<div>
+  <div class="loading-container" v-if="status == 0">
+    <div class="loading"></div>
+  </div>
+  <template v-else-if="status == 200">
+    <slot></slot>
+  </template>
+  <template v-else-if="status == 404">
+    <template v-if="custom404">
+      <slot></slot>
+    </template>
+    <div v-else>
+      404 Not Found
+    </div>
+  </template>
+  <div class="loading-container" v-else>
+    <div>{{ status }}</div>
+  </div>
+</div>
