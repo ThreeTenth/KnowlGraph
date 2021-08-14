@@ -265,6 +265,10 @@ func scanArticleRows(rows *sql.Rows) ([]*ent.Version, error) {
 		return nil, err
 	}
 
+	if 0 == len(_versions) {
+		return nil, errors.New("No more")
+	}
+
 	return _versions, nil
 }
 

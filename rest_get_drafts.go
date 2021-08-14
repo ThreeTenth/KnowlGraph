@@ -46,6 +46,10 @@ func getDrafts(c *Context) error {
 		v.Edges.Snapshots = _snapshots
 	}
 
+	if 0 == len(_drafts) {
+		return c.NotFound("No more drafts")
+	}
+
 	sort.Sort(Drafts(_drafts))
 
 	return c.Ok(&_drafts)

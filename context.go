@@ -192,6 +192,11 @@ func (p *Context) ServiceUnavailable(format string, values ...interface{}) error
 	return p.Render(http.StatusServiceUnavailable, render.String{Format: format, Data: values})
 }
 
+// StatusError writes a status with the given string into the response body.
+func (p *Context) StatusError(status int, format string, values ...interface{}) error {
+	return p.Render(status, render.String{Format: format, Data: values})
+}
+
 // Ok serializes the given struct as JSON into the response body.
 // It also sets the Content-Type as "application/json".
 func (p *Context) Ok(obj interface{}) error {
