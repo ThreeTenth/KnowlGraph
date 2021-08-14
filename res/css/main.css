@@ -68,13 +68,10 @@
 	--x216: calc(var(--x156) + var(--x60));
 
 	--body-w  : 1280px;
-	--main-w  : 320px;
 	--side-w  : 260px;
 	--snaps-w : 220px;
 	--search-w: 420px;
 	--draft-w : 720px;
-
-	--px-720: 720px;
 
 	--font     : "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
 	font-family: var(--font);
@@ -101,6 +98,10 @@ body {
 
 .block {
 	display: block;
+}
+
+.none {
+	display: none;
 }
 
 /*******************************************************************
@@ -162,6 +163,14 @@ body {
 	background-color: var(--black);
 }
 
+@media (max-width: 360px) {
+
+	.logo::before {
+		content: "KG";
+		padding: var(--x6) var(--x12);
+	}
+}
+
 /*******************************************************************
  list style
 *******************************************************************/
@@ -218,8 +227,7 @@ body {
 }
 
 .layout-main {
-	min-width: var(--main-w);
-	margin   : 0 var(--x12);
+	margin   : 0 var(--x9);
 }
 
 .layout-search {
@@ -250,7 +258,8 @@ body {
 		--search-w: 320px;
 	}
 
-	.layout-side-right {
+	.layout-side-right,
+	.is-1000 {
 		display: none;
 	}
 }
@@ -267,7 +276,8 @@ body {
 
 	.layout-history-list,
 	.layout-side-left,
-	.layout-search {
+	.layout-search,
+	.is-720 {
 		display: none;
 	}
 
@@ -313,7 +323,7 @@ body {
 	box-sizing   : border-box;
 	padding      : var(--x9);
 	width        : 100%;
-	height       : calc(100vh - 210px);
+	height       : calc(100vh - 135px);
 }
 
 /*******************************************************************
@@ -814,8 +824,12 @@ body {
 	width: 100%;
 }
 
+.w-120p {
+	width: 90px;
+}
+
 .w-720p {
-	width: var(--px-720);
+	width: 720px;
 }
 
 /*******************************************************************
@@ -875,6 +889,10 @@ body {
 	margin-left: var(--md);
 }
 
+.margin-l9 {
+	margin-left: var(--x9);
+}
+
 .margin-r {
 	margin-right: var(--md);
 }
@@ -886,6 +904,11 @@ body {
 
 .padding-0 {
 	padding: 0;
+}
+
+.padding-x {
+	padding-left : var(--md);
+	padding-right: var(--md);
 }
 
 .padding-x9 {
