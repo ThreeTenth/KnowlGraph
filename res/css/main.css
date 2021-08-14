@@ -96,38 +96,11 @@ body {
 	color           : var(--black);
 	background-color: var(--white);
 	overflow-y      : scroll;
+	margin          : 0;
 }
 
 .block {
 	display: block;
-}
-
-/*******************************************************************
- color style
-*******************************************************************/
-
-.bgc.white {
-	background-color: var(--white);
-}
-
-.bgc.highlight {
-	background-color: var(--highlight);
-}
-
-.bgc-red-light {
-	background-color: var(--red-light);
-}
-
-.bgc-green-light {
-	background-color: var(--green-light);
-}
-
-.c-green {
-	color: var(--green);
-}
-
-.c-red {
-	color: var(--red);
 }
 
 /*******************************************************************
@@ -440,42 +413,6 @@ body {
 }
 
 /*******************************************************************
- font style
-*******************************************************************/
-
-.font-md {
-	font-size: var(--md);
-}
-
-.font-lg {
-	font-size: var(--lg);
-}
-
-.font-bold {
-	font-weight: bold;
-}
-
-/*******************************************************************
- scroll style
-*******************************************************************/
-
-.scroll {
-	overflow: scroll;
-}
-
-.scroll-x {
-	overflow-x: scroll;
-}
-
-.scroll-y {
-	overflow-y: scroll;
-}
-
-.scroll-auto {
-	overflow: auto;
-}
-
-/*******************************************************************
  modal, dialog and overlay style
 *******************************************************************/
 
@@ -547,12 +484,6 @@ body {
 	font-size        : var(--x24);
 	cursor           : pointer;
 	box-shadow       : var(--x2) var(--x2) var(--x4) var(--highlight);
-}
-
-.abs-bl {
-	position: absolute;
-	bottom  : 0;
-	left    : auto;
 }
 
 .overlay {
@@ -993,6 +924,70 @@ body {
 
 .spacing-18+.spacing-18 {
 	margin-left: var(--x18);
+}
+
+/*******************************************************************
+ font style
+*******************************************************************/
+
+.font-md {
+	font-size: var(--md);
+}
+
+.font-lg {
+	font-size: var(--lg);
+}
+
+.font-bold {
+	font-weight: bold;
+}
+
+/*******************************************************************
+ scroll style
+*******************************************************************/
+
+.scroll {
+	overflow: scroll;
+}
+
+.scroll-x {
+	overflow-x: scroll;
+}
+
+.scroll-y {
+	overflow-y: scroll;
+}
+
+.scroll-auto {
+	overflow: auto;
+}
+
+/*******************************************************************
+ color style
+*******************************************************************/
+
+.bgc.white {
+	background-color: var(--white);
+}
+
+.bgc.highlight {
+	background-color: var(--highlight);
+}
+
+.bgc-red-light {
+	background-color: var(--red-light);
+}
+
+.bgc-green-light {
+	background-color: var(--green-light);
+}
+
+.c-green {
+	color: var(--green);
+}
+
+.c-red {
+	color: var(--red);
 }
 
 /*******************************************************************

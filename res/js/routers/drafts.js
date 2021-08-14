@@ -3,6 +3,7 @@
 const Drafts = {
   data: function () {
     return {
+      pageStatus: 0,
       __original: [],
     }
   },
@@ -48,8 +49,10 @@ const Drafts = {
       url: queryRestful("/v1/drafts"),
     }).then(function (resp) {
       _this.$data.__original = resp.data
-    }).catch(function (resp) {
-      console.log(resp)
+      _this.pageStatus = resp.status
+    }).catch(function (err) {
+      console.log(err)
+      _this.pageStatus = err.response.status
     })
   },
 

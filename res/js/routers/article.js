@@ -20,7 +20,7 @@ const Article = {
       ],
       __original: {},
       isNewNode: false,
-      status: 0,
+      pageStatus: 0,
     }
   },
 
@@ -256,13 +256,14 @@ const Article = {
           _this.__putAsset("browse")
         })
       }
+      _this.pageStatus = resp.status
     }).catch(function (err) {
       var status = err.response.status
       if (401 == status && !logined) {
         router.push({ name: "login" })
         return
       }
-      _this.status = err.response.status
+      _this.pageStatus = status
     })
   },
 

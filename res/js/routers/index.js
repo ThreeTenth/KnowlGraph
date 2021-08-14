@@ -3,6 +3,7 @@
 const Index = {
   data: function () {
     return {
+      pageStatus: 0,
       __original: [],
     }
   },
@@ -42,8 +43,9 @@ const Index = {
       url: queryRestful("/v1/articles", { limit: 10, offset: 0 }),
     }).then(function (resp) {
       _this.$data.__original = resp.data
-    }).catch(function (resp) {
-      console.log(resp)
+      _this.pageStatus = resp.status
+    }).catch(function (err) {
+      _this.pageStatus = err.response.status
     })
   },
 

@@ -1,8 +1,8 @@
 <div>
   <main-nav></main-nav>
-  <div class="container">
-    <h2 class="margin-x9">{{ i18n.Archive }}</h2>
-    <div class="tabs margin-x9">
+  <div class="container padding-x9">
+    <h2>{{ i18n.Archive }}</h2>
+    <div class="tabs">
       <router-link to="/archive" v-bind:class="{'selected': status == 'achiveSelf'}">{{ i18n.MyArticles }} 🔒
       </router-link>
       <router-link to="/archive/star" v-bind:class="{'selected': status == 'achiveStar'}">{{ i18n.Star }} ⭐

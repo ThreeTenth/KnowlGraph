@@ -33,21 +33,18 @@ function getArchiveArticles(status) {
     data: function () {
       return {
         __original: [],
-        loading: true,
         status: status,
         icons: {
           self: "🔒",
           star: "⭐",
           watch: "👀",
           browse: "🕒",
-        }
+        },
+        pageStatus: 0,
       }
     },
 
     computed: {
-      statusIcon: function () {
-        return this.icons[status]
-      },
       articles: function () {
         let original = this.$data.__original
         if (original == undefined) return []
@@ -82,10 +79,9 @@ function getArchiveArticles(status) {
         url: queryRestful("/v1/assets", { status: status }),
       }).then(function (resp) {
         _this.$data.__original = resp.data
-        _this.loading = false
-      }).catch(function (resp) {
-        _this.loading = false
-        console.log(resp)
+        _this.pageStatus = resp.status
+      }).catch(function (err) {
+        _this.pageStatus = err.response.status
       })
     },
 

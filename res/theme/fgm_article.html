@@ -1,88 +1,87 @@
 <div>
   <main-nav></main-nav>
-  <div class="container padding-9" v-if="article">
-    <div class="layout-1 flex margin-t18b9">
-      <div class="flex-1">
-        <dropdown class="left" v-bind:ignore="'true'" v-if="article.nodes.length">
-          <button class="btn text padding-9">{{ bZticle.nodes[0].edges.word.name }}</button>
-          <div class="menu">
-            <div class="menu-item" v-for="(node, i) in article.nodes">{{ node.edges.word.name }}</div>
-          </div>
-        </dropdown>
-        <dropdown class="left" v-else>
-          <button class="btn text padding-9">💡 {{ i18n.Archive }}</button>
-          <div class="menu" v-if="user.logined">
-            <div v-if="user.archives.length">
-              <button class="menu-item" v-for="(archive, i) in user.archives">📁 {{ archive.edges.node.edges.word.name
-                }}</button>
-              <hr>
+  <page v-bind:status="pageStatus">
+    <div class="container padding-9" v-if="article">
+      <div class="layout-1 flex margin-t18b9">
+        <div class="flex-1">
+          <dropdown class="left" v-bind:ignore="'true'" v-if="article.nodes.length">
+            <button class="btn text padding-9">{{ bZticle.nodes[0].edges.word.name }}</button>
+            <div class="menu">
+              <div class="menu-item" v-for="(node, i) in article.nodes">{{ node.edges.word.name }}</div>
             </div>
-            <div class="menu-tip" v-else>无节点 😃</div>
-            <button class="menu-item" v-on:click="onNewNode">新建一个节点并关注</button>
-            <button class="menu-item">关注更多节点</button>
+          </dropdown>
+          <dropdown class="left" v-else>
+            <button class="btn text padding-9">💡 {{ i18n.Archive }}</button>
+            <div class="menu" v-if="user.logined">
+              <div v-if="user.archives.length">
+                <button class="menu-item" v-for="(archive, i) in user.archives">📁 {{ archive.edges.node.edges.word.name
+                  }}</button>
+                <hr>
+              </div>
+              <div class="menu-tip" v-else>无节点 😃</div>
+              <button class="menu-item" v-on:click="onNewNode">新建一个节点并关注</button>
+              <button class="menu-item">关注更多节点</button>
+            </div>
+            <div class="menu" v-else>
+              <router-link class="menu-item-a" to="/login">{{ i18n.PleaseLoginFirst }}</router-link>
+            </div>
+          </dropdown>
+        </div>
+        <template v-if="article.private">
+          <span class="text padding-9">🔒</span>
+        </template>
+        <div class="flex padding-x9" v-else>
+          <button class="btn text padding-y9" v-on:click="onStar">⭐ {{ article.star ? i18n.Unstar : i18n.Star
+            }}</button>
+          <button class="btn text padding-y9" v-on:click="onWatch">👀 {{ article.watch ? i18n.Unwatch : i18n.Watch
+            }}</button>
+          <button class="btn text padding-y9" v-on:click="switchLang">🌍 {{ article.lang.name }}</button>
+        </div>
+      </div>
+      <div class="tabs">
+        <a class="selected" href="#">{{ i18n.Body }}</a>
+        <a href="#">{{ i18n.Issues }}</a>
+        <a href="#">{{ i18n.Notes }}</a>
+      </div>
+      <article class="markdown" v-html="article.body"></article>
+      <div class="flex-wrap" v-if="article.keywords">
+        <a href="#" class="label-1" v-for="(keyword, i) in article.keywords">#{{keyword.name}}</a>
+      </div>
+      <div class="layout-3 flex">
+        <div class="flex-1">
+          <the-time class="text sm padding-0" v-bind:datetime="article.created_at" />
+        </div>
+        <dropdown>
+          <button class="btn text lg">😃</button>
+          <div class="menu">
+            <div class="menu-subheader">{{ i18n.PickYourReaction }}</div>
+            <div class="menu-flex" style="width: calc(var(--x96) * 2 + var(--x24));">
+              <button class="menu-item" v-for="(reac, i) in reactions" v-on:click="onPickReaction(reac.value)"
+                v-bind:title="i18n[reac.name]">{{ reac.emoji}}</button>
+            </div>
           </div>
-          <div class="menu" v-else>
-            <router-link class="menu-item-a" to="/login">{{ i18n.PleaseLoginFirst }}</router-link>
+        </dropdown>
+        <dropdown>
+          <button class="btn text lg">
+            <svg version="1.1" width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M16,12C16,10.9 16.9,10 18,10C19.1,10 20,10.9 20,12C20,13.1 19.1,14 18,14C16.9,14 16,13.1 16,12M10,12C10,10.9 10.9,10 12,10C13.1,10 14,10.9 14,12C14,13.1 13.1,14 12,14C10.9,14 10,13.1 10,12M4,12C4,10.9 4.9,10 6,10C7.1,10 8,10.9 8,12C8,13.1 7.1,14 6,14C4.9,14 4,13.1 4,12Z" />
+            </svg>
+          </button>
+          <div class="menu">
+            <button class="menu-item">{{ i18n.Histories }}</button>
+            <button class="menu-item">{{ i18n.Translate }}</button>
+            <button class="menu-item" v-on:click="onEditArticle">{{ i18n.Edit }}</button>
           </div>
         </dropdown>
       </div>
-      <template v-if="article.private">
-        <span class="text padding-9">🔒</span>
-      </template>
-      <div class="flex padding-x9" v-else>
-        <button class="btn text padding-y9" v-on:click="onStar">⭐ {{ article.star ? i18n.Unstar : i18n.Star }}</button>
-        <button class="btn text padding-y9" v-on:click="onWatch">👀 {{ article.watch ? i18n.Unwatch : i18n.Watch
-          }}</button>
-        <button class="btn text padding-y9" v-on:click="switchLang">🌍 {{ article.lang.name }}</button>
+      <div class="layout-1 flex padding-9 margin-y9" v-if="article.reactions.length">
+        <button class="btn text" v-for="(reac, i) in article.reactions" v-on:click="onPickReaction(reac.status)">{{
+          emoji[reac.status]}} {{ reac.count }}</button>
       </div>
+      <modal v-model="isNewNode">
+        <new-node v-on:successed="isNewNode = false" v-on:failured="isNewNode = false"></new-node>
+      </modal>
     </div>
-    <div class="tabs">
-      <a class="selected" href="#">{{ i18n.Body }}</a>
-      <a href="#">{{ i18n.Issues }}</a>
-      <a href="#">{{ i18n.Notes }}</a>
-    </div>
-    <article class="markdown" v-html="article.body"></article>
-    <div class="flex-wrap" v-if="article.keywords">
-      <a href="#" class="label-1" v-for="(keyword, i) in article.keywords">#{{keyword.name}}</a>
-    </div>
-    <div class="layout-3 flex">
-      <div class="flex-1">
-        <the-time class="text sm padding-0" v-bind:datetime="article.created_at" />
-      </div>
-      <dropdown>
-        <button class="btn text lg">😃</button>
-        <div class="menu">
-          <div class="menu-subheader">{{ i18n.PickYourReaction }}</div>
-          <div class="menu-flex" style="width: calc(var(--x96) * 2 + var(--x24));">
-            <button class="menu-item" v-for="(reac, i) in reactions" v-on:click="onPickReaction(reac.value)"
-              v-bind:title="i18n[reac.name]">{{ reac.emoji}}</button>
-          </div>
-        </div>
-      </dropdown>
-      <dropdown>
-        <button class="btn text lg">
-          <svg version="1.1" width="24" height="24" viewBox="0 0 24 24">
-            <path
-              d="M16,12C16,10.9 16.9,10 18,10C19.1,10 20,10.9 20,12C20,13.1 19.1,14 18,14C16.9,14 16,13.1 16,12M10,12C10,10.9 10.9,10 12,10C13.1,10 14,10.9 14,12C14,13.1 13.1,14 12,14C10.9,14 10,13.1 10,12M4,12C4,10.9 4.9,10 6,10C7.1,10 8,10.9 8,12C8,13.1 7.1,14 6,14C4.9,14 4,13.1 4,12Z" />
-          </svg>
-        </button>
-        <div class="menu">
-          <button class="menu-item">{{ i18n.Histories }}</button>
-          <button class="menu-item">{{ i18n.Translate }}</button>
-          <button class="menu-item" v-on:click="onEditArticle">{{ i18n.Edit }}</button>
-        </div>
-      </dropdown>
-    </div>
-    <div class="layout-1 flex padding-9 margin-y9" v-if="article.reactions.length">
-      <button class="btn text" v-for="(reac, i) in article.reactions" v-on:click="onPickReaction(reac.status)">{{
-        emoji[reac.status]}} {{ reac.count }}</button>
-    </div>
-    <modal v-model="isNewNode">
-      <new-node v-on:successed="isNewNode = false" v-on:failured="isNewNode = false"></new-node>
-    </modal>
-  </div>
-  <div class="loading-container" v-else-if="0 == status">
-    <div class="loading"></div>
-  </div>
-  <div class="loading-container" v-else>没有权限</div>
+  </page>
 </div>
