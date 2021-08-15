@@ -43,6 +43,8 @@
 	--xl : calc(var(--lg) * 2.0);
 	--xxl: calc(var(--xl) * 2.0);
 
+	--font-min: 0.01rem;
+
 	--x1  : calc(var(--md) / 16);
 	--x2  : var(--xxs);
 	--x3  : calc(var(--x2) + var(--x1));
@@ -227,7 +229,7 @@ body {
 }
 
 .layout-main {
-	margin   : 0 var(--x9);
+	margin: 0 var(--x9);
 }
 
 .layout-search {
@@ -289,7 +291,7 @@ body {
 
 .layout-1 {
 	border-radius   : var(--x3);
-	background-color: var(--highlight);
+	background-color: var(--grey);
 	align-items     : center;
 	box-sizing      : border-box;
 }
@@ -313,17 +315,18 @@ body {
 }
 
 .draft-area {
-	outline      : medium;
-	font-size    : var(--md);
-	font-family  : var(--font);
-	resize       : none;
-	color        : var(--text);
-	border       : none;
-	border-bottom: var(--x1) solid var(--red);
-	box-sizing   : border-box;
-	padding      : var(--x9);
-	width        : 100%;
-	height       : calc(100vh - 135px);
+	white-space: pre-wrap;
+	word-wrap  : break-word;
+	outline    : medium;
+	font-size  : var(--md);
+	font-family: var(--font);
+	resize     : none;
+	color      : var(--text);
+	border     : none;
+	box-sizing : border-box;
+	margin-top : var(--x9);
+	width      : 100%;
+	min-height : calc(100vh - 145px);
 }
 
 /*******************************************************************
@@ -429,9 +432,11 @@ body {
 .modal {
 	-webkit-box-sizing: border-box;
 	box-sizing        : border-box;
-	position          : absolute;
+	position          : fixed;
 	left              : 0;
 	top               : 0;
+	right             : 0;
+	bottom            : 0;
 	z-index           : 1000;
 	display           : flex;
 	align-items       : flex-start;
@@ -514,6 +519,10 @@ body {
 	right: 0;
 }
 
+.overlay.right-r10 .menu {
+	right: calc(0px - var(--x10));
+}
+
 .overlay:not(.up) .menu,
 .overlay.down .menu {
 	top: auto;
@@ -525,6 +534,12 @@ body {
 
 .overlay.block .menu {
 	display: block;
+}
+
+.abs {
+	position: absolute;
+	left    : 0;
+	top     : 0;
 }
 
 /*******************************************************************
@@ -699,6 +714,7 @@ body {
 .text.fill {
 	background-color: var(--primary);
 	color           : var(--white);
+	border-radius   : var(--x4);
 }
 
 .link {
@@ -737,6 +753,11 @@ body {
 .p.wrap {
 	white-space: pre-wrap;
 	word-wrap  : break-word;
+}
+
+div[contenteditable]:empty:before {
+	content: attr(placeholder);
+	color  : #aaa;
 }
 
 /*******************************************************************
@@ -820,16 +841,32 @@ body {
  width and height style
 *******************************************************************/
 
+.w-side {
+	width: var(--side-w);
+}
+
 .w-100 {
 	width: 100%;
 }
 
 .w-120p {
-	width: 90px;
+	width: 120px;
+}
+
+.w-220p {
+	width: 220px;
 }
 
 .w-720p {
 	width: 720px;
+}
+
+.h-100vh {
+	height: 100vh;
+}
+
+.hmax-100vh {
+	max-height: 100vh;
 }
 
 /*******************************************************************
@@ -873,6 +910,10 @@ body {
 	margin-bottom: var(--x9);
 }
 
+.margin-t7 {
+	margin-top: var(--x7);
+}
+
 .margin-t9 {
 	margin-top: var(--x9);
 }
@@ -895,6 +936,10 @@ body {
 
 .margin-r {
 	margin-right: var(--md);
+}
+
+.margin-r9 {
+	margin-right: var(--x9);
 }
 
 .margin-t18b9 {
@@ -926,9 +971,9 @@ body {
 	padding-bottom: var(--md);
 }
 
-.padding-y4 {
-	padding-top   : var(--x4);
-	padding-bottom: var(--x4);
+.padding-y5 {
+	padding-top   : var(--x5);
+	padding-bottom: var(--x5);
 }
 
 .padding-y9 {
@@ -985,6 +1030,10 @@ body {
 	overflow: auto;
 }
 
+.scroll-hidden {
+	overflow: hidden;
+}
+
 /*******************************************************************
  color style
 *******************************************************************/
@@ -1014,8 +1063,62 @@ body {
 }
 
 /*******************************************************************
- margin and padding style
+ position style
 *******************************************************************/
+
+.sticky {
+	position: sticky;
+	top     : 0;
+}
+
+/*******************************************************************
+ line count style
+*******************************************************************/
+
+.line-3,
+.line-2,
+.line-1 {
+	overflow          : hidden;
+	text-overflow     : ellipsis;
+	display           : -webkit-box;
+	-webkit-box-orient: vertical;
+}
+
+.line-1 {
+	-webkit-line-clamp: 1;
+}
+
+.line-2 {
+	-webkit-line-clamp: 2;
+}
+
+.line-3 {
+	-webkit-line-clamp: 3;
+}
+
+/*******************************************************************
+ font weight style
+*******************************************************************/
+
+.fw-400 {
+	font-weight: 400;
+}
+
+/*******************************************************************
+ markdown style
+*******************************************************************/
+
+.preview {
+	-webkit-transform: scale(0.20);
+	transform        : scale(0.20);
+	transform-origin : 0 0;
+	font-size        : var(--x1);
+	width            : var(--draft-w);
+}
+
+.preview .anchor {
+	display: none;
+}
 
 .markdown {
 	word-wrap    : break-word;

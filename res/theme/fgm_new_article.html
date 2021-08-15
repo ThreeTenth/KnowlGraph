@@ -1,36 +1,44 @@
 <div>
-  <main-nav></main-nav>
+  <main-nav mobile-hidden-menu>
+    <button class="btn text sm fill padding-x padding-y5 spacing-18" v-on:click="showPublish = true">发布</button>
+  </main-nav>
   <div class="container flex-start">
-    <div class="layout-side-left">
-      <h2>草稿箱</h2>
-    </div>
-    <div class="layout-main flex-1">
-      <div class="layout-1 flex margin-t18b9">
-        <button class="btn text padding-9">预览</button>
+    <div class="sticky">
+      <div class="margin-t padding-x9 is-1000 w-220p scroll-auto hmax-100vh">
+        <h4 style="margin-top: 0;">草稿箱</h4>
+        <page v-bind:status="draftsStatus">
+          <article class="padding-y9" v-for="(draft, i) in drafts">
+            <div class="line-1 fw-400" style="word-break: break-all;">{{ draft.body }}</div>
+          </article>
+        </page>
       </div>
-      <textarea autofocus class="draft-area" placeholder="在这里书写你的文章" v-on:keyup="onChanged" v-on:blur="onBlur"
-        v-model="content"></textarea>
-      <div class="layout-3 flex">
-        <div class="flex-1"></div>
-        <button class="btn text" v-on:click="onShowPublish">预览并发布<span v-if="status=='private'">
-            🔒</span></button>
-        <dropdown>
-          <button class="btn text lg margin-x9"><svg version="1.1" width="24" height="24" viewBox="0 0 24 24">
-              <path
-                d="M16,12C16,10.9 16.9,10 18,10C19.1,10 20,10.9 20,12C20,13.1 19.1,14 18,14C16.9,14 16,13.1 16,12M10,12C10,10.9 10.9,10 12,10C13.1,10 14,10.9 14,12C14,13.1 13.1,14 12,14C10.9,14 10,13.1 10,12M4,12C4,10.9 4.9,10 6,10C7.1,10 8,10.9 8,12C8,13.1 7.1,14 6,14C4.9,14 4,13.1 4,12Z" />
+    </div>
+    <page class="flex-auto padding-x9" v-bind:status="editingStatus">
+      <div class="margin-t7 sticky padding-y9">
+        <div class="layout-1 padding-x9 flex">
+          <div class="flex-auto"></div>
+          <button class="btn text padding-y9" v-on:click="onHistories"> <svg version="1.1" width="18" height="18"
+              viewBox="0 0 16 16" fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M1.643 3.143L.427 1.927A.25.25 0 000 2.104V5.75c0 .138.112.25.25.25h3.646a.25.25 0 00.177-.427L2.715 4.215a6.5 6.5 0 11-1.18 4.458.75.75 0 10-1.493.154 8.001 8.001 0 101.6-5.684zM7.75 4a.75.75 0 01.75.75v2.992l2.028.812a.75.75 0 01-.557 1.392l-2.5-1A.75.75 0 017 8.25v-3.5A.75.75 0 017.75 4z" />
+            </svg> </button>
+          <button class="btn text padding-y9" v-on:click="showPreview = true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+              <circle cx="12" cy="12" r="3" />
             </svg></button>
-          <div class="menu">
-            <button class="menu-item" v-on:click="onHistories">{{ i18n.Histories }}</button>
-          </div>
-        </dropdown>
+        </div>
       </div>
-      <div class="layout-1 flex">
-        <button class="btn text sm">{{ i18n.Preview }}</button>
+      <div class="flex-start">
+        <div contenteditable="true" placeholder="在这里书写你的文章" class="draft-area" v-on:input="onChanged"
+          v-on:blur="onBlur">
+          <template v-if="content">{{ draft.edges.snapshots[0].body }}</template>
+        </div>
+        <div class="w-120p is-720 scroll-hidden sticky" style="top: var(--x60); height: calc(100vh - var(--x60));">
+          <div class="preview p wrap" v-text="content"></div>
+        </div>
       </div>
-    </div>
-    <div class="layout-side-right">
-      <h2>说明</h2>
-    </div>
+    </page>
   </div>
   <overlay class="bgc white" v-if="showSnapshots">
     <div class="container flex">
@@ -75,7 +83,7 @@
               查看版本差异 · <a href="#">恢复此版本</a> · <a href="#">删除</a>
             </div>
           </div>
-          <div class="p wrap" style="overflow-y: auto; max-height: calc(100vh - 140px);">
+          <div class="p wrap margin-t9" style="overflow-y: auto; max-height: calc(100vh - 140px);">
             <template v-for="(part, i) in diff">
               <span v-if="part.added" class="bgc-green-light c-green">{{ part.value }}</span>
               <del v-else-if="part.removed" class="bgc-red-light c-red">{{ part.value }}</del>

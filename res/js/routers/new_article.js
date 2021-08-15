@@ -30,9 +30,14 @@ const EditDraft = {
       showPreview: false,
       showPublish: false,
 
+      __drafts: [],
+
       content: '',
       draft: null,
-      __last: { body: "" },
+      __last: '',
+
+      editingStatus: 0,
+      draftsStatus: 0,
     }
   },
 
@@ -135,6 +140,22 @@ const EditDraft = {
         comment: comment,
       }
     },
+
+    drafts: function () {
+      let original = this.$data.__drafts
+      var _drafts = []
+      for (let index = 0; index < original.length; index++) {
+        const element = original[index];
+        let snapshot = element.edges.snapshots[0]
+        let body = removeMarkdown(snapshot.body)
+        if (200 < body.length) {
+          body = body.substr(0, 120).trim() + '...'
+        }
+
+        _drafts[index] = { id: element.id, body: body, created_at: snapshot.created_at }
+      }
+      return _drafts
+    },
   },
 
   methods: {
@@ -148,8 +169,9 @@ const EditDraft = {
         _this.snapshotIndex = 0
         _this.showSnapshots = true
         _this.__snapDiff(_this.snapshotIndex, 1)
-      }).catch(function (resp) {
-        console.log(resp)
+      }).catch(function (err) {
+        _this.snapshotIndex = 0
+        _this.showSnapshots = true
       })
     },
 
@@ -182,7 +204,7 @@ const EditDraft = {
       var maxLen = this.snapshots.length
       var _new = i < maxLen ? this.snapshots[i].body : ''
       var _old = j < maxLen ? this.snapshots[j].body : ''
-      var diff = Diff.diffChars(_old, _new)
+      var diff = Diff.diffChars(_old ? _old : '', _new ? _new : '')
       diff.forEach(part => {
         if (part.added || part.removed) {
           part.value = part.value.replace(/\n(?!.)/g, "\n ")
@@ -228,25 +250,24 @@ const EditDraft = {
       })
     },
 
-    onChanged: function (e) {
-      this.content = e.target.value
-      this.draft.edges.snapshots[0].body = e.target.value
+    onChanged(e) {
+      this.content = e.target.innerText
       let _this = this
       window.clearTimeout(postChangedTimeoutID)
       postChangedTimeoutID = window.setTimeout(function () { _this.onSaveDraft() }, 2000)
     },
 
-    onBlur: function () {
+    onBlur() {
       window.clearTimeout(postChangedTimeoutID)
       this.onSaveDraft()
     },
 
     onSaveDraft: function () {
-      if ("" === this.content) return
       if (this.__last && this.content && this.content === this.__last) {
         return
       }
 
+      let temp = this._last
       let _this = this
       axios({
         method: "PUT",
@@ -256,24 +277,20 @@ const EditDraft = {
           draft_id: this.draft.id,
         },
       }).then(function (resp) {
-        _this.draft.edges.snapshots[0] = resp.data
-        _this.__setLast(_this.draft)
+        _this.__setLast(resp.data.body)
         // todo the new article have content and notify drafts page
-      }).catch(function (resp) {
-        console.log(resp)
+      }).catch(function (err) {
+        _this.__setLast(temp)
       })
     },
 
     __setDraft(__draft) {
       this.draft = __draft
-      if (!this.draft.edges.snapshots) {
-        this.draft.edges.snapshots = [{ body: "" }]
-      }
       this.content = this.draft.edges.snapshots[0].body
     },
 
-    __setLast(__draft) {
-      this.__last = __draft.edges.snapshots[0].body
+    __setLast(content) {
+      this.__last = content
     }
   },
 
@@ -293,15 +310,21 @@ const EditDraft = {
       url: queryRestful("/v1/draft", { id: this.id }),
     }).then(function (resp) {
       _this.__setDraft(resp.data)
-      _this.__setLast(resp.data)
-    }).catch(function (resp) {
-      console.log(resp)
+      _this.__setLast(resp.data.edges.snapshots[0].body)
+      _this.editingStatus = resp.status
+    }).catch(function (err) {
+      _this.editingStatus = err.response.status
     })
-    document.body.style.overflow = 'hidden'
-  },
 
-  beforeDestroy() {
-    document.body.style['overflow-y'] = 'scroll'
+    axios({
+      method: "GET",
+      url: queryRestful("/v1/drafts"),
+    }).then(function (resp) {
+      _this.$data.__drafts = resp.data
+      _this.draftsStatus = resp.status
+    }).catch(function (err) {
+      _this.draftsStatus = err.response.status
+    })
   },
 
   template: fgm_new_article,

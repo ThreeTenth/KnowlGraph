@@ -51,7 +51,6 @@ const Drafts = {
       _this.$data.__original = resp.data
       _this.pageStatus = resp.status
     }).catch(function (err) {
-      console.log(err)
       _this.pageStatus = err.response.status
     })
   },
