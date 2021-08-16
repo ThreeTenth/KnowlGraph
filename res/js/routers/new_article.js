@@ -30,14 +30,12 @@ const EditDraft = {
       showPreview: false,
       showPublish: false,
 
-      __drafts: [],
-
       content: '',
       draft: null,
       __last: '',
 
       editingStatus: 0,
-      draftsStatus: 0,
+      fullscreen: false,
     }
   },
 
@@ -140,22 +138,6 @@ const EditDraft = {
         comment: comment,
       }
     },
-
-    drafts: function () {
-      let original = this.$data.__drafts
-      var _drafts = []
-      for (let index = 0; index < original.length; index++) {
-        const element = original[index];
-        let snapshot = element.edges.snapshots[0]
-        let body = removeMarkdown(snapshot.body)
-        if (200 < body.length) {
-          body = body.substr(0, 120).trim() + '...'
-        }
-
-        _drafts[index] = { id: element.id, body: body, created_at: snapshot.created_at }
-      }
-      return _drafts
-    },
   },
 
   methods: {
@@ -211,6 +193,21 @@ const EditDraft = {
         }
       });
       this.diff = diff
+    },
+
+    onFullscreen() {
+      if (this.fullscreen) {
+        document.exitFullscreen()
+      } else {
+        this.$refs.editer.requestFullscreen()
+      }
+      this.fullscreen = !this.fullscreen
+    },
+
+    fullscreenEvent(e) {
+      if (document.fullscreenElement === null) {
+        this.fullscreen = false
+      }
     },
 
     onShowPublish() {
@@ -316,15 +313,11 @@ const EditDraft = {
       _this.editingStatus = err.response.status
     })
 
-    axios({
-      method: "GET",
-      url: queryRestful("/v1/drafts"),
-    }).then(function (resp) {
-      _this.$data.__drafts = resp.data
-      _this.draftsStatus = resp.status
-    }).catch(function (err) {
-      _this.draftsStatus = err.response.status
-    })
+    document.addEventListener("fullscreenchange", this.fullscreenEvent)
+  },
+
+  beforeDestroy() {
+    document.removeEventListener("fullscreenchange", this.fullscreenEvent)
   },
 
   template: fgm_new_article,

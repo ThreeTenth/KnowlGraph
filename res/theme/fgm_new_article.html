@@ -1,28 +1,29 @@
 <div>
   <main-nav mobile-hidden-menu>
-    <button class="btn text sm fill padding-x padding-y5 spacing-18" v-on:click="showPublish = true">发布</button>
+    <button class="btn text sm fill flex-v padding-x padding-y5 spacing-18" v-on:click="showPublish = true">发布</button>
   </main-nav>
-  <div class="container flex-start">
-    <div class="sticky">
-      <div class="margin-t padding-x9 is-1000 w-220p scroll-auto hmax-100vh">
-        <h4 style="margin-top: 0;">草稿箱</h4>
-        <page v-bind:status="draftsStatus">
-          <article class="padding-y9" v-for="(draft, i) in drafts">
-            <div class="line-1 fw-400" style="word-break: break-all;">{{ draft.body }}</div>
-          </article>
-        </page>
-      </div>
-    </div>
-    <page class="flex-auto padding-x9" v-bind:status="editingStatus">
+  <div class="container bgc white flex-start" v-bind:class="{'scrolly-auto' : fullscreen}" ref="editer">
+    <page class="margin-auto w-draft padding-x9" v-bind:status="editingStatus">
       <div class="margin-t7 sticky padding-y9">
         <div class="layout-1 padding-x9 flex">
           <div class="flex-auto"></div>
-          <button class="btn text padding-y9" v-on:click="onHistories"> <svg version="1.1" width="18" height="18"
-              viewBox="0 0 16 16" fill="currentColor">
+          <button class="btn text flex-v padding-y9" v-on:click="onFullscreen">
+            <svg v-if="fullscreen" viewBox="-2 -2 24 24" width="18" height="18" preserveAspectRatio="xMinYMin"
+              fill="currentColor">
+              <path
+                d="M1 0h6a1 1 0 1 1 0 2H3.414L18 16.586V13a1 1 0 0 1 2 0v6a1 1 0 0 1-1 1h-6a1 1 0 0 1 0-2h3.586L2 3.414V7a1 1 0 1 1-2 0V1a1 1 0 0 1 1-1z" />
+            </svg>
+            <svg v-else viewBox="-2 -2 24 24" width="18" height="18" preserveAspectRatio="xMinYMin" fill="currentColor">
+              <path
+                d="M19 0a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V3.414L11.414 10 18 16.586V13a1 1 0 0 1 2 0v6a1 1 0 0 1-1 1h-6a1 1 0 0 1 0-2h3.586L10 11.414 3.414 18H7a1 1 0 0 1 0 2H1a1 1 0 0 1-1-1v-6a1 1 0 0 1 2 0v3.586L8.586 10 2 3.414V7a1 1 0 1 1-2 0V1a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H3.414L10 8.586 16.586 2H13a1 1 0 0 1 0-2h6z" />
+            </svg> </button>
+          <button class="btn text padding-y9" v-bind:class="fullscreen ? 'none' : 'flex-v'" v-on:click="onHistories">
+            <svg version="1.1" width="18" height="18" viewBox="0 0 16 16" fill="currentColor">
               <path fill-rule="evenodd"
                 d="M1.643 3.143L.427 1.927A.25.25 0 000 2.104V5.75c0 .138.112.25.25.25h3.646a.25.25 0 00.177-.427L2.715 4.215a6.5 6.5 0 11-1.18 4.458.75.75 0 10-1.493.154 8.001 8.001 0 101.6-5.684zM7.75 4a.75.75 0 01.75.75v2.992l2.028.812a.75.75 0 01-.557 1.392l-2.5-1A.75.75 0 017 8.25v-3.5A.75.75 0 017.75 4z" />
             </svg> </button>
-          <button class="btn text padding-y9" v-on:click="showPreview = true">
+          <button class="btn text padding-y9" v-bind:class="fullscreen ? 'none' : 'flex-v'"
+            v-on:click="showPreview = true">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
               <circle cx="12" cy="12" r="3" />
@@ -30,13 +31,11 @@
         </div>
       </div>
       <div class="flex-start">
-        <div contenteditable="true" placeholder="在这里书写你的文章" class="draft-area" v-on:input="onChanged"
+        <div contenteditable="true" placeholder="在这里书写你的文章" class="draft-area margin-y9" v-on:input="onChanged"
           v-on:blur="onBlur">
           <template v-if="content">{{ draft.edges.snapshots[0].body }}</template>
         </div>
-        <div class="w-120p is-720 scroll-hidden sticky" style="top: var(--x60); height: calc(100vh - var(--x60));">
-          <div class="preview p wrap" v-text="content"></div>
-        </div>
+        <textmap v-bind:cursor="{ height: 56 }" v-bind:content="content"></textmap>
       </div>
     </page>
   </div>

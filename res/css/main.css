@@ -73,7 +73,7 @@
 	--side-w  : 260px;
 	--snaps-w : 220px;
 	--search-w: 420px;
-	--draft-w : 720px;
+	--draft-w : 1080px;
 
 	--font     : "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
 	font-family: var(--font);
@@ -200,6 +200,7 @@ body {
 
 .list-1 .list-1-text {
 	font-weight: 400;
+	word-break : break-all;
 }
 
 /*******************************************************************
@@ -258,6 +259,7 @@ body {
 @media (max-width: 1000px) {
 	:root {
 		--search-w: 320px;
+		--draft-w : 100vw;
 	}
 
 	.layout-side-right,
@@ -317,14 +319,14 @@ body {
 .draft-area {
 	white-space: pre-wrap;
 	word-wrap  : break-word;
+	word-break : break-all;
 	outline    : medium;
-	font-size  : var(--md);
+	font-size  : var(--x24);
 	font-family: var(--font);
 	resize     : none;
 	color      : var(--text);
 	border     : none;
 	box-sizing : border-box;
-	margin-top : var(--x9);
 	width      : 100%;
 	min-height : calc(100vh - 145px);
 }
@@ -690,8 +692,6 @@ body {
 	font-weight: 500;
 	font-size  : var(--x14);
 	padding    : var(--x1) var(--x4);
-	display    : flex;
-	align-items: center;
 }
 
 .text+.text {
@@ -753,6 +753,7 @@ body {
 .p.wrap {
 	white-space: pre-wrap;
 	word-wrap  : break-word;
+	word-break : break-all;
 }
 
 div[contenteditable]:empty:before {
@@ -845,12 +846,24 @@ div[contenteditable]:empty:before {
 	width: var(--side-w);
 }
 
+.w-draft {
+	width: var(--draft-w);
+}
+
 .w-100 {
 	width: 100%;
 }
 
+.w-90p {
+	width: 90px;
+}
+
 .w-120p {
 	width: 120px;
+}
+
+.w-180p {
+	width: 180px;
 }
 
 .w-220p {
@@ -874,7 +887,8 @@ div[contenteditable]:empty:before {
 *******************************************************************/
 
 .margin-auto {
-	margin: 0 auto;
+	margin-left : auto;
+	margin-right: auto;
 }
 
 .margin-0 {
@@ -1026,6 +1040,10 @@ div[contenteditable]:empty:before {
 	overflow-y: scroll;
 }
 
+.scrolly-auto {
+	overflow-y: auto;
+}
+
 .scroll-auto {
 	overflow: auto;
 }
@@ -1108,16 +1126,40 @@ div[contenteditable]:empty:before {
  markdown style
 *******************************************************************/
 
+.preview-layout {
+	top   : var(--x60);
+	height: calc(100vh - var(--x60));
+}
+
 .preview {
-	-webkit-transform: scale(0.20);
-	transform        : scale(0.20);
+	-webkit-transform: scale(0.11);
+	transform        : scale(0.11);
 	transform-origin : 0 0;
-	font-size        : var(--x1);
-	width            : var(--draft-w);
+	font-size        : var(--x24);
+	width            : calc(var(--draft-w) - 100px);
+	height           : 100%;
+	cursor           : default;
+	user-select      : none;
 }
 
 .preview .anchor {
 	display: none;
+}
+
+.preview-scroll {
+	visibility      : hidden;
+	position        : absolute;
+	left            : 0;
+	width           : 100%;
+	background-color: var(--highlight);
+}
+
+.preview-layout:hover .preview-scroll {
+	visibility: visible;
+}
+
+.preview-scroll.preview-touch {
+	visibility: visible;
 }
 
 .markdown {
@@ -1169,4 +1211,27 @@ hr {
 	color     : var(--highlight);
 	border    : none;
 	border-top: var(--x1) solid var(--highlight);
+}
+
+/*******************************************************************
+ media style
+
+ eq
+	Returns the boolean truth of arg1 == arg2
+ ne
+	Returns the boolean truth of arg1 != arg2
+ lt
+	Returns the boolean truth of arg1 < arg2
+ le
+	Returns the boolean truth of arg1 <= arg2
+ gt
+	Returns the boolean truth of arg1 > arg2
+ ge
+	Returns the boolean truth of arg1 >= arg2
+*******************************************************************/
+
+@media (display-mode: fullscreen) {
+	.ne-full {
+		display: none;
+	}
 }

@@ -4,7 +4,7 @@
     <h2 class="padding-x9">{{ i18n.Personalize }}</h2>
     <h3 class="padding-x9">{{ currentLang }}</h3>
     <div class="flex-wrap">
-      <button class="btn text md padding-9" v-for="(lang, i) in languages" :key="lang.code"
+      <button class="btn text md flex-v padding-9" v-for="(lang, i) in languages" :key="lang.code"
         v-on:click="onSelectUserLang(lang)">{{ lang.name }}</button>
     </div>
   </div>

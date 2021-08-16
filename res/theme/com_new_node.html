@@ -7,7 +7,7 @@
     </template>
   </div>
   <div class="flex">
-    <button class="btn text" v-bind:class="{'fill': selected == archive}" v-for="(archive, i) in user.archives"
+    <button class="btn text flex-v" v-bind:class="{'fill': selected == archive}" v-for="(archive, i) in user.archives"
       v-on:click="onSelectPrev(archive)">📁 {{ archive.edges.node.edges.word.name }}</button>
   </div>
   <div class="flex margin-y">
@@ -20,6 +20,6 @@
   <hr>
   <div class="flex">
     <div class="flex-1"></div>
-    <button class="btn text margin-x18" v-on:click="onSubmit">确定</button>
+    <button class="btn text flex-v margin-x18" v-on:click="onSubmit">确定</button>
   </div>
 </div>
