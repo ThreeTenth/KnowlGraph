@@ -69,11 +69,13 @@
 	--x156: calc(var(--x120) + var(--x36));
 	--x216: calc(var(--x156) + var(--x60));
 
-	--body-w  : 1280px;
-	--side-w  : 260px;
-	--snaps-w : 220px;
-	--search-w: 420px;
-	--draft-w : 1080px;
+	--body-w     : 1280px;
+	--side-w     : 260px;
+	--snaps-w    : 220px;
+	--search-w   : 420px;
+	--draft-w    : 1080px;
+	--prev-w     : calc(var(--draft-w) * 0.11);
+	--prev-real-w: calc(var(--draft-w) - var(--prev-w) + var(--x10));
 
 	--font     : "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
 	font-family: var(--font);
@@ -258,8 +260,9 @@ body {
 
 @media (max-width: 1000px) {
 	:root {
-		--search-w: 320px;
-		--draft-w : 100vw;
+		--search-w   : 320px;
+		--draft-w    : 100vw;
+		--prev-real-w: calc(var(--draft-w) - var(--prev-w) - var(--x18));
 	}
 
 	.layout-side-right,
@@ -328,7 +331,7 @@ body {
 	border     : none;
 	box-sizing : border-box;
 	width      : 100%;
-	min-height : calc(100vh - 145px);
+	min-height : calc(100vh - var(--x120) - var(--x12));
 }
 
 /*******************************************************************
@@ -850,6 +853,10 @@ div[contenteditable]:empty:before {
 	width: var(--draft-w);
 }
 
+.w-prev {
+	width: var(--prev-w);
+}
+
 .w-100 {
 	width: 100%;
 }
@@ -1127,19 +1134,28 @@ div[contenteditable]:empty:before {
 *******************************************************************/
 
 .preview-layout {
-	top   : var(--x60);
-	height: calc(100vh - var(--x60));
+	top       : var(--x60);
+	max-height: calc(100vh - var(--x60));
 }
 
 .preview {
 	-webkit-transform: scale(0.11);
 	transform        : scale(0.11);
 	transform-origin : 0 0;
-	font-size        : var(--x24);
-	width            : calc(var(--draft-w) - 100px);
-	height           : 100%;
+	width            : var(--prev-real-w);
+	max-height       : 100%;
 	cursor           : default;
 	user-select      : none;
+	white-space      : pre-wrap;
+	word-wrap        : break-word;
+	word-break       : break-all;
+	outline          : medium;
+	font-size        : var(--x24);
+	font-family      : var(--font);
+	resize           : none;
+	color            : var(--text);
+	border           : none;
+	box-sizing       : border-box;
 }
 
 .preview .anchor {

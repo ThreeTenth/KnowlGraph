@@ -35,7 +35,7 @@
           v-on:blur="onBlur">
           <template v-if="content">{{ draft.edges.snapshots[0].body }}</template>
         </div>
-        <textmap v-bind:cursor="{ height: 56 }" v-bind:content="content"></textmap>
+        <textmap v-bind:content="content"></textmap>
       </div>
     </page>
   </div>
