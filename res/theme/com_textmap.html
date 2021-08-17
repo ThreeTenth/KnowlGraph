@@ -1,5 +1,5 @@
-<div class="preview-layout w-prev is-720 scroll-hidden sticky" v-on:click="scrollTo">
-  <div class="preview p wrap" v-text="content" v-bind:style="{ marginTop: offset + 'px' }"></div>
-  <div class="preview-scroll" v-bind:class="{ 'preview-touch' : touch }"
-    v-bind:style="{ height: slider.height + 'px', top : top + 'px' }" v-on:mousedown="startDrag"></div>
+<div class="preview-layout w-prev is-720 scroll-hidden sticky" v-on:mouseup="scrollTo">
+  <div class="preview p wrap" v-text="content" v-bind:style="{ marginTop: offset + 'px' }" ref="textmap"></div>
+  <div class="preview-scroll" v-bind:style="{ height: slider.height + 'px', top : top + 'px' }"
+    v-on:mousedown="startDrag"></div>
 </div>

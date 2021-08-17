@@ -1163,19 +1163,17 @@ div[contenteditable]:empty:before {
 }
 
 .preview-scroll {
-	visibility      : hidden;
+	display         : none;
 	position        : absolute;
+	top             : 0;
 	left            : 0;
 	width           : 100%;
+	height          : 56px;
 	background-color: var(--highlight);
 }
 
 .preview-layout:hover .preview-scroll {
-	visibility: visible;
-}
-
-.preview-scroll.preview-touch {
-	visibility: visible;
+	display: block;
 }
 
 .markdown {

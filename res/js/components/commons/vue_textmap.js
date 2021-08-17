@@ -4,6 +4,10 @@ Vue.component('textmap', {
 
   props: {
     content: String,
+    range: {
+      start: 0,
+      end: 0,
+    },
   },
 
   data: function () {
@@ -21,11 +25,10 @@ Vue.component('textmap', {
     }
   },
 
-  computed: {
-    // top: function () {
-    //   console.log(this.scrollY);
-    //   return 'top=' + this.scrollY + "px"
-    // },
+  watch: {
+    range(value, oldVal) {
+      this.highlightRange(this.$el.firstChild, value.start, value.end)
+    },
   },
 
   methods: {
@@ -41,6 +44,8 @@ Vue.component('textmap', {
     },
 
     scrollTo(e) {
+      if (this.touch) return
+
       let r = this.$el.getBoundingClientRect()
       this.init(e)
 
@@ -72,9 +77,15 @@ Vue.component('textmap', {
       let y = e.clientY
       let mapScale = this.textmapHeight / document.body.clientHeight
       let dict = y - this.start.y
-      let scrollY = dict / mapScale
+      let scrollBy = dict / mapScale
+      let scrollY = window.scrollY
 
-      window.scrollBy(0, scrollY)
+      if (scrollY + scrollBy < 0) {
+        window.scrollTo(0, 0)
+        return
+      }
+
+      window.scrollBy(0, scrollBy)
 
       this.start.x = e.clientX
       this.start.y = y
@@ -95,6 +106,35 @@ Vue.component('textmap', {
         let offset = y / ratio
         this.offset = -offset
       }
+    },
+
+    selectTextRange(obj, start, stop) {
+      var endNode, startNode = endNode = obj.firstChild
+
+      startNode.nodeValue = startNode.nodeValue.trim();
+
+      var range = document.createRange();
+      range.setStart(startNode, start);
+      range.setEnd(endNode, stop + 1);
+
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    },
+
+    highlightRange(el, start, end) {
+      if (end < start) {
+        let temp = start
+        start = end
+        end = temp
+      }
+      var text = this.content
+      var startText = text.substring(0, start)
+      var highText = '<span style="background: var(--primary); color: var(--white)">' +
+        text.substring(start, end) +
+        "</span>"
+      var endText = text.substring(end)
+      el.innerHTML = startText + highText + endText;
     },
   },
 

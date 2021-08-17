@@ -36,6 +36,11 @@ const EditDraft = {
 
       editingStatus: 0,
       fullscreen: false,
+
+      selectRange: {
+        start: 0,
+        end: 0,
+      },
     }
   },
 
@@ -199,7 +204,7 @@ const EditDraft = {
       if (this.fullscreen) {
         document.exitFullscreen()
       } else {
-        this.$refs.editer.requestFullscreen()
+        this.$refs.editorContainer.requestFullscreen()
       }
       this.fullscreen = !this.fullscreen
     },
@@ -314,6 +319,17 @@ const EditDraft = {
     })
 
     document.addEventListener("fullscreenchange", this.fullscreenEvent)
+    document.addEventListener('selectionchange', () => {
+      let selection = document.getSelection()
+
+      if (selection.anchorOffset === selection.extentOffset
+        || this.$refs.editor === selection.extentNode.parentElement) {
+        this.selectRange = {
+          start: selection.anchorOffset,
+          end: selection.extentOffset,
+        }
+      }
+    });
   },
 
   beforeDestroy() {

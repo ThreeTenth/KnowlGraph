@@ -2,7 +2,7 @@
   <main-nav mobile-hidden-menu>
     <button class="btn text sm fill flex-v padding-x padding-y5 spacing-18" v-on:click="showPublish = true">发布</button>
   </main-nav>
-  <div class="container bgc white flex-start" v-bind:class="{'scrolly-auto' : fullscreen}" ref="editer">
+  <div class="container bgc white flex-start" v-bind:class="{'scrolly-auto' : fullscreen}" ref="editorContainer">
     <page class="margin-auto w-draft padding-x9" v-bind:status="editingStatus">
       <div class="margin-t7 sticky padding-y9">
         <div class="layout-1 padding-x9 flex">
@@ -31,11 +31,11 @@
         </div>
       </div>
       <div class="flex-start">
-        <div contenteditable="true" placeholder="在这里书写你的文章" class="draft-area margin-y9" v-on:input="onChanged"
-          v-on:blur="onBlur">
+        <div contenteditable="true" placeholder="在这里书写你的文章" class="draft-area margin-y9"
+          v-on:input="onChanged" v-on:blur="onBlur" ref="editor">
           <template v-if="content">{{ draft.edges.snapshots[0].body }}</template>
         </div>
-        <textmap v-bind:content="content"></textmap>
+        <textmap v-bind:content="content" v-bind:range="selectRange"></textmap>
       </div>
     </page>
   </div>
