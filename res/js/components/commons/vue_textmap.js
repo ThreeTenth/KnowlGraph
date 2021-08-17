@@ -9,7 +9,7 @@ Vue.component('textmap', {
   data: function () {
     return {
       docScale: 0.111,
-      mapHeight: 0,
+      textmapHeight: 0,
       scrollbarHeight: 0,
       start: { x: 0, y: 0 },
       slider: {
@@ -31,20 +31,23 @@ Vue.component('textmap', {
   methods: {
     init(e) {
       if (this.touch) return
-      let docHeight = document.body.clientHeight
-      this.mapHeight = this.$el.clientHeight
-      this.scrollbarHeight = docHeight * this.docScale
-      if (this.scrollbarHeight < this.mapHeight) {
-        this.mapHeight = this.scrollbarHeight
+      let documentHeight = document.body.clientHeight
+      this.textmapHeight = this.$el.clientHeight
+      this.scrollbarHeight = documentHeight * this.docScale
+      if (this.scrollbarHeight < this.textmapHeight) {
+        this.textmapHeight = this.scrollbarHeight
       }
       this.slider.height = window.innerHeight * this.docScale
     },
 
     scrollTo(e) {
+      let r = this.$el.getBoundingClientRect()
       this.init(e)
-      this.touch = true
-      this.doDrag(e)
-      this.touch = false
+
+      let documebtHeight = document.body.clientHeight
+      let yAtTextmap = -this.offset + e.clientY - r.top - this.slider.height / 5.0
+      let scrollY = yAtTextmap / this.scrollbarHeight * documebtHeight
+      window.scrollTo(0, scrollY)
     },
 
     startDrag(e) {
@@ -67,7 +70,7 @@ Vue.component('textmap', {
       if (!this.touch) return false
 
       let y = e.clientY
-      let mapScale = this.mapHeight / document.body.clientHeight
+      let mapScale = this.textmapHeight / document.body.clientHeight
       let dict = y - this.start.y
       let scrollY = dict / mapScale
 
@@ -83,12 +86,12 @@ Vue.component('textmap', {
       let y = window.scrollY
       let windowHeight = window.innerHeight
       let documebtHeight = document.body.clientHeight
-      let ratio = (documebtHeight - windowHeight) / (this.mapHeight - this.slider.height)
+      let ratio = (documebtHeight - windowHeight) / (this.textmapHeight - this.slider.height)
       let sliderTop = y / ratio
       this.top = sliderTop
 
-      if (this.mapHeight < this.scrollbarHeight) {
-        ratio = (documebtHeight - windowHeight) / (this.scrollbarHeight - this.mapHeight)
+      if (this.textmapHeight < this.scrollbarHeight) {
+        ratio = (documebtHeight - windowHeight) / (this.scrollbarHeight - this.textmapHeight)
         let offset = y / ratio
         this.offset = -offset
       }

@@ -28,7 +28,7 @@
 	--primary  : var(--blue);
 	--text     : var(--black);
 	--text-r   : var(--white);
-	--highlight: #00000010;
+	--highlight: #00000020;
 
 	--success: var(--olive);
 	--danger : var(--red);
