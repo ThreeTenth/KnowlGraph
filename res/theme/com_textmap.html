@@ -1,4 +1,4 @@
-<div class="preview-layout w-prev is-720 scroll-hidden sticky" v-on:mouseup="scrollTo">
+<div class="preview-layout w-prev is-720 scroll-hidden sticky" v-on:mouseup="onTouchTextmap">
   <div class="preview p wrap" v-text="content" v-bind:style="{ marginTop: offset + 'px' }" ref="textmap"></div>
   <div class="preview-scroll" v-bind:style="{ height: slider.height + 'px', top : top + 'px' }"
     v-on:mousedown="startDrag"></div>

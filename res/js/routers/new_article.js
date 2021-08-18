@@ -37,6 +37,7 @@ const EditDraft = {
       editingStatus: 0,
       fullscreen: false,
 
+      scroller: document,
       selectRange: {
         start: 0,
         end: 0,
@@ -206,13 +207,18 @@ const EditDraft = {
       } else {
         this.$refs.editorContainer.requestFullscreen()
       }
-      this.fullscreen = !this.fullscreen
+      this.setFullscreen(!this.fullscreen)
     },
 
     fullscreenEvent(e) {
       if (document.fullscreenElement === null) {
-        this.fullscreen = false
+        this.setFullscreen(false)
       }
+    },
+
+    setFullscreen(b) {
+      this.fullscreen = b
+      this.scroller = b ? this.$refs.editorContainer : document
     },
 
     onShowPublish() {

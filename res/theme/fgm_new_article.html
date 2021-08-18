@@ -31,11 +31,11 @@
         </div>
       </div>
       <div class="flex-start">
-        <div contenteditable="true" placeholder="在这里书写你的文章" class="draft-area margin-y9"
-          v-on:input="onChanged" v-on:blur="onBlur" ref="editor">
+        <div contenteditable="true" placeholder="在这里书写你的文章" class="draft-area margin-y9" v-on:input="onChanged"
+          v-on:blur="onBlur" ref="editor">
           <template v-if="content">{{ draft.edges.snapshots[0].body }}</template>
         </div>
-        <textmap v-bind:content="content" v-bind:range="selectRange"></textmap>
+        <textmap v-bind:content="content" v-bind:range="selectRange" v-bind:scroller="scroller"></textmap>
       </div>
     </page>
   </div>

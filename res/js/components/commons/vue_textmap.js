@@ -2,17 +2,12 @@
 
 Vue.component('textmap', {
 
-  props: {
-    content: String,
-    range: {
-      start: 0,
-      end: 0,
-    },
-  },
+  props: ['scroller', 'content', 'range'],
 
   data: function () {
     return {
-      docScale: 0.111,
+      documentScale: 0.111,
+      documentHeight: 0,
       textmapHeight: 0,
       scrollbarHeight: 0,
       start: { x: 0, y: 0 },
@@ -29,30 +24,36 @@ Vue.component('textmap', {
     range(value, oldVal) {
       this.highlightRange(this.$el.firstChild, value.start, value.end)
     },
+
+    scroller(value, oldVal) {
+      oldVal.removeEventListener('scroll', this.scrollHandle)
+      value.addEventListener('scroll', this.scrollHandle)
+    }
   },
 
   methods: {
     init(e) {
       if (this.touch) return
-      let documentHeight = document.body.clientHeight
+      let documentHeight = this.getScrollHeight()
+      this.documentHeight = documentHeight
       this.textmapHeight = this.$el.clientHeight
-      this.scrollbarHeight = documentHeight * this.docScale
+      this.scrollbarHeight = documentHeight * this.documentScale
       if (this.scrollbarHeight < this.textmapHeight) {
         this.textmapHeight = this.scrollbarHeight
       }
-      this.slider.height = window.innerHeight * this.docScale
+      this.slider.height = window.innerHeight * this.documentScale
     },
 
-    scrollTo(e) {
+    onTouchTextmap(e) {
       if (this.touch) return
 
       let r = this.$el.getBoundingClientRect()
       this.init(e)
 
-      let documebtHeight = document.body.clientHeight
+      let documentHeight = this.documentHeight
       let yAtTextmap = -this.offset + e.clientY - r.top - this.slider.height / 5.0
-      let scrollY = yAtTextmap / this.scrollbarHeight * documebtHeight
-      window.scrollTo(0, scrollY)
+      let scrollY = yAtTextmap / this.scrollbarHeight * documentHeight
+      this.scrollTo(scrollY)
     },
 
     startDrag(e) {
@@ -75,17 +76,17 @@ Vue.component('textmap', {
       if (!this.touch) return false
 
       let y = e.clientY
-      let mapScale = this.textmapHeight / document.body.clientHeight
+      let mapScale = this.textmapHeight / this.documentHeight
       let dict = y - this.start.y
       let scrollBy = dict / mapScale
-      let scrollY = window.scrollY
+      let scrollY = this.getScrollY()
 
       if (scrollY + scrollBy < 0) {
-        window.scrollTo(0, 0)
+        this.scrollTo(0)
         return
       }
 
-      window.scrollBy(0, scrollBy)
+      this.scrollBy(scrollBy)
 
       this.start.x = e.clientX
       this.start.y = y
@@ -94,18 +95,50 @@ Vue.component('textmap', {
     scrollHandle(e) {
       this.init(e)
 
-      let y = window.scrollY
+      let y = this.getScrollY()
       let windowHeight = window.innerHeight
-      let documebtHeight = document.body.clientHeight
-      let ratio = (documebtHeight - windowHeight) / (this.textmapHeight - this.slider.height)
+      let documentHeight = this.documentHeight
+      let ratio = (documentHeight - windowHeight) / (this.textmapHeight - this.slider.height)
       let sliderTop = y / ratio
       this.top = sliderTop
 
       if (this.textmapHeight < this.scrollbarHeight) {
-        ratio = (documebtHeight - windowHeight) / (this.scrollbarHeight - this.textmapHeight)
+        ratio = (documentHeight - windowHeight) / (this.scrollbarHeight - this.textmapHeight)
         let offset = y / ratio
         this.offset = -offset
       }
+    },
+
+    getScrollHeight() {
+      var temp = this.scroller
+      if (temp === document) {
+        return document.body.clientHeight
+      }
+      return temp.scrollHeight
+    },
+
+    getScrollY() {
+      var temp = this.scroller
+      if (temp === document) {
+        return window.scrollY
+      }
+      return temp.scrollTop
+    },
+
+    scrollTo(y) {
+      var temp = this.scroller
+      if (temp === document) {
+        temp = window
+      }
+      temp.scrollTo(0, y)
+    },
+
+    scrollBy(y) {
+      var temp = this.scroller
+      if (temp === document) {
+        temp = window
+      }
+      temp.scrollBy(0, y)
     },
 
     selectTextRange(obj, start, stop) {
@@ -139,17 +172,17 @@ Vue.component('textmap', {
   },
 
   created() {
-    this.slider.height = window.innerHeight * this.docScale
+    this.slider.height = window.innerHeight * this.documentScale
 
     document.addEventListener('mousemove', this.doDrag)
     document.addEventListener('mouseup', this.stopDrag)
-    document.addEventListener('scroll', this.scrollHandle)
+    this.scroller.addEventListener('scroll', this.scrollHandle)
   },
 
   beforeDestroy() {
     document.removeEventListener('mousemove', this.doDrag)
     document.removeEventListener('mouseup', this.stopDrag)
-    document.removeEventListener('scroll', this.scrollHandle)
+    this.scroller.removeEventListener('scroll', this.scrollHandle)
   },
 
   template: com_textmap,
