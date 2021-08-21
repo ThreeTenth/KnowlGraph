@@ -163,11 +163,22 @@ Vue.component('textmap', {
       }
       var text = this.content
       var startText = text.substring(0, start)
-      var highText = '<span style="background: var(--primary); color: var(--white)">' +
-        text.substring(start, end) +
-        "</span>"
+      var highText = text.substring(start, end)
       var endText = text.substring(end)
-      el.innerHTML = startText + highText + endText;
+
+      var startEl = document.createElement("span")
+      startEl.innerText = startText
+      var highEl = document.createElement("span")
+      highEl.style.background = "var(--primary)"
+      highEl.style.color = "var(--white)"
+      highEl.innerText = highText
+      var endEl = document.createElement("span")
+      endEl.innerText = endText
+
+      el.innerHTML = ''
+      el.appendChild(startEl)
+      el.appendChild(highEl)
+      el.appendChild(endEl)
     },
   },
 
