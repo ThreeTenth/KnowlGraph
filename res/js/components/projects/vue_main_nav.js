@@ -4,6 +4,7 @@ Vue.component('main-nav', {
 
   props: {
     mobileHiddenMenu: Boolean,
+    hiddenSearch: Boolean,
   },
 
   data: function () {

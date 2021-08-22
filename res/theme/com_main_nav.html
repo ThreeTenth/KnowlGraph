@@ -15,7 +15,7 @@
           <main-menu class="padding-x9"></main-menu>
         </div>
       </dropdown>
-      <div class="layout-search">
+      <div class="layout-search" v-if="!hiddenSearch">
         <input v-on:click="onSearch" class="input-search" placeholder="点击或按 / 搜索……" />
       </div>
     </div>
