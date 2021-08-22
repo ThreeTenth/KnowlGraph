@@ -9,8 +9,8 @@ const NewArticle = {
       url: queryRestful("/v1/article", { status: to.query.status }),
     }).then(function (resp) {
       router.push({ name: 'editDraft', params: { id: resp.data.id } })
-    }).catch(function (resp) {
-      console.log(resp.status, resp.data)
+    }).catch(function (err) {
+      // console.log(resp.status, resp.data)
     })
   },
 
@@ -32,6 +32,7 @@ const EditDraft = {
 
       content: '',
       draft: null,
+      selection: null,
       __last: '',
 
       editingStatus: 0,
@@ -44,6 +45,12 @@ const EditDraft = {
       },
     }
   },
+
+  // watch: {
+  //   content(value, oldVal) {
+  //     console.log(value);
+  //   },
+  // },
 
   computed: {
     status: function () {
@@ -201,6 +208,22 @@ const EditDraft = {
       this.diff = diff
     },
 
+    insertEmoji(emoji) {
+      var start = this.selection.anchorOffset
+      var end = this.selection.extentOffset
+      if (end < start) {
+        let temp = start
+        start = end
+        end = temp
+      }
+      var text = this.content
+      var startText = text.substring(0, start)
+      var endText = text.substring(end)
+      text = startText + emoji + endText;
+      this.content = text
+      this.$refs.editor.innerText = text
+    },
+
     onFullscreen() {
       if (this.fullscreen) {
         document.exitFullscreen()
@@ -253,13 +276,24 @@ const EditDraft = {
             code: encodeURLTitle(_this.title)
           }
         })
-      }).catch(function (resp) {
-        console.log(resp)
+      }).catch(function (err) {
+        // console.log(err)
       })
     },
 
     onChanged(e) {
-      this.content = e.target.innerText
+      var children = e.target.children
+      var content = ''
+      for (let index = 0; index < children.length; index++) {
+        const element = children[index];
+        var text = element.innerText
+        if (1 < text.length || '\n' !== text) {
+          text += '\n'
+        }
+        content += text
+      }
+      this.content = content
+      // console.log(this.content);
       let _this = this
       window.clearTimeout(postChangedTimeoutID)
       postChangedTimeoutID = window.setTimeout(function () { _this.onSaveDraft() }, 2000)
@@ -295,6 +329,14 @@ const EditDraft = {
     __setDraft(__draft) {
       this.draft = __draft
       this.content = this.draft.edges.snapshots[0].body
+      var parts = this.content.split('\n')
+      setTimeout(() => {
+        parts.forEach(part => {
+          var el = document.createElement('div')
+          el.innerText = "" === part ? "\n" : part
+          this.$refs.editor.appendChild(el)
+        });
+      }, 0);
     },
 
     __setLast(content) {
@@ -321,19 +363,45 @@ const EditDraft = {
       _this.__setLast(resp.data.edges.snapshots[0].body)
       _this.editingStatus = resp.status
     }).catch(function (err) {
+      // console.log(err);
       _this.editingStatus = err.response.status
     })
 
     document.addEventListener("fullscreenchange", this.fullscreenEvent)
+    document.addEventListener("paste", (e) => {
+      e.stopPropagation()
+      e.preventDefault()
+      var text = e.clipboardData.getData("Text")
+      document.execCommand("insertText", false, text)
+    })
     document.addEventListener('selectionchange', () => {
       let selection = document.getSelection()
 
-      if (selection.anchorOffset === selection.extentOffset
-        || this.$refs.editor === selection.extentNode.parentElement) {
-        this.selectRange = {
-          start: selection.anchorOffset,
-          end: selection.extentOffset,
+      var divs = _this.$refs.editor.children
+      var start = 0, end = 0
+      for (let index = 0; index < divs.length; index++) {
+        const element = divs[index];
+        if (isChildAt(element, selection.anchorNode)) {
+          start += selection.anchorOffset
+          break
+        } else {
+          start += calcElementLength(element)
         }
+      }
+      for (let index = 0; index < divs.length; index++) {
+        const element = divs[index];
+        if (isChildAt(element, selection.focusNode)) {
+          end += selection.focusOffset
+          break
+        } else {
+          end += calcElementLength(element)
+        }
+      }
+      // console.log(selection);
+      // console.log(start, end);
+      this.selectRange = {
+        start: start,
+        end: end,
       }
     });
   },

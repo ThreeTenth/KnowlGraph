@@ -331,7 +331,13 @@ body {
 	border     : none;
 	box-sizing : border-box;
 	width      : 100%;
-	min-height : calc(100vh - var(--x120) - var(--x12));
+	min-height : calc(100vh - var(--x120) - var(--x24));
+	overflow-y : hidden;
+}
+
+.draft-area p {
+	margin : 0;
+	padding: 0;
 }
 
 /*******************************************************************

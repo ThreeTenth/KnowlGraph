@@ -58,11 +58,20 @@ const plugin = {
         'disableForced4SpacesIndentedSublists': 'true',
         'tasklists': 'true',
         'tables': 'true',
+        'strikethrough': 'true',
+        'simplifiedAutoLink': 'true',
+        'smoothLivePreview': 'true',
+        'smartIndentationFix': 'true',
+        'openLinksInNewWindow': 'true',
         'extensions': ['video', 'audio', 'catalog', 'anchor']
       })
       // KaTeX: math regex: /\$\$([^$]+)\$\$/gm
 
       return converter.makeHtml(md);
+    }
+
+    Vue.prototype.emoji = function (x, i) {
+      return '&#x' + (x + i).toString(16)
     }
 
     Vue.prototype.onGitHubOAuth = function () {

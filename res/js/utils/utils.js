@@ -1,5 +1,13 @@
 // utils.js
 
+function calcElementLength(element) {
+  var text = element.innerText
+  if ('' === text || '\n' === text) {
+    return text.length
+  }
+  return text.length + 1
+}
+
 function isChildAt(parent, child) {
   if (child == parent) {
     return true
