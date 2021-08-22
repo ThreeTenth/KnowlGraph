@@ -1,5 +1,17 @@
 // utils.js
 
+function isChildAt(parent, child) {
+  if (child == parent) {
+    return true
+  }
+
+  if (child == document.body) {
+    return false
+  }
+
+  return isChildAt(parent, child.parentElement)
+}
+
 function seo(title, gist) {
   let vt = title
   if (!vt) {
