@@ -209,19 +209,7 @@ const EditDraft = {
     },
 
     insertEmoji(emoji) {
-      var start = this.selection.anchorOffset
-      var end = this.selection.extentOffset
-      if (end < start) {
-        let temp = start
-        start = end
-        end = temp
-      }
-      var text = this.content
-      var startText = text.substring(0, start)
-      var endText = text.substring(end)
-      text = startText + emoji + endText;
-      this.content = text
-      this.$refs.editor.innerText = text
+      document.execCommand("insertHTML", false, emoji)
     },
 
     onFullscreen() {

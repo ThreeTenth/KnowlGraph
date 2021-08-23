@@ -9,6 +9,10 @@ function calcElementLength(element) {
 }
 
 function isChildAt(parent, child) {
+  if (!child) {
+    return false
+  }
+
   if (child == parent) {
     return true
   }
