@@ -32,7 +32,6 @@ const EditDraft = {
 
       content: '',
       draft: null,
-      selection: null,
       __last: '',
 
       editingStatus: 0,
@@ -384,6 +383,9 @@ const EditDraft = {
         } else {
           end += calcElementLength(element)
         }
+      }
+      if (start == end) {
+        end = start + 1
       }
       // console.log(selection);
       // console.log(start, end);
