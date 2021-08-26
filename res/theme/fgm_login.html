@@ -1,8 +1,13 @@
 <div class="modal white">
-  <div>
+  <div class="margin-auto margin-t">
     <h1>{{ i18n.Login }}
       <router-link to="/">KnowlGraph</router-link>
     </h1>
-    <button v-on:click="onGitHubOAuth">{{ i18n.LoginWithGitHubOAuth }}</button>
+    <div class="margin-y9 flex">
+      <button class="flex-1 btn text border lg" v-if="canCreateAccount" v-on:click="onGitHubOAuth">创建一个新账号</button>
+    </div>
+    <div class="flex">
+      <button class="flex-1 btn text border lg" v-on:click="onGitHubOAuth">同步其他账号到此设备</button>
+    </div>
   </div>
 </div>
