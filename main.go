@@ -309,6 +309,12 @@ func router02() http.Handler {
 	v1.GET("/word/articles", handle(getKeywordArticles))
 	v1.GET("/word/nodes", handle(getWordNodes))
 
+	v1.GET("/account/challenge")
+	v1.PUT("/account/create")
+	v1.POST("/account/request")
+	v1.POST("/account/anthn")
+	v1.POST("/account/sync")
+
 	return router
 }
 
