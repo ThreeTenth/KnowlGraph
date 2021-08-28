@@ -77,6 +77,11 @@
 	--prev-w     : calc(var(--draft-w) * 0.11);
 	--prev-real-w: calc(var(--draft-w) - var(--prev-w) + var(--x10));
 
+	--toast-min-w : 180px;
+	--toast-max-w : 480px;
+	--toast-right : var(--x10);
+	--toast-bottom: var(--x10);
+
 	--font     : "Roboto", sans-serif, "inherit", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei";
 	font-family: var(--font);
 }
@@ -357,6 +362,13 @@ body {
 }
 
 @media (max-width: 480px) {
+	:root {
+		--toast-min-w : 100%;
+		--toast-max-w : 100%;
+		--toast-right : 0;
+		--toast-bottom: 0;
+	}
+
 	.tabs a {
 		padding: var(--x9) var(--x5);
 	}
@@ -459,16 +471,17 @@ body {
 }
 
 .dialog {
+	box-sizing        : border-box;
 	background        : var(--white);
 	color             : var(--text);
 	position          : relative;
-	min-width         : 400px;
+	min-width         : 360px;
 	border-radius     : var(--x24);
 	-webkit-transition: all 0.25s ease;
 	transition        : all 0.25s ease;
-	-webkit-box-shadow: 0 var(--x5) var(--x30) 0 rgba(0, 0, 0, .05);
-	box-shadow        : 0 var(--x5) var(--x30) 0 rgba(0, 0, 0, .05);
-	max-width         : 800px;
+	-webkit-box-shadow: 0 var(--x5) var(--x30) 0 rgba(0, 0, 0, .08);
+	box-shadow        : 0 var(--x5) var(--x30) 0 rgba(0, 0, 0, .08);
+	max-width         : 700px;
 	margin            : var(--x72) auto;
 }
 
@@ -549,8 +562,14 @@ body {
 
 .abs {
 	position: absolute;
-	left    : 0;
-	top     : 0;
+}
+
+.right-10 {
+	right: var(--x10);
+}
+
+.bottom-10 {
+	bottom: var(--x10);
 }
 
 /*******************************************************************
@@ -621,6 +640,31 @@ body {
 .menu-item:hover,
 .menu-item-a:hover {
 	background-color: var(--highlight);
+}
+
+/*******************************************************************
+ toast style
+*******************************************************************/
+
+.toast {
+	min-width    : var(--toast-min-w);
+	max-width    : var(--toast-max-w);
+	position     : absolute;
+	right        : var(--toast-right);
+	bottom       : var(--toast-bottom);
+	box-sizing   : border-box;
+	padding      : var(--x9) var(--md);
+	border-radius: var(--x30);
+}
+
+.toast.success {
+	background-color: var(--green);
+	color           : var(--white);
+}
+
+.toast.error {
+	background-color: var(--red);
+	color           : var(--white);
 }
 
 /*******************************************************************
@@ -795,6 +839,10 @@ div[contenteditable]:empty:before {
 	border-radius: var(--x3);
 }
 
+.radius-30 {
+	border-radius: var(--x30);
+}
+
 /*******************************************************************
  flex style
 *******************************************************************/
@@ -891,8 +939,12 @@ div[contenteditable]:empty:before {
 	height: 100vh;
 }
 
-.hmax-100vh {
+.maxh-100vh {
 	max-height: 100vh;
+}
+
+.minw-180p {
+	min-width: 180px;
 }
 
 /*******************************************************************
@@ -947,6 +999,14 @@ div[contenteditable]:empty:before {
 
 .margin-t {
 	margin-top: var(--md);
+}
+
+.margin-t36 {
+	margin-top: var(--x36);
+}
+
+.margin-t60 {
+	margin-top: var(--x60);
 }
 
 .margin-b {
@@ -1011,6 +1071,13 @@ div[contenteditable]:empty:before {
 .padding-y12 {
 	padding-top   : var(--x12);
 	padding-bottom: var(--x12);
+}
+
+.padding-24 {
+	padding-left  : var(--x24);
+	padding-right : var(--x24);
+	padding-top   : var(--x24);
+	padding-bottom: var(--x24);
 }
 
 .padding-9 {
