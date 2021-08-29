@@ -69,8 +69,8 @@
             </svg>
           </button>
           <div class="menu">
-            <button class="menu-item">{{ i18n.Histories }}</button>
-            <button class="menu-item">{{ i18n.Translate }}</button>
+            <button class="menu-item" v-on:click="todo">{{ i18n.Histories }}</button>
+            <button class="menu-item" v-on:click="todo">{{ i18n.Translate }}</button>
             <button class="menu-item" v-on:click="onEditArticle">{{ i18n.Edit }}</button>
           </div>
         </dropdown>
