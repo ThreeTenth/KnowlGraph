@@ -33,7 +33,8 @@
 	--success: var(--olive);
 	--danger : var(--red);
 	--warn   : var(--orange);
-	--dark   : var(--black);
+	--error  : var(--red);
+	--info   : var(--black);
 
 	--md : 1rem;
 	--sm : calc(var(--md) * 0.5);
@@ -147,6 +148,64 @@ body {
 @keyframes c1 {
 	100% {
 		transform: translateY(calc(var(--s, 1)*0.1%));
+	}
+}
+
+.loading-spinner {
+	width        : var(--x18);
+	height       : var(--x18);
+	border-radius: 50%;
+	border       : var(--x3) solid #514b82;
+	animation    :
+		s10-1 0.8s infinite linear alternate,
+		s10-2 1.6s infinite linear;
+}
+
+@keyframes s10-1 {
+	0% {
+		clip-path: polygon(50% 50%, 0 0, 50% 0%, 50% 0%, 50% 0%, 50% 0%, 50% 0%)
+	}
+
+	12.5% {
+		clip-path: polygon(50% 50%, 0 0, 50% 0%, 100% 0%, 100% 0%, 100% 0%, 100% 0%)
+	}
+
+	25% {
+		clip-path: polygon(50% 50%, 0 0, 50% 0%, 100% 0%, 100% 100%, 100% 100%, 100% 100%)
+	}
+
+	50% {
+		clip-path: polygon(50% 50%, 0 0, 50% 0%, 100% 0%, 100% 100%, 50% 100%, 0% 100%)
+	}
+
+	62.5% {
+		clip-path: polygon(50% 50%, 100% 0, 100% 0%, 100% 0%, 100% 100%, 50% 100%, 0% 100%)
+	}
+
+	75% {
+		clip-path: polygon(50% 50%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 50% 100%, 0% 100%)
+	}
+
+	100% {
+		clip-path: polygon(50% 50%, 50% 100%, 50% 100%, 50% 100%, 50% 100%, 50% 100%, 0% 100%)
+	}
+}
+
+@keyframes s10-2 {
+	0% {
+		transform: scaleY(1) rotate(0deg)
+	}
+
+	49.99% {
+		transform: scaleY(1) rotate(135deg)
+	}
+
+	50% {
+		transform: scaleY(-1) rotate(0deg)
+	}
+
+	100% {
+		transform: scaleY(-1) rotate(-135deg)
 	}
 }
 
@@ -647,24 +706,26 @@ body {
 *******************************************************************/
 
 .toast {
-	min-width    : var(--toast-min-w);
-	max-width    : var(--toast-max-w);
-	position     : absolute;
-	right        : var(--toast-right);
-	bottom       : var(--toast-bottom);
-	box-sizing   : border-box;
-	padding      : var(--x9) var(--md);
-	border-radius: var(--x30);
+	min-width : var(--toast-min-w);
+	max-width : var(--toast-max-w);
+	position  : fixed;
+	right     : var(--toast-right);
+	bottom    : var(--toast-bottom);
+	box-sizing: border-box;
+	padding   : var(--x9) var(--md);
+	color     : var(--white);
 }
 
 .toast.success {
-	background-color: var(--green);
-	color           : var(--white);
+	background-color: var(--success);
+}
+
+.toast.info {
+	background-color: var(--info);
 }
 
 .toast.error {
-	background-color: var(--red);
-	color           : var(--white);
+	background-color: var(--error);
 }
 
 /*******************************************************************
@@ -783,8 +844,7 @@ body {
 }
 
 .btn.border {
-	border : var(--x2) solid var(--highlight);
-	padding: var(--x6) var(--md);
+	border: var(--x2) solid var(--highlight);
 }
 
 .btn.border:hover {
@@ -989,6 +1049,11 @@ div[contenteditable]:empty:before {
 	margin-bottom: var(--x9);
 }
 
+.margin-y24 {
+	margin-top   : var(--x24);
+	margin-bottom: var(--x24);
+}
+
 .margin-t7 {
 	margin-top: var(--x7);
 }
@@ -999,10 +1064,6 @@ div[contenteditable]:empty:before {
 
 .margin-t {
 	margin-top: var(--md);
-}
-
-.margin-t36 {
-	margin-top: var(--x36);
 }
 
 .margin-t60 {
@@ -1043,9 +1104,19 @@ div[contenteditable]:empty:before {
 	padding-right: var(--md);
 }
 
+.padding-x5 {
+	padding-left : var(--x5);
+	padding-right: var(--x5);
+}
+
 .padding-x9 {
 	padding-left : var(--x9);
 	padding-right: var(--x9);
+}
+
+.padding-x12 {
+	padding-left : var(--x12);
+	padding-right: var(--x12);
 }
 
 .padding-x24 {
@@ -1158,6 +1229,10 @@ div[contenteditable]:empty:before {
 
 .c-red {
 	color: var(--red);
+}
+
+.c-blue {
+	color: var(--blue);
 }
 
 /*******************************************************************

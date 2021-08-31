@@ -61,6 +61,12 @@ function bufferEncode(value) {
     .replace(/=/g, "");
 }
 
+// Don't drop any blanks
+// decode
+function bufferDecode(value) {
+  return Uint8Array.from(atob(value), c => c.charCodeAt(0));
+}
+
 function calcElementLength(element) {
   var text = element.innerText
   if ('' === text || '\n' === text) {

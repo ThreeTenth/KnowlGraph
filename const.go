@@ -14,6 +14,8 @@ const (
 const (
 	// ExpireTimeToken is token expire time
 	ExpireTimeToken = 30 * 24 * time.Hour
+	// ExpireTimeChallenge is challenge expire time
+	ExpireTimeChallenge = 1 * time.Minute
 )
 
 // HTML template

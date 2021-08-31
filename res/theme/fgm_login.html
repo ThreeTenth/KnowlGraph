@@ -1,11 +1,46 @@
-<div class="dialog padding-y">
-  <h3 class="flex-h">使用 APP 扫码同步账号</h3>
+<div class="dialog padding-y9">
+  <h3 class="flex-h" style="text-align: center;">使用 APP 扫码同步账号</h3>
   <page class="margin-y flex-h" v-bind:status="syncStatus">
     <!-- todo 二维码过期处理 -->
     <div ref="syncQrcode"></div>
   </page>
-  <div class="margin-t36 margin-b flex-h" v-if="canCreateAccount">
-    <span class="text">没有账号？<button class="btn text c-green font-bold" v-on:click="createAccount">创建一个</button></span>
+  <div class="margin-t9 margin-b flex-h">
+    <button class="btn text flex-v" v-on:click="onGitHubOAuth">使用
+      <svg class="padding-x5" viewBox="0 0 128 128" width="20" height="20">
+        <g fill="#181616">
+          <path
+            d="M64 5.103c-33.347 0-60.388 27.035-60.388 60.388 0 26.682 17.303 49.317 41.297 57.303 3.017.56 4.125-1.31 4.125-2.905 0-1.44-.056-6.197-.082-11.243-16.8 3.653-20.345-7.125-20.345-7.125-2.747-6.98-6.705-8.836-6.705-8.836-5.48-3.748.413-3.67.413-3.67 6.063.425 9.257 6.223 9.257 6.223 5.386 9.23 14.127 6.562 17.573 5.02.542-3.903 2.107-6.568 3.834-8.076-13.413-1.525-27.514-6.704-27.514-29.843 0-6.593 2.36-11.98 6.223-16.21-.628-1.52-2.695-7.662.584-15.98 0 0 5.07-1.623 16.61 6.19C53.7 35 58.867 34.327 64 34.304c5.13.023 10.3.694 15.127 2.033 11.526-7.813 16.59-6.19 16.59-6.19 3.287 8.317 1.22 14.46.593 15.98 3.872 4.23 6.215 9.617 6.215 16.21 0 23.194-14.127 28.3-27.574 29.796 2.167 1.874 4.097 5.55 4.097 11.183 0 8.08-.07 14.583-.07 16.572 0 1.607 1.088 3.49 4.148 2.897 23.98-7.994 41.263-30.622 41.263-57.294C124.388 32.14 97.35 5.104 64 5.104z" />
+        </g>
+      </svg>
+      GitHub 登录</button>
+  </div>
+  <div class="margin-y24 flex-h" v-if="canCreateAccount">
+    <span class="text">没有账号？<button class="btn text c-green font-bold" v-on:click="createAccount">创建一个</button>
+      <button class="btn text c-blue font-bold" v-on:click="authnAccount">测试</button></span>
+  </div>
+  <hr>
+  <h4 class="flex-h">Get APP</h4>
+  <div class="margin-y flex-h">
+    <button class="btn border-none padding-x12 padding-y9 radius-30 spacing-18" title="从 Google play 下载"
+      v-on:click="todo">
+      <svg viewBox="-3 -2 24 24" width="36" height="36" fill="currentColor">
+        <path
+          d="M17.625 9.267l-3.635-2.1L11 10.061l2.733 2.644 3.892-2.25a.68.68 0 0 0 .342-.593.68.68 0 0 0-.342-.595zM13.373 6.81l-4-2.312L.607 0l9.901 9.584zM.752 19.98l8.636-4.763 3.728-2.155-2.608-2.524zM.022.388l-.01 19.355 10.003-9.682z" />
+      </svg>
+    </button>
+    <button class="btn border-none padding-x12 padding-y9 radius-30 spacing-18" title="从 AppStore 处安装"
+      v-on:click="todo">
+      <svg width="36" height="36" viewBox="0 0 1792 1792" fill="currentColor">
+        <path
+          d="M1585 1215q-39 125-123 250-129 196-257 196-49 0-140-32-86-32-151-32-61 0-142 33-81 34-132 34-152 0-301-259-147-261-147-503 0-228 113-374 113-144 284-144 72 0 177 30 104 30 138 30 45 0 143-34 102-34 173-34 119 0 213 65 52 36 104 100-79 67-114 118-65 94-65 207 0 124 69 223t158 126zm-376-1173q0 61-29 136-30 75-93 138-54 54-108 72-37 11-104 17 3-149 78-257 74-107 250-148 1 3 2.5 11t2.5 11q0 4 .5 10t.5 10z" />
+      </svg>
+    </button>
+    <button class="btn border-none padding-x12 padding-y9 radius-30 spacing-18" title="直接下载 APK 文件" v-on:click="todo">
+      <svg viewBox="-3 -2 24 24" width="36" height="36" fill="currentColor">
+        <path
+          d="M1.247 6.51h-.051c-.656 0-1.19.537-1.19 1.19v5.183c0 .656.534 1.19 1.19 1.19h.052c.655 0 1.19-.535 1.19-1.19V7.7c-.001-.654-.536-1.19-1.191-1.19zM3.007 14.883c0 .602.492 1.092 1.094 1.092h1.17v2.8c0 .657.535 1.191 1.19 1.191h.05c.657 0 1.192-.535 1.192-1.192v-2.799h1.634v2.8c0 .657.538 1.191 1.192 1.191h.05c.657 0 1.191-.535 1.191-1.192v-2.799h1.17c.601 0 1.093-.49 1.093-1.092V6.701H3.007v8.182zM11.266 1.738l.929-1.433a.197.197 0 1 0-.33-.215l-.963 1.483a6.276 6.276 0 0 0-2.38-.462c-.854 0-1.658.166-2.382.462L5.179.09a.197.197 0 0 0-.275-.058.197.197 0 0 0-.058.273l.93 1.433C4.1 2.56 2.97 4.107 2.97 5.882c0 .11.006.217.016.323h11.07c.008-.106.014-.214.014-.323 0-1.775-1.13-3.322-2.805-4.144zM5.955 4.305a.532.532 0 1 1-.002-1.064.532.532 0 0 1 .002 1.064zm5.132 0a.532.532 0 1 1-.003-1.064.532.532 0 0 1 .003 1.064zM15.845 6.51h-.05c-.655 0-1.191.537-1.191 1.19v5.183c0 .656.537 1.19 1.191 1.19h.05c.657 0 1.191-.535 1.191-1.19V7.7c0-.654-.535-1.19-1.191-1.19z" />
+      </svg>
+    </button>
   </div>
   <!-- <div>Click “Sign In” to agree to Medium’s Terms of Service and acknowledge that Medium’s Privacy Policy applies to you.</div> -->
 </div>

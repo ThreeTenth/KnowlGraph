@@ -3,6 +3,7 @@ module knowlgraph.com
 go 1.16
 
 require (
+	github.com/duo-labs/webauthn v0.0.0-20210727191636-9f1b88ef44cc
 	github.com/excing/goflag v1.0.1
 	github.com/facebook/ent v0.5.4
 	github.com/gin-gonic/gin v1.6.3
@@ -11,6 +12,7 @@ require (
 	github.com/gofrs/uuid v4.0.0+incompatible // indirect
 	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/google/uuid v1.2.0 // indirect
+	github.com/gorilla/sessions v1.2.1 // indirect
 	github.com/jackc/pgmock v0.0.0-20201204152224-4fe30f7445fd // indirect
 	github.com/jackc/pgproto3/v2 v2.0.7 // indirect
 	github.com/jackc/pgx/v4 v4.10.1
