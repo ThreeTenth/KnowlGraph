@@ -74,6 +74,25 @@ const plugin = {
       return '&#x' + (x + i).toString(16)
     }
 
+    Vue.prototype.toast = function (message, status = 'info', duration = 3000) {
+      const Toast = Vue.extend(ToastObject)
+      const ins = new Toast()
+      ins.$mount(document.createElement('div'))
+      document.body.appendChild(ins.$el)
+      ins.message = message
+      ins.status = status
+      ins.visible = true
+      setTimeout(() => {
+        ins.visible = false
+      }, duration)
+    }
+
+    Vue.prototype.todo = function() {
+      Vue.prototype.toast("正在开发中")
+    }
+
+    Vue.prototype.canCreateAccount = canUseWenAuthn()
+
     Vue.prototype.onGitHubOAuth = function () {
       const github_client_id = getMeta("github_client_id")
       const state = Math.random().toString(36).slice(2)
@@ -86,7 +105,6 @@ const plugin = {
 
 const About = { template: fgm_about }
 const My = { template: fgm_my }
-const Login = { template: fgm_login }
 
 const router = new VueRouter({
   mode: 'history',
