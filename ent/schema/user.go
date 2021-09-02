@@ -1,9 +1,9 @@
 package schema
 
 import (
-	"github.com/facebook/ent"
-	"github.com/facebook/ent/schema/edge"
-	"github.com/facebook/ent/schema/field"
+	"entgo.io/ent"
+	"entgo.io/ent/schema/edge"
+	"entgo.io/ent/schema/field"
 )
 
 // User holds the schema definition for the User entity.
@@ -17,7 +17,7 @@ func (User) Fields() []ent.Field {
 		field.String("name").Optional(),
 		field.String("email").Optional(),
 		field.String("avatar").Optional(),
-		field.Int("github_id").Optional(),
+		field.Int("github_id").Optional().StructTag(`json:"-"`),
 	}
 }
 

@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/facebook/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql"
 	"github.com/pkg/errors"
 	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/article"
@@ -165,13 +165,9 @@ func publishArticle(c *Context) error {
 }
 
 func random() ent.OrderFunc {
-	return func(s *sql.Selector, check func(string) bool) {
+	return func(s *sql.Selector) {
 		f := "random()"
-		if check(f) {
-			s.OrderBy(f)
-		} else {
-			s.AddError(errors.Errorf("invalid field %q for ordering", f))
-		}
+		s.OrderBy(f)
 	}
 }
 

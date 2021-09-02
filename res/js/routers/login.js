@@ -17,7 +17,7 @@ const Login = {
       let _this = this;
       axios({
         method: "GET",
-        url: "/account/challenge",
+        url: queryRestful("/v1/account/challenge"),
       }).then(function (resp) {
         _this.createCredential(resp.data)
       }).catch(function (err) {
@@ -65,7 +65,7 @@ const Login = {
       var _this = this
       axios({
         method: "PUT",
-        url: "/account/create",
+        url: queryRestful("/v1/account/create"),
         data: {
           id: credentialId,
           rawId: rawId,
@@ -87,7 +87,7 @@ const Login = {
       let _this = this;
       axios({
         method: "GET",
-        url: "/account/request",
+        url: queryRestful("/v1/account/request"),
       }).then(function (resp) {
         _this.getCredentials(resp.data)
       }).catch(function (err) {
@@ -125,7 +125,7 @@ const Login = {
       var _this = this
       axios({
         method: "POST",
-        url: "/account/anthn",
+        url: queryRestful("/v1/account/anthn"),
         data: {
           id: assertion.id,
           rawId: bufferEncode(new Uint8Array(rawId)),
@@ -150,7 +150,7 @@ const Login = {
     let _this = this;
     axios({
       method: "GET",
-      url: "/account/sync",
+      url: queryRestful("/v1/account/sync"),
     }).then(function (resp) {
       _this.syncID = resp.data
       _this.syncStatus = resp.status

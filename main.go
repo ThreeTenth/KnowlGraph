@@ -18,9 +18,9 @@ import (
 	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/migrate"
 
-	"github.com/facebook/ent/dialect"
+	"entgo.io/ent/dialect"
 
-	entsql "github.com/facebook/ent/dialect/sql"
+	entsql "entgo.io/ent/dialect/sql"
 	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
@@ -263,14 +263,6 @@ func router01() http.Handler {
 	join := router.Group("/user/join")
 	join.GET("/github", handle(joinGithub))
 
-	account := router.Group("account")
-
-	account.GET("/challenge", handle((beginRegistration)))
-	account.PUT("/create", handle(finishRegistration))
-	account.GET("/request", handle(beginLogin))
-	account.POST("/anthn", handle(finishLogin))
-	account.GET("/sync", handle(getAccountChallenge))
-
 	return router
 }
 
@@ -316,6 +308,14 @@ func router02() http.Handler {
 	v1.GET("/word", handle(getWord))
 	v1.GET("/word/articles", handle(getKeywordArticles))
 	v1.GET("/word/nodes", handle(getWordNodes))
+
+	account := v1.Group("account")
+
+	account.GET("/challenge", handle((beginRegistration)))
+	account.PUT("/create", handle(finishRegistration))
+	account.GET("/request", authorizeRequired, handle(beginLogin))
+	account.POST("/anthn", authorizeRequired, handle(finishLogin))
+	account.GET("/sync", authorizeRequired, handle(getAccountChallenge))
 
 	return router
 }
