@@ -311,11 +311,12 @@ func router02() http.Handler {
 
 	account := v1.Group("account")
 
-	account.GET("/challenge", handle((beginRegistration)))
-	account.PUT("/create", handle(finishRegistration))
-	account.GET("/request", authorizeRequired, handle(beginLogin))
-	account.POST("/anthn", authorizeRequired, handle(finishLogin))
-	account.GET("/sync", authorizeRequired, handle(getAccountChallenge))
+	// account.GET("/challenge", handle((beginRegistration)))
+	// account.PUT("/create", handle(finishRegistration))
+	// account.GET("/request", authorizeRequired, handle(beginLogin))
+	// account.POST("/anthn", authorizeRequired, handle(finishLogin))
+	account.GET("/sync", handle(getAccountChallenge))
+	account.PUT("/create", handle(getAccountCreate))
 
 	return router
 }

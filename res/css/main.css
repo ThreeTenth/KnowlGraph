@@ -786,6 +786,8 @@ body {
 	height       : var(--x30);
 	margin       : 0;
 	border-radius: var(--xxl);
+	border       : none;
+	box-sizing   : border-box;
 }
 
 .icon,
@@ -1095,10 +1097,6 @@ div[contenteditable]:empty:before {
 	margin-bottom: var(--x9);
 }
 
-.padding-0 {
-	padding: 0;
-}
-
 .padding-x {
 	padding-left : var(--md);
 	padding-right: var(--md);
@@ -1149,6 +1147,14 @@ div[contenteditable]:empty:before {
 	padding-right : var(--x24);
 	padding-top   : var(--x24);
 	padding-bottom: var(--x24);
+}
+
+.padding-0 {
+	padding: 0;
+}
+
+.padding-3 {
+	padding: var(--x3);
 }
 
 .padding-9 {
