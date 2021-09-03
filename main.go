@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"database/sql"
 	"fmt"
@@ -13,7 +14,7 @@ import (
 	"github.com/excing/goflag"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
-	"github.com/gobuffalo/packr"
+	"github.com/gobuffalo/packr/v2"
 	"golang.org/x/sync/errgroup"
 	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/migrate"
@@ -31,7 +32,6 @@ type Config struct {
 	Redis string `flag:"redis source name, Please enter in the format: redis://localhost:6379/<db>"`
 	Log   string `flag:"logcat file path"`
 	Debug bool   `flag:"Is debug mode"`
-	Build bool   `flag:"Is build mode. This mode will start pre-compiling static resource files to build directory"`
 	Gci   string `flag:"GitHub client ID, see https://docs.github.com/en/developers/apps/creating-an-oauth-app"`
 	Gcs   string `flag:"GitHub client secrets"`
 	Ssd   string `flag:"static server domain"`
@@ -142,13 +142,6 @@ func loadTemplates(router *gin.Engine) {
 func main() {
 	goflag.Parse("config", "Configuration file path")
 	config.Ssd += "/" + VersionName
-
-	// 开发阶段时使用本地资源,
-	// 正式版本使用编译后的资源
-	if config.Build {
-		buildStaticFile()
-		return
-	}
 
 	openPostgreSQL()
 	openRedis()
@@ -326,48 +319,72 @@ func router03() http.Handler {
 
 	if config.Debug {
 		router.Use(cors)
+	} else {
+		router.Use(func(c *gin.Context) {
+			c.Header("Cache-Control", "public, max-age=31536000")
+		})
 	}
 
 	group := router.Group("/" + VersionName)
 
-	if config.Debug {
-		group.Static("/code-of-conduct", "./res/code-of-conduct")
-		group.Static("/strings", "./res/strings")
-		group.GET("/__app.js", func(c *gin.Context) {
+	box01 := packr.New("codeOfConduct", "./res/code-of-conduct")
+	group.StaticFS("/code-of-conduct", box01)
 
-			languagesFormat := "// %v, %v \n const languages = %v"
-			defaultStringsFormat := "// %v, %v \n const defaultLang = %v"
+	box02 := packr.New("strings", "./res/strings")
+	group.StaticFS("/strings", box02)
 
-			c.Status(http.StatusOK)
-			c.Writer.Header().Set("Content-Type", "application/javascript; charset=utf-8")
+	themeBuffer := new(bytes.Buffer)
+	{
+		themeFormat := "// %v \n const %v = `%v`"
+		CopyDir(themeBuffer, "./res/theme", themeFormat)
 
-			CopyFile(c.Writer, "./res/languages.json", languagesFormat)
-			CopyFile(c.Writer, "./res/strings/strings-en.json", defaultStringsFormat)
-			CopyDir(c.Writer, "./res/js/components", "")
-			CopyDir(c.Writer, "./res/js/routers", "")
-			CopyDir(c.Writer, "./res/js/utils", "")
-			CopyFile(c.Writer, "./res/js/app.js", "")
-		})
 		group.GET("/__default_theme.js", func(c *gin.Context) {
-
-			themeFormat := "// %v \n const %v = `%v`"
-
 			c.Status(http.StatusOK)
 			c.Writer.Header().Set("Content-Type", "application/javascript; charset=utf-8")
-
-			CopyDir(c.Writer, "./res/theme", themeFormat)
+			c.Writer.Write(themeBuffer.Bytes())
 		})
-		group.GET("/__main.css", func(c *gin.Context) {
+	}
 
+	appJSBuffer := new(bytes.Buffer)
+	{
+		languagesFormat := "// %v, %v \n const languages = %v"
+		defaultStringsFormat := "// %v, %v \n const defaultLang = %v"
+
+		CopyFile(appJSBuffer, "./res/languages.json", languagesFormat)
+		CopyFile(appJSBuffer, "./res/strings/strings-en.json", defaultStringsFormat)
+		CopyDir(appJSBuffer, "./res/js/components", "")
+		CopyDir(appJSBuffer, "./res/js/routers", "")
+		CopyDir(appJSBuffer, "./res/js/utils", "")
+		CopyFile(appJSBuffer, "./res/js/app.js", "")
+
+		group.GET("/__app.js", func(c *gin.Context) {
+			c.Status(http.StatusOK)
+			c.Writer.Header().Set("Content-Type", "application/javascript; charset=utf-8")
+			c.Writer.Write(appJSBuffer.Bytes())
+		})
+	}
+
+	mainCSSBuffer := new(bytes.Buffer)
+	{
+		CopyDir(mainCSSBuffer, "./res/css", "")
+		group.GET("/__main.css", func(c *gin.Context) {
 			c.Status(http.StatusOK)
 			c.Writer.Header().Set("Content-Type", "text/css; charset=utf-8")
-
-			CopyDir(c.Writer, "./res/css", "")
+			c.Writer.Write(mainCSSBuffer.Bytes())
 		})
-	} else {
-		group.GET("/*filepath", getStaticFile)
-		group.HEAD("/*filepath", getStaticFile)
 	}
+	// if config.Debug {
+	// 	group.GET("/__main.css", func(c *gin.Context) {
+
+	// 		c.Status(http.StatusOK)
+	// 		c.Writer.Header().Set("Content-Type", "text/css; charset=utf-8")
+
+	// 		CopyDir(c.Writer, "./res/css", "")
+	// 	})
+	// } else {
+	// 	group.GET("/*filepath", getStaticFile)
+	// 	group.HEAD("/*filepath", getStaticFile)
+	// }
 
 	router.GET("/favicon.ico", getFavicon)
 	// router.GET("/static/*paths", getStaticServerFiles)
