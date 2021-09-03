@@ -335,10 +335,13 @@ func router03() http.Handler {
 
 	themeBuffer := new(bytes.Buffer)
 	{
-		themeFormat := "// %v \n const %v = `%v`"
-		CopyDir(themeBuffer, "./res/theme", themeFormat)
-
 		group.GET("/__default_theme.js", func(c *gin.Context) {
+			if 0 == themeBuffer.Len() || config.Debug {
+				themeBuffer = new(bytes.Buffer)
+				themeFormat := "// %v \n const %v = `%v`"
+				CopyDir(themeBuffer, "./res/theme", themeFormat)
+			}
+
 			c.Status(http.StatusOK)
 			c.Writer.Header().Set("Content-Type", "application/javascript; charset=utf-8")
 			c.Writer.Write(themeBuffer.Bytes())
@@ -347,17 +350,20 @@ func router03() http.Handler {
 
 	appJSBuffer := new(bytes.Buffer)
 	{
-		languagesFormat := "// %v, %v \n const languages = %v"
-		defaultStringsFormat := "// %v, %v \n const defaultLang = %v"
-
-		CopyFile(appJSBuffer, "./res/languages.json", languagesFormat)
-		CopyFile(appJSBuffer, "./res/strings/strings-en.json", defaultStringsFormat)
-		CopyDir(appJSBuffer, "./res/js/components", "")
-		CopyDir(appJSBuffer, "./res/js/routers", "")
-		CopyDir(appJSBuffer, "./res/js/utils", "")
-		CopyFile(appJSBuffer, "./res/js/app.js", "")
-
 		group.GET("/__app.js", func(c *gin.Context) {
+			if 0 == appJSBuffer.Len() || config.Debug {
+				appJSBuffer = new(bytes.Buffer)
+				languagesFormat := "// %v, %v \n const languages = %v"
+				defaultStringsFormat := "// %v, %v \n const defaultLang = %v"
+
+				CopyFile(appJSBuffer, "./res/languages.json", languagesFormat)
+				CopyFile(appJSBuffer, "./res/strings/strings-en.json", defaultStringsFormat)
+				CopyDir(appJSBuffer, "./res/js/components", "")
+				CopyDir(appJSBuffer, "./res/js/routers", "")
+				CopyDir(appJSBuffer, "./res/js/utils", "")
+				CopyFile(appJSBuffer, "./res/js/app.js", "")
+			}
+
 			c.Status(http.StatusOK)
 			c.Writer.Header().Set("Content-Type", "application/javascript; charset=utf-8")
 			c.Writer.Write(appJSBuffer.Bytes())
@@ -366,8 +372,11 @@ func router03() http.Handler {
 
 	mainCSSBuffer := new(bytes.Buffer)
 	{
-		CopyDir(mainCSSBuffer, "./res/css", "")
 		group.GET("/__main.css", func(c *gin.Context) {
+			if 0 == mainCSSBuffer.Len() || config.Debug {
+				mainCSSBuffer = new(bytes.Buffer)
+				CopyDir(mainCSSBuffer, "./res/css", "")
+			}
 			c.Status(http.StatusOK)
 			c.Writer.Header().Set("Content-Type", "text/css; charset=utf-8")
 			c.Writer.Write(mainCSSBuffer.Bytes())
