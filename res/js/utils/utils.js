@@ -1,5 +1,10 @@
 // utils.js
 
+function getString(text) {
+  if (text) return text
+  return ""
+}
+
 function canUseWenAuthn() {
   if (window.PublicKeyCredential === undefined ||
     typeof window.PublicKeyCredential !== "function") {

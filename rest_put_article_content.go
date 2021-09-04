@@ -33,6 +33,7 @@ func putArticleContent(c *Context) error {
 	}
 
 	_contentCreate := client.Content.Create()
+	// todo LastID 有何作用?
 	if 0 != _data.LastID {
 		_contentCreate.SetLastID(_data.LastID)
 	}

@@ -279,7 +279,7 @@ const EditDraft = {
         }
         content += text
       }
-      this.content = content
+      this.content = getString(content)
       // console.log(this.content);
       let _this = this
       window.clearTimeout(postChangedTimeoutID)
@@ -292,7 +292,8 @@ const EditDraft = {
     },
 
     onSaveDraft: function () {
-      if (this.__last && this.content && this.content === this.__last) {
+      console.log(this.content, this.__last);
+      if (this.content === this.__last) {
         return
       }
 
@@ -315,7 +316,8 @@ const EditDraft = {
 
     __setDraft(__draft) {
       this.draft = __draft
-      this.content = this.draft.edges.snapshots[0].body
+      this.content = getString(this.draft.edges.snapshots[0].body)
+      if ('' == this.content) return
       var parts = this.content.split('\n')
       setTimeout(() => {
         parts.forEach(part => {
@@ -327,7 +329,7 @@ const EditDraft = {
     },
 
     __setLast(content) {
-      this.__last = content
+      this.__last = getString(content)
     }
   },
 
@@ -347,7 +349,7 @@ const EditDraft = {
       url: queryRestful("/v1/draft", { id: this.id }),
     }).then(function (resp) {
       _this.__setDraft(resp.data)
-      _this.__setLast(resp.data.edges.snapshots[0].body)
+      _this.__setLast(this.content)
       _this.editingStatus = resp.status
     }).catch(function (err) {
       // console.log(err);
@@ -363,6 +365,8 @@ const EditDraft = {
     })
     document.addEventListener('selectionchange', () => {
       let selection = document.getSelection()
+
+      if (!_this.$refs.editor) return
 
       var divs = _this.$refs.editor.children
       var start = 0, end = 0

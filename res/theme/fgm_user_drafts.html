@@ -10,7 +10,8 @@
       <template v-else>
         <article class="list-1" v-for="(draft, i) in drafts">
           <router-link class="list-1-link" :to="{ name: 'editDraft', params: { id: draft.id }}">
-            <div class="list-1-text">{{ draft.body }}</div>
+            <div class="list-1-text" v-if="draft.body">{{ draft.body }}</div>
+            <div class="list-1-text c-deep" v-else>空白文档</div>
           </router-link>
           <the-time class="text sm flex-v padding-0" v-bind:datetime="draft.created_at" />
           </the-time>

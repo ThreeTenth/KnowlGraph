@@ -156,6 +156,8 @@ Vue.component('textmap', {
     },
 
     highlightRange(el, start, end) {
+      if (!this.content) return
+
       if (end < start) {
         let temp = start
         start = end

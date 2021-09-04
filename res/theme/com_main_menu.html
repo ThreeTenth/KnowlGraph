@@ -1,7 +1,8 @@
 <div>
   <h4>社区 Community</h4>
   <a class="block btn link sm margin-y3" v-on:click="todo">首页 Home</a>
-  <a class="block btn link sm margin-y3" v-on:click="todo">新文章 New article</a>
+  <router-link class="block btn link sm margin-y3" v-bind:to="{ name: 'newArticle', query: { status: 'public' }}"
+    v-if="user.logined">新文章 New article</router-link>
   <a class="block btn link sm margin-y3" v-on:click="todo">表决 Votes</a>
   <a class="block btn link sm margin-y3" v-on:click="todo">词条 Dictionary</a>
   <a class="block btn link sm margin-y3" v-on:click="todo">节点 Nodes</a>
