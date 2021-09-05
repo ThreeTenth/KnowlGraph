@@ -11,6 +11,11 @@ const Login = {
 
   methods: {
     createAccount() {
+      if (this.user.logined) {
+        this.toast("你已登录")
+        return
+      }
+      
       var _this = this
       axios({
         method: "PUT",
