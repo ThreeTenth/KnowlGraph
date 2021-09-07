@@ -7,7 +7,7 @@
     <page class="margin-auto w-draft padding-x9" v-bind:status="editingStatus">
       <div class="sticky padding-y9">
         <div class="layout-1 flex-v">
-          <div class="flex-auto">
+          <div class="flex-auto flex-v">
             <dropdown class="left">
               <button class="btn text flex-v padding-9">😃</button>
               <div class="menu" style="max-height: 60vh;">
@@ -17,6 +17,7 @@
                 </div>
               </div>
             </dropdown>
+            <span>{{ content.length }}</span>
           </div>
           <button class="btn text padding-9" v-bind:class="fullscreen ? 'none' : 'flex-v'"
             v-on:click="showPreview = true">
