@@ -308,8 +308,14 @@ func router02() http.Handler {
 	// account.PUT("/create", handle(finishRegistration))
 	// account.GET("/request", authorizeRequired, handle(beginLogin))
 	// account.POST("/anthn", authorizeRequired, handle(finishLogin))
-	account.GET("/sync", handle(getAccountChallenge))
-	account.PUT("/create", handle(getAccountCreate))
+	account.GET("/sync", authentication, handle(getAccountChallenge))
+	account.PUT("/create", checkChallenge(TokenStateIdle), handle(putAccountCreate))
+	account.PUT("/terminal", checkChallenge(TokenStateIdle), handle(putAccountTerminal))
+	account.GET("/terminals", authorizeRequired, handle(putAccountTerminal))
+	account.PATCH("/authn", authorizeRequired, checkChallenge(TokenStateActivated), handle(postAccountAuthn))
+	account.POST("/authn", authorizeRequired, checkChallenge(TokenStateActivated), handle(postAccountAuthn))
+	account.DELETE("/authn", authorizeRequired, checkChallenge(TokenStateActivated), handle(postAccountAuthn))
+	account.GET("/check", authorizeRequired, handle(checkAccountChallenge))
 
 	return router
 }

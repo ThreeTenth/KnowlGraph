@@ -3,6 +3,21 @@ package main
 import "time"
 
 const (
+	// TokenStateIdle is that the token state is idle, and the token is unavailable
+	// at this time, and it needs to wait for subsequent authorization.
+	// When the idle time exceeds 1 minute, the token becomes invalid.
+	TokenStateIdle = 0
+	// TokenStateActivated means that the current token is activated and
+	// can be used only after authorization.
+	// If it is not authorized within 1 minute, the token will become invalid.
+	TokenStateActivated = 1
+	// TokenStateAuthorized means that the token is authorized,
+	// this state is hidden and invisible in the system.
+	// When the token is authorized, the token will be associated with the user.
+	TokenStateAuthorized = 2
+)
+
+const (
 	// Version is current version number
 	Version = 13
 	// VersionName is current version name
@@ -14,8 +29,14 @@ const (
 const (
 	// ExpireTimeToken is token expire time
 	ExpireTimeToken = 30 * 24 * time.Hour
+	// ExpireTimeTokenOnce is temporary authorization, only once
+	ExpireTimeTokenOnce = 2 * time.Hour
 	// ExpireTimeChallenge is challenge expire time
 	ExpireTimeChallenge = 1 * time.Minute
+	// ExpireTimeChallengeConfirm is authorized party's final confirmation time
+	ExpireTimeChallengeConfirm = 15 * time.Second
+	// ExpireTimeIPInfo is ipinfo expire time
+	ExpireTimeIPInfo = 7 * 24 * time.Hour
 )
 
 // HTML template
@@ -61,6 +82,8 @@ const (
 const (
 	// GinKeyUserID means gin context keys `access_token` field
 	GinKeyUserID = "user_id"
+	// GinKeyChallenge means gin context keys `challenge` field
+	GinKeyChallenge = "challenge"
 )
 
 // Redis Key

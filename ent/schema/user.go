@@ -38,5 +38,7 @@ func (User) Edges() []ent.Edge {
 			StructTag(`json:"words,omitempty"`),
 		edge.To("languages", Language.Type).
 			StructTag(`json:"languages,omitempty"`),
+		edge.To("terminals", Terminal.Type).
+			StructTag(`json:"terminals,omitempty"`),
 	}
 }

@@ -25,7 +25,12 @@ func authentication(c *gin.Context) {
 	_token := getRequestToken(c)
 
 	if _token != "" {
-		if userID, err := rdb.Get(ctx, _token).Int(); err == nil && 0 < userID {
+		// radis 中 token 对应的值，有三种情况：
+		// 1. 空闲状态，对应的值是 TokenStateIdle;
+		// 2. 已激活状态，对应的值是 TokenStateActivated;
+		// 3. 已授权状态，对应的值才是 user id.
+		// 具体可见 [TokenStateIdle], [TokenStateActivated], [TokenStateAuthorized]
+		if userID, err := rdb.Get(ctx, _token).Int(); err == nil && TokenStateActivated < userID {
 			c.Set(GinKeyUserID, userID)
 		}
 	}

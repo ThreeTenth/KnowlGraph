@@ -1,9 +1,12 @@
 <div class="dialog padding-y9">
   <h3 class="flex-h" style="text-align: center;">使用 APP 扫码同步账号</h3>
-  <div class="flex-h text sm c-deep" v-if="user.logined">未上线设备可扫码同步账号</div>
+  <div class="flex-h text sm c-deep" v-if="user.logined">向其他终端授权</div>
   <page class="margin-y flex-h" v-bind:status="syncStatus">
     <!-- todo 二维码过期处理 -->
     <div ref="syncQrcode"></div>
+    <div class="abs bgc-white-light flex-h flex-v" style="width: 256px; height: 256px;" v-if="hasRefresh">
+      <button class="btn text padding-9" v-on:click="getChallenge">刷新</button>
+    </div>
   </page>
   <div class="margin-t9 margin-b flex-h" v-if="!user.logined">
     <button class="btn text flex-v" v-on:click="onGitHubOAuth">使用
@@ -43,4 +46,20 @@
     </button>
   </div>
   <!-- <div>Click “Sign In” to agree to Medium’s Terms of Service and acknowledge that Medium’s Privacy Policy applies to you.</div> -->
+  <modal v-model="canAuthn" v-on:toggle="onToggleModal">
+    <div class="padding-24">
+      <h3 class="flex-h">{{ terminalName }} 请求授权</h3>
+      <span class="flex-h">确认对话框将于 {{ confirmExpire}} 秒关闭</span>
+      <div class="flex-h margin-9">
+        <button class="btn text fill padding-x padding-y9" v-on:click="onConfirmAuthn">确认授权</button>
+      </div>
+      <div class="flex-h margin-9">
+        <button class="btn text fill padding-x padding-y9" v-on:click="onConfirmAuthn"
+          title="有效时长最多 6 小时，退出应用失效">临时授权</button>
+      </div>
+      <div class="flex-h margin-9">
+        <button class="btn text sm" v-on:click="onCancelAuthn">取消授权</button>
+      </div>
+    </div>
+  </modal>
 </div>

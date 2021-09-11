@@ -24,6 +24,7 @@
 
 	--green-light: #01810142;
 	--red-light  : #e02e0642;
+	--white-light: #fffffff0;
 
 	--primary  : var(--blue);
 	--text     : var(--black);
@@ -1227,6 +1228,10 @@ div[contenteditable]:empty:before {
 
 .bgc-green-light {
 	background-color: var(--green-light);
+}
+
+.bgc-white-light {
+	background-color: var(--white-light);
 }
 
 .c-green {
