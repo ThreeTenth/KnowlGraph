@@ -88,7 +88,11 @@ const Login = {
           }, 3000);
         }, 0);
       }).catch(function (err) {
-        _this.syncStatus = err.response.status
+        if (err.response) {
+          _this.syncStatus = err.response.status
+        } else {
+          _this.syncStatus = 401
+        }
       })
     },
 

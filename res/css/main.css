@@ -994,6 +994,10 @@ div[contenteditable]:empty:before {
 	width: 220px;
 }
 
+.w-256p {
+	width: 256px;
+}
+
 .w-720p {
 	width: 720px;
 }
@@ -1004,6 +1008,10 @@ div[contenteditable]:empty:before {
 
 .maxh-100vh {
 	max-height: 100vh;
+}
+
+.maxw-360p {
+	max-width: 180px;
 }
 
 .minw-180p {
