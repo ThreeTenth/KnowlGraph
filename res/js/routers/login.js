@@ -5,11 +5,7 @@ const Login = {
     return {
       syncStatus: 0,
       syncID: 0,
-      challenge: 0,
       checkChallengeInterval: 0,
-      terminalName: '',
-      canAuthn: false,
-      confirmExpire: 15,
       hasRefresh: false,
       qrcode: null,
     }
@@ -31,8 +27,10 @@ const Login = {
         },
       }).then(function (resp) {
         Cookies.set("access_token", _this.syncID)
+        window.clearInterval(_this.checkChallengeInterval)
         window.open("/", "_self")
       }).catch(function (err) {
+        window.clearInterval(_this.checkChallengeInterval)
         _this.toast("创建失败: " + err)
       })
     },
@@ -46,17 +44,7 @@ const Login = {
         var data = resp.data
         if (1 == data.state) {
           window.clearInterval(_this.checkChallengeInterval)
-          _this.canAuthn = true
-          _this.terminalName = data.name
-          // 确认有期时间，默认 15 秒后授权失效
-          _this.confirmExpire = 15
-          window.setInterval(() => {
-            _this.confirmExpire--
-            if (_this.confirmExpire < 0) {
-              _this.canAuthn = false
-              _this.hasRefresh = true
-            }
-          }, 1000);
+          _this.hasRefresh = true
         }
       }).catch(function (err) {
         window.clearInterval(_this.checkChallengeInterval)
@@ -95,51 +83,13 @@ const Login = {
         }
       })
     },
-
-    onToggleModal(toggle) {
-      if (toggle) return
-      this.onCancelAuthn()
-    },
-
-    onCancelAuthn() {
-      this.canAuthn = false
-      this.hasRefresh = true
-      this.__postAccountAuthn("DELETE")
-    },
-
-    onTemporaryAuthn() {
-      this.canAuthn = false
-      this.hasRefresh = true
-      this.__postAccountAuthn("PATCH")
-    },
-
-    onConfirmAuthn() {
-      this.canAuthn = false
-      this.hasRefresh = true
-      this.__postAccountAuthn("POST")
-    },
-
-    __postAccountAuthn(method) {
-      var _this = this
-      axios({
-        method: method,
-        url: queryRestful("/v1/account/authn"),
-        data: {
-          challenge: this.syncID,
-        },
-      }).then(function (resp) {
-        _this.toast("Success", "success")
-      }).catch(function (err) {
-        _this.toast("Error: " + err, "error")
-      })
-    },
   },
 
   created() {
-    // if (this.user.logined) {
-    //   router.push({ path: '/' })
-    //   return
-    // }
+    if (this.user.logined) {
+      router.push({ path: '/' })
+      return
+    }
     this.getChallenge()
   },
 

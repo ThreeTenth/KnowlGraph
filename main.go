@@ -315,7 +315,7 @@ func router02() http.Handler {
 	account.PATCH("/authn", authorizeRequired, checkChallenge(TokenStateActivated), handle(postAccountAuthn))
 	account.POST("/authn", authorizeRequired, checkChallenge(TokenStateActivated), handle(postAccountAuthn))
 	account.DELETE("/authn", authorizeRequired, checkChallenge(TokenStateActivated), handle(postAccountAuthn))
-	account.GET("/check", authorizeRequired, handle(checkAccountChallenge))
+	account.GET("/check", handle(checkAccountChallenge))
 
 	return router
 }
@@ -323,6 +323,9 @@ func router02() http.Handler {
 func router03() http.Handler {
 	router := gin.Default()
 
+	// Debug 模式支持 cors 请求，非 Debug 模式不支持，
+	// Debug 模式每次请求静态资源时，刷新资源，
+	// 非 Debug 模式时，静态资源缓存 1 年。
 	if config.Debug {
 		router.Use(cors)
 	} else {

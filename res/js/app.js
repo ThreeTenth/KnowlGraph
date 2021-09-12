@@ -116,6 +116,7 @@ const router = new VueRouter({
     { path: '/about', name: 'about', component: About },
     { path: '/my', name: 'my', component: My },
     { path: '/settings/personalize', name: 'personalize', component: Personalize },
+    { path: '/terminals', name: 'terminals', component: Terminals },
     { path: '/new/article', name: 'newArticle', component: NewArticle },
     { path: '/d/:id/edit', name: 'editDraft', component: EditDraft, props: true },
     { path: '/login', name: 'login', component: Login },
