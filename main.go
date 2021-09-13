@@ -249,6 +249,7 @@ func router01() http.Handler {
 	router.GET("/p/:id", authentication, html(articleHTML))
 	router.GET("/p/:id/*path", authentication, html(articleHTML))
 	router.GET("/settings/*path", authentication, html(index))
+	router.GET("/terminals", authentication, html(index))
 
 	router.GET("/login", authentication, html(index))
 	router.GET("/signout", deauthorize, handle(signout))
@@ -341,6 +342,9 @@ func router03() http.Handler {
 
 	box02 := packr.New("strings", "./res/strings")
 	group.StaticFS("/strings", box02)
+
+	box03 := packr.New("fonts", "./res/fonts")
+	group.StaticFS("/fonts", box03)
 
 	themeBuffer := new(bytes.Buffer)
 	{

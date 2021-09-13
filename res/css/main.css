@@ -1014,6 +1014,10 @@ div[contenteditable]:empty:before {
 	max-width: 180px;
 }
 
+.maxw-720p {
+	max-width: 720px;
+}
+
 .minw-180p {
 	min-width: 180px;
 }
@@ -1033,6 +1037,11 @@ div[contenteditable]:empty:before {
 
 .margin-9 {
 	margin: var(--x9);
+}
+
+.margin-x0 {
+	margin-left : 0;
+	margin-right: 0;
 }
 
 .margin-x9 {
@@ -1109,6 +1118,11 @@ div[contenteditable]:empty:before {
 .padding-x {
 	padding-left : var(--md);
 	padding-right: var(--md);
+}
+
+.padding-x0 {
+	padding-left : 0;
+	padding-right: 0;
 }
 
 .padding-x5 {
@@ -1419,4 +1433,33 @@ hr {
 	.ne-full {
 		display: none;
 	}
+}
+
+/******************************************************************
+vsg icon
+******************************************************************/
+
+span[class*=ic-] {
+	width : var(--x24);
+	height: var(--x24);
+}
+
+.ic-windows {
+	background-repeat: no-repeat;
+	background-image : url("https://icongr.am/devicon/windows8-original.svg?size=24&color=currentColor");
+}
+
+.ic-android {
+	background-repeat: no-repeat;
+	background-image : url("https://icongr.am/devicon/android-original.svg?size=24&color=currentColor");
+}
+
+.ic-linux {
+	background-repeat: no-repeat;
+	background-image : url("https://icongr.am/devicon/linux-original.svg?size=24&color=currentColor");
+}
+
+.ic-apple {
+	background-repeat: no-repeat;
+	background-image : url("https://icongr.am/devicon/apple-original.svg?size=24&color=currentColor");
 }
