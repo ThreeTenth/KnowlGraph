@@ -45,7 +45,7 @@ const Index = {
       _this.$data.__original = resp.data
       _this.pageStatus = resp.status
     }).catch(function (err) {
-      _this.pageStatus = err.response.status
+      _this.pageStatus = getStatus4Error(err)
     })
   },
 

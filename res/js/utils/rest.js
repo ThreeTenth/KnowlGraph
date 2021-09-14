@@ -20,3 +20,7 @@ function encodeQueryData(url, data = undefined) {
 
   return url + "?" + ret.join('&');
 }
+
+function getStatus4Error(err) {
+  return err.response ? err.response.status : 9999 
+}

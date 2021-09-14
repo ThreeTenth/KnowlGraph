@@ -74,11 +74,7 @@ const Terminals = {
       }).then(function (resp) {
         _this.pageStatus = resp.status
       }).catch(function (err) {
-        if (err.response) {
-          _this.pageStatus = err.response.status
-        } else {
-          _this.pageStatus = 9999
-        }
+        _this.pageStatus = getStatus4Error(err)
       })
     },
   },

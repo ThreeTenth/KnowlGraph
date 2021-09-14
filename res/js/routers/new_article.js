@@ -353,7 +353,7 @@ const EditDraft = {
       _this.editingStatus = resp.status
     }).catch(function (err) {
       // console.log(err);
-      _this.editingStatus = err.response.status
+      _this.editingStatus = getStatus4Error(err)
     })
 
     document.addEventListener("fullscreenchange", this.fullscreenEvent)

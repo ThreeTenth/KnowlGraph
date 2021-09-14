@@ -258,7 +258,7 @@ const Article = {
       }
       _this.pageStatus = resp.status
     }).catch(function (err) {
-      var status = err.response.status
+      var status = getStatus4Error(err)
       if (401 == status && !logined) {
         router.push({ name: "login" })
         return
