@@ -3,6 +3,8 @@
 const Terminals = {
   data: function () {
     return {
+      pageStatus: 0,
+      terminals: [],
     }
   },
 
@@ -24,7 +26,7 @@ const Terminals = {
         url: queryRestful("/v1/account/sync"),
       }).then(function (resp) {
 
-       }).catch(function (err) {
+      }).catch(function (err) {
       })
     },
 
@@ -63,10 +65,26 @@ const Terminals = {
       }).catch(function (err) {
       })
     },
+
+    __updateTerminals() {
+      let _this = this;
+      axios({
+        method: "GET",
+        url: queryRestful("/v1/account/terminals"),
+      }).then(function (resp) {
+        _this.pageStatus = resp.status
+      }).catch(function (err) {
+        if (err.response) {
+          _this.pageStatus = err.response.status
+        } else {
+          _this.pageStatus = 9999
+        }
+      })
+    },
   },
 
   created() {
-    this.getChallenge()
+    this.__updateTerminals()
   },
 
   beforeDestroy() {

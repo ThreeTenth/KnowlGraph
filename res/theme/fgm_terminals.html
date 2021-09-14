@@ -5,19 +5,13 @@
       <h2 class="flex-auto">管理你的终端</h2>
       <button class="btn text fill padding-x padding-y9">添加一个终端</button>
     </div>
-    <ul class="maxw-360p margin-auto padding-x0">
-      <li class="flex-v padding-y9">
-        <span class="margin-x9 ic-github"></span>
-        Pixel XL
-      </li>
-      <li class="flex-v padding-y9">
-        <span class="margin-x9 ic-linux"></span>
-        Redmi note3
-      </li>
-      <li class="flex-v padding-y9">
-        <span class="margin-x9 ic-twitter"></span>
-        Windows Edge
-      </li>
-    </ul>
+    <page v-bind:status="pageStatus">
+      <ul class="maxw-360p margin-auto padding-x0">
+        <ul v-for="(terminal, i) in terminals">
+          <span class="margin-y9" v-bind:class="os('ic-', terminal)"></span>
+          {{ terminal.name }}
+        </ul>
+      </ul>
+    </page>
   </div>
 </div>

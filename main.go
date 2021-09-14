@@ -351,8 +351,10 @@ func router03() http.Handler {
 		group.GET("/__default_theme.js", func(c *gin.Context) {
 			if 0 == themeBuffer.Len() || config.Debug {
 				themeBuffer = new(bytes.Buffer)
-				themeFormat := "// %v \n const %v = `%v`"
-				CopyDir(themeBuffer, "./res/theme", themeFormat)
+				themeFormat := "// %v \nconst %v = `%v`"
+
+				box := packr.Folder("./res/theme")
+				CopyBox(themeBuffer, box, nil, themeFormat)
 			}
 
 			c.Status(http.StatusOK)
@@ -366,15 +368,16 @@ func router03() http.Handler {
 		group.GET("/__app.js", func(c *gin.Context) {
 			if 0 == appJSBuffer.Len() || config.Debug {
 				appJSBuffer = new(bytes.Buffer)
-				languagesFormat := "// %v, %v \n const languages = %v"
-				defaultStringsFormat := "// %v, %v \n const defaultLang = %v"
+				languagesFormat := "// %v, %v \nconst languages = %v"
+				defaultStringsFormat := "// %v, %v \nconst defaultLang = %v"
 
-				CopyFile(appJSBuffer, "./res/languages.json", languagesFormat)
-				CopyFile(appJSBuffer, "./res/strings/strings-en.json", defaultStringsFormat)
-				CopyDir(appJSBuffer, "./res/js/components", "")
-				CopyDir(appJSBuffer, "./res/js/routers", "")
-				CopyDir(appJSBuffer, "./res/js/utils", "")
-				CopyFile(appJSBuffer, "./res/js/app.js", "")
+				box := packr.Folder("./res/strings")
+				CopyBoxFile(appJSBuffer, box, "languages.json", languagesFormat)
+				CopyBoxFile(appJSBuffer, box, "strings-en.json", defaultStringsFormat)
+
+				box = packr.Folder("./res/js")
+				CopyBox(appJSBuffer, box, []string{"app.js"})
+				CopyBoxFile(appJSBuffer, box, "app.js")
 			}
 
 			c.Status(http.StatusOK)
@@ -388,7 +391,9 @@ func router03() http.Handler {
 		group.GET("/__main.css", func(c *gin.Context) {
 			if 0 == mainCSSBuffer.Len() || config.Debug {
 				mainCSSBuffer = new(bytes.Buffer)
-				CopyDir(mainCSSBuffer, "./res/css", "")
+
+				box := packr.Folder("./res/css")
+				CopyBox(mainCSSBuffer, box, nil)
 			}
 			c.Status(http.StatusOK)
 			c.Writer.Header().Set("Content-Type", "text/css; charset=utf-8")

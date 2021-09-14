@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -8,54 +9,55 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
+
+	"github.com/gobuffalo/packr/v2"
 )
 
-// func buildStaticFile() {
-// 	const ResPath = "./res"
-// 	const BuildPath = "./build"
+// CopyBox is to copy the contents of packr.Box to dst, except for the ignores list.
+func CopyBox(dst io.Writer, box *packr.Box, ignores []string, format ...string) (int64, error) {
+	files := box.List()
+	var count int64
+	for _, f := range files {
+		isBreak := false
+		for _, ig := range ignores {
+			if f == ig {
+				isBreak = true
+				break
+			}
+		}
+		if isBreak {
+			continue
+		}
+		i, err := CopyBoxFile(dst, box, f, format...)
+		if err != nil {
+			return count, err
+		}
+		count += i
+	}
 
-// 	panicIfErrNotNil(os.RemoveAll(BuildPath))
-// 	panicIfErrNotNil(os.Mkdir(BuildPath, os.ModeDir))
+	return count, nil
+}
 
-// 	// # pre: js
-// 	// 获取后端 Domain
-// 	// 获取所有 JS 文件内容
-// 	// 拼接以上字符串
-// 	// 生成 JS 文件，并保存到 build 目录
+// CopyBoxFile copies the content of the specified name in packr.Box to dst.
+func CopyBoxFile(dst io.Writer, box *packr.Box, name string, format ...string) (int64, error) {
+	bs, err := box.Find(name)
+	if err != nil {
+		return 0, err
+	}
 
-// 	appJsPath := path.Join(BuildPath, "__app.js")
-// 	languagesFormat := "// %v, %v \n const languages = %v"
-// 	defaultStringsFormat := "// %v, %v \n const defaultLang = %v"
+	if 1 == len(format) {
+		_, fullname := filepath.Split(name)
+		var extension = filepath.Ext(fullname)
+		var filename = fullname[0 : len(fullname)-len(extension)]
+		bs = []byte(fmt.Sprintf(format[0], fullname, filename, string(bs)))
+	} else if 1 < len(format) {
+		return 0, errors.New("invaild format")
+	}
 
-// 	panicIfErrNotNil(MergeFiles(path.Join(ResPath, "languages.json"), appJsPath, "", "", languagesFormat, "\n\n"))
-// 	panicIfErrNotNil(MergeFiles(path.Join(ResPath, "strings/strings-en.json"), appJsPath, "", "", defaultStringsFormat, "\n\n"))
-// 	panicIfErrNotNil(MergeFiles(path.Join(ResPath, "js"), appJsPath, "", "", "", "\n\n", "js/app.js"))
-// 	panicIfErrNotNil(AppendFile(path.Join(ResPath, "js/app.js"), appJsPath))
+	count, err := dst.Write(bs)
 
-// 	// # pre: div+css theme
-// 	// 获取所有 CSS 文件
-// 	// 生成唯一 CSS 文件并保存到 build 目录
-// 	// 获取所有前面 html 模板
-// 	// 用 map[string]string 结构存储
-// 	// 并输出到 build 目录
-
-// 	themeFormat := "// %v \n const %v = `%v`"
-// 	panicIfErrNotNil(MergeFiles(path.Join(ResPath, "css"), path.Join(BuildPath, "__main.css"), "", "", "", "\n\n"))
-// 	panicIfErrNotNil(MergeFiles(path.Join(ResPath, "theme"), path.Join(BuildPath, "__default_theme.js"), "", "", themeFormat, "\n\n"))
-
-// 	// # pre: common resources
-// 	// 拷贝到 build 目录
-
-// 	builds := []string{
-// 		"strings",
-// 		"code-of-conduct",
-// 		"favicon",
-// 	}
-
-// 	for _, item := range builds {
-// 		panicIfErrNotNil(CpDir(path.Join(ResPath, item), path.Join(BuildPath, item)))
-// 	}
-// }
+	return int64(count), err
+}
 
 // AppendFile append src file to dst
 func AppendFile(src, dst string) error {
