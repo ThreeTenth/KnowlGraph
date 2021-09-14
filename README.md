@@ -9,6 +9,7 @@ set GOOS=linux
 packr2 clean
 packr2 build --ldflags="-w -s" -o "knowlgraph.com"
 upx -9 knowlgraph.com
+packr2 clean
 echo "finished"
 ```
 
