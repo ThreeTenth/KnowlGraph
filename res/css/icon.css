@@ -36,8 +36,13 @@ https://yoksel.github.io/url-encoder/
   background-image: url("https://icongr.am/devicon/linux-original.svg?size=27&color=currentColor");
 }
 
-.ic-apple {
+.ic-apple,
+.ic-apple-original {
   background-image: url("data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128' fill='currentColor'%3E%3Cpath d='M97.905 67.885c.174 18.8 16.494 25.057 16.674 25.137-.138.44-2.607 8.916-8.597 17.669-5.178 7.568-10.553 15.108-19.018 15.266-8.318.152-10.993-4.934-20.504-4.934-9.508 0-12.479 4.776-20.354 5.086-8.172.31-14.395-8.185-19.616-15.724-10.668-15.424-18.821-43.585-7.874-62.594 5.438-9.44 15.158-15.417 25.707-15.571 8.024-.153 15.598 5.398 20.503 5.398 4.902 0 14.106-6.676 23.782-5.696 4.051.169 15.421 1.636 22.722 12.324-.587.365-13.566 7.921-13.425 23.639m-15.633-46.166c4.338-5.251 7.258-12.563 6.462-19.836-6.254.251-13.816 4.167-18.301 9.416-4.02 4.647-7.54 12.087-6.591 19.216 6.971.54 14.091-3.542 18.43-8.796'/%3E%3C/svg%3E");
+}
+
+.ic-apple-original {
+  filter: invert(45%) sepia(97%) saturate(25%) hue-rotate(315deg) brightness(99%) contrast(83%);
 }
 
 .ic-twitter {
@@ -86,6 +91,10 @@ https://yoksel.github.io/url-encoder/
 
 .ic-google-play {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-3 -2 24 24' fill='currentColor'%3E%3Cpath d='M17.625 9.267l-3.635-2.1L11 10.061l2.733 2.644 3.892-2.25a.68.68 0 0 0 .342-.593.68.68 0 0 0-.342-.595zM13.373 6.81l-4-2.312L.607 0l9.901 9.584zM.752 19.98l8.636-4.763 3.728-2.155-2.608-2.524zM.022.388l-.01 19.355 10.003-9.682z' /%3E%3C/svg%3E");
+}
+
+.ic-google-play-original {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' version='1.1' viewBox='-4.12599 -7.65905 35.75858 45.9543'%3E%3Cdefs id='defs38'%3E%3ClinearGradient gradientUnits='userSpaceOnUse' y2='21.86' x2='-5.9' y1='1.87' x1='14.09' id='linear-gradient'%3E%3Cstop id='stop4' stop-color='%23008eff' offset='0'/%3E%3Cstop id='stop6' stop-color='%23008fff' offset='.01'/%3E%3Cstop id='stop8' stop-color='%2300acff' offset='.26'/%3E%3Cstop id='stop10' stop-color='%2300c0ff' offset='.51'/%3E%3Cstop id='stop12' stop-color='%2300cdff' offset='.76'/%3E%3Cstop id='stop14' stop-color='%2300d1ff' offset='1'/%3E%3C/linearGradient%3E%3ClinearGradient gradientUnits='userSpaceOnUse' y2='15.32' x2='-2.37' y1='15.32' x1='26.45' id='linear-gradient-2'%3E%3Cstop id='stop17' stop-color='%23ffd800' offset='0'/%3E%3Cstop id='stop19' stop-color='%23ff8a00' offset='1'/%3E%3C/linearGradient%3E%3ClinearGradient gradientUnits='userSpaceOnUse' y2='45.15' x2='-9.41' y1='18.05' x1='17.69' id='linear-gradient-3'%3E%3Cstop id='stop22' stop-color='%23ff3a44' offset='0'/%3E%3Cstop id='stop24' stop-color='%23b11162' offset='1'/%3E%3C/linearGradient%3E%3ClinearGradient gradientUnits='userSpaceOnUse' y2='3.81' x2='8.92' y1='-8.29' x1='-3.19' id='linear-gradient-4'%3E%3Cstop id='stop27' stop-color='%23328e71' offset='0'/%3E%3Cstop id='stop29' stop-color='%232d9571' offset='.07'/%3E%3Cstop id='stop31' stop-color='%2315bd74' offset='.48'/%3E%3Cstop id='stop33' stop-color='%2306d575' offset='.8'/%3E%3Cstop id='stop35' stop-color='%2300de76' offset='1'/%3E%3C/linearGradient%3E%3Cstyle id='style2'%3E.cls-7%7Bopacity:.07%7D%3C/style%3E%3C/defs%3E%3Cg transform='translate(.004)' id='g58'%3E%3Cg id='g56'%3E%3Cpath id='path40' d='M.55.48A2.39 2.39 0 000 2.15v26.34a2.41 2.41 0 00.55 1.67l.09.09 14.75-14.76v-.35L.64.39z' fill='url(%23linear-gradient)'/%3E%3Cpath id='path42' d='M20.31 20.41l-4.92-4.92v-.35l4.92-4.91.11.06 5.83 3.31c1.67.94 1.67 2.49 0 3.44l-5.83 3.31z' fill='url(%23linear-gradient-2)'/%3E%3Cpath id='path44' d='M20.42 20.35l-5-5L.55 30.16a2 2 0 002.45.07l17.39-9.88' fill='url(%23linear-gradient-3)'/%3E%3Cpath id='path46' d='M20.42 10.29L3 .4A1.93 1.93 0 00.55.48l14.84 14.84z' fill='url(%23linear-gradient-4)'/%3E%3Cpath id='path48' d='M20.31 20.24L3 30.06a2 2 0 01-2.39 0l-.09.09.09.09a2 2 0 002.39 0l17.39-9.88z' opacity='.1'/%3E%3Cpath id='path50' d='M.55 30A2.43 2.43 0 010 28.32v.17a2.41 2.41 0 00.55 1.67l.09-.09z' /%3E%3Cpath id='path52' d='M26.25 16.86l-5.94 3.38.11.11L26.25 17a2.11 2.11 0 001.25-1.72 2.21 2.21 0 01-1.25 1.58z' /%3E%3Cpath id='path54' d='M3 .58l23.25 13.19a2.2 2.2 0 011.25 1.55 2.09 2.09 0 00-1.25-1.72L3 .4C1.36-.54 0 .24 0 2.15v.17C0 .42 1.36-.37 3 .58z' fill='%23fff' opacity='.3'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
 .ic-header {

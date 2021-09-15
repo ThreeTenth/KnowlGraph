@@ -1,5 +1,10 @@
 // rest.js
 
+function queryPage(url, data = undefined) {
+  url = window.location.origin + url
+  return encodeQueryData(url, data)
+}
+
 function queryRestful(url, data = undefined) {
   url = restfulDomain + url
   return encodeQueryData(url, data)

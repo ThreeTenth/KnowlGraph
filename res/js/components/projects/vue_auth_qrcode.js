@@ -23,7 +23,7 @@ Vue.component('auth-qrcode', {
         _this.syncStatus = resp.status
         _this.hasRefresh = false
         setTimeout(() => {
-          let text = queryStatic("/t/" + resp.data)
+          let text = queryPage("/g/" + resp.data)
           if (_this.qrcode) {
             _this.qrcode.clear()
             _this.qrcode.makeCode(text)

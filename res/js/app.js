@@ -105,6 +105,7 @@ const plugin = {
 
 const About = { template: fgm_about }
 const My = { template: fgm_my }
+const GetAPP = { template: fgm_get_app }
 
 const router = new VueRouter({
   mode: 'history',
@@ -120,6 +121,8 @@ const router = new VueRouter({
     { path: '/new/article', name: 'newArticle', component: NewArticle },
     { path: '/d/:id/edit', name: 'editDraft', component: EditDraft, props: true },
     { path: '/login', name: 'login', component: Login },
+    { path: '/g/:id', name: 'getapp', component: GetAPP },
+    { path: '/getapp', name: 'getapp', component: GetAPP },
   ]
 })
 

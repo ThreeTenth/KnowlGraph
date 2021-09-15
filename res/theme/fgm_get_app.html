@@ -1,0 +1,17 @@
+<div class="dialog padding-y9">
+  <router-link class="close" to="/">✖</router-link>
+  <h4 class="flex-h">Get APP</h4>
+  <div class="margin-y flex-h">
+    <button class="btn border-none padding-x12 padding-y9 radius-30 spacing-18" title="从 Google play 下载"
+      v-on:click="todo">
+      <span class="ic-google-play-original wh-x30"></span>
+    </button>
+    <button class="btn border-none padding-x12 padding-y9 radius-30 spacing-18" title="从 AppStore 处安装"
+      v-on:click="todo">
+      <span class="ic-apple-original wh-x30"></span>
+    </button>
+    <button class="btn border-none padding-x12 padding-y9 radius-30 spacing-18" title="直接下载 APK 文件" v-on:click="todo">
+      <span class="ic-android-original wh-x30"></span>
+    </button>
+  </div>
+</div>
