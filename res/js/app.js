@@ -88,7 +88,7 @@ const plugin = {
     }
 
     Vue.prototype.todo = function(msg) {
-      Vue.prototype.toast(msg ? msg : "正在开发中")
+      Vue.prototype.toast(isString(msg) ? msg : "正在开发中")
     }
 
     Vue.prototype.canCreateAccount = canUseWenAuthn()

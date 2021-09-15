@@ -1,5 +1,20 @@
 // utils.js
 
+//判断是否是字符串
+function isString(str) {
+  return isType(str, "[object String]")
+}
+
+//判断是否是指定类型
+function isType(obj, type) {
+  if (Object.prototype.toString.call(obj) === type) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+// 获取 text 的字符串内容，如果 text 为空或 undefined，则返回 ""
 function getString(text) {
   if (text) return text
   return ""
