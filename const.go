@@ -6,15 +6,15 @@ const (
 	// TokenStateIdle is that the token state is idle, and the token is unavailable
 	// at this time, and it needs to wait for subsequent authorization.
 	// When the idle time exceeds 1 minute, the token becomes invalid.
-	TokenStateIdle = 0
+	TokenStateIdle = 1
 	// TokenStateActivated means that the current token is activated and
 	// can be used only after authorization.
 	// If it is not authorized within 1 minute, the token will become invalid.
-	TokenStateActivated = 1
+	TokenStateActivated = 2
 	// TokenStateAuthorized means that the token is authorized,
 	// this state is hidden and invisible in the system.
 	// When the token is authorized, the token will be associated with the user.
-	TokenStateAuthorized = 2
+	TokenStateAuthorized = 4
 )
 
 const (

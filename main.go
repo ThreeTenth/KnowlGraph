@@ -315,7 +315,7 @@ func router02() http.Handler {
 	account.GET("/terminals", authorizeRequired, handle(putAccountTerminal))
 	account.PATCH("/authn", authorizeRequired, checkChallenge(TokenStateActivated), handle(postAccountAuthn))
 	account.POST("/authn", authorizeRequired, checkChallenge(TokenStateActivated), handle(postAccountAuthn))
-	account.DELETE("/authn", authorizeRequired, checkChallenge(TokenStateActivated), handle(postAccountAuthn))
+	account.DELETE("/authn", authorizeRequired, checkChallenge(TokenStateIdle+TokenStateActivated), handle(postAccountAuthn))
 	account.GET("/check", handle(checkAccountChallenge))
 
 	return router

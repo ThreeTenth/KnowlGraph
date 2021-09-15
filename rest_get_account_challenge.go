@@ -20,7 +20,7 @@ import (
 type Terminal struct {
 	Name  string `json:"name"`
 	State int    `json:"state"`
-	Main  string `json:"main"`
+	Main  string `json:"main,omitempty"`
 }
 
 func checkAccountChallenge(c *Context) error {
@@ -36,7 +36,10 @@ func checkAccountChallenge(c *Context) error {
 		terminal.State = TokenStateAuthorized
 	}
 
-	return c.Ok(&terminal)
+	return c.Ok(Terminal{
+		Name:  terminal.Name,
+		State: terminal.State,
+	})
 }
 
 func putAccountTerminal(c *Context) error {
@@ -149,7 +152,7 @@ func checkChallenge(state int) gin.HandlerFunc {
 		if err := GetV4Redis(body.Challenge, &terminal); err != nil {
 			c.AbortWithError(http.StatusBadRequest, err)
 			return
-		} else if state != terminal.State {
+		} else if state&terminal.State != terminal.State {
 			c.AbortWithStatus(http.StatusConflict)
 			return
 		} else if _, ok := c.Get(GinKeyUserID); ok && getRequestToken(c) != terminal.Main {
