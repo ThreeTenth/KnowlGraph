@@ -1,0 +1,6 @@
+<page class="flex-h" v-bind:status="syncStatus">
+  <div ref="syncQrcode"></div>
+  <div class="abs bgc-white-light flex-h flex-v" style="width: 256px; height: 256px;" v-if="hasRefresh">
+    <button class="btn text padding-9" v-on:click="getChallenge">刷新</button>
+  </div>
+</page>
