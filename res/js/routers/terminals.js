@@ -5,55 +5,53 @@ const Terminals = {
     return {
       pageStatus: 0,
       terminals: [],
+      syncID: "",
+      showAuthorize: false,
+      showConfirm: false,
+      receiverName: null,
+      confirmChallengeInterval: 0,
+      confirmChallengeExpire: 15,
     }
   },
 
   methods: {
-    checkChallengeState() {
-      let _this = this;
-      axios({
-        method: "GET",
-        url: queryRestful("/v1/account/check?challenge=" + this.syncID),
-      }).then(function (resp) {
-      }).catch(function (err) {
-      })
-    },
-
-    getChallenge() {
-      let _this = this;
-      axios({
-        method: "GET",
-        url: queryRestful("/v1/account/sync"),
-      }).then(function (resp) {
-
-      }).catch(function (err) {
-      })
+    onAuthResult(syncID, data) {
+      this.syncID = syncID
+      this.receiverName = data.name
+      this.showAuthorize = false
+      this.showConfirm = true
+      this.confirmChallengeInterval = window.setInterval(() => {
+        if (0 < this.confirmChallengeExpire) {
+          this.confirmChallengeExpire--
+        } else {
+          window.clearInterval(this.confirmChallengeInterval)
+          this.showConfirm = false
+        }
+      }, 1000);
     },
 
     onToggleModal(toggle) {
       if (toggle) return
-      this.onCancelAuthn()
+      this.onCancelAuthn("DELETE")
     },
 
     onCancelAuthn() {
-      this.canAuthn = false
-      this.hasRefresh = true
       this.__postAccountAuthn("DELETE")
     },
 
     onTemporaryAuthn() {
-      this.canAuthn = false
-      this.hasRefresh = true
+      this.showConfirm = true
       this.__postAccountAuthn("PATCH")
     },
 
     onConfirmAuthn() {
-      this.canAuthn = false
-      this.hasRefresh = true
+      this.showConfirm = true
       this.__postAccountAuthn("POST")
     },
 
     __postAccountAuthn(method) {
+      if ("" === this.syncID) return
+
       var _this = this
       axios({
         method: method,
@@ -62,7 +60,10 @@ const Terminals = {
           challenge: this.syncID,
         },
       }).then(function (resp) {
+        if ("DELETE" == method) return
+        _this.toast("Success", "success")
       }).catch(function (err) {
+        _this.toast("错误: " + err, "error")
       })
     },
 
@@ -80,10 +81,22 @@ const Terminals = {
   },
 
   created() {
-    this.__updateTerminals()
+    this.pageStatus = 404
+  },
+
+  beforeRouteEnter(to, from, next) {
+    if (!logined) {
+      router.push({ name: "login" })
+      return
+    }
+
+    next()
   },
 
   beforeDestroy() {
+    if (0 < this.confirmChallengeExpire) {
+      window.clearInterval(this.confirmChallengeInterval)
+    }
   },
 
   template: fgm_terminals,

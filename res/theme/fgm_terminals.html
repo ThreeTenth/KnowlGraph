@@ -3,7 +3,7 @@
   <div class="container padding-x9">
     <div class="flex-v">
       <h2 class="flex-auto">管理你的终端</h2>
-      <button class="btn text fill padding-x padding-y9">添加一个终端</button>
+      <button class="btn text fill padding-x padding-y9" v-on:click="showAuthorize = true">添加一个终端</button>
     </div>
     <page v-bind:status="pageStatus">
       <ul class="maxw-360p margin-auto padding-x0">
@@ -14,4 +14,27 @@
       </ul>
     </page>
   </div>
+  <modal clazz="bgc white" v-model="showAuthorize">
+    <div class="margin-y24">
+      <h3 class="flex-h">向终端授权</h3>
+      <auth-qrcode v-on:result="onAuthResult"></auth-qrcode>
+      <span class="margin-9 flex-h text sm">扫二维码，添加终端到此账号</span>
+    </div>
+  </modal>
+  <modal v-model="showConfirm" v-on:toggle="onToggleModal">
+    <div class="padding-24">
+      <h3 class="flex-h">{{ receiverName }} 请求授权</h3>
+      <span class="flex-h">确认对话框将于 {{ confirmChallengeExpire }} 秒关闭</span>
+      <div class="flex-h margin-9">
+        <button class="btn text fill padding-x padding-y9" v-on:click="onConfirmAuthn">确认授权</button>
+      </div>
+      <div class="flex-h margin-9">
+        <button class="btn text fill padding-x padding-y9" v-on:click="onTemporaryAuthn"
+          title="有效时长最多 6 小时，退出应用失效">临时授权</button>
+      </div>
+      <div class="flex-h margin-9">
+        <button class="btn text sm" v-on:click="onCancelAuthn">取消授权</button>
+      </div>
+    </div>
+  </modal>
 </div>

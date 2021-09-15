@@ -5,13 +5,14 @@ const Login = {
     return {
       syncStatus: 0,
       syncID: 0,
-      checkChallengeInterval: 0,
-      hasRefresh: false,
-      qrcode: null,
     }
   },
 
   methods: {
+    onAuthResult(syncID, data) {
+      this.todo("扫描成功，等待授权中")
+    },
+
     createAccount() {
       if (this.user.logined) {
         this.toast("你已登录")
@@ -35,23 +36,6 @@ const Login = {
       })
     },
 
-    checkChallengeState() {
-      let _this = this;
-      axios({
-        method: "GET",
-        url: queryRestful("/v1/account/check?challenge=" + this.syncID),
-      }).then(function (resp) {
-        var data = resp.data
-        if (1 == data.state) {
-          window.clearInterval(_this.checkChallengeInterval)
-          _this.hasRefresh = true
-        }
-      }).catch(function (err) {
-        window.clearInterval(_this.checkChallengeInterval)
-        _this.hasRefresh = true
-      })
-    },
-
     getChallenge() {
       let _this = this;
       axios({
@@ -60,27 +44,8 @@ const Login = {
       }).then(function (resp) {
         _this.syncID = resp.data
         _this.syncStatus = resp.status
-        _this.hasRefresh = false
-        setTimeout(() => {
-          let text = queryStatic("/t/" + resp.data)
-          if (_this.qrcode) {
-            _this.qrcode.clear()
-            _this.qrcode.makeCode(text)
-          } else {
-            _this.qrcode = new QRCode(_this.$refs.syncQrcode, text)
-          }
-          _this.$refs.syncQrcode.title = ''
-
-          _this.checkChallengeInterval = window.setInterval(() => {
-            _this.checkChallengeState()
-          }, 3000);
-        }, 0);
       }).catch(function (err) {
-        if (err.response) {
-          _this.syncStatus = err.response.status
-        } else {
-          _this.syncStatus = 401
-        }
+        _this.syncStatus = getStatus4Error(err)
       })
     },
   },
@@ -94,7 +59,6 @@ const Login = {
   },
 
   beforeDestroy() {
-    window.clearInterval(this.checkChallengeInterval)
   },
 
   template: fgm_login,
