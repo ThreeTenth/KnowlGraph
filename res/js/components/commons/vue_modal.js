@@ -7,6 +7,7 @@ Vue.component('modal', {
   },
 
   props: {
+    clazz: String,
     seen: Boolean
   },
 
