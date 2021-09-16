@@ -87,8 +87,16 @@ const plugin = {
       }, duration)
     }
 
-    Vue.prototype.todo = function(msg) {
+    Vue.prototype.todo = function (msg) {
       Vue.prototype.toast(isString(msg) ? msg : "正在开发中")
+    }
+
+    Vue.prototype.back = function () {
+      if (1 == history.length) {
+        router.push({ path: "/" })
+      } else {
+        history.back()
+      }
     }
 
     Vue.prototype.canCreateAccount = canUseWenAuthn()
