@@ -1,4 +1,5 @@
 <div class="dialog padding-y9">
+  <button class="close" v-on:click="back">✖</button>
   <div class="margin-auto">
     <h3 class="flex-h">使用 APP 扫码同步账号</h3>
     <auth-qrcode v-on:result="onAuthResult"></auth-qrcode>
