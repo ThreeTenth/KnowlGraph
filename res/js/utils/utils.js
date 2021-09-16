@@ -1,5 +1,23 @@
 // utils.js
 
+function getBodyWidth() {
+  var win = window,
+    doc = document,
+    docElem = doc.documentElement,
+    body = doc.getElementsByTagName('body')[0],
+    w = win.innerWidth || docElem.clientWidth || body.clientWidth;
+  return w
+}
+
+function getBodyHeight() {
+  var win = window,
+    doc = document,
+    docElem = doc.documentElement,
+    body = doc.getElementsByTagName('body')[0],
+    h = win.innerHeight || docElem.clientHeight || body.clientHeight;
+  return h
+}
+
 //判断是否是字符串
 function isString(str) {
   return isType(str, "[object String]")
