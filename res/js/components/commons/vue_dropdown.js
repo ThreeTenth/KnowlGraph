@@ -9,14 +9,7 @@ Vue.component('dropdown', {
       pos: 'down',
     }
   },
-  computed: {
-  },
-  mounted() {
-    this.__update()
-  },
-  activated() {
-    this.__update()
-  },
+
   methods: {
     toggle() {
       if (this.seen) {
@@ -26,6 +19,7 @@ Vue.component('dropdown', {
     },
 
     __show() {
+      this.__update()
       this.seen = true
       setTimeout(() => document.addEventListener('click', this.__hide), 0);
     },
@@ -53,8 +47,10 @@ Vue.component('dropdown', {
     },
 
     __update() {
-      let top = this.$refs.dropdown.getBoundingClientRect().top
-      if (top < 240) {
+      let rect = this.$refs.dropdown.getBoundingClientRect()
+      let top = rect.top
+      let bottom = getBodyHeight() - rect.bottom
+      if (top < 240 || 240 < bottom) {
         this.pos = 'down'
       } else {
         this.pos = 'up'
