@@ -15,6 +15,14 @@ const Terminals = {
   },
 
   methods: {
+    os: function(prefix, terminal, suffix = "") {
+      return prefix + terminal.os.toLowerCase() + suffix
+    },
+
+    dt: function(prefix, terminal, suffix = "") {
+      return prefix + terminal.deviceType.toLowerCase() + suffix
+    },
+
     onAuthResult(syncID, data) {
       this.syncID = syncID
       this.receiverName = data.name
@@ -74,6 +82,7 @@ const Terminals = {
         url: queryRestful("/v1/account/terminals"),
       }).then(function (resp) {
         _this.pageStatus = resp.status
+        _this.terminals = resp.data
       }).catch(function (err) {
         _this.pageStatus = getStatus4Error(err)
       })
@@ -81,7 +90,7 @@ const Terminals = {
   },
 
   created() {
-    this.pageStatus = 404
+    this.__updateTerminals()
   },
 
   beforeRouteEnter(to, from, next) {

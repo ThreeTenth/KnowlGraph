@@ -932,13 +932,33 @@ div[contenteditable]:empty:before {
 	justify-content: center;
 }
 
+.flex-c {
+	display        : flex;
+	justify-content: center;
+	align-items    : center;
+}
+
 .flex-start {
 	display    : flex;
 	align-items: flex-start;
 }
 
+.flex-end {
+	display    : flex;
+	align-items: flex-end;
+}
+
+.flex-r {
+	display        : flex;
+	justify-content: flex-end;
+}
+
 .flex-auto {
 	flex: auto;
+}
+
+.flex-0_5 {
+	flex: 0.5;
 }
 
 .flex-1 {
@@ -1019,6 +1039,16 @@ div[contenteditable]:empty:before {
 	height: var(--x18) !important;
 }
 
+.wh-x36 {
+	width : var(--x36) !important;
+	height: var(--x36) !important;
+}
+
+.wh-x120 {
+	width : var(--x120) !important;
+	height: var(--x120) !important;
+}
+
 .maxh-100vh {
 	max-height: 100vh;
 }
@@ -1039,6 +1069,18 @@ div[contenteditable]:empty:before {
  margin, padding and spacing style
 *******************************************************************/
 
+.margin-smartphone {
+	margin-left: var(--x7);
+}
+
+.margin-tablat {
+	margin-left: calc(0px - var(--x3));
+}
+
+.margin-desktop {
+	margin-left: calc(0px - var(--x7));
+}
+
 .margin-auto {
 	margin-left : auto;
 	margin-right: auto;
@@ -1050,6 +1092,11 @@ div[contenteditable]:empty:before {
 
 .margin-9 {
 	margin: var(--x9);
+}
+
+.margin-x {
+	margin-left : var(--md);
+	margin-right: var(--md);
 }
 
 .margin-x0 {
@@ -1257,6 +1304,10 @@ div[contenteditable]:empty:before {
 	background-color: var(--highlight);
 }
 
+.bgc-black {
+	background-color: var(--black);
+}
+
 .bgc-red-light {
 	background-color: var(--red-light);
 }
@@ -1428,7 +1479,7 @@ hr {
 /*******************************************************************
  media style
 
- eq
+ eq or is
 	Returns the boolean truth of arg1 == arg2
  ne
 	Returns the boolean truth of arg1 != arg2

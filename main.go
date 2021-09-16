@@ -79,7 +79,8 @@ func openPostgreSQL() {
 	err = client.Schema.Create(ctx,
 		migrate.WithGlobalUniqueID(true),
 		migrate.WithDropIndex(true),
-		migrate.WithDropColumn(true))
+		migrate.WithDropColumn(true),
+	)
 	if err != nil {
 		panic("failed to create schema: " + err.Error())
 	}
@@ -314,7 +315,7 @@ func router02() http.Handler {
 	account.GET("/sync", authentication, handle(getAccountChallenge))
 	account.PUT("/create", checkChallenge(TokenStateIdle), handle(putAccountCreate))
 	account.PUT("/terminal", checkChallenge(TokenStateIdle), handle(putAccountTerminal))
-	account.GET("/terminals", authorizeRequired, handle(putAccountTerminal))
+	account.GET("/terminals", authorizeRequired, handle(getAccountTerminals))
 	account.PATCH("/authn", authorizeRequired, checkChallenge(TokenStateActivated), handle(postAccountAuthn))
 	account.POST("/authn", authorizeRequired, checkChallenge(TokenStateActivated), handle(postAccountAuthn))
 	account.DELETE("/authn", authorizeRequired, checkChallenge(TokenStateIdle+TokenStateActivated), handle(postAccountAuthn))

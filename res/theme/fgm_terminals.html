@@ -6,12 +6,34 @@
       <button class="btn text fill padding-x padding-y9" v-on:click="showAuthorize = true">添加一个终端</button>
     </div>
     <page v-bind:status="pageStatus">
-      <ul class="maxw-360p margin-auto padding-x0">
-        <ul v-for="(terminal, i) in terminals">
-          <span class="margin-y9" v-bind:class="os('ic-', terminal)"></span>
-          {{ terminal.name }}
-        </ul>
-      </ul>
+      <div class="margin-y flex-v flex-wrap" v-for="(terminal, i) in terminals">
+        <div class="flex-auto spacing-18 flex-v">
+          <div class="padding-24 spacing-18">
+            <span class="wh-x120" v-bind:class="dt('ic-', terminal)">
+              <span class="wh-x36 flex-c bgc white" v-bind:class="dt('margin-', terminal)">
+                <span class="wh-x30" v-bind:class="os('ic-', terminal, '-original')"></span>
+              </span>
+            </span>
+          </div>
+          <div class="spacing-18">
+            <h3 class="margin-0">{{ terminal.nickname }}</h3>
+            <div class="margin-y9"><span>Add in</span> {{ terminal.name }} <span>on</span> {{ terminal.device}}</div>
+            <div class="flex-v">
+              <a class="btn flex-v spacing-18" v-on:click="todo">查看详细信息</a>
+              <button class="margin-x9 btn text fill c-red" v-on:click="todo">删除</button>
+            </div>
+          </div>
+        </div>
+        <div class="flex-c spacing-18 padding-x9">
+          <span class="ic-location-pin" v-bind:class="terminal.addr ? 'ic-c-success' : 'ic-c-error'"></span>
+          <template v-if="terminal.addr">
+            <span class="margin-x3">{{ terminal.addr }}</span>
+          </template>
+          <template v-else>
+            <span class="margin-x3">Unknown</span>
+          </template>
+        </div>
+      </div>
     </page>
   </div>
   <modal clazz="bgc white" v-model="showAuthorize">
