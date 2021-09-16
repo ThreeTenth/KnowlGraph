@@ -8,13 +8,11 @@
     <page v-bind:status="pageStatus">
       <div class="margin-y flex-v flex-wrap" v-for="(terminal, i) in terminals">
         <div class="flex-auto spacing-18 flex-v">
-          <div class="padding-24 spacing-18">
-            <span class="wh-x120" v-bind:class="dt('ic-', terminal)">
-              <span class="wh-x36 flex-c bgc white" v-bind:class="dt('margin-', terminal)">
-                <span class="wh-x30" v-bind:class="os('ic-', terminal, '-original')"></span>
-              </span>
+          <span class="terminal-icon" v-bind:class="dt('ic-', terminal)">
+            <span class="wh-x36 flex-c bgc white" v-bind:class="dt('margin-', terminal)">
+              <span class="wh-x30" v-bind:class="os('ic-', terminal, '-original')"></span>
             </span>
-          </div>
+          </span>
           <div class="spacing-18">
             <h3 class="margin-0">{{ terminal.nickname }}</h3>
             <div class="margin-y9"><span>Add in</span> {{ terminal.name }} <span>on</span> {{ terminal.device}}</div>

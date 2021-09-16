@@ -405,6 +405,12 @@ body {
 	padding: 0;
 }
 
+.terminal-icon {
+	width : var(--x120);
+	height: var(--x120);
+	margin: var(--x24);
+}
+
 /*******************************************************************
  tabs style
 *******************************************************************/
@@ -431,6 +437,10 @@ body {
 
 	.tabs a {
 		padding: var(--x9) var(--x5);
+	}
+
+	.terminal-icon {
+		margin: var(--md);
 	}
 }
 
@@ -1092,6 +1102,10 @@ div[contenteditable]:empty:before {
 
 .margin-9 {
 	margin: var(--x9);
+}
+
+.margin-24 {
+	margin: var(--x24);
 }
 
 .margin-x {
