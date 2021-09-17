@@ -27,11 +27,10 @@ const Login = {
           challenge: this.syncID,
         },
       }).then(function (resp) {
-        Cookies.set("access_token", _this.syncID)
-        window.clearInterval(_this.checkChallengeInterval)
+        // Token 有效期最多 30 天。
+        Cookies.set("access_token", _this.syncID, { expires: 30 })
         window.open("/", "_self")
       }).catch(function (err) {
-        window.clearInterval(_this.checkChallengeInterval)
         _this.toast("创建失败: " + err)
       })
     },

@@ -234,7 +234,8 @@ function getUserLang() {
 }
 
 function setUserLang(lang) {
-  Cookies.set("user-lang", lang)
+  // 用户语言设置缓存有效期 365天
+  Cookies.set("user-lang", lang, { expires: 365 })
 }
 
 function getMeta(metaName) {
