@@ -45,7 +45,7 @@ Vue.component('auth-qrcode', {
       let _this = this;
       axios({
         method: "GET",
-        url: queryRestful("/v1/account/check?challenge=" + this.syncID),
+        url: queryRestful("/v1/account/check", { challenge: this.syncID }),
       }).then(function (resp) {
         var data = resp.data
         if (2 == data.state) {

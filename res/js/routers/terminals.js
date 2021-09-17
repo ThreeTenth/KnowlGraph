@@ -79,7 +79,7 @@ const Terminals = {
       let _this = this;
       axios({
         method: "GET",
-        url: queryRestful("/v1/account/terminals"),
+        url: queryRestful("/v1/account/terminals", {id: "0"}),
       }).then(function (resp) {
         _this.pageStatus = resp.status
         _this.terminals = resp.data
