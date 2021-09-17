@@ -31,11 +31,12 @@
           <span class="text flex-v padding-9">🔒</span>
         </template>
         <div class="flex padding-x9" v-else>
-          <button class="btn text flex-v padding-y9" v-on:click="onStar">⭐ {{ article.star ? i18n.Unstar : i18n.Star
-            }}</button>
-          <button class="btn text flex-v padding-y9" v-on:click="onWatch">👀 {{ article.watch ? i18n.Unwatch : i18n.Watch
-            }}</button>
-          <button class="btn text flex-v padding-y9" v-on:click="switchLang">🌍 {{ article.lang.name }}</button>
+          <button class="btn text flex-v padding-y9" v-on:click="onStar">⭐ <span class="gt-360">
+              {{ article.star ? i18n.Unstar : i18n.Star }}</span></button>
+          <button class="btn text flex-v padding-y9" v-on:click="onWatch">👀 <span class="gt-360">
+              {{ article.watch ? i18n.Unwatch : i18n.Watch }}</span></button>
+          <button class="btn text flex-v padding-y9" v-on:click="switchLang">🌍 <span class="gt-360">
+              {{ article.lang.name }}</span></button>
         </div>
       </div>
       <div class="tabs">
@@ -73,7 +74,8 @@
         </dropdown>
       </div>
       <div class="layout-1 flex padding-9 margin-y9" v-if="article.reactions.length">
-        <button class="btn text flex-v" v-for="(reac, i) in article.reactions" v-on:click="onPickReaction(reac.status)">{{
+        <button class="btn text flex-v" v-for="(reac, i) in article.reactions"
+          v-on:click="onPickReaction(reac.status)">{{
           emoji[reac.status]}} {{ reac.count }}</button>
       </div>
       <modal v-model="isNewNode">

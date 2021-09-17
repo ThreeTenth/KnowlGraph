@@ -1,9 +1,17 @@
 <div class="dialog padding-y9">
   <button class="close" v-on:click="back">✖</button>
   <div class="margin-auto">
-    <h3 class="flex-h">使用 APP 扫码同步账号</h3>
-    <auth-qrcode v-on:result="onAuthResult"></auth-qrcode>
-    <span class="margin-9 flex-h text sm">扫二维码，添加此终端到你的账号</span>
+    <div class="gt-480">
+      <h3 class="flex-h">使用 APP 扫码同步账号</h3>
+      <auth-qrcode v-on:result="onAuthResult"></auth-qrcode>
+      <span class="margin-9 flex-h text sm">扫二维码，添加此终端到你的账号</span>
+    </div>
+    <div class="le-480">
+      <h3 class="flex-h">使用 APP 授权同步账号</h3>
+      <div class="flex-h margin-y">
+        <button class="btn text fill lg padding-6-30">开始授权</button>
+      </div>
+    </div>
     <!-- <div class="margin-t9 margin-b flex-h">
       <button class="btn text flex-v" v-on:click="onGitHubOAuth">使用
         <span class="ic-github wh-x18"></span>

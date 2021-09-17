@@ -3,7 +3,12 @@
   <div class="container padding-x9">
     <div class="flex-v">
       <h2 class="flex-auto">管理你的终端</h2>
-      <button class="btn text fill padding-x padding-y9" v-on:click="showAuthorize = true">添加一个终端</button>
+      <button class="gt-360 btn text fill padding-x padding-y9" v-on:click="showAuthorize = true">
+        添加一个终端
+      </button>
+      <button class="le-360 btn icon flex-v" title="添加一个终端" v-on:click="showAuthorize = true">
+        <span class="ic-plus-circle ic-c-primary wh-x30"></span>
+      </button>
     </div>
     <page v-bind:status="pageStatus">
       <div class="margin-y flex-v flex-wrap" v-for="(terminal, i) in terminals">
@@ -17,8 +22,13 @@
             <h3 class="margin-0">{{ terminal.nickname }}</h3>
             <div class="margin-y9"><span>Add in</span> {{ terminal.name }} <span>on</span> {{ terminal.device}}</div>
             <div class="flex-v">
-              <a class="btn flex-v spacing-18" v-on:click="todo">查看详细信息</a>
-              <button class="margin-x9 btn text fill c-red" v-on:click="todo">删除</button>
+              <a class="gt-360 btn flex-v margin-r9" v-on:click="todo">查看详细信息</a>
+              <div class="spacing-9 flex-auto">
+                <button class="btn text fill c-red" v-on:click="todo">删除</button>
+              </div>
+              <button class="le-360 spacing-9 btn text c-red" v-on:click="todo">
+                <span class="ic-more"></span>
+              </button>
             </div>
           </div>
         </div>

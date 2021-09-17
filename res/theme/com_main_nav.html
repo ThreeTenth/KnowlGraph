@@ -1,9 +1,9 @@
 <div class="bgc white">
   <nav class="nav">
     <div class="flex-auto flex-v">
-      <router-link class="btn link logo" to="/"></router-link>
-      <dropdown class="right-r10">
-        <button class="btn icon padding-x9 margin-l9 is-mobile">
+      <router-link class="btn link logo spacing-9" to="/"></router-link>
+      <dropdown class="left-right spacing-9 is-mobile">
+        <button class="btn icon padding-6-9 flex-v">
           <span class="ic-menu"></span>
         </button>
         <div class="menu">
@@ -16,16 +16,16 @@
     </div>
     <div class="flex-v margin-r">
       <slot></slot>
-      <button class="btn icon spacing-18" v-bind:class="mobileHiddenMenu ? 'none' : 'is-mobile'" v-on:click="onSearch">
+      <button class="btn icon spacing-18 flex-v" v-bind:class="mobileHiddenMenu ? 'none' : 'is-mobile'" v-on:click="onSearch">
         <span class="ic-search wh-x18"></span>
       </button>
-      <button class="btn icon spacing-18" v-bind:class="mobileHiddenMenu ? 'is-720' : 'flex-v'" v-on:click="todo"
+      <button class="btn icon spacing-18 flex-v" v-bind:class="mobileHiddenMenu ? 'is-720' : ''" v-on:click="todo"
         v-if="user.logined">
         <span class="ic-notify wh-x18"></span>
       </button>
     </div>
     <dropdown style="height: var(--x30);" v-if="user.logined">
-      <button class="btn avatar flex-v" title="user info">
+      <button class="btn avatar flex-c" title="user info">
         <img title="user avatar" v-bind:src="profilePicture" v-if="profilePicture">
         <span class="ic-avatar" v-else></span>
       </button>
