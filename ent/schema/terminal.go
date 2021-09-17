@@ -20,7 +20,6 @@ func (Terminal) Fields() []ent.Field {
 		field.String("ua"),
 		field.Time("created_at").
 			Default(time.Now).
-			Optional().
 			StructTag(`json:"-"`),
 		// field.String("cred_id"),
 		// field.String("public_key"),

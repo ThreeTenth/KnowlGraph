@@ -44,6 +44,7 @@ func (Location) Edges() []ent.Edge {
 			Ref("registration").
 			Unique(),
 		edge.From("terminal", Terminal.Type).
-			Ref("locations"),
+			Ref("locations").
+			Unique(),
 	}
 }
