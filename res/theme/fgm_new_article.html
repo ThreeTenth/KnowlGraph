@@ -79,8 +79,8 @@
           </div>
           <div class="p wrap margin-t9" style="overflow-y: auto; max-height: calc(100vh - 140px);">
             <template v-for="(part, i) in diff">
-              <span v-if="part.added" class="bgc-green-light c-green">{{ part.value }}</span>
-              <del v-else-if="part.removed" class="bgc-red-light c-red">{{ part.value }}</del>
+              <span v-if="part.added" class="bgc-success-light c-success">{{ part.value }}</span>
+              <del v-else-if="part.removed" class="bgc-error-light c-error">{{ part.value }}</del>
               <template v-else>{{ part.value }}</template>
             </template>
           </div>
