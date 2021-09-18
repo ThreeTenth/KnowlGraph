@@ -3,8 +3,6 @@
 const Login = {
   data: function () {
     return {
-      syncStatus: 0,
-      syncID: 0,
     }
   },
 
@@ -13,38 +11,34 @@ const Login = {
       this.todo("扫描成功，等待授权中")
     },
 
-    createAccount() {
-      if (this.user.logined) {
-        this.toast("你已登录")
-        return
-      }
-
+    createAccount(syncID) {
       var _this = this
       axios({
         method: "PUT",
         url: queryRestful("/v1/account/create"),
         data: {
-          challenge: this.syncID,
+          challenge: syncID,
         },
       }).then(function (resp) {
+        // Default(no expiration time is set): Cookie is removed when the user closes the browser.
         // Token 有效期最多 30 天。
-        Cookies.set("access_token", _this.syncID, { expires: 30 })
+        Cookies.set("terminal_code", resp.data, { expires: 365 })
+        Cookies.set("access_token", syncID, { expires: 30 })
         window.open("/", "_self")
       }).catch(function (err) {
         _this.toast("创建失败: " + err)
       })
     },
 
-    getChallenge() {
+    startCreate() {
       let _this = this;
       axios({
         method: "GET",
         url: queryRestful("/v1/account/sync"),
       }).then(function (resp) {
-        _this.syncID = resp.data
-        _this.syncStatus = resp.status
+        _this.createAccount(resp.data)
       }).catch(function (err) {
-        _this.syncStatus = getStatus4Error(err)
+        _this.toast("创建失败: " + err)
       })
     },
   },
@@ -54,7 +48,6 @@ const Login = {
       router.push({ path: '/' })
       return
     }
-    this.getChallenge()
   },
 
   beforeDestroy() {
