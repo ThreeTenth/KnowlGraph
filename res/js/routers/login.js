@@ -21,8 +21,8 @@ const Login = {
         },
       }).then(function (resp) {
         // Default(no expiration time is set): Cookie is removed when the user closes the browser.
+        Cookies.set("terminal_id", resp.data, { expires: 365 })
         // Token 有效期最多 30 天。
-        Cookies.set("terminal_code", resp.data, { expires: 365 })
         Cookies.set("access_token", syncID, { expires: 30 })
         window.open("/", "_self")
       }).catch(function (err) {

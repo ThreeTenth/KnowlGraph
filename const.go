@@ -68,6 +68,8 @@ const (
 	HeaderAuthorization = "Authorization"
 	// HeaderAcceptLanguage means http header `Accept-Language`field
 	HeaderAcceptLanguage = "Accept-Language"
+	// HeaderUserAgent means http header `User-Agent`field
+	HeaderUserAgent = "User-Agent"
 )
 
 // HTTP cookies key

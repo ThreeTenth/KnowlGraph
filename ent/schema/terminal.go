@@ -16,6 +16,8 @@ type Terminal struct {
 // Fields of the Terminal.
 func (Terminal) Fields() []ent.Field {
 	return []ent.Field{
+		field.String("code").
+			StructTag(`json:"-"`),
 		field.String("name"),
 		field.String("ua"),
 		field.Time("created_at").

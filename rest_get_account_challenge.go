@@ -26,25 +26,19 @@ type Terminal struct {
 }
 
 func getAccountTerminals(c *Context) error {
-	var _query struct {
-		ID int `form:"id" binding:"required"`
-	}
-
-	err := c.ShouldBindQuery(&_query)
-	if err != nil {
-		return c.BadRequest(err.Error())
-	}
-
 	_userID, _ := c.Get(GinKeyUserID)
 	ts, err := client.Terminal.Query().
 		Where(
 			terminal.HasUserWith(user.ID(_userID.(int))),
-			terminal.ID(_query.ID),
 		).
 		All(ctx)
 
 	if err != nil {
-		return c.NotFound(err.Error())
+		return c.InternalServerError(err.Error())
+	}
+
+	if 0 == len(ts) {
+		return c.NotFound("No terminals")
 	}
 
 	return c.Ok(&ts)
@@ -149,11 +143,43 @@ func getAccountChallenge(c *Context) error {
 func putAccountCreate(c *Context) error {
 	challenge, _ := c.Get(GinKeyChallenge)
 
+	ua := ua.Parse(c.GetHeader(HeaderUserAgent))
+	name := ua.Device
+	if ua.Bot {
+		return c.MethodNotAllowed("Bot can't allow this method")
+	}
+
+	if 0 == len(name) {
+		if ua.Mobile {
+			name = "Mobile"
+		} else if ua.Tablet {
+			name = "Tablet"
+		} else if ua.Desktop {
+			name = "Desktop"
+		}
+	}
+
+	name = name + " 1"
+
+	var terminalID int
 	err := WithTx(ctx, client, func(tx *ent.Tx) error {
 		_user, err := tx.User.Create().Save(ctx)
 		if err != nil {
 			return err
 		}
+
+		_terminal, err := tx.Terminal.Create().
+			SetCode(New16bitID()).
+			SetName(name).
+			SetUa(c.GetHeader(HeaderUserAgent)).
+			SetUser(_user).
+			Save(ctx)
+
+		if err != nil {
+			return err
+		}
+
+		terminalID = _terminal.ID
 
 		return rdb.Set(ctx, challenge.(string), _user.ID, ExpireTimeToken).Err()
 	})
@@ -162,7 +188,7 @@ func putAccountCreate(c *Context) error {
 		return c.InternalServerError(err.Error())
 	}
 
-	return c.Ok(true)
+	return c.Ok(terminalID)
 }
 
 // 检测 challenge 是否存在，challenge 的状态是否合法，以及是否存在非法请求者
