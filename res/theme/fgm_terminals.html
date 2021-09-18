@@ -15,31 +15,31 @@
         <div class="flex-auto spacing-18 flex-v">
           <span class="terminal-icon" v-bind:class="dt('ic-', terminal)">
             <span class="wh-x36 flex-c bgc white" v-bind:class="dt('margin-', terminal)">
-              <span class="wh-x30" v-bind:class="os('ic-', terminal, '-original')"></span>
+              <span class="wh-x30 btn" v-bind:class="os('ic-', terminal, '-original')"></span>
             </span>
           </span>
           <div class="spacing-18">
             <h3 class="margin-0">{{ terminal.nickname }}</h3>
-            <div class="margin-y9"><span>Add in</span> {{ terminal.name }} <span>on</span> {{ terminal.device}}</div>
+            <div class="margin-y9"><span>Add in</span> {{ terminal.name }} <span>on</span> {{ terminal.device.model }}
+            </div>
             <div class="flex-v">
               <a class="gt-360 btn flex-v margin-r9" v-on:click="todo">查看详细信息</a>
               <div class="spacing-9 flex-auto">
-                <button class="btn text fill c-red" v-on:click="todo">删除</button>
+                <button class="text fill bgc-success" title="你正在此终端上工作" v-if="terminal.current">当前终端</button>
+                <button class="btn text fill bgc-error" v-on:click="todo" v-else>删除</button>
               </div>
-              <button class="le-360 spacing-9 btn text c-red" v-on:click="todo">
+              <button class="le-360 spacing-9 btn text c-error" v-on:click="todo">
                 <span class="ic-more"></span>
               </button>
             </div>
           </div>
         </div>
         <div class="flex-c spacing-18 padding-x9">
-          <span class="ic-location-pin" v-bind:class="terminal.addr ? 'ic-c-success' : 'ic-c-error'"></span>
-          <template v-if="terminal.addr">
-            <span class="margin-x3">{{ terminal.addr }}</span>
-          </template>
-          <template v-else>
-            <span class="margin-x3">Unknown</span>
-          </template>
+          <div class="spacing-18" title="终端地理位置">
+            <span class="ic-location-pin" v-bind:class="terminal.addr ? 'ic-c-success' : 'ic-c-error'"></span>
+            <span class="margin-x5 font-bold font-lg">**</span>
+          </div>
+          <button title="查看位置" class="ic-eye wh-x18 spacing-18 btn icon" v-on:click="todo"></button>
         </div>
       </div>
     </page>

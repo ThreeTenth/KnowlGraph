@@ -4,7 +4,7 @@ const Terminals = {
   data: function () {
     return {
       pageStatus: 0,
-      terminals: [],
+      __original: [],
       syncID: "",
       showAuthorize: false,
       showConfirm: false,
@@ -14,13 +14,44 @@ const Terminals = {
     }
   },
 
+  computed: {
+    terminals: function () {
+      var parser = new UAParser();
+      var orig = this.$data.__original
+      var ts = []
+      var tid = Cookies.get("terminal_id")
+      for (let index = 0; index < orig.length; index++) {
+        const term = orig[index];
+        parser.setUA(term.ua);
+        var result = parser.getResult();
+        var device = result.device
+        if (device.modal == undefined) {
+          device = {
+            model: "Desktop",
+            type: "desktop",
+            vendor: "Unknown",
+          }
+        }
+        ts[index] = {
+          current: term.id === parseInt(tid),
+          nickname: term.name,
+          name: result.browser.name,
+          os: result.os.name,
+          device: device,
+        }
+      }
+
+      return ts
+    },
+  },
+
   methods: {
-    os: function(prefix, terminal, suffix = "") {
+    os: function (prefix, terminal, suffix = "") {
       return prefix + terminal.os.toLowerCase() + suffix
     },
 
-    dt: function(prefix, terminal, suffix = "") {
-      return prefix + terminal.deviceType.toLowerCase() + suffix
+    dt: function (prefix, terminal, suffix = "") {
+      return prefix + terminal.device.type.toLowerCase() + suffix
     },
 
     onAuthResult(syncID, data) {
@@ -79,10 +110,10 @@ const Terminals = {
       let _this = this;
       axios({
         method: "GET",
-        url: queryRestful("/v1/account/terminals", {id: "0"}),
+        url: queryRestful("/v1/account/terminals"),
       }).then(function (resp) {
         _this.pageStatus = resp.status
-        _this.terminals = resp.data
+        _this.$data.__original = resp.data
       }).catch(function (err) {
         _this.pageStatus = getStatus4Error(err)
       })

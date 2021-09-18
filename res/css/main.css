@@ -570,6 +570,22 @@ body {
 }
 
 /*******************************************************************
+ terminal style
+*******************************************************************/
+
+.margin-smartphone {
+	margin-left: var(--x7);
+}
+
+.margin-tablat {
+	margin-left: calc(0px - var(--x3));
+}
+
+.margin-desktop {
+	margin-left: calc(0px - var(--x7));
+}
+
+/*******************************************************************
  menu style
 *******************************************************************/
 
@@ -1002,18 +1018,6 @@ div[contenteditable]:empty:before {
  margin, padding and spacing style
 *******************************************************************/
 
-.margin-smartphone {
-	margin-left: var(--x7);
-}
-
-.margin-tablat {
-	margin-left: calc(0px - var(--x3));
-}
-
-.margin-desktop {
-	margin-left: calc(0px - var(--x7));
-}
-
 .margin-auto {
 	margin-left : auto;
 	margin-right: auto;
@@ -1039,6 +1043,11 @@ div[contenteditable]:empty:before {
 .margin-x0 {
 	margin-left : 0;
 	margin-right: 0;
+}
+
+.margin-x5 {
+	margin-left : var(--x5);
+	margin-right: var(--x5);
 }
 
 .margin-x9 {
@@ -1206,7 +1215,7 @@ div[contenteditable]:empty:before {
 }
 
 .font-lg {
-	font-size: var(--lg);
+	font-size: var(--x24);
 }
 
 .font-bold {
@@ -1257,11 +1266,11 @@ div[contenteditable]:empty:before {
 	background-color: var(--black);
 }
 
-.bgc-red-light {
+.bgc-error-light {
 	background-color: var(--red-light);
 }
 
-.bgc-green-light {
+.bgc-success-light {
 	background-color: var(--green-light);
 }
 
@@ -1269,15 +1278,23 @@ div[contenteditable]:empty:before {
 	background-color: var(--white-light);
 }
 
-.c-green {
+.bgc-success {
+	background-color: var(--success) !important;
+}
+
+.bgc-error {
+	background-color: var(--error) !important;
+}
+
+.c-success {
 	color: var(--green);
 }
 
-.c-red {
+.c-error {
 	color: var(--red);
 }
 
-.c-blue {
+.c-primary {
 	color: var(--blue);
 }
 
