@@ -32,7 +32,7 @@
 	--highlight: #00000020;
 
 	--success: var(--olive);
-	--danger : var(--red);
+	--danger : var(--yellow);
 	--warn   : var(--orange);
 	--error  : var(--red);
 	--info   : var(--black);
@@ -841,6 +841,10 @@ div[contenteditable]:empty:before {
 	border: none;
 }
 
+.outline-none {
+	outline: none;
+}
+
 .border-1 {
 	border: var(--x1) solid var(--black);
 }
@@ -956,6 +960,10 @@ div[contenteditable]:empty:before {
 
 .w-120p {
 	width: 120px;
+}
+
+.w-140p {
+	width: 140px;
 }
 
 .w-180p {
@@ -1280,6 +1288,18 @@ div[contenteditable]:empty:before {
 
 .bgc-success {
 	background-color: var(--success) !important;
+}
+
+.bgc-danger {
+	background-color: var(--danger) !important;
+}
+
+.bgc-warn {
+	background-color: var(--warn) !important;
+}
+
+.bgc-info {
+	background-color: var(--info) !important;
 }
 
 .bgc-error {
