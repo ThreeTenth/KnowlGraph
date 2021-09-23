@@ -3,13 +3,13 @@ A publishing platform where people can read professional and in-depth knowledge 
 
 ### Build for linux
 
+使用 ~~packr v2~~ `go:embed` 打包静态资源
+
 ```
 set GOARCH=amd64
 set GOOS=linux
-packr2 clean
-packr2 build --ldflags="-w -s" -o "knowlgraph.com"
+go build --ldflags="-w -s" -o "knowlgraph.com"
 upx -9 knowlgraph.com
-packr2 clean
 echo "finished"
 ```
 
@@ -41,3 +41,4 @@ Release 模式则与之相反。
 
 - 404 list
 - 移动端账号同步
+- 回复/笔记
