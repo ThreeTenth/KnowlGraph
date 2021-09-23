@@ -1,25 +1,22 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gobuffalo/packr/v2"
 )
 
 func getFavicon(c *gin.Context) {
-	_box := packr.NewBox("./res/favicon")
-	_favicon, _ := _box.Find("favicon.png")
+	_favicon, err := resource.ReadFile("res/favicon/favicon.png")
+	if err != nil {
+		c.AbortWithError(http.StatusNotFound, err)
+		return
+	}
 
 	c.Status(http.StatusOK)
-	header := c.Writer.Header()
-	if val := header["Content-Type"]; len(val) == 0 {
-		header["Content-Type"] = []string{"image/png"}
-	}
-
-	if i, err := c.Writer.Write(_favicon); err != nil {
-		fmt.Print(i, err.Error())
-	}
+	c.Writer.Header().Set("Content-Type", "image/png")
+	c.Writer.Header().Set("Content-Length", strconv.Itoa(len(_favicon)))
+	c.Writer.Write(_favicon)
 	c.Abort()
 }
