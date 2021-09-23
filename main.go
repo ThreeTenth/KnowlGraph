@@ -1,12 +1,13 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	"database/sql"
+	"embed"
 	"fmt"
 	"html/template"
 	"io"
+	"io/fs"
 	"net/http"
 	"os"
 	"time"
@@ -14,7 +15,6 @@ import (
 	"github.com/excing/goflag"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
-	"github.com/gobuffalo/packr/v2"
 	"golang.org/x/sync/errgroup"
 	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/migrate"
@@ -43,6 +43,12 @@ var client *ent.Client
 var rdb *redis.Client
 var config *Config
 var db *sql.DB
+
+//go:embed res
+var resource embed.FS
+
+//go:embed tpl
+var tpl embed.FS
 
 func init() {
 	fmt.Printf("The current version: v%v, the version name: %v", Version, VersionName)
@@ -118,12 +124,13 @@ func openRedis() {
 
 func loadTemplates(router *gin.Engine) {
 	tmpl := template.New("user")
-	box := packr.NewBox("./tpl")
+	templates, err := tpl.ReadDir("tpl")
+	panicIfErrNotNil(err)
 
-	for _, v := range box.List() {
-		fgm := tmpl.New(v)
-		data, _ := box.FindString(v)
-		fgm.Parse(data)
+	for _, v := range templates {
+		fgm := tmpl.New(v.Name())
+		data, _ := tpl.ReadFile("tpl/" + v.Name())
+		fgm.Parse(string(data))
 	}
 
 	router.SetHTMLTemplate(tmpl)
@@ -279,6 +286,7 @@ func router02() http.Handler {
 	v1.PUT("/article/edit", authorizeRequired, handle(editArticle))
 
 	v1.PUT("/publish/article", authorizeRequired, handle(publishArticle))
+	v1.PUT("/article/quote", authorizeRequired, handle(putQuote))
 
 	v1.GET("/articles", authentication, handle(getArticles))
 	v1.GET("/words", authentication, handle(getKeywords))
@@ -340,87 +348,29 @@ func router03() http.Handler {
 
 	group := router.Group("/" + VersionName)
 
-	box01 := packr.New("codeOfConduct", "./res/code-of-conduct")
-	group.StaticFS("/code-of-conduct", box01)
+	fsys, err := fs.Sub(resource, "res")
+	panicIfErrNotNil(err)
+	fileServer := http.StripPrefix(group.BasePath(), http.FileServer(http.FS(fsys)))
 
-	box02 := packr.New("strings", "./res/strings")
-	group.StaticFS("/strings", box02)
+	group.GET("/*filepath", func(c *gin.Context) {
+		file := c.Param("filepath")
+		if "/__default_theme.js" == file {
+			getDefaultThemes(c)
+			return
+		}
+		if "/__app.js" == file {
+			getAppJS(c)
+			return
+		}
+		if "/__main.css" == file {
+			getMainCSS(c)
+			return
+		}
 
-	box03 := packr.New("fonts", "./res/fonts")
-	group.StaticFS("/fonts", box03)
-
-	themeBuffer := new(bytes.Buffer)
-	{
-		group.GET("/__default_theme.js", func(c *gin.Context) {
-			if 0 == themeBuffer.Len() || config.Debug {
-				themeBuffer = new(bytes.Buffer)
-				themeFormat := "// %v \nconst %v = `%v`"
-
-				box := packr.Folder("./res/theme")
-				CopyBox(themeBuffer, box, nil, themeFormat)
-			}
-
-			c.Status(http.StatusOK)
-			c.Writer.Header().Set("Content-Type", "application/javascript; charset=utf-8")
-			c.Writer.Write(themeBuffer.Bytes())
-		})
-	}
-
-	appJSBuffer := new(bytes.Buffer)
-	{
-		group.GET("/__app.js", func(c *gin.Context) {
-			if 0 == appJSBuffer.Len() || config.Debug {
-				appJSBuffer = new(bytes.Buffer)
-				languagesFormat := "// %v, %v \nconst languages = %v"
-				defaultStringsFormat := "// %v, %v \nconst defaultLang = %v"
-
-				box := packr.Folder("./res/strings")
-				CopyBoxFile(appJSBuffer, box, "languages.json", languagesFormat)
-				CopyBoxFile(appJSBuffer, box, "strings-en.json", defaultStringsFormat)
-
-				box = packr.Folder("./res/js")
-				CopyBox(appJSBuffer, box, []string{"app.js"})
-				CopyBoxFile(appJSBuffer, box, "app.js")
-			}
-
-			c.Status(http.StatusOK)
-			c.Writer.Header().Set("Content-Type", "application/javascript; charset=utf-8")
-			c.Writer.Write(appJSBuffer.Bytes())
-		})
-	}
-
-	mainCSSBuffer := new(bytes.Buffer)
-	{
-		group.GET("/__main.css", func(c *gin.Context) {
-			if 0 == mainCSSBuffer.Len() || config.Debug {
-				mainCSSBuffer = new(bytes.Buffer)
-
-				box := packr.Folder("./res/css")
-				CopyBox(mainCSSBuffer, box, nil)
-			}
-			c.Status(http.StatusOK)
-			c.Writer.Header().Set("Content-Type", "text/css; charset=utf-8")
-			c.Writer.Write(mainCSSBuffer.Bytes())
-		})
-	}
-	// if config.Debug {
-	// 	group.GET("/__main.css", func(c *gin.Context) {
-
-	// 		c.Status(http.StatusOK)
-	// 		c.Writer.Header().Set("Content-Type", "text/css; charset=utf-8")
-
-	// 		CopyDir(c.Writer, "./res/css", "")
-	// 	})
-	// } else {
-	// 	group.GET("/*filepath", getStaticFile)
-	// 	group.HEAD("/*filepath", getStaticFile)
-	// }
+		fileServer.ServeHTTP(c.Writer, c.Request)
+	})
 
 	router.GET("/favicon.ico", getFavicon)
-	// router.GET("/static/*paths", getStaticServerFiles)
-	// router.GET("/theme/theme.js", getStaticTheme)
-	// router.GET("/theme/theme@:id.js", getStaticTheme)
-	// router.GET("/lang/:id", getStaticLang)
 
 	return router
 }
