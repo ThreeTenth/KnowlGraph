@@ -7,6 +7,10 @@ Vue.component('modal', {
   },
 
   props: {
+    seenClose: {
+      type: Boolean,
+      default: true,
+    },
     clazz: String,
     seen: Boolean
   },
