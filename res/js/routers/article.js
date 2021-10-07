@@ -20,29 +20,35 @@ const Article = {
       ],
       __original: {},
       isNewNode: false,
+      isNewQuote: false,
+      isAddResponse: false,
       pageStatus: 0,
+      selection: {
+        text: '',
+        context: '',
+        left: 0,
+        top: 0,
+      },
     }
   },
 
   computed: {
     article: function () {
       let article = this.$data.__original
-      if (undefined == article.edges) return
+      if (undefined == article.edges)
+        return {
+          reactions: [],
+          keywords: [],
+          nodes: [],
+          private: true,
+        }
 
       let version = article.edges.versions[0]
       let content = version.edges.content
 
       var title, gist, code = seo(version.title, version.gist)
 
-      var converter = new showdown.Converter({
-        'disableForced4SpacesIndentedSublists': 'true',
-        'tasklists': 'true',
-        'tables': 'true',
-        'extensions': ['video', 'audio', 'catalog', 'anchor']
-      })
-      // KaTeX: math regex: /\$\$([^$]+)\$\$/gm
-
-      var body = converter.makeHtml(content.body);
+      var body = content.body;
       var keywords = version.edges.keywords
 
       var lang = userLang
@@ -172,7 +178,41 @@ const Article = {
       }
     },
 
+    onAddQuote() {
+      this.isAddResponse = true
+      console.log("on add quote", this.selection);
+    },
+
     switchLang() { },
+
+    __putQuote() {
+      let text = this.selection.text
+      let context = this.selection.context
+      let articleId = this.article.id
+      let responseId = -1
+      let highlight = 1
+      let _this = this
+      axios({
+        method: "PUT",
+        url: queryRestful("/v1/article/quote"),
+        data: {
+          text: text,
+          context: context,
+          articleId: articleId,
+          responseId: responseId,
+          highlight: highlight,
+        },
+      }).then(function (resp) {
+        _this.toast("Success", 'success')
+      }).catch(function (err) {
+        _this.toast("Failure", 'error')
+      })
+    },
+
+    __resetSelection() {
+      this.selection.text = ''
+      this.selection.context = ''
+    },
 
     __deleteAsset(status) {
       var assets = this.$data.__original.edges.assets
@@ -234,6 +274,21 @@ const Article = {
         })
       })
     },
+
+    __addQuote(e) {
+      if (this.selection.text) {
+        this.selection.left = e.pageX
+        this.selection.top = e.pageY
+        this.isNewQuote = true
+      } else {
+        this.__cancelQuote()
+      }
+    },
+
+    __cancelQuote(e) {
+      this.isNewQuote = false
+      this.__resetSelection()
+    },
   },
 
   created() {
@@ -265,6 +320,62 @@ const Article = {
       }
       _this.pageStatus = status
     })
+
+    document.addEventListener('selectionchange', () => {
+      let selection = document.getSelection()
+
+      if (!this.$refs.reader
+        || (selection.anchorNode == selection.focusNode && selection.anchorOffset == selection.focusOffset)) {
+        this.__resetSelection()
+        return
+      }
+
+      var text = selection.toString()
+      if (!text || 0 == text.length || 0 == text.trim().length) return
+
+      var divs = this.$refs.reader.children
+      var startEl, endEl
+      for (let index = 0; index < divs.length; index++) {
+        const element = divs[index];
+        if (isChildAt(element, selection.anchorNode)) {
+          if (startEl) {
+            endEl = element
+          } else {
+            startEl = element
+          }
+        }
+        if (isChildAt(element, selection.focusNode)) {
+          if (startEl) {
+            endEl = element
+          } else {
+            startEl = element
+          }
+        }
+      }
+
+      var context = undefined
+      for (let index = 0; index < divs.length; index++) {
+        const element = divs[index];
+        if (startEl == element) {
+          context = element.innerText
+          if (startEl == endEl) {
+            break
+          }
+        } else if (endEl == element) {
+          context += element.innerText
+          break
+        } else if (context) {
+          context += element.innerText
+        }
+
+        context += "\n\n"
+      }
+
+      this.selection.text = selection.toString()
+      this.selection.context = context
+    })
+
+    document.onclick = this.__addQuote
   },
 
   template: fgm_article,

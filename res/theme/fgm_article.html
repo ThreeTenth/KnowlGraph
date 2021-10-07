@@ -1,7 +1,8 @@
 <div>
   <main-nav></main-nav>
-  <page v-bind:status="pageStatus">
-    <div class="container padding-9" v-if="article">
+  <div class="container padding-9 flex-start">
+    <div class="w-90p is-720"></div>
+    <page class="flex-1" v-bind:status="pageStatus">
       <div class="layout-1 flex margin-t18b9">
         <div class="flex-1">
           <dropdown class="left" v-bind:ignore="'true'" v-if="article.nodes.length">
@@ -39,12 +40,12 @@
               {{ article.lang.name }}</span></button>
         </div>
       </div>
-      <div class="tabs">
+      <!-- <div class="tabs">
         <a class="selected" href="#">{{ i18n.Body }}</a>
         <a href="#">{{ i18n.Issues }}</a>
         <a href="#">{{ i18n.Notes }}</a>
-      </div>
-      <article class="markdown" v-html="article.body"></article>
+      </div> -->
+      <article class="markdown" v-html="md2html(article.body)" ref="reader"></article>
       <div class="flex-wrap" v-if="article.keywords">
         <a href="#" class="label-1" v-for="(keyword, i) in article.keywords">#{{keyword.name}}</a>
       </div>
@@ -78,9 +79,39 @@
           v-on:click="onPickReaction(reac.status)">{{
           emoji[reac.status]}} {{ reac.count }}</button>
       </div>
-      <modal v-model="isNewNode">
-        <new-node v-on:successed="isNewNode = false" v-on:failured="isNewNode = false"></new-node>
-      </modal>
+      <div></div>
+    </page>
+    <div class="w-90p is-720"></div>
+  </div>
+  <modal v-model="isNewNode">
+    <new-node v-on:successed="isNewNode = false" v-on:failured="isNewNode = false"></new-node>
+  </modal>
+  <div class="abs bgc white padding-6-9 shadow radius-30 flex-v"
+    v-bind:style="'left: ' + selection.left + 'px; top: ' + selection.top + 'px'" v-if="isNewQuote && selection">
+    <div class="margin-x5 btn" v-on:click="onAddQuote">
+      <span class="ic-feather"></span>
     </div>
-  </page>
+    <div class="margin-x9">|</div>
+    <div class="margin-x5 btn" v-on:click="onAddQuote">
+      <div class="radius-30 bgc-success wh-x18"></div>
+    </div>
+    <div class="margin-x5 btn" v-on:click="onAddQuote">
+      <div class="radius-30 bgc-info wh-x18"></div>
+    </div>
+    <div class="margin-x5 btn" v-on:click="onAddQuote">
+      <div class="radius-30 bgc-error wh-x18"></div>
+    </div>
+    <div class="margin-x5 btn" v-on:click="onAddQuote">
+      <div class="radius-30 bgc-warn wh-x18"></div>
+    </div>
+    <div class="margin-x5 btn" v-on:click="onAddQuote">
+      <div class="radius-30 bgc-danger wh-x18"></div>
+    </div>
+  </div>
+  <modal v-model="isAddResponse">
+    <div class="margin-9">
+      <h4>回复</h4>
+      <input class="w-100 padding-6-9 font-md box-border border-none outline-none" autofocus placeholder="请输入你的回复">
+    </div>
+  </modal>
 </div>
