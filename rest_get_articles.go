@@ -4,7 +4,7 @@ func getArticles(c *Context) error {
 	var _query struct {
 		Lang   string `form:"lang"`
 		Limit  int    `form:"limit,default=10"`
-		Offset int    `form:"Offset,default=0"`
+		Offset int    `form:"offset,default=0"`
 	}
 
 	err := c.ShouldBindQuery(&_query)
