@@ -67,7 +67,16 @@ const plugin = {
       })
       // KaTeX: math regex: /\$\$([^$]+)\$\$/gm
 
-      return converter.makeHtml(md);
+      var html = document.createElement('div')
+      html.innerHTML = converter.makeHtml(md)
+
+      var ps = html.getElementsByTagName('p')
+      for (let index = 0; index < ps.length; index++) {
+        const element = ps[index];
+        element.classList.add('quote')
+      }
+
+      return html.innerHTML
     }
 
     Vue.prototype.emoji = function (x, i) {
@@ -129,7 +138,7 @@ const router = new VueRouter({
     { path: '/new/article', name: 'newArticle', component: NewArticle },
     { path: '/d/:id/edit', name: 'editDraft', component: EditDraft, props: true },
     { path: '/login', name: 'login', component: Login },
-    { path: '/g/:id', redirect: { name: 'getapp' }},
+    { path: '/g/:id', redirect: { name: 'getapp' } },
     { path: '/getapp', name: 'getapp', component: GetAPP },
   ]
 })
