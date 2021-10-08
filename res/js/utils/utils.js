@@ -1,5 +1,43 @@
 // utils.js
 
+function detectMob() {
+  const toMatch = [
+    /Android/i,
+    /webOS/i,
+    /iPhone/i,
+    /iPad/i,
+    /iPod/i,
+    /BlackBerry/i,
+    /Windows Phone/i
+  ];
+
+  return toMatch.some((toMatchItem) => {
+    return navigator.userAgent.match(toMatchItem);
+  });
+}
+
+function detectAndroid() {
+  const toMatch = [
+    /Android/i,
+  ];
+
+  return toMatch.some((toMatchItem) => {
+    return navigator.userAgent.match(toMatchItem);
+  });
+}
+
+function detectIOS() {
+  const toMatch = [
+    /iPhone/i,
+    /iPad/i,
+    /iPod/i,
+  ];
+
+  return toMatch.some((toMatchItem) => {
+    return navigator.userAgent.match(toMatchItem);
+  });
+}
+
 function getBodyWidth() {
   var win = window,
     doc = document,

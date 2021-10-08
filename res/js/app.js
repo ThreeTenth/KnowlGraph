@@ -109,6 +109,9 @@ const plugin = {
     }
 
     Vue.prototype.canCreateAccount = canUseWenAuthn()
+    Vue.prototype.isMobile = detectMob()
+    Vue.prototype.isAndroid = detectAndroid()
+    Vue.prototype.isIOS = detectIOS()
 
     Vue.prototype.onGitHubOAuth = function () {
       const github_client_id = getMeta("github_client_id")
