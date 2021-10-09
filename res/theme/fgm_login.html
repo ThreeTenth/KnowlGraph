@@ -6,7 +6,7 @@
       <auth-qrcode v-on:result="onAuthResult"></auth-qrcode>
       <span class="margin-9 flex-h text sm">扫二维码，添加此终端到你的账号</span>
     </div>
-    <div else>
+    <div v-else>
       <h3 class="flex-h">使用 APP 授权同步账号</h3>
       <div class="flex-h margin-y">
         <a class="btn text fill lg padding-6-30" href="knowlgraph://scanner">开始授权</a>
