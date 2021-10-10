@@ -12,7 +12,7 @@ import (
 func setAuthorization(c *gin.Context, userID int) error {
 	_token := New64BitID()
 
-	err := rdb.Set(ctx, _token, userID, ExpireTimeToken).Err()
+	err := rdb.Set(ctx, RToken(_token), userID, ExpireTimeToken).Err()
 	if err != nil {
 		return err
 	}
@@ -30,7 +30,7 @@ func authentication(c *gin.Context) {
 		// 2. 已激活状态，对应的值是 TokenStateActivated;
 		// 3. 已授权状态，对应的值才是 user id.
 		// 具体可见 [TokenStateIdle], [TokenStateActivated], [TokenStateAuthorized]
-		if userID, err := rdb.Get(ctx, _token).Int(); err == nil && TokenStateActivated < userID {
+		if userID, err := rdb.Get(ctx, RToken(_token)).Int(); err == nil && TokenStateActivated < userID {
 			c.Set(GinKeyUserID, userID)
 		}
 	}
@@ -42,7 +42,7 @@ func deauthorize(c *gin.Context) {
 	_token := getRequestToken(c)
 
 	if _token != "" {
-		if rdb.Del(ctx, _token).Err() != nil {
+		if rdb.Del(ctx, RToken(_token)).Err() != nil {
 			c.AbortWithStatus(http.StatusInternalServerError)
 			return
 		}
@@ -56,7 +56,7 @@ func authorizeRequired(c *gin.Context) {
 	_token := getRequestToken(c)
 
 	if _token != "" {
-		if userID, err := rdb.Get(ctx, _token).Int(); err == nil && 0 < userID {
+		if userID, err := rdb.Get(ctx, RToken(_token)).Int(); err == nil && 0 < userID {
 			c.Set(GinKeyUserID, userID)
 			c.Next()
 			return

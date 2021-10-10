@@ -5,6 +5,21 @@ import (
 	"time"
 )
 
+// RChallenge is challenge key in redis
+func RChallenge(key string) string {
+	return "challenge_" + key
+}
+
+// RToken is token key in redis
+func RToken(key string) string {
+	return "token_" + key
+}
+
+// RTerminal is terminal key in redis
+func RTerminal(key string) string {
+	return "terminal_" + key
+}
+
 // SetV2Redis encodes the value as json, and
 // then stores it in redis in the form of key-value pairs
 func SetV2Redis(key string, v interface{}, duration time.Duration) error {
