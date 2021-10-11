@@ -9,6 +9,7 @@ import (
 	"knowlgraph.com/ent/article"
 	"knowlgraph.com/ent/asset"
 	"knowlgraph.com/ent/node"
+	"knowlgraph.com/ent/quote"
 	"knowlgraph.com/ent/user"
 	"knowlgraph.com/ent/version"
 )
@@ -78,13 +79,18 @@ func GetArticle(isLogin bool, _userID interface{}, articleID int, needVersions b
 	} else {
 		vq.Order(ent.Desc(version.FieldCreatedAt)).Limit(1)
 	}
-
-	_versions, err := vq.WithContent().WithKeywords().WithQuotes().All(ctx)
+	_version, err := vq.WithContent().WithKeywords().First(ctx)
 	if err != nil {
 		return nil, http.StatusNotFound, err
 	}
 
 	_reactions, _ := _article.QueryReactions().All(ctx)
+
+	_quotes, _ := _article.
+		QueryQuotes().
+		Where(quote.HasArticleWith(article.StatusEQ(article.StatusPublic))).
+		WithArticle().
+		All(ctx)
 
 	_nodesWhere := node.StatusEQ(node.StatusPublic)
 	if isLogin {
@@ -115,9 +121,10 @@ func GetArticle(isLogin bool, _userID interface{}, articleID int, needVersions b
 		_article.Edges.Assets = _assets
 	}
 
-	_article.Edges.Versions = _versions
+	_article.Edges.Versions = []*ent.Version{_version}
 	_article.Edges.Reactions = _reactions
 	_article.Edges.Nodes = _nodes
+	_article.Edges.Quotes = _quotes
 
 	return _article, http.StatusOK, err
 }
