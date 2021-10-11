@@ -320,14 +320,27 @@ func router02() http.Handler {
 	// account.PUT("/create", handle(finishRegistration))
 	// account.GET("/request", authorizeRequired, handle(beginLogin))
 	// account.POST("/anthn", authorizeRequired, handle(finishLogin))
-	account.GET("/sync", authentication, handle(getAccountChallenge))
-	account.PUT("/create", checkChallenge(TokenStateIdle), handle(putAccountCreate))
-	account.PUT("/terminal", checkChallenge(TokenStateIdle), handle(putAccountTerminal))
+	// account.GET("/sync", authentication, handle(getAccountChallenge))
+	// account.PUT("/create", checkChallenge(TokenStateIdle), handle(putAccountCreate))
+	// account.PUT("/terminal", checkChallenge(TokenStateIdle), handle(putAccountTerminal))
+	// account.GET("/terminals", authorizeRequired, handle(getAccountTerminals))
+	// account.PATCH("/authn", authorizeRequired, checkChallenge(TokenStateActivated), handle(postAccountAuthn))
+	// account.POST("/authn", authorizeRequired, checkChallenge(TokenStateActivated), handle(postAccountAuthn))
+	// account.DELETE("/authn", authorizeRequired, checkChallenge(TokenStateIdle+TokenStateActivated), handle(postAccountAuthn))
+	// account.GET("/check", handle(checkAccountChallenge))
+
 	account.GET("/terminals", authorizeRequired, handle(getAccountTerminals))
-	account.PATCH("/authn", authorizeRequired, checkChallenge(TokenStateActivated), handle(postAccountAuthn))
-	account.POST("/authn", authorizeRequired, checkChallenge(TokenStateActivated), handle(postAccountAuthn))
-	account.DELETE("/authn", authorizeRequired, checkChallenge(TokenStateIdle+TokenStateActivated), handle(postAccountAuthn))
-	account.GET("/check", handle(checkAccountChallenge))
+	account.GET("/authorized", authorizeRequired, handle(isAuthorized))
+	account.DELETE("/terminal", authorizeRequired, handle(deleteTerminal))
+
+	t := account.Group("t")
+
+	t.GET("/challenge", authentication, handle(getChallenge))
+	t.PUT("/makeCredential", handle(makeCredential))
+	t.POST("/activate", authentication, handle(activateTerminal))
+	t.POST("/authorize", authorizeRequired, handle(authorizeTerminal))
+	t.POST("/cancel", handle(cancelTerminal))
+	t.GET("/scanChallenge", handle(scanChallenge))
 
 	return router
 }

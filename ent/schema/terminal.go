@@ -33,9 +33,11 @@ func (Terminal) Fields() []ent.Field {
 func (Terminal) Edges() []ent.Edge {
 	// 终端的地理位置信息和创建时间默认不向客户端显示，需要得到用户的授权，才能显示。
 	return []ent.Edge{
+		// 登记地
 		edge.To("registration", Location.Type).
 			Unique().
 			StructTag(`json:"-"`),
+		// 上线地
 		edge.To("locations", Location.Type).
 			StructTag(`json:"-"`),
 
