@@ -4,8 +4,10 @@ Vue.component('auth-qrcode', {
 
   data: function () {
     return {
-      syncStatus: 0,
-      syncID: 0,
+      qrcodeStatus: 0,
+      challenge: "",
+      requestState: "",
+      challengeState: 1,
       checkChallengeInterval: 0,
       hasRefresh: false,
       qrcode: null,
@@ -15,29 +17,32 @@ Vue.component('auth-qrcode', {
   methods: {
     getChallenge() {
       let _this = this;
+      let state = Math.random().toString(36).slice(2)
       axios({
         method: "GET",
-        url: queryRestful("/v1/account/sync"),
+        url: queryRestful("/v1/account/t/challenge", { state: state }),
       }).then(function (resp) {
-        _this.syncID = resp.data
-        _this.syncStatus = resp.status
+        _this.requestState = state
+        _this.challenge = resp.data
+        _this.qrcodeStatus = resp.status
         _this.hasRefresh = false
+        _this.$emit('challenge', resp.data, state)
         setTimeout(() => {
           let text = queryPage("/g/" + resp.data)
           if (_this.qrcode) {
             _this.qrcode.clear()
             _this.qrcode.makeCode(text)
           } else {
-            _this.qrcode = new QRCode(_this.$refs.syncQrcode, text)
+            _this.qrcode = new QRCode(_this.$refs.qrcode, text)
           }
-          _this.$refs.syncQrcode.title = ''
+          _this.$refs.qrcode.title = ''
 
           _this.checkChallengeInterval = window.setInterval(() => {
             _this.checkChallengeState()
           }, 3000);
         }, 0);
       }).catch(function (err) {
-        _this.syncStatus = getStatus4Error(err)
+        _this.qrcodeStatus = getStatus4Error(err)
       })
     },
 
@@ -45,18 +50,21 @@ Vue.component('auth-qrcode', {
       let _this = this;
       axios({
         method: "GET",
-        url: queryRestful("/v1/account/check", { challenge: this.syncID }),
+        url: queryRestful("/v1/account/t/scanChallenge", {
+          challenge: this.challenge
+        }),
       }).then(function (resp) {
-        var data = resp.data
-        if (2 == data.state) {
+        var state = resp.data.state
+        _this.challengeState = state
+        if (4 == state) {
           window.clearInterval(_this.checkChallengeInterval)
           _this.hasRefresh = true
-
-          _this.$emit('result', _this.syncID, data)
         }
+        _this.$emit('result', state)
       }).catch(function (err) {
         window.clearInterval(_this.checkChallengeInterval)
         _this.hasRefresh = true
+        _this.challengeState = 1
       })
     },
 
@@ -64,10 +72,9 @@ Vue.component('auth-qrcode', {
       this.hasRefresh = true
       axios({
         method: "DELETE",
-        url: queryRestful("/v1/account/authn"),
-        data: {
-          challenge: this.syncID,
-        },
+        url: queryRestful("/v1/account/t/cancel", {
+          challenge: this.challenge,
+        }),
       })
     },
   },
@@ -78,7 +85,7 @@ Vue.component('auth-qrcode', {
 
   beforeDestroy() {
     window.clearInterval(this.checkChallengeInterval)
-    if (this.hasRefresh || this.syncStatus != 200) return
+    if (this.hasRefresh || this.qrcodeStatus != 200) return
 
     this.onCancelAuthn()
   },
