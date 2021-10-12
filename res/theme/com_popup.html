@@ -1,0 +1,11 @@
+<span>
+  <div v-on:click.stop="close" v-on:keyup.esc="close" tabindex="0" class="modal"
+    v-bind:class="clazz ? clazz : 'bgc highlight'" v-if="seen" ref="popup-content">
+    <div class="dialog" v-on:click.stop>
+      <button class="close" v-if="seenClose" v-on:click="close">✖</button>
+      <div class="dialog__content">
+        <slot></slot>
+      </div>
+    </div>
+  </div>
+</span>
