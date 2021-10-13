@@ -140,7 +140,7 @@ const router = new VueRouter({
     { path: '/terminals', name: 'terminals', component: Terminals },
     { path: '/new/article', name: 'newArticle', component: NewArticle },
     { path: '/d/:id/edit', name: 'editDraft', component: EditDraft, props: true },
-    { path: '/login', name: 'login', component: Login },
+    { path: '/login', name: 'login', component: NewAccount },
     { path: '/g/:id', redirect: { name: 'getapp' } },
     { path: '/getapp', name: 'getapp', component: GetAPP },
   ]
