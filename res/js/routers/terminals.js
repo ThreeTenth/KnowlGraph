@@ -32,8 +32,11 @@ const Terminals = {
             vendor: "Unknown",
           }
         }
+        let current = term.id === parseInt(tid)
         ts[index] = {
-          current: term.id === parseInt(tid),
+          id: term.id,
+          canDelete: false,
+          current: current,
           nickname: term.name,
           name: result.browser.name,
           os: result.os.name,
@@ -54,6 +57,13 @@ const Terminals = {
       return prefix + terminal.device.type.toLowerCase() + suffix
     },
 
+    canDel(terminal) {
+      return !terminal.current || 1 == this.terminals.length
+    },
+
+    onChallenge(challenge, requestState) {
+    },
+
     onAuthResult(syncID, data) {
       this.syncID = syncID
       this.receiverName = data.name
@@ -67,6 +77,24 @@ const Terminals = {
           this.showConfirm = false
         }
       }, 1000);
+    },
+
+    onDeleteTerminal(terminal) {
+      var _this = this
+      axios({
+        method: "DELETE",
+        url: queryRestful("/v1/account/terminal", { id: terminal.id }),
+      }).then(function (resp) {
+        if (terminal.current) {
+          Cookies.remove("terminal_id")
+          Cookies.remove("access_token")
+          window.open("/", "_self")
+        } else {
+          _this.toast("Delete success", "success")
+        }
+      }).catch(function (err) {
+        _this.toast("Delete failure: " + err, "error")
+      })
     },
 
     onToggleModal(toggle) {

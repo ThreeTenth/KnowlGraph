@@ -26,7 +26,8 @@
               <a class="gt-360 btn flex-v margin-r9" v-on:click="todo">查看详细信息</a>
               <div class="spacing-9 flex-auto">
                 <button class="text fill bgc-success" title="你正在此终端上工作" v-if="terminal.current">当前终端</button>
-                <button class="btn text fill bgc-error" v-on:click="todo" v-else>删除</button>
+                <button class="btn text fill bgc-error" v-on:click="onDeleteTerminal(terminal)"
+                  v-if="canDel(terminal)">删除</button>
               </div>
               <button class="le-360 spacing-9 btn text c-error" v-on:click="todo">
                 <span class="ic-more"></span>
@@ -46,8 +47,8 @@
   </div>
   <modal clazz="bgc white" v-model="showAuthorize">
     <div class="margin-y24">
-      <h3 class="flex-h">向终端授权</h3>
-      <auth-qrcode v-on:result="onAuthResult"></auth-qrcode>
+      <h3 class="flex-h">添加一个终端</h3>
+      <auth-qrcode v-on:challenge="onChallenge" v-on:result="onAuthResult"></auth-qrcode>
       <span class="margin-9 flex-h text sm">扫描此二维码，添加终端到此账号</span>
     </div>
   </modal>
