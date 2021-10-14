@@ -1,21 +1,26 @@
 <div class="dialog padding-y9">
-  <button class="close" v-on:click="back">✖</button>
-  <div class="margin-auto">
-    <div v-if="!isMobile">
+  <div class="abs right-0 padding-9" v-bind:class="isQRCode ? 'ic-scanning' : 'ic-qrcode'"
+    v-on:click="switchAuthMethod"></div>
+  <div class="margin-auto" v-if="isQRCode">
+    <div>
       <h3 class="flex-h">使用 APP 扫码同步账号</h3>
-      <auth-qrcode v-on:challenge="onChallenge" v-on:result="onResult"></auth-qrcode>
-      <span class="margin-9 flex-h text sm">扫二维码，添加此终端到你的账号</span>
-    </div>
-    <div v-else>
-      <h3 class="flex-h">扫描二维码同步账号</h3>
-      <div class="flex-h margin-y">
-        <a class="btn text fill lg padding-6-30" href="knowlgraph://scanner">开始扫描</a>
-      </div>
+      <auth-qrcode style="height: 256px;" v-on:challenge="onChallenge" v-on:result="onResult"></auth-qrcode>
+      <span class="margin-9 flex-h text sm">扫此二维码，添加此终端到你的账号</span>
     </div>
     <div class="margin-y24 flex-h" v-if="canCreateAccount">
       <span class="text">没有账号？<button class="btn text c-success font-bold"
           v-on:click="createAccount">创建一个</button></span>
     </div>
+  </div>
+  <div class="margin-auto" v-else>
+    <template v-if="videoInputDevices.length">
+      <h3 class="flex-h">扫描二维码同步账号</h3>
+      <div class="flex-h">
+        <video id="video" width="350" height="265"></video>
+      </div>
+      <span class="margin-9 flex-h text sm">扫描二维码，添加此终端到你的账号</span>
+    </template>
+    <div class="margin-auto margin-y24" v-else>没有找到摄像头</div>
   </div>
   <hr>
   <h4 class="flex-h">Get APP</h4>
