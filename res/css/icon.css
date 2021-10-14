@@ -178,3 +178,11 @@ https://yoksel.github.io/url-encoder/
 .ic-feather {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-feather'%3E%3Cpath d='M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z'/%3E%3Cline x1='16' y1='8' x2='2' y2='22'/%3E%3Cline x1='17.5' y1='15' x2='9' y2='15'/%3E%3C/svg%3E");
 }
+
+.ic-qrcode {
+  background-image: url("data:image/svg+xml,%0A%3Csvg viewBox='0 0 1792 1792' xmlns='http://www.w3.org/2000/svg' fill='currentColor'%3E%3Cpath d='M576 1152v128h-128v-128h128zm0-768v128h-128v-128h128zm768 0v128h-128v-128h128zm-1024 1023h384v-383h-384v383zm0-767h384v-384h-384v384zm768 0h384v-384h-384v384zm-256 256v640h-640v-640h640zm512 512v128h-128v-128h128zm256 0v128h-128v-128h128zm0-512v384h-384v-128h-128v384h-128v-640h384v128h128v-128h128zm-768-768v640h-640v-640h640zm768 0v640h-640v-640h640z'/%3E%3C/svg%3E");
+}
+
+.ic-scanning {
+  background-image: url("data:image/svg+xml,%3Csvg t='1636617242919' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='2527'%3E%3Cpath d='M234.666667 640v149.333333h159.978666v64H234.666667a64 64 0 0 1-64-64v-149.333333h64z m618.666666 0v149.333333a64 64 0 0 1-64 64h-160.021333v-64H789.333333v-149.333333h64z m-85.333333-160v64H256v-64h512zM789.333333 170.666667a64 64 0 0 1 64 64v149.333333h-64v-149.333333h-160V170.666667H789.333333zM394.666667 170.666667v64H234.666667v149.333333H170.666667v-149.333333a64 64 0 0 1 64-64h160z' p-id='2528' fill='%23262626'%3E%3C/path%3E%3C/svg%3E");
+}
