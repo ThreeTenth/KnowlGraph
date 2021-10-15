@@ -24,13 +24,13 @@ func getChallenge(c *Context) error {
 	challenge := New16BitID()
 
 	t := Terminal{
-		UA:          c.GetHeader(HeaderUserAgent),
 		State:       TokenStateIdle,
 		ClientState: state,
 	}
 	if userID, ok := c.Get(GinKeyUserID); ok {
 		t.UserID = userID.(int)
 	} else {
+		t.UA = c.GetHeader(HeaderUserAgent)
 		t.Name, _ = getTerminalName(c.Context)
 	}
 
@@ -124,6 +124,7 @@ func activateTerminal(c *Context) error {
 	} else if 0 == t.UserID {
 		return c.Unauthorized("Invalid user")
 	} else {
+		t.UA = c.GetHeader(HeaderUserAgent)
 		t.Name, _ = getTerminalName(c.Context)
 	}
 
