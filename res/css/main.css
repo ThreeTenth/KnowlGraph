@@ -668,6 +668,7 @@ body {
 	box-sizing: border-box;
 	padding   : var(--x9) var(--md);
 	color     : var(--white);
+	z-index   : 1999;
 }
 
 .toast.success {
@@ -954,6 +955,10 @@ div[contenteditable]:empty:before {
 	width: var(--prev-w);
 }
 
+.h-100 {
+	height: 100%;
+}
+
 .w-100 {
 	width: 100%;
 }
@@ -1163,6 +1168,11 @@ div[contenteditable]:empty:before {
 	padding-right: var(--x24);
 }
 
+.padding-x36 {
+	padding-left : var(--x36);
+	padding-right: var(--x36);
+}
+
 .padding-y {
 	padding-top   : var(--md);
 	padding-bottom: var(--md);
@@ -1222,12 +1232,20 @@ div[contenteditable]:empty:before {
  font style
 *******************************************************************/
 
+.font-sm {
+	font-size: var(--x14);
+}
+
 .font-md {
 	font-size: var(--md);
 }
 
 .font-lg {
 	font-size: var(--x24);
+}
+
+.font-xl {
+	font-size: var(--x30);
 }
 
 .font-bold {
