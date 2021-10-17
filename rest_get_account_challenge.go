@@ -289,7 +289,7 @@ func getTerminalName(c *gin.Context) (string, error) {
 			name = "Unknown"
 		}
 
-		name += " 1"
+		name += " " + New4BitNumber()
 	}
 
 	return name, nil
