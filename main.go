@@ -339,7 +339,7 @@ func router02() http.Handler {
 	t.PUT("/makeCredential", handle(makeCredential))
 	t.POST("/activate", authentication, handle(activateTerminal))
 	t.POST("/authorize", authorizeRequired, handle(authorizeTerminal))
-	t.POST("/cancel", handle(cancelTerminal))
+	t.DELETE("/activate", handle(cancelActivateTerminal))
 	t.GET("/scanChallenge", handle(scanChallenge))
 
 	return router

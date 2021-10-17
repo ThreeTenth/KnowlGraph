@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis/v8"
 	"knowlgraph.com/ent"
 )
 
@@ -72,6 +73,8 @@ func makeCredential(c *Context) error {
 		d = ExpireTimeTokenOnce
 	}
 
+	terminalMap := make(map[int]string)
+
 	err := WithTx(ctx, client, func(tx *ent.Tx) error {
 		if 0 == t.UserID {
 			user, err1 := tx.User.Create().Save(ctx)
@@ -79,6 +82,8 @@ func makeCredential(c *Context) error {
 				return err1
 			}
 			t.UserID = user.ID
+		} else {
+			GetV4Redis(RUser(t.UserID), &terminalMap)
 		}
 
 		terminal, err1 := tx.Terminal.
@@ -92,11 +97,16 @@ func makeCredential(c *Context) error {
 
 		id = terminal.ID
 
-		pipe := rdb.Pipeline()
-		pipe.Set(ctx, RToken(token), t.UserID, d)
-		pipe.Set(ctx, RTerminal(token), id, d)
-		pipe.Del(ctx, RChallenge(form.Challenge))
-		_, err1 = pipe.Exec(ctx)
+		terminalMap[id] = token
+
+		_, err1 = rdb.Pipelined(ctx, func(pipe redis.Pipeliner) error {
+			if err1 = SetV2RedisPipe(pipe, RUser(t.UserID), &terminalMap, d); err1 != nil {
+				return err1
+			}
+			pipe.Set(ctx, RToken(token), t.UserID, d)
+			pipe.Del(ctx, RChallenge(form.Challenge))
+			return nil
+		})
 
 		return err1
 	})
@@ -168,10 +178,10 @@ func authorizeTerminal(c *Context) error {
 	return c.Ok(gin.H{"name": t.Name, "state": t.State})
 }
 
-func cancelTerminal(c *Context) error {
+func cancelActivateTerminal(c *Context) error {
 	challenge := c.Query("challenge")
 
-	if err := rdb.Del(ctx, challenge).Err(); err != nil {
+	if err := rdb.Del(ctx, RChallenge(challenge)).Err(); err != nil {
 		return c.InternalServerError(err.Error())
 	}
 
