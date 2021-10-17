@@ -159,3 +159,9 @@ func New4BitID() string {
 func New4bitID() string {
 	return RandNdigMbitString(4, 26, 36)
 }
+
+// New4BitNumber Get a 4-base random number,
+// 10 numbers
+func New4BitNumber() string {
+	return RandNdigMbitString(4, 26, 10)
+}
