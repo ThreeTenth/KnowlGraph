@@ -2,15 +2,20 @@ package main
 
 import (
 	"encoding/json"
+	"strconv"
 	"time"
+
+	"github.com/go-redis/redis/v8"
 )
 
 // RChallenge is challenge key in redis
+// It is Terminal
 func RChallenge(key string) string {
 	return "challenge_" + key
 }
 
 // RToken is token key in redis
+// It is int, is user id
 func RToken(key string) string {
 	return "token_" + key
 }
@@ -18,6 +23,23 @@ func RToken(key string) string {
 // RTerminal is terminal key in redis
 func RTerminal(key string) string {
 	return "terminal_" + key
+}
+
+// RUser is terminal key in redis
+// It is map[int]string, map's key is terminal id, and map's value is terminal token
+func RUser(userID int) string {
+	return "user_" + strconv.Itoa(userID)
+}
+
+// SetV2RedisPipe encodes the value as json, and
+// then stores it in redis in the form of key-value pairs
+func SetV2RedisPipe(pipe redis.Pipeliner, key string, v interface{}, duration time.Duration) error {
+	bs, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	return pipe.Set(ctx, key, string(bs), duration).Err()
 }
 
 // SetV2Redis encodes the value as json, and
