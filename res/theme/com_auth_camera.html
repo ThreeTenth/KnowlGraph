@@ -1,0 +1,13 @@
+<div class="flex-h">
+  <template>
+    <div class="margin-9 flex-h text sm" v-if="videoInputDevices.length == 0">没有找到摄像头</div>
+    <video class="bgc-black" id="video" width="350" v-bind:height="isMobile ? '460' : '265'" v-else></video>
+  </template>
+  <div class="margin-9 abs right-0 ic-cycle ic-c-white" v-if="videoInputDevices.length > 1" v-on:click="switchDeviceId">
+  </div>
+  <template v-if="activateSuccessed">
+    <div class="abs flex-h flex-v bgc-white-light" style="width: 351px; height: 265px;">
+      <span>{{activateTerminalName}} 等待确认授权</span>
+    </div>
+  </template>
+</div>
