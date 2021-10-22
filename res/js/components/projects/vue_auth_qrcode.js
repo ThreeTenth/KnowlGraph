@@ -14,6 +14,16 @@ Vue.component('auth-qrcode', {
     }
   },
 
+  computed: {
+    refresh: function () {
+      return this.hasRefresh && 2 != this.challengeState
+    },
+
+    waiting: function () {
+      return !this.hasRefresh && 2 == this.challengeState
+    },
+  },
+
   methods: {
     getChallenge() {
       let _this = this;
@@ -28,7 +38,11 @@ Vue.component('auth-qrcode', {
         _this.hasRefresh = false
         _this.$emit('challenge', resp.data, state)
         setTimeout(() => {
-          let text = queryPage("/g/" + resp.data)
+          let text = queryPage("/g/")
+          if (logined) {
+            text += state + "/"
+          }
+          text += resp.data
           if (_this.qrcode) {
             _this.qrcode.clear()
             _this.qrcode.makeCode(text)
@@ -60,7 +74,7 @@ Vue.component('auth-qrcode', {
           window.clearInterval(_this.checkChallengeInterval)
           _this.hasRefresh = true
         }
-        _this.$emit('result', state)
+        _this.$emit('result', resp.data)
       }).catch(function (err) {
         window.clearInterval(_this.checkChallengeInterval)
         _this.hasRefresh = true
@@ -70,12 +84,7 @@ Vue.component('auth-qrcode', {
 
     onCancelAuthn() {
       this.hasRefresh = true
-      axios({
-        method: "DELETE",
-        url: queryRestful("/v1/account/t/cancel", {
-          challenge: this.challenge,
-        }),
-      })
+      cancelActivateTerminal(this.challenge)
     },
   },
 
@@ -85,7 +94,7 @@ Vue.component('auth-qrcode', {
 
   beforeDestroy() {
     window.clearInterval(this.checkChallengeInterval)
-    if (this.hasRefresh || this.qrcodeStatus != 200) return
+    if (this.waiting || this.refresh) return
 
     this.onCancelAuthn()
   },

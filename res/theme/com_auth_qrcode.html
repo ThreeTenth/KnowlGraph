@@ -1,8 +1,7 @@
-<page class="flex-h" v-bind:status="qrcodeStatus">
+<page class="flex-h" style="height: 256px;" v-bind:status="qrcodeStatus">
   <div ref="qrcode"></div>
-  <div class="abs bgc-white-light flex-h flex-v" style="width: 256px; height: 256px;"
-    v-if="hasRefresh || 2 == challengeState">
-    <button class="btn text padding-9" v-on:click="getChallenge" v-if="hasRefresh && 2 != challengeState">刷新</button>
-    <span class="padding-9" v-if="!hasRefresh && 2 == challengeState">等待确认授权</span>
+  <div class="abs bgc-white-light flex-h flex-v" style="width: 256px; height: 256px;" v-if="refresh || waiting">
+    <button class="btn text padding-9" v-on:click="getChallenge" v-if="refresh">刷新</button>
+    <span class="padding-9" v-else-if="waiting">等待确认授权</span>
   </div>
 </page>
