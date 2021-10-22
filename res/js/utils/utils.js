@@ -1,5 +1,16 @@
 // utils.js
 
+function authSuccess(data) {
+  // Default(no expiration time is set): Cookie is removed when the user closes the browser.
+  const idExpiresDay = data.onlyOnce ? 0 : 365
+  const tokenExpiresDay = data.onlyOnce ? 0 : 30
+
+  Cookies.set("terminal_id", data.id, { expires: idExpiresDay })
+  // Token 有效期最多 30 天。
+  Cookies.set("access_token", data.token, { expires: tokenExpiresDay })
+  window.open("/", "_self")
+}
+
 function detectMob() {
   const toMatch = [
     /Android/i,
