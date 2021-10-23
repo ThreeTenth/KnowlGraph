@@ -48,23 +48,38 @@
   <modal clazz="bgc white" v-model="showAuthorize">
     <div class="margin-y24">
       <h3 class="flex-h">添加一个终端</h3>
-      <auth-qrcode v-on:challenge="onChallenge" v-on:result="onAuthResult"></auth-qrcode>
-      <span class="margin-9 flex-h text sm">扫描此二维码，添加终端到此账号</span>
+      <template v-if="isCamera">
+        <auth-camera v-on:authorize="onAuthorizeTerminal"></auth-camera>
+        <span class="margin-9 flex-h text sm">扫描二维码，添加终端到此账号</span>
+      </template>
+      <template v-else>
+        <auth-qrcode v-on:challenge="onChallenge" v-on:result="onAuthResult"></auth-qrcode>
+        <span class="margin-9 flex-h text sm">扫描此二维码，添加终端到此账号</span>
+      </template>
+      <hr>
+      <div class="margin-y flex-h">
+        <button class="btn text md flex-v" v-on:click="switchAuthMethod">
+          <template v-if="isCamera">
+            <span class="margin-x9 wh-x36 ic-qrcode"></span>授权码
+          </template>
+          <template v-else>
+            <span class="margin-x9 wh-x36 ic-scanning"></span>扫描
+          </template>
+        </button>
+      </div>
     </div>
   </modal>
   <modal v-model="showConfirm" v-on:toggle="onToggleModal">
     <div class="padding-24">
       <h3 class="flex-h">{{ receiverName }} 请求授权</h3>
-      <span class="flex-h">确认对话框将于 {{ confirmChallengeExpire }} 秒关闭</span>
-      <div class="flex-h margin-9">
-        <button class="btn text fill padding-x padding-y9" v-on:click="onConfirmAuthn">确认授权</button>
+      <div class="flex-h margin-t">
+        <button class="btn text padding-x12" v-on:click="onCancelAuthn">取消</button>
+        <button class="btn text fill padding-x24 padding-y9" v-on:click="onConfirmAuthn">确认授权
+          (<span class="c-error"> {{ confirmChallengeExpire }}</span>s)
+        </button>
       </div>
       <div class="flex-h margin-9">
-        <button class="btn text fill padding-x padding-y9" v-on:click="onTemporaryAuthn"
-          title="有效时长最多 6 小时，退出应用失效">临时授权</button>
-      </div>
-      <div class="flex-h margin-9">
-        <button class="btn text sm" v-on:click="onCancelAuthn">取消授权</button>
+        <button class="btn link sm" v-on:click="onTemporaryAuthn" title="有效时长最多 2 小时，退出应用失效">临时授权，仅此一次</button>
       </div>
     </div>
   </modal>

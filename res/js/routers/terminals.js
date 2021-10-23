@@ -11,6 +11,8 @@ const Terminals = {
       receiverName: null,
       confirmChallengeInterval: 0,
       confirmChallengeExpire: 15,
+
+      isCamera: true,
     }
   },
 
@@ -25,7 +27,7 @@ const Terminals = {
         parser.setUA(term.ua);
         var result = parser.getResult();
         var device = result.device
-        if (device.modal == undefined) {
+        if (device.model == undefined) {
           device = {
             model: "Desktop",
             type: "desktop",
@@ -61,22 +63,37 @@ const Terminals = {
       return !terminal.current || 1 == this.terminals.length
     },
 
-    onChallenge(challenge, requestState) {
+    switchAuthMethod() {
+      var isCamera = this.isCamera
+
+      this.isCamera = !isCamera
     },
 
-    onAuthResult(syncID, data) {
-      this.syncID = syncID
-      this.receiverName = data.name
+    onChallenge(challenge, requestState) {
+      this.syncID = challenge
+    },
+
+    onAuthorizeTerminal(resp, challenge) {
+      this.syncID = challenge
+      this.onAuthResult(resp.data)
+    },
+
+    onAuthResult(qrcodeResult) {
+      if (qrcodeResult.state != 2) return
+      this.receiverName = qrcodeResult.name
+      this.confirmChallengeExpire = 15
       this.showAuthorize = false
       this.showConfirm = true
-      this.confirmChallengeInterval = window.setInterval(() => {
+
+      var confirmChallengeInterval = window.setInterval(() => {
         if (0 < this.confirmChallengeExpire) {
           this.confirmChallengeExpire--
         } else {
-          window.clearInterval(this.confirmChallengeInterval)
+          window.clearInterval(confirmChallengeInterval)
           this.showConfirm = false
         }
       }, 1000);
+      this.confirmChallengeInterval = confirmChallengeInterval
     },
 
     onDeleteTerminal(terminal) {
@@ -100,38 +117,34 @@ const Terminals = {
     onToggleModal(toggle) {
       if (toggle) return
       this.onCancelAuthn("DELETE")
+      window.clearInterval(this.confirmChallengeInterval)
     },
 
     onCancelAuthn() {
-      this.__postAccountAuthn("DELETE")
+      this.showConfirm = false
+      cancelActivateTerminal(this.syncID, this.cancelSuccess, this.cancelFailure)
+    },
+
+    cancelSuccess(resp) { },
+    cancelFailure(err) {
+      this.toast("错误: " + err, "error")
     },
 
     onTemporaryAuthn() {
-      this.showConfirm = true
-      this.__postAccountAuthn("PATCH")
+      postAuthorizeTerminal(this.syncID, true, this.authnSuccess, this.authnFailure)
     },
 
     onConfirmAuthn() {
-      this.showConfirm = true
-      this.__postAccountAuthn("POST")
+      postAuthorizeTerminal(this.syncID, false, this.authnSuccess, this.authnFailure)
     },
 
-    __postAccountAuthn(method) {
-      if ("" === this.syncID) return
-
-      var _this = this
-      axios({
-        method: method,
-        url: queryRestful("/v1/account/authn"),
-        data: {
-          challenge: this.syncID,
-        },
-      }).then(function (resp) {
-        if ("DELETE" == method) return
-        _this.toast("Success", "success")
-      }).catch(function (err) {
-        _this.toast("错误: " + err, "error")
-      })
+    authnSuccess(resp) {
+      this.showConfirm = false
+      this.toast("Success", "success")
+    },
+    authnFailure(err) {
+      this.showConfirm = false
+      this.toast("错误: " + err, "error")
     },
 
     __updateTerminals() {
