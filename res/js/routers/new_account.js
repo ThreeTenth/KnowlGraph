@@ -8,9 +8,6 @@ const NewAccount = {
       challenge: "",
       challengeState: 0,
       isQRCode: true,
-      codeReader: undefined,
-      videoInputDevices: [],
-      selectedDeviceId: 0,
     }
   },
 
@@ -18,25 +15,7 @@ const NewAccount = {
 
     switchAuthMethod() {
       var is = this.isQRCode
-      var selectedDeviceId = this.selectedDeviceId
-      var codeReader = this.codeReader
       this.isQRCode = !is
-
-      if (!is) {
-        codeReader.reset()
-      } else {
-        codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (result, err) => {
-          if (result) {
-            console.log(result)
-            // document.getElementById('result').textContent = result.text
-          }
-          if (err && !(err instanceof ZXing.NotFoundException)) {
-            console.error(err)
-            // document.getElementById('result').textContent = err
-          }
-        })
-        console.log(`Started continous decode from camera with id ${selectedDeviceId}`)
-      }
     },
 
     onChallenge(challenge, requestState) {
@@ -44,7 +23,8 @@ const NewAccount = {
       this.requestState = requestState
     },
 
-    onResult(state) {
+    onResult(qrcodeResult) {
+      var state = qrcodeResult.state
       if (this.challengeState == state) {
         return
       }
@@ -61,15 +41,7 @@ const NewAccount = {
         method: "PUT",
         url: queryRestful("/v1/account/t/makeCredential", { state: state, challenge: challenge })
       }).then(function (resp) {
-        const data = resp.data
-        // Default(no expiration time is set): Cookie is removed when the user closes the browser.
-        const idExpiresDay = data.onlyOnce ? 0 : 365
-        const tokenExpiresDay = data.onlyOnce ? 0 : 30
-
-        Cookies.set("terminal_id", data.id, { expires: idExpiresDay })
-        // Token 有效期最多 30 天。
-        Cookies.set("access_token", data.token, { expires: tokenExpiresDay })
-        window.open("/", "_self")
+        authSuccess(resp.data)
       }).catch(function (err) { })
     },
 
@@ -88,26 +60,9 @@ const NewAccount = {
   },
 
   created() {
-    const codeReader = new ZXing.BrowserMultiFormatReader()
-    console.log('ZXing code reader initialized')
-    codeReader.listVideoInputDevices()
-      .then((videoInputDevices) => {
-        this.videoInputDevices = videoInputDevices
-        this.selectedDeviceId = videoInputDevices[0].deviceId
-      })
-      .catch((err) => {
-        console.error(err)
-      })
-
-    this.codeReader = codeReader
   },
 
   beforeDestroy() {
-    this.codeReader.reset()
-    axios({
-      method: "POST",
-      url: queryRestful("/v1/account/t/cancel", { challenge: this.challenge }),
-    })
   },
 
   template: fgm_new_account,
