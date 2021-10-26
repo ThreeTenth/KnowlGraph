@@ -19,10 +19,9 @@ Vue.component('auth-camera', {
   methods: {
 
     switchDeviceId() {
-      var index = this.inputDeviceIndex++
-      if (this.videoInputDevices.length <= index) {
-        index = 0
-      }
+      var index = this.inputDeviceIndex
+      index = this.videoInputDevices.length <= (index + 1) ? 0 : (index + 1)
+      this.codeReader.reset()
       this.startInputDevice(this.videoInputDevices, index)
       this.inputDeviceIndex = index
     },
@@ -89,7 +88,6 @@ Vue.component('auth-camera', {
 
   created() {
     const codeReader = new ZXing.BrowserMultiFormatReader()
-    console.log('ZXing code reader initialized')
     codeReader.listVideoInputDevices()
       .then((videoInputDevices) => {
         this.startInputDevice(videoInputDevices, 0)
