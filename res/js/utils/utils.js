@@ -1,5 +1,17 @@
 // utils.js
 
+String.prototype.trim = function (char, type) {
+  if (char) {
+    if (type == 'left') {
+      return this.replace(new RegExp('^\\' + char + '+', 'g'), '');
+    } else if (type == 'right') {
+      return this.replace(new RegExp('\\' + char + '+$', 'g'), '');
+    }
+    return this.replace(new RegExp('^\\' + char + '+|\\' + char + '+$', 'g'), '');
+  }
+  return this.replace(/^\s+|\s+$/g, '');
+};
+
 function authSuccess(data) {
   // Default(no expiration time is set): Cookie is removed when the user closes the browser.
   const idExpiresDay = data.onlyOnce ? 0 : 365
