@@ -269,18 +269,26 @@ const EditDraft = {
     },
 
     onChanged(e) {
-      var children = e.target.children
+      var nodes = e.target.childNodes
       var content = ''
-      for (let index = 0; index < children.length; index++) {
-        const element = children[index];
-        var text = element.innerText
-        if (1 < text.length || '\n' !== text) {
+      for (let index = 0; index < nodes.length; index++) {
+        const node = nodes[index]
+
+        var text
+        if (node.nodeName == "#text") {
+          text = node.textContent
+        } else {
+          text = node.innerText
+        }
+        text = text.trim("\n")
+        if (index + 1 < nodes.length) {
           text += '\n'
         }
         content += text
       }
       this.content = getString(content)
       // console.log(this.content);
+      // this.content = e.target.innerText
       let _this = this
       window.clearTimeout(postChangedTimeoutID)
       postChangedTimeoutID = window.setTimeout(function () { _this.onSaveDraft() }, 2000)
