@@ -300,7 +300,8 @@ const EditDraft = {
     },
 
     onSaveDraft: function () {
-      console.log(this.content, this.__last);
+      // console.log(this.content);
+      // console.log(this.__last);
       if (this.content === this.__last) {
         return
       }
@@ -357,7 +358,7 @@ const EditDraft = {
       url: queryRestful("/v1/draft", { id: this.id }),
     }).then(function (resp) {
       _this.__setDraft(resp.data)
-      _this.__setLast(this.content)
+      _this.__setLast(_this.content)
       _this.editingStatus = resp.status
     }).catch(function (err) {
       // console.log(err);
