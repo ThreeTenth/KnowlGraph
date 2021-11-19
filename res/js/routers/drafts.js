@@ -16,11 +16,13 @@ const Drafts = {
         const element = original[index];
         let snapshot = element.edges.snapshots[0]
         let body = removeMarkdown(snapshot.body)
-        if (200 < body.length) {
-          body = body.substr(0, 120).trim() + '...'
+        let ps = body.split("\n")
+        let firstP = ps[0]
+        if (200 < firstP.length) {
+          firstP = firstP.substr(0, 120).trim() + '...'
         }
 
-        _drafts[index] = { id: element.id, body: body, created_at: snapshot.created_at }
+        _drafts[index] = { id: element.id, body: firstP, created_at: snapshot.created_at }
       }
       return _drafts
     }
