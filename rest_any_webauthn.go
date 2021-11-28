@@ -1,12 +1,16 @@
 package main
 
 import (
+	"encoding/base64"
 	"fmt"
 	"net/http"
 
 	"github.com/duo-labs/webauthn/protocol"
 	"github.com/duo-labs/webauthn/webauthn"
+	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis/v8"
 	ua "github.com/mileusna/useragent"
+	"knowlgraph.com/ent"
 )
 
 // WebAuthnID is user ID according to the Relying Party
@@ -43,7 +47,7 @@ func init() {
 	web, err = webauthn.New(&webauthn.Config{
 		RPDisplayName: "Knowledge graph", // Display Name for your site
 		RPID:          "localhost",       // Generally the FQDN for your site
-		RPOrigin:      "http://localhost",
+		RPOrigin:      "http://localhost:20010",
 	})
 	panicIfErrNotNil(err)
 }
@@ -131,6 +135,68 @@ func finishRegistration(c *Context) error {
 		return c.Unauthorized(err.Error())
 	}
 
-	fmt.Println(&credential)
-	return c.Ok(&credential)
+	id := 0
+	token := New64BitID()
+	d := ExpireTimeToken
+	if t.OnlyOnce {
+		d = ExpireTimeTokenOnce
+	}
+
+	terminalMap := make(map[int]string)
+
+	err = WithTx(ctx, client, func(tx *ent.Tx) error {
+		if 0 == t.UserID {
+			user, err1 := tx.User.Create().Save(ctx)
+			if err1 != nil {
+				return err1
+			}
+			t.UserID = user.ID
+		} else {
+			GetV4Redis(RUser(t.UserID), &terminalMap)
+		}
+
+		cidBase64 := base64.StdEncoding.EncodeToString(credential.ID)
+		publicKeyBase64 := base64.StdEncoding.EncodeToString(credential.PublicKey)
+		fmt.Println(cidBase64, publicKeyBase64)
+		_credential, err1 := tx.Credential.
+			Create().
+			SetCredID(cidBase64).
+			SetPublicKey(publicKeyBase64).
+			SetAttestationType(credential.AttestationType).
+			Save(ctx)
+
+		if err1 != nil {
+			return err1
+		}
+
+		terminal, err1 := tx.Terminal.
+			Create().
+			SetCode(New16bitID()).SetName(t.Name).SetUa(t.UA).SetUserID(t.UserID).SetCredential(_credential).
+			Save(ctx)
+
+		if err1 != nil {
+			return err1
+		}
+
+		id = terminal.ID
+
+		terminalMap[id] = token
+
+		_, err1 = rdb.Pipelined(ctx, func(pipe redis.Pipeliner) error {
+			if err1 = SetV2RedisPipe(pipe, RUser(t.UserID), &terminalMap, d); err1 != nil {
+				return err1
+			}
+			pipe.Set(ctx, RToken(token), t.UserID, d)
+			pipe.Del(ctx, RChallenge(challenge))
+			return nil
+		})
+
+		return err1
+	})
+
+	if err != nil {
+		return c.InternalServerError(err.Error())
+	}
+
+	return c.Ok(gin.H{"id": id, "token": token, "onlyOnce": t.OnlyOnce})
 }
