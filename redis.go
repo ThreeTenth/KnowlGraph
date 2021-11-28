@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/duo-labs/webauthn/webauthn"
 	"github.com/go-redis/redis/v8"
 )
 
@@ -29,6 +30,17 @@ func RTerminal(key string) string {
 // It is map[int]string, map's key is terminal id, and map's value is terminal token
 func RUser(userID int) string {
 	return "user_" + strconv.Itoa(userID)
+}
+
+// SetWebAuthnSession is set webauthn session data
+func SetWebAuthnSession(challenge string, seesinData *webauthn.SessionData) error {
+	return SetV2Redis("webauthn_"+challenge, seesinData, ExpireTimeChallengeConfirm)
+}
+
+// GetWebAuthnSession returns webauthn session data
+func GetWebAuthnSession(challenge string) (seesinData webauthn.SessionData, err error) {
+	err = GetV4Redis("webauthn_"+challenge, &seesinData)
+	return
 }
 
 // SetV2RedisPipe encodes the value as json, and
