@@ -8,6 +8,7 @@ import (
 
 // Terminal is user's device Terminal
 type Terminal struct {
+	Code        string
 	Name        string
 	UA          string
 	ClientState string // 一个不可猜测的随机字符串。它用于防止跨站点请求伪造攻击。
