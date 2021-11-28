@@ -74,7 +74,7 @@ const NewAccount = {
 
     requestWebAuthnSuccess(resp) {
       this.toast("Success", "success")
-      console.log(resp.data);
+      authSuccess(resp.data)
     },
     requestWebAuthnFailure(err) {
       this.toast("Error " + err, "error")
