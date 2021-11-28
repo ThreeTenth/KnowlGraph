@@ -40,6 +40,9 @@ func (Terminal) Edges() []ent.Edge {
 		// 上线地
 		edge.To("locations", Location.Type).
 			StructTag(`json:"-"`),
+		edge.To("credential", Credential.Type).
+			StructTag(`json:"-"`).
+			Unique(),
 
 		edge.From("user", User.Type).
 			Ref("terminals").
