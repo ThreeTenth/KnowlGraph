@@ -342,6 +342,9 @@ func router02() http.Handler {
 	t.DELETE("/activate", handle(cancelActivateTerminal))
 	t.GET("/scanChallenge", handle(scanChallenge))
 
+	t.PUT("/beginRegistration", handle(beginRegistration))
+	t.POST("/finishRegistration", handle(finishRegistration))
+
 	return router
 }
 
