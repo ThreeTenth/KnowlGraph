@@ -5,6 +5,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -12,6 +13,16 @@ import (
 	"github.com/gin-gonic/gin/render"
 	"github.com/pkg/errors"
 )
+
+// RestfulAPIError is restful api error
+type RestfulAPIError struct {
+	Status  int
+	Content string
+}
+
+func (err *RestfulAPIError) Error() string {
+	return fmt.Sprintf("RestfulAPIError is Status: %v, Content: %v", err.Status, err.Content)
+}
 
 // Context is http request and response content
 type Context struct {
@@ -192,9 +203,19 @@ func (p *Context) ServiceUnavailable(format string, values ...interface{}) error
 	return p.Render(http.StatusServiceUnavailable, render.String{Format: format, Data: values})
 }
 
-// StatusError writes a status with the given string into the response body.
-func (p *Context) StatusError(status int, format string, values ...interface{}) error {
+// StatusString writes a status with the given string into the response body.
+func (p *Context) StatusString(status int, format string, values ...interface{}) error {
 	return p.Render(status, render.String{Format: format, Data: values})
+}
+
+// StatusError writes a status with the given error into the response body.
+func (p *Context) StatusError(err error) error {
+	switch vv := err.(type) {
+	case *RestfulAPIError:
+		return p.Render(vv.Status, render.String{Format: vv.Error(), Data: nil})
+	default:
+		return p.NotFound(err.Error())
+	}
 }
 
 // Ok serializes the given struct as JSON into the response body.
