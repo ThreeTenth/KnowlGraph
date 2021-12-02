@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/base64"
-	"fmt"
 	"net/http"
 
 	"github.com/duo-labs/webauthn/protocol"
@@ -11,6 +10,7 @@ import (
 	"github.com/go-redis/redis/v8"
 	ua "github.com/mileusna/useragent"
 	"knowlgraph.com/ent"
+	"knowlgraph.com/ent/terminal"
 )
 
 // WebAuthnID is user ID according to the Relying Party
@@ -35,7 +35,21 @@ func (u *Terminal) WebAuthnIcon() string {
 
 // WebAuthnCredentials is credentials owned by the user
 func (u *Terminal) WebAuthnCredentials() []webauthn.Credential {
-	return nil
+	credID, err := base64.StdEncoding.DecodeString(u.Cred.CredID)
+	if err != nil {
+		return nil
+	}
+	publicKey, err := base64.StdEncoding.DecodeString(u.Cred.PublicKey)
+	if err != nil {
+		return nil
+	}
+
+	cred := webauthn.Credential{
+		ID:              credID,
+		PublicKey:       publicKey,
+		AttestationType: u.Cred.AttestationType,
+	}
+	return []webauthn.Credential{cred}
 }
 
 var (
@@ -89,7 +103,7 @@ func beginRegistration(c *Context) error {
 	if _ua.IsIOS() {
 		userVerification = protocol.VerificationDiscouraged
 	}
-	t.Code = New16BitID()
+	t.Code = New16bitID()
 	options, sessionData, err := web.BeginRegistration(t, func(pkcco *protocol.PublicKeyCredentialCreationOptions) {
 		pkcco.AuthenticatorSelection = protocol.AuthenticatorSelection{
 			AuthenticatorAttachment: protocol.Platform,
@@ -157,7 +171,6 @@ func finishRegistration(c *Context) error {
 
 		cidBase64 := base64.StdEncoding.EncodeToString(credential.ID)
 		publicKeyBase64 := base64.StdEncoding.EncodeToString(credential.PublicKey)
-		fmt.Println(cidBase64, publicKeyBase64)
 		_credential, err1 := tx.Credential.
 			Create().
 			SetCredID(cidBase64).
@@ -171,7 +184,7 @@ func finishRegistration(c *Context) error {
 
 		terminal, err1 := tx.Terminal.
 			Create().
-			SetCode(New16bitID()).SetName(t.Name).SetUa(t.UA).SetUserID(t.UserID).SetCredential(_credential).
+			SetCode(t.Code).SetName(t.Name).SetUa(t.UA).SetUserID(t.UserID).SetCredential(_credential).
 			Save(ctx)
 
 		if err1 != nil {
@@ -199,4 +212,60 @@ func finishRegistration(c *Context) error {
 	}
 
 	return c.Ok(gin.H{"id": id, "token": token, "onlyOnce": t.OnlyOnce})
+}
+
+func beginLogin(c *Context) error {
+	terminalID := c.QueryInt("id")
+	_terminal, err := client.Terminal.Query().Where(terminal.ID(terminalID)).WithCredential().First(ctx)
+	if err != nil {
+		return c.NotFound(err.Error())
+	}
+	t := Terminal{
+		Code: _terminal.Code,
+		Name: _terminal.Name,
+		Cred: _terminal.Edges.Credential,
+	}
+	options, sessionData, err := web.BeginLogin(&t)
+	if err != nil {
+		return c.InternalServerError(err.Error())
+	}
+
+	if err = SetWebAuthnSession(_terminal.Code, sessionData); err != nil {
+		return c.InternalServerError(err.Error())
+	}
+
+	return c.Ok(&options)
+}
+
+func finishLogin(c *Context) error {
+	terminalID := c.QueryInt("id")
+	_terminal, err := client.Terminal.Query().Where(terminal.ID(terminalID)).WithCredential().First(ctx)
+	if err != nil {
+		return c.NotFound(err.Error())
+	}
+	// Get the session data stored from the function above
+	// using gorilla/sessions it could look like this
+	sessionData, err := GetWebAuthnSession(_terminal.Code)
+	if err != nil {
+		return c.Unauthorized(err.Error())
+	}
+
+	parsedResponse, err := protocol.ParseCredentialRequestResponseBody(c.Request.Body)
+	if err != nil {
+		return c.Unauthorized(err.Error())
+	}
+
+	t := Terminal{
+		Code: _terminal.Code,
+		Name: _terminal.Name,
+		Cred: _terminal.Edges.Credential,
+	}
+
+	credential, err := web.ValidateLogin(&t, sessionData, parsedResponse)
+	if err != nil {
+		return c.Unauthorized(err.Error())
+	}
+	// Handle validation or input errors
+	// If login was successful, handle next steps
+	return c.Ok(&credential)
 }

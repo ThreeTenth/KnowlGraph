@@ -11,6 +11,7 @@ type Terminal struct {
 	Code        string
 	Name        string
 	UA          string
+	Cred        *ent.Credential
 	ClientState string // 一个不可猜测的随机字符串。它用于防止跨站点请求伪造攻击。
 	State       int
 	UserID      int
