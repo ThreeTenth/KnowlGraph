@@ -1,25 +1,38 @@
 // rest.js
 
-function postFinishLogin(terminalID, assertedCredential, success, failure) {
+function _assertedCredentialData(assertedCredential) {
   let authData = new Uint8Array(assertedCredential.response.authenticatorData);
   let clientDataJSON = new Uint8Array(assertedCredential.response.clientDataJSON);
   let rawId = new Uint8Array(assertedCredential.rawId);
   let sig = new Uint8Array(assertedCredential.response.signature);
   let userHandle = new Uint8Array(assertedCredential.response.userHandle);
+  return JSON.stringify({
+    id: assertedCredential.id,
+    rawId: bufferEncode(rawId),
+    type: assertedCredential.type,
+    response: {
+      authenticatorData: bufferEncode(authData),
+      clientDataJSON: bufferEncode(clientDataJSON),
+      signature: bufferEncode(sig),
+      userHandle: bufferEncode(userHandle),
+    },
+  })
+}
+
+function parseAssertionOptionsResponse(resp) {
+  var makeAssertionOptions = resp.data
+  makeAssertionOptions.publicKey.challenge = bufferDecode(makeAssertionOptions.publicKey.challenge);
+  makeAssertionOptions.publicKey.allowCredentials.forEach(function (listItem) {
+    listItem.id = bufferDecode(listItem.id)
+  });
+  return resp
+}
+
+function postFinishLogin(terminalID, assertedCredential, success, failure) {
   axios({
     method: "POST",
     url: queryRestful("/v1/account/t/finishLogin", { id: terminalID }),
-    data: JSON.stringify({
-      id: assertedCredential.id,
-      rawId: bufferEncode(rawId),
-      type: assertedCredential.type,
-      response: {
-        authenticatorData: bufferEncode(authData),
-        clientDataJSON: bufferEncode(clientDataJSON),
-        signature: bufferEncode(sig),
-        userHandle: bufferEncode(userHandle),
-      },
-    }),
+    data: _assertedCredentialData(assertedCredential),
     contentType: "application/json; charset=utf-8",
     dataType: "json",
   }).then(success).catch(failure)
@@ -30,12 +43,26 @@ function putBeginLogin(terminalID, success, failure) {
     method: "PUT",
     url: queryRestful("/v1/account/t/beginLogin", { id: terminalID })
   }).then((resp) => {
-    var makeAssertionOptions = resp.data
-    makeAssertionOptions.publicKey.challenge = bufferDecode(makeAssertionOptions.publicKey.challenge);
-    makeAssertionOptions.publicKey.allowCredentials.forEach(function (listItem) {
-      listItem.id = bufferDecode(listItem.id)
-    });
-    success(resp)
+    success(parseAssertionOptionsResponse(resp))
+  }).catch(failure)
+}
+
+function postFinishValidate(terminalID, assertedCredential, success, failure) {
+  axios({
+    method: "POST",
+    url: queryRestful("/v1/account/t/finishValidate", { id: terminalID }),
+    data: _assertedCredentialData(assertedCredential),
+    contentType: "application/json; charset=utf-8",
+    dataType: "json",
+  }).then(success).catch(failure)
+}
+
+function putBeginValidate(terminalID, success, failure) {
+  axios({
+    method: "PUT",
+    url: queryRestful("/v1/account/t/beginValidate", { id: terminalID })
+  }).then((resp) => {
+    success(parseAssertionOptionsResponse(resp))
   }).catch(failure)
 }
 

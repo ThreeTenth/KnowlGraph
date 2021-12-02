@@ -99,6 +99,14 @@ function getString(text) {
   return ""
 }
 
+function isInvalidAccount() {
+  var tid = Cookies.get("terminal_id")
+  var token = Cookies.get("access_token")
+  if (token) return false
+  if (tid) return true
+  return false
+}
+
 function canUseWenAuthn() {
   if (window.PublicKeyCredential === undefined ||
     typeof window.PublicKeyCredential !== "function") {
