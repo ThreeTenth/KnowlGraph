@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/base64"
+	"io"
 	"net/http"
 
 	"github.com/duo-labs/webauthn/protocol"
@@ -214,12 +215,7 @@ func finishRegistration(c *Context) error {
 	return c.Ok(gin.H{"id": id, "token": token, "onlyOnce": t.OnlyOnce})
 }
 
-func beginLogin(c *Context) error {
-	terminalID := c.QueryInt("id")
-	_terminal, err := client.Terminal.Query().Where(terminal.ID(terminalID)).WithCredential().First(ctx)
-	if err != nil {
-		return c.NotFound(err.Error())
-	}
+func beginWebAuthnLogin(_terminal *ent.Terminal) (*protocol.CredentialAssertion, error) {
 	t := Terminal{
 		Code: _terminal.Code,
 		Name: _terminal.Name,
@@ -227,32 +223,59 @@ func beginLogin(c *Context) error {
 	}
 	options, sessionData, err := web.BeginLogin(&t)
 	if err != nil {
-		return c.InternalServerError(err.Error())
+		return nil, &RestfulAPIError{Status: http.StatusInternalServerError, Content: err.Error()}
 	}
 
 	if err = SetWebAuthnSession(_terminal.Code, sessionData); err != nil {
-		return c.InternalServerError(err.Error())
+		return nil, &RestfulAPIError{Status: http.StatusInternalServerError, Content: err.Error()}
+	}
+	return options, nil
+}
+
+func beginValidate(c *Context) error {
+	terminalID := c.QueryInt("id")
+	_terminal, err := client.Terminal.Query().Where(terminal.ID(terminalID)).WithCredential().WithUser().First(ctx)
+	if err != nil {
+		return c.NotFound(err.Error())
+	}
+	if _terminal.Edges.User.ID != c.GetInt(GinKeyUserID) {
+		return c.Unauthorized("The terminal does not belong to you")
+	}
+
+	options, err := beginWebAuthnLogin(_terminal)
+	if err != nil {
+		return c.StatusError(err)
 	}
 
 	return c.Ok(&options)
 }
 
-func finishLogin(c *Context) error {
+func beginLogin(c *Context) error {
 	terminalID := c.QueryInt("id")
 	_terminal, err := client.Terminal.Query().Where(terminal.ID(terminalID)).WithCredential().First(ctx)
 	if err != nil {
 		return c.NotFound(err.Error())
 	}
+
+	options, err := beginWebAuthnLogin(_terminal)
+	if err != nil {
+		return c.StatusError(err)
+	}
+
+	return c.Ok(&options)
+}
+
+func finishWebAuthnLogin(credential io.Reader, _terminal *ent.Terminal) error {
 	// Get the session data stored from the function above
 	// using gorilla/sessions it could look like this
 	sessionData, err := GetWebAuthnSession(_terminal.Code)
 	if err != nil {
-		return c.Unauthorized(err.Error())
+		return &RestfulAPIError{Status: http.StatusUnauthorized, Content: err.Error()}
 	}
 
-	parsedResponse, err := protocol.ParseCredentialRequestResponseBody(c.Request.Body)
+	parsedResponse, err := protocol.ParseCredentialRequestResponseBody(credential)
 	if err != nil {
-		return c.Unauthorized(err.Error())
+		return &RestfulAPIError{Status: http.StatusUnauthorized, Content: err.Error()}
 	}
 
 	t := Terminal{
@@ -261,11 +284,58 @@ func finishLogin(c *Context) error {
 		Cred: _terminal.Edges.Credential,
 	}
 
-	credential, err := web.ValidateLogin(&t, sessionData, parsedResponse)
-	if err != nil {
-		return c.Unauthorized(err.Error())
+	if _, err = web.ValidateLogin(&t, sessionData, parsedResponse); err != nil {
+		return &RestfulAPIError{Status: http.StatusUnauthorized, Content: err.Error()}
 	}
-	// Handle validation or input errors
-	// If login was successful, handle next steps
-	return c.Ok(&credential)
+
+	return nil
+}
+
+func finishValidate(c *Context) error {
+	terminalID := c.QueryInt("id")
+	_terminal, err := client.Terminal.Query().Where(terminal.ID(terminalID)).WithCredential().WithUser().First(ctx)
+	if err != nil {
+		return c.NotFound(err.Error())
+	}
+	if _terminal.Edges.User.ID != c.GetInt(GinKeyUserID) {
+		return c.Unauthorized("The terminal does not belong to you")
+	}
+
+	if err = finishWebAuthnLogin(c.Request.Body, _terminal); err != nil {
+		return c.StatusError(err)
+	}
+
+	return c.Ok(true)
+}
+
+func finishLogin(c *Context) error {
+	terminalID := c.QueryInt("id")
+	_terminal, err := client.Terminal.Query().Where(terminal.ID(terminalID)).WithCredential().WithUser().First(ctx)
+	if err != nil {
+		return c.NotFound(err.Error())
+	}
+	if err = finishWebAuthnLogin(c.Request.Body, _terminal); err != nil {
+		return c.StatusError(err)
+	}
+
+	token := New64BitID()
+	userID := _terminal.Edges.User.ID
+	terminalMap := make(map[int]string)
+	if err = GetV4Redis(RUser(userID), &terminalMap); err != nil {
+		return c.InternalServerError(err.Error())
+	}
+
+	d := ExpireTimeToken
+	_, err = rdb.Pipelined(ctx, func(pipe redis.Pipeliner) error {
+		if err1 := SetV2RedisPipe(pipe, RUser(userID), &terminalMap, d); err1 != nil {
+			return err1
+		}
+		pipe.Set(ctx, RToken(token), userID, d)
+		return nil
+	})
+	if err != nil {
+		return c.InternalServerError(err.Error())
+	}
+
+	return c.Ok(gin.H{"id": terminalID, "token": token, "onlyOnce": false})
 }
