@@ -344,6 +344,8 @@ func router02() http.Handler {
 
 	t.PUT("/beginRegistration", handle(beginRegistration))
 	t.POST("/finishRegistration", handle(finishRegistration))
+	t.PUT("/beginLogin", handle(beginLogin))
+	t.POST("/finishLogin", handle(finishLogin))
 
 	return router
 }

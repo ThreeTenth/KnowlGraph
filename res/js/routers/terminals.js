@@ -59,6 +59,39 @@ const Terminals = {
       return prefix + terminal.device.type.toLowerCase() + suffix
     },
 
+    onAddTerminal() {
+      var tid = Cookies.get("terminal_id")
+      putBeginLogin(tid, (resp) => {
+        this.beginLoginSuccess(tid, resp.data)
+      }, this.beginLoginFailure)
+    },
+
+    beginLoginFailure(err) {
+      this.toast(err, "error")
+      console.info("BeginLoginFailure", err)
+    },
+    beginLoginSuccess(terminalID, makeAssertionOptions) {
+      console.log("Assertion Options:");
+      console.log(makeAssertionOptions);
+      navigator.credentials.get(makeAssertionOptions)
+        .then((credential) => {
+          console.log(credential);
+          postFinishLogin(terminalID, credential, this.finishLoginSuccess, this.finishLoginFailure)
+        }).catch((err) => {
+          this.toast(err, "error")
+          console.info("Error", err)
+        });
+    },
+
+    finishLoginFailure(err) {
+      this.toast(err, "error")
+      console.info("FinishLoginFailure", err)
+    },
+    finishLoginSuccess(resp) {
+      console.log(resp.data)
+      this.showAuthorize = true
+    },
+
     canDel(terminal) {
       return !terminal.current || 1 == this.terminals.length
     },
