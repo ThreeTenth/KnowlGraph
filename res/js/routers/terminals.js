@@ -195,6 +195,8 @@ const Terminals = {
   },
 
   created() {
+    document.title = "管理你的终端 -- KnowlGraph"
+
     this.__updateTerminals()
   },
 

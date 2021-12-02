@@ -46,7 +46,9 @@ const Article = {
       let version = article.edges.versions[0]
       let content = version.edges.content
 
-      var title, gist, code = seo(version.title, version.gist)
+      var gist = version.gist
+      var title = getTitleIfEmpty(version.title, version.gist)
+      var code = encodeURLTitle(title)
 
       var body = content.body;
       var keywords = version.edges.keywords
@@ -312,6 +314,7 @@ const Article = {
         })
       }
       _this.pageStatus = resp.status
+      document.title = _this.article.title + " -- KnowlGraph"
     }).catch(function (err) {
       var status = getStatus4Error(err)
       if (401 == status && !logined) {

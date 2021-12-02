@@ -352,6 +352,8 @@ const EditDraft = {
   },
 
   created() {
+    document.title = "编辑 -- KnowlGraph"
+
     let _this = this
     axios({
       method: "GET",

@@ -73,6 +73,8 @@ function getArchiveArticles(status) {
     },
 
     created() {
+      document.title = "归档 -- KnowlGraph"
+
       let _this = this
       axios({
         method: "GET",

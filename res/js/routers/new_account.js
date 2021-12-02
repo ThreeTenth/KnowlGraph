@@ -80,6 +80,8 @@ const NewAccount = {
       if (this.challengeState == state) {
         return
       }
+      
+      // todo 临时授权流程
 
       if (state == 4) {
         this.makeCredential(this.requestState, this.challenge)
@@ -135,6 +137,8 @@ const NewAccount = {
   },
 
   created() {
+    document.title = "同步账号 -- KnowlGraph"
+    
     this.isExpiredTerminal = isExpiredTerminal()
   },
 

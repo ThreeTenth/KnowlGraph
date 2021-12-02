@@ -34,11 +34,6 @@
 	<meta name="twitter:image" content="" />
 	<meta name="twitter:label1" content="Reading time">
 	<meta name="twitter:data1" content="1 min read">
-	{{ end }}
-
-	{{ if .Body.Logined }}
-	<title>Knowledge Graph -- {{ .Body.User.Name }} </title>
-	<link rel="icon" type="image/png" href="{{ .Body.User.Avatar }}">
 	{{ else }}
 	<title>Knowledge Graph -- KnowlGraph</title>
 	{{ end }}

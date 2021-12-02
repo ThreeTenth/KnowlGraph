@@ -199,8 +199,8 @@ function isChildAt(parent, child) {
   return isChildAt(parent, child.parentElement)
 }
 
-function seo(title, gist) {
-  let vt = title
+function getTitleIfEmpty(title, gist) {
+  var vt = title
   if (!vt) {
     vt = gist
     if (60 < gist.length) {
@@ -211,7 +211,7 @@ function seo(title, gist) {
     }
   }
 
-  return vt, gist, encodeURLTitle(vt)
+  return vt
 }
 
 function encodeURLTitle(title) {

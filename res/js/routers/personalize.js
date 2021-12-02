@@ -62,5 +62,9 @@ const Personalize = {
     }
   },
 
+  created() {
+    document.title = "人性化 -- KnowlGraph"
+  },
+
   template: fgm_personalize
 }

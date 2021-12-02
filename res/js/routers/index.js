@@ -37,6 +37,8 @@ const Index = {
   },
 
   created() {
+    document.title = "Knowledge graph -- KnowlGraph"
+
     let _this = this
     axios({
       method: "GET",

@@ -45,6 +45,8 @@ const Drafts = {
   },
 
   created() {
+    document.title = "草稿箱 -- KnowlGraph"
+
     let _this = this
     axios({
       method: "GET",
