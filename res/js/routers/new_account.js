@@ -12,6 +12,12 @@ const NewAccount = {
     }
   },
 
+  computed: {
+    terminalName: function() {
+      return Cookies.get("terminal_name")
+    }
+  },
+
   methods: {
 
     backOrWebAuthn() {

@@ -212,7 +212,7 @@ func finishRegistration(c *Context) error {
 		return c.InternalServerError(err.Error())
 	}
 
-	return c.Ok(gin.H{"id": id, "token": token, "onlyOnce": t.OnlyOnce})
+	return c.Ok(gin.H{"id": id, "name": t.Name, "token": token, "onlyOnce": t.OnlyOnce})
 }
 
 func beginWebAuthnLogin(_terminal *ent.Terminal) (*protocol.CredentialAssertion, error) {
@@ -337,5 +337,5 @@ func finishLogin(c *Context) error {
 		return c.InternalServerError(err.Error())
 	}
 
-	return c.Ok(gin.H{"id": terminalID, "token": token, "onlyOnce": false})
+	return c.Ok(gin.H{"id": terminalID, "name": _terminal.Name, "token": token, "onlyOnce": false})
 }
