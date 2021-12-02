@@ -100,7 +100,7 @@ function getString(text) {
   return ""
 }
 
-function isInvalidAccount() {
+function isExpiredTerminal() {
   var tid = Cookies.get("terminal_id")
   var token = Cookies.get("access_token")
   if (token) return false

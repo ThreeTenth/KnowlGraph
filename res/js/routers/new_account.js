@@ -8,7 +8,7 @@ const NewAccount = {
       challenge: "",
       challengeState: 0,
       isQRCode: true,
-      isInvalidAccount: false,
+      isExpiredTerminal: false,
     }
   },
 
@@ -21,8 +21,8 @@ const NewAccount = {
   methods: {
 
     backOrWebAuthn() {
-      if (isInvalidAccount()) {
-        this.isInvalidAccount = true
+      if (isExpiredTerminal()) {
+        this.isExpiredTerminal = true
       } else {
         this.back()
       }
@@ -62,7 +62,7 @@ const NewAccount = {
     },
 
     switchOtherAccount() {
-      this.isInvalidAccount = false
+      this.isExpiredTerminal = false
     },
 
     switchAuthMethod() {
@@ -135,7 +135,7 @@ const NewAccount = {
   },
 
   created() {
-    this.isInvalidAccount = isInvalidAccount()
+    this.isExpiredTerminal = isExpiredTerminal()
   },
 
   beforeDestroy() {
