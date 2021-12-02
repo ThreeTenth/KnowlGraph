@@ -37,12 +37,6 @@ const NewAccount = {
     },
 
     makeCredential(state, challenge) {
-      // axios({
-      //   method: "PUT",
-      //   url: queryRestful("/v1/account/t/makeCredential", { state: state, challenge: challenge })
-      // }).then(function (resp) {
-      //   authSuccess(resp.data)
-      // }).catch(function (err) { })
       putBeginRegistration(challenge, state, (resp) => {
         this.requestWebAuthn(state, challenge, resp.data)
       }, this.beginRegistrationFailure)
@@ -52,13 +46,6 @@ const NewAccount = {
       this.toast(err, "error")
     },
     requestWebAuthn(state, challenge, makeCredentialOptions) {
-      makeCredentialOptions.publicKey.challenge = bufferDecode(makeCredentialOptions.publicKey.challenge);
-      makeCredentialOptions.publicKey.user.id = bufferDecode(makeCredentialOptions.publicKey.user.id);
-      if (makeCredentialOptions.publicKey.excludeCredentials) {
-        for (var i = 0; i < makeCredentialOptions.publicKey.excludeCredentials.length; i++) {
-          makeCredentialOptions.publicKey.excludeCredentials[i].id = bufferDecode(makeCredentialOptions.publicKey.excludeCredentials[i].id);
-        }
-      }
       // console.log("Credential Creation Options");
       // console.log(makeCredentialOptions);
       navigator.credentials.create(makeCredentialOptions)
