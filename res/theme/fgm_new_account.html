@@ -1,22 +1,39 @@
 <div class="dialog padding-y9">
-  <div class="abs right-0 padding-9" v-bind:class="isQRCode ? 'ic-scanning' : 'ic-qrcode'"
-    v-on:click="switchAuthMethod"></div>
-  <div class="margin-auto" v-if="isQRCode">
-    <div>
-      <h3 class="flex-h">使用 APP 扫码同步账号</h3>
-      <auth-qrcode style="height: 256px;" v-on:challenge="onChallenge" v-on:result="onResult"></auth-qrcode>
-      <span class="margin-9 flex-h text sm">扫此二维码，添加此终端到你的账号</span>
+  <template v-if="isInvalidAccount">
+    <button class="close" v-on:click="back">✖</button>
+    <h3 class="flex-h">同步账号</h3>
+    <div class="flex-c margin-t24">
+      是否使用当前终端开始认证
     </div>
-    <div class="margin-y24 flex-h">
-      <span class="text">没有账号？<button class="btn text c-success font-bold"
-          v-on:click="createAccount">创建一个</button></span>
+    <div class="flex-c margin-t5 font-sm c-deep">当前终端：Desktop 9060</div>
+    <div class="flex-c margin-t">
+      <button class="btn text fill padding-x24 padding-y9" v-on:click="startWebAuthn">是，开始认证</button>
     </div>
-  </div>
-  <div class="margin-auto" v-else>
-    <h3 class="flex-h">扫描二维码同步账号</h3>
-    <auth-camera></auth-camera>
-    <span class="margin-9 flex-h text sm">扫描二维码，添加此终端到你的账号</span>
-  </div>
+    <div class="flex-c margin-t7">
+      <button class="btn text padding-x24 padding-y9" v-on:click="switchOtherAccount">否，使用其他账号同步</button>
+    </div>
+  </template>
+  <template v-else>
+    <div class="margin-x9 margin-y abs btn padding-3 ic-chevron-left" v-on:click="backOrWebAuthn"></div>
+    <div class="margin-9 abs right-0 btn padding-9" v-bind:class="isQRCode ? 'ic-scanning' : 'ic-qrcode'"
+      v-on:click="switchAuthMethod"></div>
+    <div class="margin-auto" v-if="isQRCode">
+      <div>
+        <h3 class="flex-h">使用 APP 扫码同步账号</h3>
+        <auth-qrcode style="height: 256px;" v-on:challenge="onChallenge" v-on:result="onResult"></auth-qrcode>
+        <span class="margin-9 flex-h text sm">扫此二维码，添加此终端到你的账号</span>
+      </div>
+      <div class="margin-y24 flex-h">
+        <span class="text">没有账号？<button class="btn text c-success font-bold"
+            v-on:click="createAccount">创建一个</button></span>
+      </div>
+    </div>
+    <div class="margin-auto" v-else>
+      <h3 class="flex-h">扫描二维码同步账号</h3>
+      <auth-camera></auth-camera>
+      <span class="margin-9 flex-h text sm">扫描二维码，添加此终端到你的账号</span>
+    </div>
+  </template>
   <hr>
   <h4 class="flex-h">Get APP</h4>
   <div class="margin-y flex-h">

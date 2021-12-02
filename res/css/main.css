@@ -1109,6 +1109,10 @@ div[contenteditable]:empty:before {
 	margin-top: var(--md);
 }
 
+.margin-t24 {
+	margin-top: var(--x24);
+}
+
 .margin-t60 {
 	margin-top: var(--x60);
 }
