@@ -23,10 +23,11 @@
         <auth-qrcode style="height: 256px;" v-on:challenge="onChallenge" v-on:result="onResult"></auth-qrcode>
         <span class="margin-9 flex-h text sm">扫此二维码，添加此终端到你的账号</span>
       </div>
-      <div class="margin-y24 flex-h">
+      <div class="margin-y24 flex-h" v-if="canCreateAccount">
         <span class="text">没有账号？<button class="btn text c-success font-bold"
             v-on:click="createAccount">创建一个</button></span>
       </div>
+      <div class="margin-y24 flex-h" v-else>请更换为 Chrome 浏览器试试</div>
     </div>
     <div class="margin-auto" v-else>
       <h3 class="flex-h">扫描二维码同步账号</h3>
