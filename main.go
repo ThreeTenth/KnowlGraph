@@ -36,6 +36,8 @@ type Config struct {
 	Gcs   string `flag:"GitHub client secrets"`
 	Ssd   string `flag:"static server domain"`
 	Rad   string `flag:"restful api domain"`
+	Rpid  string `flag:"WebAuthn RPID"`
+	Rpog  string `flag:"WebAuthn RPOrigin"`
 }
 
 var ctx context.Context
@@ -153,6 +155,7 @@ func main() {
 
 	openPostgreSQL()
 	openRedis()
+	initWebAuthn()
 
 	defer db.Close()
 

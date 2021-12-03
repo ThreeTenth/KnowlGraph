@@ -57,12 +57,12 @@ var (
 	web *webauthn.WebAuthn
 )
 
-func init() {
+func initWebAuthn() {
 	var err error
 	web, err = webauthn.New(&webauthn.Config{
 		RPDisplayName: "Knowledge graph", // Display Name for your site
-		RPID:          "localhost",       // Generally the FQDN for your site
-		RPOrigin:      "http://localhost:20010",
+		RPID:          config.Rpid,       // Generally the FQDN for your site
+		RPOrigin:      config.Rpog,
 	})
 	panicIfErrNotNil(err)
 }
