@@ -41,10 +41,10 @@ const NewAccount = {
     },
     beginLoginSuccess(terminalID, makeAssertionOptions) {
       console.log("Assertion Options:");
-      console.log(makeAssertionOptions);
+      // console.log(makeAssertionOptions);
       navigator.credentials.get(makeAssertionOptions)
         .then((credential) => {
-          console.log(credential);
+          // console.log(credential);
           postFinishLogin(terminalID, credential, this.finishLoginSuccess, this.finishLoginFailure)
         }).catch((err) => {
           this.toast(err, "error")
@@ -57,7 +57,7 @@ const NewAccount = {
       console.info("FinishLoginFailure", err)
     },
     finishLoginSuccess(resp) {
-      console.log(resp.data)
+      // console.log(resp.data)
       authSuccess(resp.data)
     },
 
@@ -100,12 +100,12 @@ const NewAccount = {
       this.toast(err, "error")
     },
     requestWebAuthn(state, challenge, makeCredentialOptions) {
-      // console.log("Credential Creation Options");
+      console.log("Credential Creation Options");
       // console.log(makeCredentialOptions);
       navigator.credentials.create(makeCredentialOptions)
         .then((newCredential) => {
           console.log("PublicKeyCredential Created");
-          console.log(newCredential);
+          // console.log(newCredential);
           postFinishRegistration(challenge, state, newCredential, this.requestWebAuthnSuccess, this.requestWebAuthnFailure)
         }).catch((err) => {
           console.info(err);

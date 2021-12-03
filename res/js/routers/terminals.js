@@ -62,32 +62,32 @@ const Terminals = {
     onAddTerminal() {
       var tid = Cookies.get("terminal_id")
       putBeginValidate(tid, (resp) => {
-        this.beginLoginSuccess(tid, resp.data)
-      }, this.beginLoginFailure)
+        this.beginValidateSuccess(tid, resp.data)
+      }, this.beginValidateFailure)
     },
 
-    beginLoginFailure(err) {
+    beginValidateFailure(err) {
       this.toast(err, "error")
       console.info("BeginLoginFailure", err)
     },
-    beginLoginSuccess(terminalID, makeAssertionOptions) {
+    beginValidateSuccess(terminalID, makeAssertionOptions) {
       console.log("Assertion Options:");
       console.log(makeAssertionOptions);
       navigator.credentials.get(makeAssertionOptions)
         .then((credential) => {
           console.log(credential);
-          postFinishValidate(terminalID, credential, this.finishLoginSuccess, this.finishLoginFailure)
+          postFinishValidate(terminalID, credential, this.finishValidateSuccess, this.finishValidateFailure)
         }).catch((err) => {
           this.toast(err, "error")
           console.info("Error", err)
         });
     },
 
-    finishLoginFailure(err) {
+    finishValidateFailure(err) {
       this.toast(err, "error")
       console.info("FinishLoginFailure", err)
     },
-    finishLoginSuccess(resp) {
+    finishValidateSuccess(resp) {
       console.log(resp.data)
       this.showAuthorize = true
     },
