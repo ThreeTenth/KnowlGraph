@@ -1,5 +1,12 @@
 // rest.js
 
+function postFinishRegOnlyOnce(challenge, state, success, failure) {
+  axios({
+    method: "POST",
+    url: queryRestful("/v1/account/t/finishRegOnlyOnce", { state: state, challenge: challenge }),
+  }).then(success).catch(failure)
+}
+
 function _assertedCredentialData(assertedCredential) {
   let authData = new Uint8Array(assertedCredential.response.authenticatorData);
   let clientDataJSON = new Uint8Array(assertedCredential.response.clientDataJSON);
