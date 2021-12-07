@@ -19,7 +19,8 @@
             </span>
           </span>
           <div class="spacing-18">
-            <h3 class="margin-0">{{ terminal.nickname }}</h3>
+            <h3 class="margin-0 flex-v">{{ terminal.nickname }} <span v-if="terminal.onlyOnce"
+                class="ic-lock ic-c-success"></span></h3>
             <div class="margin-y9"><span>Add in</span> {{ terminal.name }} <span>on</span> {{ terminal.device.model }}
             </div>
             <div class="flex-v">

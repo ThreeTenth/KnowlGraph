@@ -9,16 +9,26 @@ const NewAccount = {
       challengeState: 0,
       isQRCode: true,
       isExpiredTerminal: false,
+      isSwitchTemporaryAuth: false,
     }
   },
 
   computed: {
-    terminalName: function() {
+    terminalName: function () {
       return Cookies.get("terminal_name")
     }
   },
 
   methods: {
+
+    onCancelTemporaryAuth() {
+      this.isSwitchTemporaryAuth = false
+    },
+
+    onSwitchTemporaryAuth() {
+      postFinishRegOnlyOnce(this.challenge, this.requestState,
+        this.finishRegOnlyOnceSuccess, this.finishRegOnlyOnceFailure)
+    },
 
     backOrWebAuthn() {
       if (isExpiredTerminal()) {
@@ -76,30 +86,39 @@ const NewAccount = {
     },
 
     onResult(qrcodeResult) {
+      // var name = qrcodeResult.name
       var state = qrcodeResult.state
+      var onlyOnce = qrcodeResult.onlyOnce
       if (this.challengeState == state) {
         return
       }
-      
-      // todo 临时授权流程
 
       if (state == 4) {
-        this.makeCredential(this.requestState, this.challenge)
+        if (onlyOnce) {
+          // 临时授权流程
+          postFinishRegOnlyOnce(this.challenge, this.requestState,
+            this.finishRegOnlyOnceSuccess, this.finishRegOnlyOnceFailure)
+        } else if (canUseWenAuthn()) {
+          this.makeCredential(state, this.requestState, this.challenge)
+        } else {
+          // 长期授权，但终端没有 WebAuthn 认证功能时
+          this.isSwitchTemporaryAuth = true
+        }
       }
 
       this.challengeState = state
     },
 
-    makeCredential(state, challenge) {
+    makeCredential(authState, state, challenge) {
       putBeginRegistration(challenge, state, (resp) => {
-        this.requestWebAuthn(state, challenge, resp.data)
+        this.requestWebAuthn(authState, state, challenge, resp.data)
       }, this.beginRegistrationFailure)
     },
 
     beginRegistrationFailure(err) {
       this.toast(err, "error")
     },
-    requestWebAuthn(state, challenge, makeCredentialOptions) {
+    requestWebAuthn(authState, state, challenge, makeCredentialOptions) {
       console.log("Credential Creation Options");
       // console.log(makeCredentialOptions);
       navigator.credentials.create(makeCredentialOptions)
@@ -109,8 +128,27 @@ const NewAccount = {
           postFinishRegistration(challenge, state, newCredential, this.requestWebAuthnSuccess, this.requestWebAuthnFailure)
         }).catch((err) => {
           console.info(err);
-          this.toast(err, "error")
+          this.requestWebAuthnError(authState, state, challenge)
         });
+    },
+    requestWebAuthnError(authState, state, challenge) {
+      if (4 != authState) {
+        this.toast("认证失败", "error")
+        return
+      }
+
+      // 如果是用户添加终端，但终端不支持(或用户无法认证，此条待确认) WebAuthn，则为用户提供切换到临时授权模式选项。
+      // todo 或用户无法认证，此条待确认
+      this.isSwitchTemporaryAuth = true
+      // postFinishRegOnlyOnce(challenge, state, this.finishRegOnlyOnceSuccess, this.finishRegOnlyOnceFailure)
+    },
+    finishRegOnlyOnceFailure(err) {
+      this.toast("Error " + err, "error")
+      console.info(err);
+    },
+    finishRegOnlyOnceSuccess(resp) {
+      this.toast("Success", "success")
+      authSuccess(resp.data)
     },
 
     requestWebAuthnSuccess(resp) {
@@ -123,22 +161,21 @@ const NewAccount = {
     },
 
     createAccount() {
-      let _this = this;
       let state = Math.random().toString(36).slice(2)
       axios({
         method: "GET",
         url: queryRestful("/v1/account/t/challenge", { state: state }),
-      }).then(function (resp) {
-        _this.makeCredential(state, resp.data)
-      }).catch(function (err) {
-        _this.toast(err, "error")
+      }).then((resp) => {
+        this.makeCredential(1, state, resp.data)
+      }).catch((err) => {
+        this.toast(err, "error")
       })
     },
   },
 
   created() {
     document.title = "同步账号 -- KnowlGraph"
-    
+
     this.isExpiredTerminal = isExpiredTerminal()
   },
 
