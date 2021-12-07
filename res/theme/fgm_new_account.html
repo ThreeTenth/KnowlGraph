@@ -51,4 +51,16 @@
     </button>
   </div>
   <!-- <div>Click “Sign In” to agree to Medium’s Terms of Service and acknowledge that Medium’s Privacy Policy applies to you.</div> -->
+  <modal v-model="isSwitchTemporaryAuth">
+    <div class="padding-24">
+      <h3>临时授权模式</h3>
+      <p>由于当前终端未通过 <a>WebAuthn 认证</a>，是否切换到临时授权模式？</p>
+      <div class="flex-c margin-t">
+        <button class="btn text fill padding-x24 padding-y9" v-on:click="onSwitchTemporaryAuth">是，使用临时授权模式</button>
+      </div>
+      <div class="flex-c margin-t7">
+        <button class="btn text padding-x24 padding-y9" v-on:click="onCancelTemporaryAuth">否，放弃授权</button>
+      </div>
+    </div>
+  </modal>
 </div>

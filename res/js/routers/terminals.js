@@ -43,6 +43,7 @@ const Terminals = {
           name: result.browser.name,
           os: result.os.name,
           device: device,
+          onlyOnce: term.onlyOnce,
         }
       }
 
@@ -196,6 +197,8 @@ const Terminals = {
 
   created() {
     document.title = "管理你的终端 -- KnowlGraph"
+
+    // todo 对临时授权的终端进行权限限制
 
     this.__updateTerminals()
   },
