@@ -131,6 +131,9 @@ func finishRegistration(c *Context) error {
 	if err != nil {
 		return c.StatusError(err)
 	}
+	if t.OnlyOnce {
+		return c.MethodNotAllowed("Unauthorized access to the interface.")
+	}
 
 	// Get the session data stored from the function above
 	// using gorilla/sessions it could look like this
@@ -153,9 +156,6 @@ func finishRegistration(c *Context) error {
 	id := 0
 	token := New64BitID()
 	d := ExpireTimeToken
-	if t.OnlyOnce {
-		d = ExpireTimeTokenOnce
-	}
 
 	terminalMap := make(map[int]string)
 
@@ -185,7 +185,7 @@ func finishRegistration(c *Context) error {
 
 		terminal, err1 := tx.Terminal.
 			Create().
-			SetCode(t.Code).SetName(t.Name).SetUa(t.UA).SetUserID(t.UserID).SetCredential(_credential).
+			SetCode(t.Code).SetName(t.Name).SetUa(t.UA).SetOnlyOnce(false).SetUserID(t.UserID).SetCredential(_credential).
 			Save(ctx)
 
 		if err1 != nil {
@@ -205,6 +205,56 @@ func finishRegistration(c *Context) error {
 			return nil
 		})
 
+		return err1
+	})
+
+	if err != nil {
+		return c.InternalServerError(err.Error())
+	}
+
+	return c.Ok(gin.H{"id": id, "name": t.Name, "token": token, "onlyOnce": t.OnlyOnce})
+}
+
+// 仅支持用户添加终端时使用
+func finishRegOnlyOnce(c *Context) error {
+	challenge, t, err := verifyChallenge(c)
+	if err != nil {
+		return c.StatusError(err)
+	}
+	if t.State == TokenStateIdle {
+		return c.MethodNotAllowed("Unauthorized access to the interface.")
+	}
+
+	id := 0
+	token := New64BitID()
+	d := ExpireTimeTokenOnce
+	terminalMap := make(map[int]string)
+	if err = GetV4Redis(RUser(t.UserID), &terminalMap); err != nil {
+		return c.InternalServerError(err.Error())
+	}
+
+	err = WithTx(ctx, client, func(tx *ent.Tx) error {
+		terminal, err1 := tx.Terminal.
+			Create().
+			SetCode(t.Code).SetName(t.Name).SetUa(t.UA).SetOnlyOnce(true).SetUserID(t.UserID).
+			Save(ctx)
+
+		if err1 != nil {
+			return err1
+		}
+
+		id = terminal.ID
+
+		terminalMap[id] = token
+
+		_, err1 = rdb.Pipelined(ctx, func(pipe redis.Pipeliner) error {
+			if err1 = SetV2RedisPipe(pipe, RUser(t.UserID), &terminalMap, d); err1 != nil {
+				return err1
+			}
+			pipe.Set(ctx, RToken(token), t.UserID, d)
+			pipe.Del(ctx, RChallenge(challenge))
+			return nil
+		})
 		return err1
 	})
 
