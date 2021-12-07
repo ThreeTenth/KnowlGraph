@@ -20,6 +20,9 @@ func (Terminal) Fields() []ent.Field {
 			StructTag(`json:"-"`),
 		field.String("name"),
 		field.String("ua"),
+		field.Bool("only_once").
+			Default(false).
+			StructTag(`json:"onlyOnce"`), // 临时授权，仅此一次
 		field.Time("created_at").
 			Default(time.Now).
 			StructTag(`json:"-"`),
