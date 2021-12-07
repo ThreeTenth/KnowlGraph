@@ -198,5 +198,5 @@ func scanChallenge(c *Context) error {
 		return c.BadRequest(err.Error())
 	}
 
-	return c.Ok(gin.H{"name": t.Name, "state": t.State})
+	return c.Ok(gin.H{"name": t.Name, "state": t.State, "onlyOnce": t.OnlyOnce})
 }
