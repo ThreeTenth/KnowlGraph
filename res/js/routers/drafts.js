@@ -14,6 +14,7 @@ const Drafts = {
       var _drafts = []
       for (let index = 0; index < original.length; index++) {
         const element = original[index];
+        const article = element.edges.article
         let snapshot = element.edges.snapshots[0]
         let body = removeMarkdown(snapshot.body)
         let ps = body.split("\n")
@@ -22,7 +23,7 @@ const Drafts = {
           firstP = firstP.substr(0, 120).trim() + '...'
         }
 
-        _drafts[index] = { id: element.id, body: firstP, created_at: snapshot.created_at }
+        _drafts[index] = { id: element.id, body: firstP, created_at: snapshot.created_at, status: article.status }
       }
       return _drafts
     }
