@@ -13,9 +13,10 @@ String.prototype.trim = function (char, type) {
 };
 
 function authSuccess(data) {
-  // Default(no expiration time is set): Cookie is removed when the user closes the browser.
-  const idExpiresDay = data.onlyOnce ? 0 : 365
-  const tokenExpiresDay = data.onlyOnce ? 0 : 30
+  // Temporary status is valid for 2 hours.
+  const temporaryExpires = new Date(new Date().getTime() + 2 * 3600 * 1000)
+  const idExpiresDay = data.onlyOnce ? temporaryExpires : 365
+  const tokenExpiresDay = data.onlyOnce ? temporaryExpires : 30
 
   Cookies.set("terminal_id", data.id, { expires: idExpiresDay })
   Cookies.set("terminal_name", data.name, { expires: idExpiresDay })
