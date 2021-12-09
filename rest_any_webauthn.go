@@ -212,7 +212,7 @@ func finishRegistration(c *Context) error {
 		return c.InternalServerError(err.Error())
 	}
 
-	return c.Ok(gin.H{"id": id, "name": t.Name, "token": token, "onlyOnce": t.OnlyOnce})
+	return c.Ok(gin.H{"id": id, "name": t.Name, "token": token, "onlyOnce": false})
 }
 
 // 仅支持用户添加终端时使用
@@ -262,7 +262,7 @@ func finishRegOnlyOnce(c *Context) error {
 		return c.InternalServerError(err.Error())
 	}
 
-	return c.Ok(gin.H{"id": id, "name": t.Name, "token": token, "onlyOnce": t.OnlyOnce})
+	return c.Ok(gin.H{"id": id, "name": t.Name, "token": token, "onlyOnce": true})
 }
 
 func beginWebAuthnLogin(_terminal *ent.Terminal) (*protocol.CredentialAssertion, error) {
@@ -371,9 +371,8 @@ func finishLogin(c *Context) error {
 	token := New64BitID()
 	userID := _terminal.Edges.User.ID
 	terminalMap := make(map[int]string)
-	if err = GetV4Redis(RUser(userID), &terminalMap); err != nil {
-		return c.InternalServerError(err.Error())
-	}
+	GetV4Redis(RUser(userID), &terminalMap)
+	terminalMap[terminalID] = token
 
 	d := ExpireTimeToken
 	_, err = rdb.Pipelined(ctx, func(pipe redis.Pipeliner) error {
