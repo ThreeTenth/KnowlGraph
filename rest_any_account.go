@@ -3,6 +3,8 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
+	ua "github.com/mileusna/useragent"
+	"github.com/pkg/errors"
 	"knowlgraph.com/ent"
 )
 
@@ -199,4 +201,29 @@ func scanChallenge(c *Context) error {
 	}
 
 	return c.Ok(gin.H{"name": t.Name, "state": t.State, "onlyOnce": t.OnlyOnce})
+}
+
+func getTerminalName(c *gin.Context) (string, error) {
+	ua := ua.Parse(c.GetHeader("User-Agent"))
+	if 0 == len(ua.OS) {
+		return "Unknown", errors.New("Invalid User-Agent")
+	}
+
+	name := ua.Device
+
+	if 0 == len(name) {
+		if ua.Mobile {
+			name = "Mobile"
+		} else if ua.Tablet {
+			name = "Tablet"
+		} else if ua.Desktop {
+			name = "Desktop"
+		} else {
+			name = "Unknown"
+		}
+
+		name += " " + New4BitNumber()
+	}
+
+	return name, nil
 }

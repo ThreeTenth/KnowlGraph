@@ -1,11 +1,5 @@
 package main
 
-import (
-	"github.com/gin-gonic/gin"
-	ua "github.com/mileusna/useragent"
-	"github.com/pkg/errors"
-)
-
 // import (
 // 	"errors"
 // 	"net"
@@ -270,27 +264,27 @@ import (
 // 	}
 // }
 
-func getTerminalName(c *gin.Context) (string, error) {
-	ua := ua.Parse(c.GetHeader("User-Agent"))
-	if 0 == len(ua.OS) {
-		return "Unknown", errors.New("Invalid User-Agent")
-	}
+// func getTerminalName(c *gin.Context) (string, error) {
+// 	ua := ua.Parse(c.GetHeader("User-Agent"))
+// 	if 0 == len(ua.OS) {
+// 		return "Unknown", errors.New("Invalid User-Agent")
+// 	}
 
-	name := ua.Device
+// 	name := ua.Device
 
-	if 0 == len(name) {
-		if ua.Mobile {
-			name = "Mobile"
-		} else if ua.Tablet {
-			name = "Tablet"
-		} else if ua.Desktop {
-			name = "Desktop"
-		} else {
-			name = "Unknown"
-		}
+// 	if 0 == len(name) {
+// 		if ua.Mobile {
+// 			name = "Mobile"
+// 		} else if ua.Tablet {
+// 			name = "Tablet"
+// 		} else if ua.Desktop {
+// 			name = "Desktop"
+// 		} else {
+// 			name = "Unknown"
+// 		}
 
-		name += " " + New4BitNumber()
-	}
+// 		name += " " + New4BitNumber()
+// 	}
 
-	return name, nil
-}
+// 	return name, nil
+// }

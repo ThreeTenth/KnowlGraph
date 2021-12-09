@@ -32,6 +32,8 @@ func RUser(userID int) string {
 	return "user_" + strconv.Itoa(userID)
 }
 
+// ===========================================================================
+
 // SetWebAuthnSession is set webauthn session data
 func SetWebAuthnSession(challenge string, seesinData *webauthn.SessionData) error {
 	return SetV2Redis("webauthn_"+challenge, seesinData, ExpireTimeChallengeConfirm)
@@ -42,6 +44,8 @@ func GetWebAuthnSession(challenge string) (seesinData webauthn.SessionData, err 
 	err = GetV4Redis("webauthn_"+challenge, &seesinData)
 	return
 }
+
+// ===========================================================================
 
 // SetV2RedisPipe encodes the value as json, and
 // then stores it in redis in the form of key-value pairs
