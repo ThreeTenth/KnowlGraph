@@ -68,21 +68,17 @@ Vue.component('auth-camera', {
     },
 
     checkChallengeState(challenge, state) {
+      this.$emit('challenge', challenge, state)
       var interval = window.setInterval(() => {
         getScanChallenge(challenge, (resp) => {
           if (4 == resp.data.state) {
             window.clearInterval(interval)
-            putMakeCredential(challenge, state, this.makeCredentialSuccess, this.makeCredentialFailure)
           }
+          this.$emit('result', resp.data)
         }, function (err) {
           window.clearInterval(interval)
         })
       }, 1000);
-    },
-
-    makeCredentialSuccess(err) { },
-    makeCredentialSuccess(resp) {
-      authSuccess(resp.data)
     },
   },
 
