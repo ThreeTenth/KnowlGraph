@@ -31,7 +31,7 @@
     </div>
     <div class="margin-auto" v-else>
       <h3 class="flex-h">扫描二维码同步账号</h3>
-      <auth-camera></auth-camera>
+      <auth-camera v-on:challenge="onChallenge" v-on:result="onResult"></auth-camera>
       <span class="margin-9 flex-h text sm">扫描二维码，添加此终端到你的账号</span>
     </div>
   </template>
