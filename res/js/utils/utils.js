@@ -1,5 +1,27 @@
 // utils.js
 
+// textContentOfDiv returns the text content of the div
+function textContentOfDiv(target) {
+  var nodes = target.childNodes
+  var content = ''
+  for (let index = 0; index < nodes.length; index++) {
+    const node = nodes[index]
+
+    var text
+    if (node.nodeName == "#text") {
+      text = node.textContent
+    } else {
+      text = node.innerText
+    }
+    text = text.trim("\n")
+    if (index + 1 < nodes.length) {
+      text += '\n'
+    }
+    content += text
+  }
+  return getString(content)
+}
+
 function versionNamePlusOne(name) {
   let old = name
   try {
