@@ -1,5 +1,18 @@
 // utils.js
 
+function versionNamePlusOne(name) {
+  let old = name
+  try {
+    var numbers = name.split("\.")
+    var lastIndex = numbers.length - 1
+    numbers[lastIndex] = (parseInt(numbers[lastIndex]) + 1) + ""
+    name = numbers.join(".")
+    return name
+  } catch (error) {
+    return old
+  }
+}
+
 String.prototype.trim = function (char, type) {
   if (char) {
     if (type == 'left') {
