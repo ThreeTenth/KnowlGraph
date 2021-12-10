@@ -132,12 +132,14 @@ const EditDraft = {
       var comment = "初次提交："
       var _original = this.draft.edges.original
       if (_original) {
-        lang = _original.lang
-        name = _original.versionName ? _original.versionName : name
+        lang = _original.lang ? _original.lang : lang
+        name = _original.name ? versionNamePlusOne(_original.name) : name
         keywords = []
-        _original.edges.keywords.forEach(element => {
-          keywords.push(element.name)
-        });
+        if (_original.edges.keywords) {
+          _original.edges.keywords.forEach(element => {
+            keywords.push(element.name)
+          })
+        }
         comment = ""
       }
 
@@ -236,35 +238,30 @@ const EditDraft = {
     },
 
     onPublish() {
-      var _this = this
+      var draft = this.draft
+      var version = this.version
 
       axios({
         method: "PUT",
         url: queryRestful("/v1/publish/article"),
         data: {
-          name: this.versionName,
-          comment: this.comment,
-          cover: this.cover,
-          title: this.title,
-          gist: this.gist,
-          lang: this.lang,
-          keywords: this.keywords,
-          draft_id: this.draft.id,
+          name: version.name,
+          comment: version.comment,
+          title: version.title,
+          gist: version.gist,
+          lang: version.lang,
+          keywords: version.keywords,
+          draft_id: draft.id,
         },
-      }).then(function (resp) {
+      }).then((resp) => {
         // todo this content is published and notify home page and drafts page
         if (204 == resp.status) {
           router.push({ path: '/' })
           return
         }
-        router.push({
-          name: 'article', params: {
-            id: resp.data.edges.article.id,
-            code: encodeURLTitle(_this.title)
-          }
-        })
+        router.push({ name: 'achiveSelf' })
       }).catch(function (err) {
-        // console.log(err)
+        console.log(err)
       })
     },
 
