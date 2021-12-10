@@ -266,24 +266,7 @@ const EditDraft = {
     },
 
     onChanged(e) {
-      var nodes = e.target.childNodes
-      var content = ''
-      for (let index = 0; index < nodes.length; index++) {
-        const node = nodes[index]
-
-        var text
-        if (node.nodeName == "#text") {
-          text = node.textContent
-        } else {
-          text = node.innerText
-        }
-        text = text.trim("\n")
-        if (index + 1 < nodes.length) {
-          text += '\n'
-        }
-        content += text
-      }
-      this.content = getString(content)
+      this.content = textContentOfDiv(e.target)
       // console.log(this.content);
       // this.content = e.target.innerText
       let _this = this
@@ -376,10 +359,10 @@ const EditDraft = {
 
       if (!_this.$refs.editor) return
 
-      var divs = _this.$refs.editor.children
+      var nodes = _this.$refs.editor.childNodes
       var start = 0, end = 0
-      for (let index = 0; index < divs.length; index++) {
-        const element = divs[index];
+      for (let index = 0; index < nodes.length; index++) {
+        const element = nodes[index];
         if (isChildAt(element, selection.anchorNode)) {
           start += selection.anchorOffset
           break
@@ -387,8 +370,8 @@ const EditDraft = {
           start += calcElementLength(element)
         }
       }
-      for (let index = 0; index < divs.length; index++) {
-        const element = divs[index];
+      for (let index = 0; index < nodes.length; index++) {
+        const element = nodes[index];
         if (isChildAt(element, selection.focusNode)) {
           end += selection.focusOffset
           break
