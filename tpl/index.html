@@ -8,12 +8,20 @@
 	<meta name="mobile-web-app-capable" content="yes">
 	<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ThreeTenth/css-theme@v0.1.2/colours.css" /> -->
 	<link rel="stylesheet" href="{{.Header.StaticDomain}}/__main.css" />
-	<!-- {{ if .Header.Debug }}
-	<link rel="stylesheet" href="{{.Header.StaticDomain}}/__main.css" />
+	{{ if .Header.Debug }}
+	<!-- <link rel="stylesheet" href="{{.Header.StaticDomain}}/__main.css" /> -->
 	{{ else }}
-	<link rel="stylesheet"
-		href="https://cdn.jsdelivr.net/combine/gh/ThreeTenth/KnowlGraph@{{ .Header.VersionName }}/build/__main.min.css">
-	{{ end }} -->
+	<!-- <link rel="stylesheet"
+		href="https://cdn.jsdelivr.net/combine/gh/ThreeTenth/KnowlGraph@{{ .Header.VersionName }}/build/__main.min.css"> -->
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-411GKFXS6N"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+		gtag('config', 'G-411GKFXS6N');
+	</script>
+	{{ end }}
 
 	{{ if .Body.Article }}
 	<title>{{ .Body.Article.Title}} - KnowlGraph</title>
@@ -37,6 +45,7 @@
 	{{ else }}
 	<title>Knowledge Graph -- KnowlGraph</title>
 	{{ end }}
+
 </head>
 
 <body>
