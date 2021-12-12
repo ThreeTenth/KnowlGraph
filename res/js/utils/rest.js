@@ -112,12 +112,12 @@ function putBeginRegistration(challenge, state, success, failure) {
   }).catch(failure)
 }
 
-function putMakeCredential(challenge, state, success, failure) {
-  axios({
-    method: "PUT",
-    url: queryRestful("/v1/account/t/makeCredential", { state: state, challenge: challenge })
-  }).then(success).catch(failure)
-}
+// function putMakeCredential(challenge, state, success, failure) {
+//   axios({
+//     method: "PUT",
+//     url: queryRestful("/v1/account/t/makeCredential", { state: state, challenge: challenge })
+//   }).then(success).catch(failure)
+// }
 
 function getScanChallenge(challenge, success, failure) {
   axios({

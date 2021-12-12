@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/go-redis/redis/v8"
 	ua "github.com/mileusna/useragent"
 	"github.com/pkg/errors"
 	"knowlgraph.com/ent"
@@ -47,80 +46,80 @@ func getChallenge(c *Context) error {
 }
 
 // 如果已有账号，则该凭据关联账号，若无，则创建一个新账号
-func makeCredential(c *Context) error {
-	var form struct {
-		State     string `form:"state" binding:"required"`
-		Challenge string `form:"challenge" binding:"required"`
-	}
+// func makeCredential(c *Context) error {
+// 	var form struct {
+// 		State     string `form:"state" binding:"required"`
+// 		Challenge string `form:"challenge" binding:"required"`
+// 	}
 
-	if err := c.ShouldBindQuery(&form); err != nil {
-		return c.BadRequest(err.Error())
-	}
+// 	if err := c.ShouldBindQuery(&form); err != nil {
+// 		return c.BadRequest(err.Error())
+// 	}
 
-	var t Terminal
-	if err := GetV4Redis(RChallenge(form.Challenge), &t); err != nil {
-		return c.BadRequest(err.Error())
-	}
-	if form.State != t.ClientState {
-		return c.BadRequest("Bad state")
-	}
-	if 0 != t.UserID && !t.authorized() {
-		// 如果已绑定认证账号，但认证账号未授权，则返回“没有权限”
+// 	var t Terminal
+// 	if err := GetV4Redis(RChallenge(form.Challenge), &t); err != nil {
+// 		return c.BadRequest(err.Error())
+// 	}
+// 	if form.State != t.ClientState {
+// 		return c.BadRequest("Bad state")
+// 	}
+// 	if 0 != t.UserID && !t.authorized() {
+// 		// 如果已绑定认证账号，但认证账号未授权，则返回“没有权限”
 
-		return c.Unauthorized("Permission denied")
-	}
+// 		return c.Unauthorized("Permission denied")
+// 	}
 
-	id := 0
-	token := New64BitID()
-	d := ExpireTimeToken
-	if t.OnlyOnce {
-		d = ExpireTimeTokenOnce
-	}
+// 	id := 0
+// 	token := New64BitID()
+// 	d := ExpireTimeToken
+// 	if t.OnlyOnce {
+// 		d = ExpireTimeTokenOnce
+// 	}
 
-	terminalMap := make(map[int]string)
+// 	terminalMap := make(map[int]string)
 
-	err := WithTx(ctx, client, func(tx *ent.Tx) error {
-		if 0 == t.UserID {
-			user, err1 := tx.User.Create().Save(ctx)
-			if err1 != nil {
-				return err1
-			}
-			t.UserID = user.ID
-		} else {
-			GetV4Redis(RUser(t.UserID), &terminalMap)
-		}
+// 	err := WithTx(ctx, client, func(tx *ent.Tx) error {
+// 		if 0 == t.UserID {
+// 			user, err1 := tx.User.Create().Save(ctx)
+// 			if err1 != nil {
+// 				return err1
+// 			}
+// 			t.UserID = user.ID
+// 		} else {
+// 			GetV4Redis(RUser(t.UserID), &terminalMap)
+// 		}
 
-		terminal, err1 := tx.Terminal.
-			Create().
-			SetCode(New16bitID()).SetName(t.Name).SetUa(t.UA).SetUserID(t.UserID).
-			Save(ctx)
+// 		terminal, err1 := tx.Terminal.
+// 			Create().
+// 			SetCode(New16bitID()).SetName(t.Name).SetUa(t.UA).SetUserID(t.UserID).
+// 			Save(ctx)
 
-		if err1 != nil {
-			return err1
-		}
+// 		if err1 != nil {
+// 			return err1
+// 		}
 
-		id = terminal.ID
+// 		id = terminal.ID
 
-		terminalMap[id] = token
+// 		terminalMap[id] = token
 
-		_, err1 = rdb.Pipelined(ctx, func(pipe redis.Pipeliner) error {
-			if err1 = SetV2RedisPipe(pipe, RUser(t.UserID), &terminalMap, d); err1 != nil {
-				return err1
-			}
-			pipe.Set(ctx, RToken(token), t.UserID, d)
-			pipe.Del(ctx, RChallenge(form.Challenge))
-			return nil
-		})
+// 		_, err1 = rdb.Pipelined(ctx, func(pipe redis.Pipeliner) error {
+// 			if err1 = SetV2RedisPipe(pipe, RUser(t.UserID), &terminalMap, d); err1 != nil {
+// 				return err1
+// 			}
+// 			pipe.Set(ctx, RToken(token), t.UserID, d)
+// 			pipe.Del(ctx, RChallenge(form.Challenge))
+// 			return nil
+// 		})
 
-		return err1
-	})
+// 		return err1
+// 	})
 
-	if err != nil {
-		return c.InternalServerError(err.Error())
-	}
+// 	if err != nil {
+// 		return c.InternalServerError(err.Error())
+// 	}
 
-	return c.Ok(gin.H{"id": id, "token": token, "onlyOnce": t.OnlyOnce})
-}
+// 	return c.Ok(gin.H{"id": id, "token": token, "onlyOnce": t.OnlyOnce})
+// }
 
 func activateTerminal(c *Context) error {
 	challenge := c.Query("challenge")

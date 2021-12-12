@@ -339,7 +339,7 @@ func router02() http.Handler {
 	t := account.Group("t")
 
 	t.GET("/challenge", authentication, handle(getChallenge))
-	t.PUT("/makeCredential", handle(makeCredential))
+	// t.PUT("/makeCredential", handle(makeCredential))
 	t.POST("/activate", authentication, handle(activateTerminal))
 	t.POST("/authorize", authorizeRequired, handle(authorizeTerminal))
 	t.DELETE("/activate", handle(cancelActivateTerminal))
