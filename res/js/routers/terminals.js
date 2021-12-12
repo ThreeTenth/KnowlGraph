@@ -12,6 +12,8 @@ const Terminals = {
       confirmChallengeInterval: 0,
       confirmChallengeExpire: 15,
 
+      showConfirmDeleteCurrentTerminal: false,
+
       isCamera: true,
     }
   },
@@ -63,21 +65,25 @@ const Terminals = {
     onAddTerminal() {
       var tid = Cookies.get("terminal_id")
       putBeginValidate(tid, (resp) => {
-        this.beginValidateSuccess(tid, resp.data)
+        this.beginValidateSuccess(tid, resp.data, this.showAddTerminal)
       }, this.beginValidateFailure)
+    },
+    showAddTerminal(resp) {
+      console.log(resp.data)
+      this.showAuthorize = true
     },
 
     beginValidateFailure(err) {
       this.toast(err, "error")
       console.info("BeginLoginFailure", err)
     },
-    beginValidateSuccess(terminalID, makeAssertionOptions) {
+    beginValidateSuccess(terminalID, makeAssertionOptions, successed) {
       console.log("Assertion Options:");
       console.log(makeAssertionOptions);
       navigator.credentials.get(makeAssertionOptions)
         .then((credential) => {
           console.log(credential);
-          postFinishValidate(terminalID, credential, this.finishValidateSuccess, this.finishValidateFailure)
+          postFinishValidate(terminalID, credential, successed, this.finishValidateFailure)
         }).catch((err) => {
           this.toast(err, "error")
           console.info("Error", err)
@@ -87,10 +93,6 @@ const Terminals = {
     finishValidateFailure(err) {
       this.toast(err, "error")
       console.info("FinishLoginFailure", err)
-    },
-    finishValidateSuccess(resp) {
-      console.log(resp.data)
-      this.showAuthorize = true
     },
 
     canDel(terminal) {
@@ -131,20 +133,44 @@ const Terminals = {
     },
 
     onDeleteTerminal(terminal) {
-      var _this = this
+      if (this.terminals.length == 1) {
+        this.showConfirmDeleteCurrentTerminal = true
+      } else {
+        this.confirmDeleteTerminal(terminal)
+      }
+    },
+
+    onCancelDeleteCurrentTerminal() {
+      this.showConfirmDeleteCurrentTerminal = false
+    },
+
+    onConfirmDeleteCurrentTerminal() {
+      this.showConfirmDeleteCurrentTerminal = false
+      this.confirmDeleteTerminal(this.terminals[0])
+    },
+
+    confirmDeleteTerminal(terminal) {
+      var tid = Cookies.get("terminal_id")
+      putBeginValidate(tid, (resp) => {
+        this.beginValidateSuccess(tid, resp.data, (resp1) => this.requestDeleteTerminal(terminal))
+      }, this.beginValidateFailure)
+    },
+
+    requestDeleteTerminal(terminal) {
       axios({
         method: "DELETE",
         url: queryRestful("/v1/account/terminal", { id: terminal.id }),
-      }).then(function (resp) {
+      }).then((resp) => {
         if (terminal.current) {
           Cookies.remove("terminal_id")
           Cookies.remove("access_token")
           window.open("/", "_self")
         } else {
-          _this.toast("Delete success", "success")
+          this.toast("Delete success", "success")
+          this.__updateTerminals()
         }
-      }).catch(function (err) {
-        _this.toast("Delete failure: " + err, "error")
+      }).catch((err) => {
+        this.toast("Delete failure: " + err, "error")
       })
     },
 
@@ -182,15 +208,15 @@ const Terminals = {
     },
 
     __updateTerminals() {
-      let _this = this;
+      this.pageStatus = 0
       axios({
         method: "GET",
         url: queryRestful("/v1/account/terminals"),
-      }).then(function (resp) {
-        _this.pageStatus = resp.status
-        _this.$data.__original = resp.data
-      }).catch(function (err) {
-        _this.pageStatus = getStatus4Error(err)
+      }).then((resp) => {
+        this.pageStatus = resp.status
+        this.$data.__original = resp.data
+      }).catch((err) => {
+        this.pageStatus = getStatus4Error(err)
       })
     },
   },

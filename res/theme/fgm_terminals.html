@@ -84,4 +84,15 @@
       </div>
     </div>
   </modal>
+  <modal v-model="showConfirmDeleteCurrentTerminal">
+    <div class="padding-24">
+      <h3 class="flex-h">确认注销账号吗？</h3>
+      <p>你有且只有当前一个终端，删除后，账号会被自动注销。</p>
+      <p >账号无法恢复！无法使用！请确认！</p>
+      <div class="flex-h margin-t">
+        <button class="btn text padding-x12" v-on:click="onCancelDeleteCurrentTerminal">取消</button>
+        <button class="btn text fill padding-x24 padding-y9" v-on:click="onConfirmDeleteCurrentTerminal">确认注销</button>
+      </div>
+    </div>
+  </modal>
 </div>
