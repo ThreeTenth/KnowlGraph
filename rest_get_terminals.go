@@ -6,10 +6,10 @@ import (
 )
 
 func getAccountTerminals(c *Context) error {
-	_userID, _ := c.Get(GinKeyUserID)
+	_userID := c.GetInt(GinKeyUserID)
 	ts, err := client.Terminal.Query().
 		Where(
-			terminal.HasUserWith(user.ID(_userID.(int))),
+			terminal.HasUserWith(user.ID(_userID)),
 		).
 		All(ctx)
 

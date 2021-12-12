@@ -34,6 +34,22 @@ func RUser(userID int) string {
 
 // ===========================================================================
 
+// GetUserTerminals returns user terminals in cache if have
+func GetUserTerminals(userID int) (map[int]string, error) {
+	terminalMap := make(map[int]string)
+	result, err := rdb.Get(ctx, RUser(userID)).Result()
+	if err != nil {
+		return terminalMap, err
+	}
+
+	err = json.Unmarshal([]byte(result), &terminalMap)
+	if err != nil {
+		return nil, err
+	}
+
+	return terminalMap, nil
+}
+
 // SetWebAuthnSession is set webauthn session data
 func SetWebAuthnSession(challenge string, seesinData *webauthn.SessionData) error {
 	return SetV2Redis("webauthn_"+challenge, seesinData, ExpireTimeChallengeConfirm)

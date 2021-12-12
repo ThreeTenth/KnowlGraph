@@ -82,7 +82,7 @@ const (
 
 // Gin set keys
 const (
-	// GinKeyUserID means gin context keys `access_token` field
+	// GinKeyUserID means gin context keys `user_id` field
 	GinKeyUserID = "user_id"
 	// GinKeyChallenge means gin context keys `challenge` field
 	GinKeyChallenge = "challenge"

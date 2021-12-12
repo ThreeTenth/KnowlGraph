@@ -21,7 +21,7 @@
           <div class="spacing-18">
             <h3 class="margin-0 flex-v">{{ terminal.nickname }} <span v-if="terminal.onlyOnce"
                 class="margin-x5 ic-lock ic-c-success"></span></h3>
-            <div class="margin-y9"><span>Add in</span> {{ terminal.name }} <span>on</span> {{ terminal.device.model }}
+            <div class="margin-y9"><span>From</span> {{ terminal.device.model }} {{ terminal.name }}
             </div>
             <div class="flex-v">
               <a class="gt-360 btn flex-v margin-r9" v-on:click="todo">查看详细信息</a>
