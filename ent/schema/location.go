@@ -20,6 +20,7 @@ func (Location) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("city").
 			Optional(),
+		field.String("timezone"), // 时区
 		field.Float("lat").
 			Optional().
 			SchemaType(map[string]string{
