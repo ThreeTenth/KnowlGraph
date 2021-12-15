@@ -25,25 +25,27 @@
 
 	{{ if .Body.Article }}
 	<title>{{ .Body.Article.Title}} - KnowlGraph</title>
-	<meta name="title" content="{{ .Body.Article.Title}} - KnowlGraph">
-	<meta name="description" content="Free Web tutorials">
-	<meta name="keywords" content="HTML, CSS, JavaScript">
-	<meta property="article:published_time" content="">
-	<meta property="og:url" content="" />
+	<meta name="title" content="{{ .Body.Article.Title}}">
+	<meta name="description" content="{{ .Body.Article.Gist}}">
+	<!-- <meta name="keywords" content=""> -->
+	<meta property="article:published_time" content="{{ .Body.Article.CreatedAt}}">
+	<!-- <meta property="og:url" content="" /> -->
 	<meta property="og:type" content="article" />
 	<meta property="og:title" content="{{ .Body.Article.Title}}" />
 	<meta property="og:description" content="{{ .Body.Article.Gist}}" />
-	<meta property="og:image" content="" />
+	<!-- <meta property="og:image" content="" /> -->
 	<!-- Twitter describe metadata -->
 	<meta name="twitter:card" content="summary" />
 	<meta name="twitter:site" content="@KnowlGraph" />
 	<meta name="twitter:title" content="{{ .Body.Article.Title}}" />
 	<meta name="twitter:description" content="{{ .Body.Article.Gist}}">
-	<meta name="twitter:image" content="" />
-	<meta name="twitter:label1" content="Reading time">
-	<meta name="twitter:data1" content="1 min read">
+	<!-- <meta name="twitter:image" content="" /> -->
+	<!-- <meta name="twitter:label1" content="Reading time"> -->
+	<!-- <meta name="twitter:data1" content="1 min read"> -->
 	{{ else }}
 	<title>Knowledge Graph -- KnowlGraph</title>
+	<meta name="title" content="Knowledge Graph -- KnowlGraph">
+	<meta name="description" content="KnowlGraph is Knowledge Graph.">
 	{{ end }}
 
 </head>
