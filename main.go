@@ -317,6 +317,8 @@ func router02() http.Handler {
 	v1.GET("/word/articles", handle(getKeywordArticles))
 	v1.GET("/word/nodes", handle(getWordNodes))
 
+	v1.POST("/analytics", authentication, handle(postAnalytics))
+
 	account := v1.Group("account")
 
 	// account.GET("/challenge", handle((beginRegistration)))
