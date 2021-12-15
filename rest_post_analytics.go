@@ -23,9 +23,11 @@ func postAnalytics(c *Context) error {
 		DeviceType string    `json:"device_type"`
 		Display    string    `json:"display"`
 		Os         string    `json:"os"`
+		OsVer      string    `json:"os_version"`
 		Platform   string    `json:"platform" binding:"required"`
+		PlatVer    string    `json:"platform_version" binding:"required"`
 		Browser    string    `json:"browser"`
-		Version    int       `json:"version" binding:"required"`
+		BrowsVer   string    `json:"browser_version"`
 		StartTime  time.Time `json:"start_time" binding:"required"`
 	}
 
@@ -45,13 +47,15 @@ func postAnalytics(c *Context) error {
 		}
 	}
 	if body.Browser == "" {
-		body.Browser = ua.Name + " " + ua.Version
+		body.Browser = ua.Name
+		body.BrowsVer = ua.Version
 	}
 	if body.Lang == "" {
 		body.Lang = c.UserLang()
 	}
 	if body.Os == "" {
-		body.Os = ua.OS + " " + ua.OSVersion
+		body.Os = ua.OS
+		body.OsVer = ua.OSVersion
 	}
 	if body.Device == "" {
 		body.Device = ua.Device
@@ -90,8 +94,11 @@ func postAnalytics(c *Context) error {
 		SetCity(body.City).
 		SetTimezone(body.Timezone).
 		SetOs(body.Os).
+		SetOsVersion(body.OsVer).
 		SetPlatform(body.Platform).
+		SetPlatformVersion(body.PlatVer).
 		SetBrowser(body.Browser).
+		SetBrowserVersion(body.BrowsVer).
 		SetDevice(body.Device).
 		SetDeviceType(body.DeviceType).
 		SetDisplay(body.Display).
