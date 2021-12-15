@@ -9,6 +9,11 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
+// RIPInfo is ipinfo key in redis
+func RIPInfo(key string) string {
+	return "ipinfo_" + key
+}
+
 // RChallenge is challenge key in redis
 // It is Terminal
 func RChallenge(key string) string {
