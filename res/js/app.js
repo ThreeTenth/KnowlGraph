@@ -130,7 +130,7 @@ const GetAPP = { template: fgm_get_app }
 const router = new VueRouter({
   mode: 'history',
   routes: [
-    { path: '/', component: Index },
+    { path: '/', name: "index", component: Index },
     { path: '/p/:id/:code?', name: "article", component: Article, props: true },
     { path: '/drafts', name: 'drafts', component: Drafts },
     { path: '/archive', component: Archive, children: archive_router },
@@ -144,6 +144,23 @@ const router = new VueRouter({
     { path: '/g/:id', redirect: { name: 'getapp' } },
     { path: '/getapp', name: 'getapp', component: GetAPP },
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  // ...
+  var page = to.fullPath
+  var title = to.name
+  if (to.name === "article") {
+    let last = to.fullPath.lastIndexOf("/")
+    page = to.fullPath.substring(0, last)
+    title = to.fullPath.substr(last + 1)
+    title = decodeURIComponent(title)
+  } else if (to.name === "editDraft") {
+    page = "/d"
+    title = "edit draft"
+  }
+  next()
+  postAnalyticsPageView(page, title, from.fullPath)
 })
 
 var app = new Vue({
