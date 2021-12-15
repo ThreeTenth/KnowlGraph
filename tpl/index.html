@@ -65,6 +65,7 @@
 	<script>var logined = false</script>
 	{{ end }}
 	<script>
+		const VersionName = '{{ .Header.VersionName }}';
 		const restfulDomain = '{{ .Header.RestfulDomain }}';
 		const staticDomain = '{{ .Header.StaticDomain }}';
 	</script>

@@ -25,6 +25,7 @@ function postAnalyticsPageView(page, title, referrer) {
       url: location.href,
       path: location.path,
       platform: "web",
+      platform_version: VersionName,
       display: screenWidth + "x" + screenHeight,
       start_time: new Date(),
       version: 1,
