@@ -18,6 +18,8 @@ type IPInfo struct {
 	Hostname string
 	// City holds the city of the ISP location.
 	City string
+	// Region holds the region of the ISP location.
+	Region string
 	// Country holds the two-letter country code.
 	Country string
 	// Loc holds the latitude and longitude of the
@@ -27,6 +29,8 @@ type IPInfo struct {
 	// Org describes the organization that is
 	// responsible for the IP address.
 	Org string
+	// Timezone holds the timezone of the ISP location.
+	Timezone string
 	// Postal holds the post code or zip code region of the ISP location.
 	Postal string
 }
@@ -42,6 +46,13 @@ func MyIP() (*IPInfo, error) {
 // http://ipinfo.io/json
 // http://ipinfo.io/67.148.93.12/json
 func ForeignIP(ip string) (*IPInfo, error) {
+	var ipinfo IPInfo
+	if ip == "" || IsPrivateIP(net.ParseIP(ip)) {
+		if err := GetV4Redis(RIPInfo("127.0.0.1"), &ipinfo); err == nil {
+			return &ipinfo, nil
+		}
+		ip = ""
+	}
 	if ip != "" {
 		ip += "/" + ip
 	}
@@ -55,10 +66,13 @@ func ForeignIP(ip string) (*IPInfo, error) {
 	if err != nil {
 		return nil, err
 	}
-	var ipinfo IPInfo
 	if err := json.Unmarshal(contents, &ipinfo); err != nil {
 		return nil, err
 	}
+	if ip == "" {
+		ip = "127.0.0.1"
+	}
+	SetV2Redis(RIPInfo(ip), &ipinfo, ExpireTimeIPInfo)
 	return &ipinfo, nil
 }
 
