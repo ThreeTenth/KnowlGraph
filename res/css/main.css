@@ -1020,7 +1020,11 @@ div[contenteditable]:empty:before {
 }
 
 .maxw-360p {
-	max-width: 180px;
+	max-width: 360px;
+}
+
+.maxw-480p {
+	max-width: 480px;
 }
 
 .maxw-720p {
