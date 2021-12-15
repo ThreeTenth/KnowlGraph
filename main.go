@@ -53,7 +53,7 @@ var resource embed.FS
 var tpl embed.FS
 
 func init() {
-	fmt.Printf("The current version: v%v, the version name: %v", Version, VersionName)
+	fmt.Printf("The current version: v%v, the version name: %v\n", Version, VersionName)
 	time.FixedZone("CST", 8*3600) // China Standard Timzone
 
 	config = &Config{Port: 8080, Ssd: "http://localhost:20012", Rad: "http://localhost:20011"}

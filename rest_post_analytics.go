@@ -102,9 +102,9 @@ func postAnalytics(c *Context) error {
 		analyticsCreater.SetUserID(userID.(int))
 	}
 
-	analytics, err := analyticsCreater.Save(ctx)
+	_, err = analyticsCreater.Save(ctx)
 	if err != nil {
 		return c.InternalServerError(err.Error())
 	}
-	return c.Ok(analytics)
+	return c.NoContent()
 }
