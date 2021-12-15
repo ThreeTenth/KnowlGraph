@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/render"
@@ -36,6 +37,28 @@ func handle(fn func(p *Context) error) gin.HandlerFunc {
 		}
 		c.Abort()
 	}
+}
+
+// UserLang returns user language
+func (p *Context) UserLang() string {
+	_lang, err := p.Cookie(CookieUserLang)
+	if err != nil {
+		_lang = p.GetHeader(HeaderAcceptLanguage)
+		idx := strings.Index(_lang, ",")
+		if 0 < idx {
+			_lang = _lang[:idx]
+		}
+		if idx = strings.Index(_lang, ";"); 0 < idx {
+			_lang = _lang[:idx]
+		}
+		if idx = strings.Index(_lang, "-"); 0 < idx {
+			_lang = _lang[:idx]
+		}
+	}
+	if _lang == "" {
+		_lang = DefaultLanguage
+	}
+	return _lang
 }
 
 // QueryInt returns the keyed url query int value if it exists,
