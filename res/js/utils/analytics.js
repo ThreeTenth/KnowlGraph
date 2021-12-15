@@ -5,7 +5,7 @@ var timezone = ""
 var screenWidth = window.screen.width
 var screenHeight = window.screen.height
 
-axios({ method: "GET", url: "http://ipinfo.io/json", })
+axios({ method: "GET", url: "https://ipinfo.io/json", })
   .then((resp) => {
     city = resp.data.city
     timezone = resp.data.timezone

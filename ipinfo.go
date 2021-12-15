@@ -56,7 +56,7 @@ func ForeignIP(ip string) (*IPInfo, error) {
 	if ip != "" {
 		ip += "/" + ip
 	}
-	response, err := http.Get("http://ipinfo.io" + ip + "/json")
+	response, err := http.Get("https://ipinfo.io" + ip + "/json")
 	if err != nil {
 		return nil, err
 	}
