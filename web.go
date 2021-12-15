@@ -1,8 +1,6 @@
 package main
 
 import (
-	"strings"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,25 +16,10 @@ type Header struct {
 
 func html(fn func(p *Context) (int, string, interface{})) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		status, name, body := fn(&Context{c})
+		ctx := &Context{c}
+		status, name, body := fn(ctx)
 
-		_lang, err := c.Cookie(CookieUserLang)
-		if err != nil {
-			_lang = c.GetHeader(HeaderAcceptLanguage)
-			idx := strings.Index(_lang, ",")
-			if 0 < idx {
-				_lang = _lang[:idx]
-			}
-			if idx = strings.Index(_lang, ";"); 0 < idx {
-				_lang = _lang[:idx]
-			}
-			if idx = strings.Index(_lang, "-"); 0 < idx {
-				_lang = _lang[:idx]
-			}
-		}
-		if _lang == "" {
-			_lang = DefaultLanguage
-		}
+		_lang := ctx.UserLang()
 
 		header := header()
 		header.UserLang = _lang
