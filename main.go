@@ -317,6 +317,7 @@ func router02() http.Handler {
 	v1.GET("/word/articles", handle(getKeywordArticles))
 	v1.GET("/word/nodes", handle(getWordNodes))
 
+	v1.GET("/analytics", authentication, handle(getAnalytics))
 	v1.POST("/analytics", authentication, handle(postAnalytics))
 
 	account := v1.Group("account")
