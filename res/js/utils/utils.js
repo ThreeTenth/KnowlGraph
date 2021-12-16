@@ -65,6 +65,14 @@ function authSuccess(data) {
   window.open("/", "_self")
 }
 
+function deauthorizeSuccess() {
+  Cookies.remove("terminal_id")
+  Cookies.remove("terminal_name")
+  Cookies.remove("analytics_code")
+  Cookies.remove("access_token")
+  window.open("/", "_self")
+}
+
 function detectMob() {
   const toMatch = [
     /Android/i,

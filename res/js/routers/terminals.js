@@ -162,9 +162,7 @@ const Terminals = {
         url: queryRestful("/v1/account/terminal", { id: terminal.id }),
       }).then((resp) => {
         if (terminal.current) {
-          Cookies.remove("terminal_id")
-          Cookies.remove("access_token")
-          window.open("/", "_self")
+          deauthorizeSuccess()
         } else {
           this.toast("Delete success", "success")
           this.__updateTerminals()
