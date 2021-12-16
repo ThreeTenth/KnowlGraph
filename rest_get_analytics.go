@@ -34,7 +34,7 @@ func getAnalytics(c *Context) error {
 		BrowsVer   []string    `form:"browser_version"`
 		TimeStart  []time.Time `form:"time_start"`
 		TimeUnit   int         `form:"time_unit"`
-		GroupBy    string      `form:"group_by"`
+		GroupBy    string      `form:"group_by" binding:"ne=start_time"`
 	}
 	if err := c.ShouldBindQuery(&form); err != nil {
 		return c.BadRequest(err.Error())
@@ -167,7 +167,7 @@ func getAnalytics(c *Context) error {
 func getAnalyticsByPredicates(predicates []predicate.Analytics, groupBy string) ([]*AnalyticsResult, error) {
 	result := make([]*AnalyticsResult, 0)
 	query := client.Analytics.Query().Where(analytics.And(predicates...))
-	if groupBy != "" && groupBy != "start_time" {
+	if groupBy != "" {
 		err := query.GroupBy(groupBy).Aggregate(ent.Count()).Scan(ctx, &result)
 		if err != nil {
 			return nil, err
