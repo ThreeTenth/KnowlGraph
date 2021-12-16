@@ -9,6 +9,7 @@ import (
 
 func postAnalytics(c *Context) error {
 	var body struct {
+		Code       string    `json:"code" binding:"required"`
 		Event      string    `json:"event" binding:"required"`
 		Category   string    `json:"category" binding:"required"`
 		Label      string    `json:"label" binding:"required"`
@@ -83,6 +84,7 @@ func postAnalytics(c *Context) error {
 	}
 
 	analyticsCreater := client.Analytics.Create().
+		SetCode(body.Code).
 		SetEvent(body.Event).
 		SetCategory(body.Category).
 		SetLabel(body.Label).
