@@ -35,10 +35,17 @@ func getAnalytics(c *Context) error {
 		Bot        bool        `form:"bot"`
 		TimeStart  []time.Time `form:"time_start"`
 		TimeUnit   int         `form:"time_unit"`
-		GroupBy    string      `form:"group_by" binding:"ne=start_time"`
+		GroupBy    []string    `form:"group_by"`
 	}
 	if err := c.ShouldBindQuery(&form); err != nil {
 		return c.BadRequest(err.Error())
+	}
+	if form.GroupBy != nil {
+		for _, v := range form.GroupBy {
+			if v == "time_start" {
+				return c.BadRequest(`The value of group_by cannot be "time_start"`)
+			}
+		}
 	}
 
 	predicates := make([]predicate.Analytics, 0, 3)
@@ -168,11 +175,15 @@ func getAnalytics(c *Context) error {
 	return c.Ok(&resultList)
 }
 
-func getAnalyticsByPredicates(predicates []predicate.Analytics, groupBy string) ([]*AnalyticsResult, error) {
+func getAnalyticsByPredicates(predicates []predicate.Analytics, groupBy []string) ([]*AnalyticsResult, error) {
 	result := make([]*AnalyticsResult, 0)
 	query := client.Analytics.Query().Where(analytics.And(predicates...))
-	if groupBy != "" {
-		err := query.GroupBy(groupBy).Aggregate(ent.Count()).Scan(ctx, &result)
+	if groupBy != nil {
+		analyticsGroupBy := query.GroupBy(groupBy[0])
+		if len(groupBy) > 1 {
+			analyticsGroupBy = query.GroupBy(groupBy[0], groupBy[1:]...)
+		}
+		err := analyticsGroupBy.Aggregate(ent.Count()).Scan(ctx, &result)
 		if err != nil {
 			return nil, err
 		}
