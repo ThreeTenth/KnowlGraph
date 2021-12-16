@@ -147,11 +147,13 @@ func getAnalytics(c *Context) error {
 	resultList := make(map[time.Time][]*AnalyticsResult)
 	for _, node := range form.TimeStart {
 		startTime := node
-		nodePredicates := append(predicates, analytics.StartTimeGTE(startTime))
+		timePredicates := analytics.StartTimeGTE(startTime)
 		if 0 < form.TimeUnit {
-			endTime := node.Add(time.Duration(form.TimeUnit))
-			nodePredicates = append(predicates, analytics.StartTimeLTE(endTime))
+			// 如果有时间单位（TimeUnit），则仅返回该时间单位内的统计数据，以分钟（Minute）计
+			endTime := node.Add(time.Duration(form.TimeUnit) * time.Minute)
+			timePredicates = analytics.And(timePredicates, analytics.StartTimeLTE(endTime))
 		}
+		nodePredicates := append(predicates, timePredicates)
 		result, err := getAnalyticsByPredicates(nodePredicates, form.GroupBy)
 		if err != nil {
 			ar := &AnalyticsResult{Analytics: ent.Analytics{Message: err.Error()}, Count: 1}
