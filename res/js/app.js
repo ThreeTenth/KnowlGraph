@@ -143,6 +143,7 @@ const router = new VueRouter({
     { path: '/login', name: 'login', component: NewAccount },
     { path: '/g/:id', redirect: { name: 'getapp' } },
     { path: '/getapp', name: 'getapp', component: GetAPP },
+    { path: '/dashboard', name: 'dashboard', component: Dashboard },
   ]
 })
 
