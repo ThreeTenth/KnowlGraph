@@ -174,8 +174,16 @@ function queryStatic(url, data = undefined) {
 function encodeQueryData(url, data = undefined) {
   if (undefined == data) return url
   const ret = [];
-  for (let d in data)
-    ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
+  for (let d in data) {
+    let val = data[d]
+    if (val instanceof Array) {
+      val.forEach(v => {
+        ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(v));
+      });
+    } else {
+      ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(val));
+    }
+  }
 
   if (0 == ret.length) return url
 
