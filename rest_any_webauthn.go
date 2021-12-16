@@ -67,6 +67,10 @@ func initWebAuthn() {
 	panicIfErrNotNil(err)
 }
 
+func getUserAuthInfo(terminalID int, terminalName string, token string, analyticsCode string, onlyOnce bool) gin.H {
+	return gin.H{"id": terminalID, "name": terminalName, "token": token, "analyticsCode": analyticsCode, "onlyOnce": onlyOnce}
+}
+
 func verifyChallenge(c *Context) (string, *Terminal, error) {
 	var form struct {
 		State     string `form:"state" binding:"required"`
@@ -212,7 +216,7 @@ func finishRegistration(c *Context) error {
 		return c.InternalServerError(err.Error())
 	}
 
-	return c.Ok(gin.H{"id": id, "name": t.Name, "token": token, "onlyOnce": false})
+	return c.Ok(getUserAuthInfo(id, t.Name, token, GetUserAnalyticsCode(t.UserID), false))
 }
 
 // 仅支持用户添加终端时使用
@@ -262,7 +266,7 @@ func finishRegOnlyOnce(c *Context) error {
 		return c.InternalServerError(err.Error())
 	}
 
-	return c.Ok(gin.H{"id": id, "name": t.Name, "token": token, "onlyOnce": true})
+	return c.Ok(getUserAuthInfo(id, t.Name, token, GetUserAnalyticsCode(t.UserID), true))
 }
 
 func beginWebAuthnLogin(_terminal *ent.Terminal) (*protocol.CredentialAssertion, error) {
@@ -386,5 +390,5 @@ func finishLogin(c *Context) error {
 		return c.InternalServerError(err.Error())
 	}
 
-	return c.Ok(gin.H{"id": terminalID, "name": _terminal.Name, "token": token, "onlyOnce": false})
+	return c.Ok(getUserAuthInfo(terminalID, _terminal.Name, token, GetUserAnalyticsCode(userID), false))
 }
