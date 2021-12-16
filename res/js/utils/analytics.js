@@ -9,6 +9,11 @@ var device = parser.getResult().device
 if (device.model == undefined) {
   device.model = ""
 }
+var analyticsCode = Cookies.get("analytics_code")
+if (analyticsCode === undefined) {
+  analyticsCode = getRandomString() + "." + getRandomString()
+  Cookies.set("analytics_code", analyticsCode, 365)
+}
 
 axios({ method: "GET", url: "https://ipinfo.io/json", })
   .then((resp) => {
@@ -21,6 +26,7 @@ function postAnalyticsPageView(page, title, referrer) {
     method: "POST",
     url: queryRestful("/v1/analytics"),
     data: {
+      code: analyticsCode,
       event: "page_view",
       category: page,
       label: title,
