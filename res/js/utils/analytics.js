@@ -1,7 +1,7 @@
 // analytics.js
 
-var city = ""
-var timezone = ""
+var city = Cookies.get("city")
+var timezone = Cookies.get("timezone")
 var screenWidth = window.screen.width
 var screenHeight = window.screen.height
 var parser = new UAParser().setUA(navigator.userAgent)
@@ -12,14 +12,20 @@ if (device.model == undefined) {
 var analyticsCode = Cookies.get("analytics_code")
 if (analyticsCode === undefined) {
   analyticsCode = getRandomString() + "." + getRandomString()
-  Cookies.set("analytics_code", analyticsCode, 365)
+  Cookies.set("analytics_code", analyticsCode, 30)
 }
 
-axios({ method: "GET", url: "https://ipinfo.io/json", })
-  .then((resp) => {
-    city = resp.data.city
-    timezone = resp.data.timezone
-  })
+if (city === undefined || city === null)
+  axios({ method: "GET", url: "https://ipinfo.io/json", })
+    .then((resp) => {
+      city = resp.data.city
+      timezone = resp.data.timezone
+      Cookies.set("city", city, { expires: 30 })
+      Cookies.set("timezone", timezone, { expires: 30 })
+    }).catch((err) => {
+      Cookies.set("city", "", { expires: 1 })
+      Cookies.set("timezone", "", { expires: 1 })
+    })
 
 function postAnalyticsPageView(page, title, referrer) {
   axios({
@@ -40,9 +46,6 @@ function postAnalyticsPageView(page, title, referrer) {
       device: device.model,
       display: screenWidth + "x" + screenHeight,
       start_time: new Date(),
-      version: 1,
     },
-  }).then((resp) => {
-    console.log(resp.data)
   })
 }
