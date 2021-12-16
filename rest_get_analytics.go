@@ -32,6 +32,7 @@ func getAnalytics(c *Context) error {
 		PlatVer    []string    `form:"platform_version"`
 		Browser    []string    `form:"browser"`
 		BrowsVer   []string    `form:"browser_version"`
+		Bot        bool        `form:"bot"`
 		TimeStart  []time.Time `form:"time_start"`
 		TimeUnit   int         `form:"time_unit"`
 		GroupBy    string      `form:"group_by" binding:"ne=start_time"`
@@ -40,7 +41,8 @@ func getAnalytics(c *Context) error {
 		return c.BadRequest(err.Error())
 	}
 
-	predicates := make([]predicate.Analytics, 0, 2)
+	predicates := make([]predicate.Analytics, 0, 3)
+	predicates = append(predicates, analytics.BotEQ(form.Bot))
 	predicates = append(predicates, analytics.EventEQ(form.Event))
 	if form.Category != nil {
 		if len(form.Category) == 1 {

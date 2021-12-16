@@ -102,6 +102,7 @@ func postAnalytics(c *Context) error {
 		SetDevice(body.Device).
 		SetDeviceType(body.DeviceType).
 		SetDisplay(body.Display).
+		SetBot(ua.Bot).
 		SetStartTime(body.StartTime).
 		SetVersion(1)
 

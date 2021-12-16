@@ -45,6 +45,8 @@ func (Analytics) Fields() []ent.Field {
 		field.String("platform_version").Default(""),
 		field.String("browser").Default(""),
 		field.String("browser_version").Default(""),
+		// 机器人，爬虫，蜘蛛
+		field.Bool("bot").Default(false),
 		// 统计数据接口版本号
 		field.Int("version"),
 		// 发起统计时间
