@@ -16,6 +16,8 @@ type Analytics struct {
 // Fields of the Analytics.
 func (Analytics) Fields() []ent.Field {
 	return []ent.Field{
+		// 客户端Code，统计用户数，非用户ID
+		field.String("code").Default(""),
 		// 事件名称
 		field.String("event").Default(""),
 		// 事件主体
