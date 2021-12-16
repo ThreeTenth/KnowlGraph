@@ -16,24 +16,25 @@ type AnalyticsResult struct {
 
 func getAnalytics(c *Context) error {
 	var form struct {
-		Event      string     `form:"event" binding:"required"`
-		Category   []string   `form:"category"`
-		Label      []string   `form:"label"`
-		City       []string   `form:"city"`
-		Timezone   []string   `form:"timezone"`
-		Referrer   []string   `form:"referrer"`
-		Lang       []string   `form:"lang"`
-		Device     []string   `form:"device"`
-		DeviceType []string   `form:"device_type"`
-		Display    []string   `form:"display"`
-		Os         []string   `form:"os"`
-		OsVer      []string   `form:"os_version"`
-		Platform   []string   `form:"platform"`
-		PlatVer    []string   `form:"platform_version"`
-		Browser    []string   `form:"browser"`
-		BrowsVer   []string   `form:"browser_version"`
-		StartTime  *time.Time `form:"start_time"`
-		GroupBy    string     `form:"group_by"`
+		Event      string      `form:"event" binding:"required"`
+		Category   []string    `form:"category"`
+		Label      []string    `form:"label"`
+		City       []string    `form:"city"`
+		Timezone   []string    `form:"timezone"`
+		Referrer   []string    `form:"referrer"`
+		Lang       []string    `form:"lang"`
+		Device     []string    `form:"device"`
+		DeviceType []string    `form:"device_type"`
+		Display    []string    `form:"display"`
+		Os         []string    `form:"os"`
+		OsVer      []string    `form:"os_version"`
+		Platform   []string    `form:"platform"`
+		PlatVer    []string    `form:"platform_version"`
+		Browser    []string    `form:"browser"`
+		BrowsVer   []string    `form:"browser_version"`
+		TimeStart  []time.Time `form:"time_start"`
+		TimeUnit   int         `form:"time_unit"`
+		GroupBy    string      `form:"group_by"`
 	}
 	if err := c.ShouldBindQuery(&form); err != nil {
 		return c.BadRequest(err.Error())
@@ -134,28 +135,51 @@ func getAnalytics(c *Context) error {
 			predicates = append(predicates, analytics.BrowserIn(form.Browser...))
 		}
 	}
-	if form.StartTime != nil {
-		predicates = append(predicates, analytics.StartTimeGTE(*form.StartTime))
-	} else {
+	if form.TimeStart == nil {
+		form.TimeStart = make([]time.Time, 1)
+	}
+	if len(form.TimeStart) == 0 {
 		// 默认获取最近一天的统计数据
-		predicates = append(predicates, analytics.StartTimeGTE(time.Now().AddDate(0, 0, -1)))
+		_1day := time.Now().AddDate(0, 0, -1)
+		form.TimeStart = append(form.TimeStart, _1day)
 	}
 
+	resultList := make(map[time.Time][]*AnalyticsResult)
+	for _, node := range form.TimeStart {
+		startTime := node
+		nodePredicates := append(predicates, analytics.StartTimeGTE(startTime))
+		if 0 < form.TimeUnit {
+			endTime := node.Add(time.Duration(form.TimeUnit))
+			nodePredicates = append(predicates, analytics.StartTimeLTE(endTime))
+		}
+		result, err := getAnalyticsByPredicates(nodePredicates, form.GroupBy)
+		if err != nil {
+			ar := &AnalyticsResult{Analytics: ent.Analytics{Message: err.Error()}, Count: 1}
+			resultList[node] = []*AnalyticsResult{ar}
+		} else {
+			resultList[node] = result
+		}
+	}
+
+	return c.Ok(&resultList)
+}
+
+func getAnalyticsByPredicates(predicates []predicate.Analytics, groupBy string) ([]*AnalyticsResult, error) {
 	result := make([]*AnalyticsResult, 0)
 	query := client.Analytics.Query().Where(analytics.And(predicates...))
-	if form.GroupBy != "" && form.GroupBy != "start_time" {
-		err := query.GroupBy(form.GroupBy).Aggregate(ent.Count()).Scan(ctx, &result)
+	if groupBy != "" && groupBy != "start_time" {
+		err := query.GroupBy(groupBy).Aggregate(ent.Count()).Scan(ctx, &result)
 		if err != nil {
-			return c.InternalServerError(err.Error())
+			return nil, err
 		}
-		return c.Ok(&result)
+		return result, nil
 	}
 	count, err := query.Count(ctx)
 	if err != nil {
-		return c.InternalServerError(err.Error())
+		return nil, err
 	}
 
-	result = append(result, &AnalyticsResult{Analytics: ent.Analytics{Event: form.Event}, Count: count})
+	result = append(result, &AnalyticsResult{Count: count})
 
-	return c.Ok(&result)
+	return result, nil
 }
