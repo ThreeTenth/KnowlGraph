@@ -1,6 +1,9 @@
 package main
 
 import (
+	"crypto/md5"
+	"encoding/binary"
+	"encoding/hex"
 	"math/rand"
 	"net/http"
 	"time"
@@ -164,4 +167,13 @@ func New4bitID() string {
 // 10 numbers
 func New4BitNumber() string {
 	return RandNdigMbitString(4, 26, 10)
+}
+
+// GetUserAnalyticsCode return user analytics code
+func GetUserAnalyticsCode(userID int) string {
+	buf := make([]byte, binary.MaxVarintLen64)
+	binary.PutUvarint(buf, uint64(userID))
+	h := md5.New()
+	h.Write(buf)
+	return hex.EncodeToString(h.Sum(nil))
 }
