@@ -1,5 +1,9 @@
 // utils.js
 
+function getRandomString() {
+  return Math.random().toString(36).slice(2)
+}
+
 // textContentOfDiv returns the text content of the div
 function textContentOfDiv(target) {
   var nodes = target.childNodes
@@ -55,6 +59,7 @@ function authSuccess(data) {
 
   Cookies.set("terminal_id", data.id, { expires: idExpiresDay })
   Cookies.set("terminal_name", data.name, { expires: idExpiresDay })
+  Cookies.set("analytics_code", data.analyticsCode, { expires: idExpiresDay })
   // Token 有效期最多 30 天。
   Cookies.set("access_token", data.token, { expires: tokenExpiresDay })
   window.open("/", "_self")
