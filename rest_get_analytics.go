@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"time"
 
+	"entgo.io/ent/dialect/sql"
 	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/analytics"
 	"knowlgraph.com/ent/predicate"
@@ -36,16 +38,20 @@ func getAnalytics(c *Context) error {
 		TimeStart  []time.Time `form:"time_start"`
 		TimeUnit   int         `form:"time_unit"`
 		GroupBy    []string    `form:"group_by"`
+		CountField string      `form:"count_field"`
 	}
 	if err := c.ShouldBindQuery(&form); err != nil {
 		return c.BadRequest(err.Error())
 	}
 	if form.GroupBy != nil {
 		for _, v := range form.GroupBy {
-			if v == "time_start" {
-				return c.BadRequest(`The value of group_by cannot be "time_start"`)
+			if v == "time_start" || v == "code" {
+				return c.BadRequest(fmt.Sprintf(`The value of group_by cannot be "%s"`, v))
 			}
 		}
+	}
+	if form.CountField == "" {
+		form.CountField = "*"
 	}
 
 	predicates := make([]predicate.Analytics, 0, 3)
@@ -163,7 +169,7 @@ func getAnalytics(c *Context) error {
 			timePredicates = analytics.And(timePredicates, analytics.StartTimeLTE(endTime))
 		}
 		nodePredicates := append(predicates, timePredicates)
-		result, err := getAnalyticsByPredicates(nodePredicates, form.GroupBy)
+		result, err := getAnalyticsByPredicates(nodePredicates, form.GroupBy, form.CountField)
 		if err != nil {
 			ar := &AnalyticsResult{Analytics: ent.Analytics{Message: err.Error()}, Count: 1}
 			resultList[node] = []*AnalyticsResult{ar}
@@ -175,7 +181,7 @@ func getAnalytics(c *Context) error {
 	return c.Ok(&resultList)
 }
 
-func getAnalyticsByPredicates(predicates []predicate.Analytics, groupBy []string) ([]*AnalyticsResult, error) {
+func getAnalyticsByPredicates(predicates []predicate.Analytics, groupBy []string, countField string) ([]*AnalyticsResult, error) {
 	result := make([]*AnalyticsResult, 0)
 	query := client.Analytics.Query().Where(analytics.And(predicates...))
 	if groupBy != nil {
@@ -183,13 +189,27 @@ func getAnalyticsByPredicates(predicates []predicate.Analytics, groupBy []string
 		if len(groupBy) > 1 {
 			analyticsGroupBy = query.GroupBy(groupBy[0], groupBy[1:]...)
 		}
-		err := analyticsGroupBy.Aggregate(ent.Count()).Scan(ctx, &result)
+		if countField == "*" {
+			analyticsGroupBy = analyticsGroupBy.Aggregate(ent.Count())
+		} else {
+			analyticsGroupBy = analyticsGroupBy.
+				Aggregate(func(s *sql.Selector) string {
+					return sql.Count(sql.Distinct(countField))
+				})
+		}
+		err := analyticsGroupBy.Scan(ctx, &result)
 		if err != nil {
 			return nil, err
 		}
 		return result, nil
 	}
-	count, err := query.Count(ctx)
+	var count int
+	var err error
+	if countField == "*" {
+		count, err = query.Count(ctx)
+	} else {
+		count, err = query.Unique(true).Select(countField).Count(ctx)
+	}
 	if err != nil {
 		return nil, err
 	}
