@@ -4,26 +4,22 @@
     <h2>仪表盘</h2>
     <div class="flex-wrap">
       <div class="flex-1">
-        <analytics-chart class="margin-24"></analytics-chart>
+        <analytics-chart :days="5" :time-unit="1440" class="margin-24" title="最近 5 天的用户浏览量"></analytics-chart>
       </div>
       <div class="flex-1">
-        <analytics-chart count-field="code" class="margin-24"></analytics-chart>
-      </div>
-    </div>
-    <div class="flex-wrap">
-      <div class="flex-1">
-        <analytics-chart group-by="city" class="margin-24"></analytics-chart>
-      </div>
-      <div class="flex-1">
-        <analytics-chart group-by="city" count-field="code" class="margin-24"></analytics-chart>
+        <analytics-chart :days="5" :time-unit="1440" count-field="code" class="margin-24" title="最近 5 天的活跃用户数">
+        </analytics-chart>
       </div>
     </div>
     <div class="flex-wrap">
       <div class="flex-1">
-        <analytics-chart group-by="browser" class="margin-24"></analytics-chart>
+        <analytics-chart :days="2" :time-unit="1440" group-by="category" class="margin-24" title="最近 2 天内各个页面的用户浏览量">
+        </analytics-chart>
       </div>
       <div class="flex-1">
-        <analytics-chart group-by="browser" count-field="code" class="margin-24"></analytics-chart>
+        <analytics-chart :days="2" :time-unit="1440" group-by="category" count-field="code" class="margin-24"
+          title="最近 2 天内各个页面的活跃用户数">
+        </analytics-chart>
       </div>
     </div>
   </div>
