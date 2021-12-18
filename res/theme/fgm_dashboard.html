@@ -2,5 +2,29 @@
   <main-nav></main-nav>
   <div class="container padding-9">
     <h2>仪表盘</h2>
+    <div class="flex-wrap">
+      <div class="flex-1">
+        <analytics-chart class="margin-24"></analytics-chart>
+      </div>
+      <div class="flex-1">
+        <analytics-chart count-field="code" class="margin-24"></analytics-chart>
+      </div>
+    </div>
+    <div class="flex-wrap">
+      <div class="flex-1">
+        <analytics-chart group-by="city" class="margin-24"></analytics-chart>
+      </div>
+      <div class="flex-1">
+        <analytics-chart group-by="city" count-field="code" class="margin-24"></analytics-chart>
+      </div>
+    </div>
+    <div class="flex-wrap">
+      <div class="flex-1">
+        <analytics-chart group-by="browser" class="margin-24"></analytics-chart>
+      </div>
+      <div class="flex-1">
+        <analytics-chart group-by="browser" count-field="code" class="margin-24"></analytics-chart>
+      </div>
+    </div>
   </div>
 </div>

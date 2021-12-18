@@ -6,12 +6,7 @@ const Dashboard = {
     }
   },
   // computed: {},
-  methods: {
-    getAnalyticsPageViewSuccess() { },
-    getAnalyticsPageViewFailure() { },
-  },
-  created() {
-    getAnalyticsPageView((resp) => { }, (err) => { })
-  },
+  methods: {},
+  created() { },
   template: fgm_dashboard,
 }
