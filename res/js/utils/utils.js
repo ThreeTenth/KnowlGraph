@@ -143,6 +143,14 @@ function isType(obj, type) {
   }
 }
 
+function isEmpty(str) {
+  return str == undefined || str == null || str == ""
+}
+
+function isNull(str) {
+  return isEmpty(str) || str == "null"
+}
+
 // 获取 text 的字符串内容，如果 text 为空或 undefined，则返回 ""
 function getString(text) {
   if (text) return text
