@@ -27,6 +27,26 @@ if (city === undefined || city === null)
       Cookies.set("timezone", "", { expires: 1 })
     })
 
+function getAnalyticsUser(form = undefined, success, failure) {
+  var copyForm = form ? form : {}
+  copyForm.event = "page_view"
+  copyForm.group_by = "event"
+  copyForm.count_field = "code"
+  axios({
+    method: "GET",
+    url: queryRestful("/v1/analytics", copyForm),
+  }).then(success).catch(failure)
+}
+
+function getAnalyticsPageView(form = undefined, success, failure) {
+  var copyForm = form ? form : {}
+  copyForm.event = "page_view"
+  axios({
+    method: "GET",
+    url: queryRestful("/v1/analytics", copyForm),
+  }).then(success).catch(failure)
+}
+
 function postAnalyticsPageView(page, title, referrer) {
   axios({
     method: "POST",
