@@ -2,15 +2,32 @@ package main
 
 import (
 	"bytes"
-	"embed"
 	"fmt"
 	"io"
+	"io/fs"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
+
+// ResourceReadDir return `[]fs.DirEntry` from `src`` dir.
+func ResourceReadDir(src string) ([]fs.DirEntry, error) {
+	if config.Debug {
+		return os.ReadDir(filepath.Join("./", src))
+	}
+	return resource.ReadDir(src)
+}
+
+// ResourceReadFile return `[]byte` from `src`` file.
+func ResourceReadFile(src string) ([]byte, error) {
+	if config.Debug {
+		return os.ReadFile(filepath.Join("./", src))
+	}
+	return resource.ReadFile(src)
+}
 
 var mainCSSBuffer *bytes.Buffer
 
@@ -21,7 +38,7 @@ func getMainCSS(c *gin.Context) {
 	if 0 == mainCSSBuffer.Len() || config.Debug {
 		mainCSSBuffer.Reset()
 
-		_, err := writeEmbedDir(resource, "res/css", mainCSSBuffer, nil)
+		_, err := writeEmbedDir(ResourceReadDir, ResourceReadFile, "res/css", mainCSSBuffer, nil)
 		if err != nil {
 			c.AbortWithError(http.StatusInternalServerError, err)
 			return
@@ -46,25 +63,25 @@ func getAppJS(c *gin.Context) {
 		languagesFormat := "// %v, %v \nconst languages = %v"
 		defaultStringsFormat := "// %v, %v \nconst defaultLang = %v"
 
-		_, err := writeEmbedFile(resource, "res/strings/languages.json", appJSBuffer, languagesFormat)
+		_, err := writeEmbedFile(ResourceReadFile, "res/strings/languages.json", appJSBuffer, languagesFormat)
 		if err != nil {
 			c.AbortWithError(http.StatusInternalServerError, err)
 			return
 		}
 
-		_, err = writeEmbedFile(resource, "res/strings/strings-en.json", appJSBuffer, defaultStringsFormat)
+		_, err = writeEmbedFile(ResourceReadFile, "res/strings/strings-en.json", appJSBuffer, defaultStringsFormat)
 		if err != nil {
 			c.AbortWithError(http.StatusInternalServerError, err)
 			return
 		}
 
-		_, err = writeEmbedDir(resource, "res/js", appJSBuffer, []string{"res/js/app.js"})
+		_, err = writeEmbedDir(ResourceReadDir, ResourceReadFile, "res/js", appJSBuffer, []string{"res/js/app.js"})
 		if err != nil {
 			c.AbortWithError(http.StatusInternalServerError, err)
 			return
 		}
 
-		_, err = writeEmbedFile(resource, "res/js/app.js", appJSBuffer)
+		_, err = writeEmbedFile(ResourceReadFile, "res/js/app.js", appJSBuffer)
 		if err != nil {
 			c.AbortWithError(http.StatusInternalServerError, err)
 			return
@@ -89,7 +106,7 @@ func getDefaultThemes(c *gin.Context) {
 		themeFormat := "// %v \nconst %v = `%v`"
 
 		var err error
-		_, err = writeEmbedDir(resource, "res/theme", themeBuffer, nil, themeFormat)
+		_, err = writeEmbedDir(ResourceReadDir, ResourceReadFile, "res/theme", themeBuffer, nil, themeFormat)
 		if err != nil {
 			c.AbortWithError(http.StatusInternalServerError, err)
 			return
@@ -103,8 +120,15 @@ func getDefaultThemes(c *gin.Context) {
 	c.Abort()
 }
 
-func writeEmbedDir(resource embed.FS, src string, dst io.Writer, ignores []string, format ...string) (int, error) {
-	themes, err := resource.ReadDir(src)
+func writeEmbedDir(
+	readDir func(src string) ([]fs.DirEntry, error),
+	readFile func(src string) ([]byte, error),
+	src string,
+	dst io.Writer,
+	ignores []string,
+	format ...string,
+) (int, error) {
+	themes, err := readDir(src)
 	if err != nil {
 		return 0, err
 	}
@@ -128,9 +152,9 @@ func writeEmbedDir(resource embed.FS, src string, dst io.Writer, ignores []strin
 		}
 
 		if theme.IsDir() {
-			length, err = writeEmbedDir(resource, path, dst, ignores, format...)
+			length, err = writeEmbedDir(readDir, readFile, path, dst, ignores, format...)
 		} else {
-			length, err = writeEmbedFile(resource, path, dst, format...)
+			length, err = writeEmbedFile(readFile, path, dst, format...)
 		}
 
 		count += length
@@ -142,8 +166,13 @@ func writeEmbedDir(resource embed.FS, src string, dst io.Writer, ignores []strin
 	return count, nil
 }
 
-func writeEmbedFile(resource embed.FS, src string, dst io.Writer, format ...string) (int, error) {
-	bs, err := resource.ReadFile(src)
+func writeEmbedFile(
+	readFile func(src string) ([]byte, error),
+	src string,
+	dst io.Writer,
+	format ...string,
+) (int, error) {
+	bs, err := readFile(src)
 	if err != nil {
 		return 0, err
 	}
