@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes, minimal-ui">
 	<meta name="github_client_id" content="{{.Header.GithubClientID}}" />
 	<meta name="mobile-web-app-capable" content="yes">
 	<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ThreeTenth/css-theme@v0.1.2/colours.css" /> -->
@@ -80,12 +80,14 @@
 	<script src="https://cdn.jsdelivr.net/npm/qrcode_js@1.0.0/qrcode.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/diff@5.0.0/dist/diff.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/ua-parser-js@0.7.28/src/ua-parser.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.2/dist/chart.js"></script>
 	{{ else }}
 	<script
 		src="https://cdn.jsdelivr.net/combine/npm/vue,npm/vue-router,npm/axios/dist/axios.min.js,npm/js-cookie@rc/dist/js.cookie.min.js,npm/sprintf-js@1.1.2/dist/sprintf.min.js,npm/showdown@1.9.0,gh/excing/showdown-extensions@v1.2.2/showdown-full-extensions.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/qrcode_js@1.0.0/qrcode.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/diff@5.0.0/dist/diff.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/ua-parser-js@0.7.28/src/ua-parser.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.2/dist/chart.min.js"></script>
 	{{end}}
 	<script type="text/javascript" src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
 	<script src="{{.Header.StaticDomain}}/__default_theme.js"></script>
