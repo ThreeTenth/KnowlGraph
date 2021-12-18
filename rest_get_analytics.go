@@ -13,7 +13,7 @@ import (
 // AnalyticsResult is analytics result
 type AnalyticsResult struct {
 	ent.Analytics
-	Count int
+	Count int `json:"count"`
 }
 
 func getAnalytics(c *Context) error {
@@ -151,7 +151,7 @@ func getAnalytics(c *Context) error {
 		}
 	}
 	if form.TimeStart == nil {
-		form.TimeStart = make([]time.Time, 1)
+		form.TimeStart = make([]time.Time, 0)
 	}
 	if len(form.TimeStart) == 0 {
 		// 默认获取最近一天的统计数据
@@ -171,7 +171,7 @@ func getAnalytics(c *Context) error {
 		nodePredicates := append(predicates, timePredicates)
 		result, err := getAnalyticsByPredicates(nodePredicates, form.GroupBy, form.CountField)
 		if err != nil {
-			ar := &AnalyticsResult{Analytics: ent.Analytics{Message: err.Error()}, Count: 1}
+			ar := &AnalyticsResult{Analytics: ent.Analytics{Event: "error", Message: err.Error()}, Count: 1}
 			resultList[node] = []*AnalyticsResult{ar}
 		} else {
 			resultList[node] = result
