@@ -4,14 +4,19 @@ const color = ["#7FDBFF", "#F012BE", "#39CCCC", "#B10DC9", "#01FF70", "#85144B",
 
 Vue.component('analytics-chart', {
   props: {
+    theme: String,
     groupBy: {
       type: String,
     },
     countField: String,
+    title: String,
+    timeUnit: Number,
+    days: Number,
   },
   data: function () {
     return {
       pageStatus: 0,
+      chartType: "bar",
     }
   },
   methods: {
@@ -24,13 +29,16 @@ Vue.component('analytics-chart', {
           const value = arr[key];
           var data = []
           value.forEach(v => {
+            let countFileName = this.countField || "浏览量"
+            countFileName = countFileName == "code" ? "用户数" : countFileName
+
             let groupByName = this.groupBy ?
               (
                 v[this.groupBy] ?
                   v[this.groupBy] :
-                  "Unknown"
+                  countFileName
               ) :
-              "浏览量"
+              countFileName
 
             let idx = labels.indexOf(groupByName)
             if (-1 == idx) {
@@ -55,8 +63,9 @@ Vue.component('analytics-chart', {
       // console.log(labels);
       // console.log(datasets);
       const ctx = this.$refs.chart.getContext('2d');
+      const title = this.title
       new Chart(ctx, {
-        type: 'bar',
+        type: this.chartType,
         data: {
           labels: labels,
           datasets: datasets,
@@ -68,8 +77,8 @@ Vue.component('analytics-chart', {
               position: 'top',
             },
             title: {
-              display: true,
-              text: this.countField === "code" ? "用户数" : '浏览量'
+              display: !isEmpty(title),
+              text: title
             }
           }
         },
@@ -84,18 +93,24 @@ Vue.component('analytics-chart', {
     analyticsPageViewFailure(err) { },
   },
   created() {
-    var now = new Date()
-    var _1day = new Date(now.getTime() - 24 * 60 * 60 * 1000)
-    var _2day = new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000)
-    var _7day = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+    this.chartType = this.theme || this.chartType
+    var _day = 24 * 60 * 60 * 1000
+    var today = new Date()
+    today.setHours(0)
+    today.setMinutes(0)
+    today.setSeconds(1)
+    var timeStart = [today.toJSON()]
+    if (this.days) {
+      for (let index = 1; index < this.days; index++) {
+        timeStart.push(new Date(today.getTime() - index * _day).toJSON())
+      }
+    }
 
     var form = {
-      time_start: [
-        _7day.toJSON(),
-        _2day.toJSON(),
-        _1day.toJSON()
-      ],
-      time_unit: 1440,
+      time_start: timeStart,
+    }
+    if (this.timeUnit) {
+      form.time_unit = this.timeUnit
     }
     if (this.groupBy) {
       form.group_by = this.groupBy
