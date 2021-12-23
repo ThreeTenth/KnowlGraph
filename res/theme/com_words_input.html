@@ -4,7 +4,7 @@
       v-on:click="onRemoveWord(word)">{{ word }} X
     </li>
     <input v-model="input" type="text" class="input-2" v-on:keyup="onKeyup" v-on:keyup.enter="onAdd"
-      v-on:keyup.188="onAdd" v-on:keyup.delete="onDel" v-on:keyup.up="onMoveUp" v-on:keyup.down="onMoveDown"
+      v-on:keyup.188="onAdd" v-on:keyup.delete="onDel" 
       v-bind:placeholder="i18n.AddAWord"></input>
   </ul>
   <div class="menu w-100" v-bind:class="{'block': items.length}">

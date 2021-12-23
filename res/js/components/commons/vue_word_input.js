@@ -46,6 +46,7 @@ Vue.component('words-input', {
       if (index > -1) {
         this.values.splice(index, 1)
       }
+      this.$emit("changed", this.values)
     },
     onAdd: function () {
       var word = this.input.replace(/[\,\， ]*$/g, '')
@@ -67,6 +68,7 @@ Vue.component('words-input', {
 
       this.values.push(word)
       this.input = ""
+      this.$emit("changed", this.values)
     },
     onDel: function () {
       if (this.$data.__isDelProcess) {
@@ -81,6 +83,7 @@ Vue.component('words-input', {
         this.values.splice(this.deleteMark, 1)
         window.clearTimeout(cancelDeleteWordTimeoutID)
         this.deleteMark = null
+      this.$emit("changed", this.values)
       }
     },
   },

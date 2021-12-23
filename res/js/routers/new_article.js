@@ -34,6 +34,16 @@ const EditDraft = {
       draft: null,
       __last: '',
 
+      version: {
+        title: "",
+        gist: "",
+        lang: getUserLang(),
+        keywords: [],
+        name: "v1.0.0",
+        comment: "初次提交",
+        init: false,
+      },
+
       editingStatus: 0,
       fullscreen: false,
 
@@ -61,97 +71,6 @@ const EditDraft = {
       return this.md2html(this.content)
     },
 
-    version: function () {
-      if (!this.content) return {
-        title: "",
-        gist: "",
-        lang: "",
-        keywords: null,
-        name: "",
-        comment: "",
-      }
-
-      let title
-      let gist
-
-      let found = this.content.match(/^# (.*)/m)
-
-      if (found) {
-        title = found[1]
-      } else {
-        found = this.content.match(/^#+ (.*)/m)
-
-        if (found) {
-          title = found[1]
-        }
-      }
-
-      var content = this.content.replace(/#+ .*/g, '')
-      content = content.replace(/\n- .*/g, '')
-      content = content.replace(/\n([123456789]+\.) .*/g, '')
-      let text = removeMarkdown(content)
-
-      if (!title) {
-        var index = text.indexOf("\n")
-        if (index === -1) index = text.length
-        title = text.substring(0, index);
-      }
-
-      var index = text.indexOf(title)
-      var gistStart = 0, gistEnd = 0
-
-      if (index === -1) {
-        gistStart = 0
-        gistEnd = 120
-      } else if (0 == index) {
-        gistStart = title.length
-        gistEnd = gistStart + 120
-      } else {
-        gistStart = 0
-        gistEnd = index
-      }
-
-      if (text.length <= gistEnd) {
-        gist = text.substr(gistStart, text.length).trim()
-      } else {
-        gist = text.substr(gistStart, gistEnd).trim() + '...'
-      }
-
-      index = gist.indexOf("\n")
-      if (-1 < index) {
-        gist = gist.substring(0, index)
-      }
-
-      if (!gist) {
-        gist = title
-      }
-
-      var lang = getUserLang()
-      var name = "v1.0.0"
-      var keywords = null
-      var comment = "初次提交："
-      var _original = this.draft.edges.original
-      if (_original) {
-        lang = _original.lang ? _original.lang : lang
-        name = _original.name ? versionNamePlusOne(_original.name) : name
-        keywords = []
-        if (_original.edges.keywords) {
-          _original.edges.keywords.forEach(element => {
-            keywords.push(element.name)
-          })
-        }
-        comment = ""
-      }
-
-      return {
-        title: title,
-        gist: gist,
-        lang: lang,
-        keywords: keywords,
-        name: name,
-        comment: comment,
-      }
-    },
   },
 
   methods: {
@@ -233,8 +152,96 @@ const EditDraft = {
       this.scroller = b ? this.$refs.editorContainer : document
     },
 
+    onKeywordsChanged(values) {
+      this.version.keywords = values
+    },
+
     onShowPublish() {
-      this.showPreview = true
+      if (!this.content && this.version.init) {
+        this.showPublish = true
+        return
+      }
+
+      let title
+      let gist
+
+      let found = this.content.match(/^# (.*)/m)
+
+      if (found) {
+        title = found[1]
+      } else {
+        found = this.content.match(/^#+ (.*)/m)
+
+        if (found) {
+          title = found[1]
+        }
+      }
+
+      var content = this.content.replace(/#+ .*/g, '')
+      content = content.replace(/\n- .*/g, '')
+      content = content.replace(/\n([123456789]+\.) .*/g, '')
+      let text = removeMarkdown(content)
+
+      if (!title) {
+        var index = text.indexOf("\n")
+        if (index === -1) index = text.length
+        title = text.substring(0, index);
+      }
+
+      var index = text.indexOf(title)
+      var gistStart = 0, gistEnd = 0
+
+      if (index === -1) {
+        gistStart = 0
+        gistEnd = 120
+      } else if (0 == index) {
+        gistStart = title.length
+        gistEnd = gistStart + 120
+      } else {
+        gistStart = 0
+        gistEnd = index
+      }
+
+      if (text.length <= gistEnd) {
+        gist = text.substr(gistStart, text.length).trim()
+      } else {
+        gist = text.substr(gistStart, gistEnd).trim() + '...'
+      }
+
+      index = gist.indexOf("\n")
+      if (-1 < index) {
+        gist = gist.substring(0, index)
+      }
+
+      if (!gist) {
+        gist = title
+      }
+
+      var lang = this.version.lang
+      var name = this.version.name
+      var keywords = this.version.keywords
+      var comment = this.version.comment
+      var _original = this.draft.edges.original
+      if (_original) {
+        lang = _original.lang ? _original.lang : lang
+        name = _original.name ? versionNamePlusOne(_original.name) : name
+        keywords = []
+        if (_original.edges.keywords) {
+          _original.edges.keywords.forEach(element => {
+            keywords.push(element.name)
+          })
+        }
+        comment = ""
+      }
+
+      this.version.title = title
+      this.version.gist = gist
+      this.version.lang = lang
+      this.version.keywords = keywords
+      this.version.name = name
+      this.version.comment = comment
+      this.version.init = true
+      this.showPublish = true
     },
 
     onPublish() {

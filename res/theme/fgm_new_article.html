@@ -1,6 +1,6 @@
 <div>
   <main-nav mobile-hidden-menu hidden-search>
-    <button class="btn text sm fill flex-v padding-x padding-y5 spacing-18" v-on:click="showPublish = true">发布</button>
+    <button class="btn text sm fill flex-v padding-x padding-y5 spacing-18" v-on:click="onShowPublish">发布</button>
   </main-nav>
   <div class="margin-t7 container bgc white flex-start" v-bind:class="{'scrolly-auto' : fullscreen}"
     ref="editorContainer">
@@ -109,7 +109,7 @@
             {{ i18n.Preview }}
           </h2>
         </div>
-        <button class="margin-x9 btn text fill padding-x24 padding-y9" v-on:click="showPublish = true">发布</button>
+        <button class="margin-x9 btn text fill padding-x24 padding-y9" v-on:click="onShowPublish">发布</button>
       </div>
       <article class="markdown margin-x9" v-html="preview"></article>
     </div>
@@ -136,7 +136,8 @@
           </select>
         </div>
         <div class="margin-x9" style="width: 480px;">
-          <words-input class="input-3" v-bind:keywords="version.keywords" v-bind:words="user.words" />
+          <words-input class="input-3" v-bind:keywords="version.keywords" v-bind:words="user.words"
+            v-on:changed="onKeywordsChanged" />
           <input type="text" name="versionName" class="input-3" v-model="version.name"
             v-bind:placeholder="i18n.VersionName"></input>
           <input type="text" name="comment" class="input-3" v-model="version.comment"
