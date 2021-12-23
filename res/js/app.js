@@ -159,6 +159,9 @@ router.beforeEach((to, from, next) => {
   } else if (to.name === "editDraft") {
     page = "/d"
     title = "edit draft"
+  } else if (to.name === "newArticle") {
+    page = "/new/article"
+    title = "new article"
   }
   next()
   postAnalyticsPageView(page, title, from.fullPath)
