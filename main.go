@@ -167,6 +167,11 @@ func startServer() {
 	//
 	//
 	////////////////////////////////////////////////////////
+	if config.Debug {
+		gin.SetMode(gin.DebugMode)
+	} else {
+		gin.SetMode(gin.ReleaseMode)
+	}
 
 	// write the logs to file and console at the same time
 	if f, err := os.Create(config.Log); err == nil {
@@ -220,6 +225,7 @@ func startServer() {
 		return err
 	})
 
+	info("start knowledge graph service successed\n")
 	if err := g.Wait(); err != nil {
 		panic(err)
 	}
