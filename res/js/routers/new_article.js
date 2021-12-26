@@ -356,10 +356,16 @@ const EditDraft = {
 
     document.addEventListener("fullscreenchange", this.fullscreenEvent)
     document.addEventListener("paste", (e) => {
+      let paste = (e.clipboardData || window.clipboardData).getData('text');
+
+      const selection = window.getSelection();
+      if (!selection.rangeCount) return false;
+      // selection.deleteFromDocument();
+      // selection.getRangeAt(0).insertNode(document.createTextNode(paste));
+      document.execCommand("insertText", false, paste)
+
       e.stopPropagation()
       e.preventDefault()
-      var text = e.clipboardData.getData("Text")
-      document.execCommand("insertText", false, text)
     })
     document.addEventListener('selectionchange', () => {
       let selection = document.getSelection()
