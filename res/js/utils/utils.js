@@ -233,11 +233,19 @@ function bufferDecode(value) {
 }
 
 function calcElementLength(element) {
-  var text = element.innerText
+  var text
+  if (element.nodeType === Node.TEXT_NODE) {
+    text = element.data
+  } else {
+    text = element.innerText
+  }
   if ('' === text || '\n' === text) {
     return text.length
+  } else if (text) {
+    return text.length + 1
+  } else {
+    return 1
   }
-  return text.length + 1
 }
 
 function isChildAt(parent, child) {
