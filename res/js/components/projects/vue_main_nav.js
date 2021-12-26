@@ -5,6 +5,10 @@ Vue.component('main-nav', {
   props: {
     mobileHiddenMenu: Boolean,
     hiddenSearch: Boolean,
+    openSearchShortcut: {
+      type: Boolean,
+      default: true,
+    },
   },
 
   data: function () {
@@ -29,12 +33,10 @@ Vue.component('main-nav', {
   },
 
   created() {
-    var _this = this
-
-    document.onkeydown = function (e) {
+    document.onkeydown = (e) => {
       let key = window.event.keyCode
-      if (key == 191 && !e.target.type) {
-        _this.onSearch()
+      if (key == 191 && !e.target.type && this.openSearchShortcut) {
+        this.onSearch()
       }
     }
   },
