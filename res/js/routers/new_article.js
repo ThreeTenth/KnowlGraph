@@ -47,6 +47,8 @@ const EditDraft = {
       editingStatus: 0,
       fullscreen: false,
 
+      isEditor: true,
+
       scroller: document,
       selectRange: {
         start: 0,
@@ -369,8 +371,11 @@ const EditDraft = {
     })
     document.addEventListener('selectionchange', () => {
       let selection = document.getSelection()
+      const editor = _this.$refs.editor
 
-      if (!_this.$refs.editor) return
+      this.isEditor = isChildAt(editor, selection.focusNode)
+
+      if (!this.isEditor) return
 
       var nodes = _this.$refs.editor.childNodes
       var start = 0, end = 0

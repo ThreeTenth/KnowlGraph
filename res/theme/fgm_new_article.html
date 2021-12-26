@@ -1,5 +1,5 @@
 <div>
-  <main-nav mobile-hidden-menu hidden-search>
+  <main-nav mobile-hidden-menu hidden-search v-bind:open-search-shortcut="!isEditor">
     <button class="btn text sm fill flex-v padding-x padding-y5 spacing-18" v-on:click="onShowPublish">发布</button>
   </main-nav>
   <div class="margin-t7 container bgc white flex-start" v-bind:class="{'scrolly-auto' : fullscreen}"
