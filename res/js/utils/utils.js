@@ -1,5 +1,21 @@
 // utils.js
 
+// 将光标移动至输入框或可编辑元素的末尾
+function moveCursorToEnd(el) {
+  if (window.getSelection) { // ie11, 10, 9, safari
+    var range = window.getSelection() // 创建range
+    range.selectAllChildren(el) // range 选择obj下所有子内容
+    range.collapseToEnd() // 光标移至最后
+  }
+  else if (document.selection) { // ie10 及以下
+    var range = document.selection.createRange() // 创建选择对象
+    range.moveToElementText(el) // range定位到obj
+    range.collapse(false) // 光标移至最后
+    range.select()
+  }
+}
+
+// 创建一个随机字符串。
 function getRandomString() {
   return Math.random().toString(36).slice(2)
 }
