@@ -77,18 +77,17 @@ const EditDraft = {
 
   methods: {
     onHistories() {
-      let _this = this
       axios({
         method: "GET",
         url: queryRestful("/v1/draft", { id: this.id, needHistory: true }),
-      }).then(function (resp) {
-        _this.snapshots = resp.data.edges.snapshots
-        _this.snapshotIndex = 0
-        _this.showSnapshots = true
-        _this.__snapDiff(_this.snapshotIndex, 1)
-      }).catch(function (err) {
-        _this.snapshotIndex = 0
-        _this.showSnapshots = true
+      }).then((resp) => {
+        this.snapshots = resp.data.edges.snapshots
+        this.snapshotIndex = 0
+        this.showSnapshots = true
+        this.__snapDiff(this.snapshotIndex, 1)
+      }).catch((err) => {
+        this.snapshotIndex = 0
+        this.showSnapshots = true
       })
     },
 
@@ -152,6 +151,58 @@ const EditDraft = {
     setFullscreen(b) {
       this.fullscreen = b
       this.scroller = b ? this.$refs.editorContainer : document
+    },
+
+    pasteEent(e) {
+      let paste = (e.clipboardData || window.clipboardData).getData('text');
+
+      const selection = window.getSelection();
+      if (!selection.rangeCount) return false;
+      // selection.deleteFromDocument();
+      // selection.getRangeAt(0).insertNode(document.createTextNode(paste));
+      document.execCommand("insertText", false, paste)
+
+      e.stopPropagation()
+      e.preventDefault()
+    },
+
+    selectionchangeEvent(e) {
+      let selection = document.getSelection()
+      const editor = this.$refs.editor
+
+      this.isEditor = isChildAt(editor, selection.focusNode)
+
+      if (!this.isEditor) return
+
+      var nodes = this.$refs.editor.childNodes
+      var start = 0, end = 0
+      for (let index = 0; index < nodes.length; index++) {
+        const element = nodes[index];
+        if (isChildAt(element, selection.anchorNode)) {
+          start += selection.anchorOffset
+          break
+        } else {
+          start += calcElementLength(element)
+        }
+      }
+      for (let index = 0; index < nodes.length; index++) {
+        const element = nodes[index];
+        if (isChildAt(element, selection.focusNode)) {
+          end += selection.focusOffset
+          break
+        } else {
+          end += calcElementLength(element)
+        }
+      }
+      if (start == end) {
+        end = start + 1
+      }
+      // console.log(selection);
+      // console.log(start, end);
+      this.selectRange = {
+        start: start,
+        end: end,
+      }
     },
 
     onKeywordsChanged(values) {
@@ -278,9 +329,8 @@ const EditDraft = {
       this.content = textContentOfDiv(e.target)
       // console.log(this.content);
       // this.content = e.target.innerText
-      let _this = this
       window.clearTimeout(postChangedTimeoutID)
-      postChangedTimeoutID = window.setTimeout(function () { _this.onSaveDraft() }, 2000)
+      postChangedTimeoutID = window.setTimeout(() => { this.onSaveDraft() }, 2000)
     },
 
     onBlur() {
@@ -296,7 +346,6 @@ const EditDraft = {
       }
 
       let temp = this._last
-      let _this = this
       axios({
         method: "PUT",
         url: queryRestful("/v1/article/content"),
@@ -304,25 +353,29 @@ const EditDraft = {
           body: this.content,
           draft_id: this.draft.id,
         },
-      }).then(function (resp) {
-        _this.__setLast(resp.data.body)
+      }).then((resp) => {
+        this.__setLast(resp.data.body)
         // todo the new article have content and notify drafts page
-      }).catch(function (err) {
-        _this.__setLast(temp)
+      }).catch(() => {
+        this.__setLast(temp)
       })
     },
 
     __setDraft(__draft) {
       this.draft = __draft
       this.content = getString(this.draft.edges.snapshots[0].body)
-      if ('' == this.content) return
-      var parts = this.content.split('\n')
       setTimeout(() => {
+        const editor = this.$refs.editor
+        editor.focus()
+
+        if ('' == this.content) return
+        var parts = this.content.split('\n')
         parts.forEach(part => {
           var el = document.createElement('div')
           el.innerText = "" === part ? "\n" : part
-          this.$refs.editor.appendChild(el)
+          editor.appendChild(el)
         });
+        moveCursorToEnd(editor)
       }, 0);
     },
 
@@ -343,74 +396,27 @@ const EditDraft = {
   created() {
     document.title = "编辑 -- KnowlGraph"
 
-    let _this = this
     axios({
       method: "GET",
       url: queryRestful("/v1/draft", { id: this.id }),
-    }).then(function (resp) {
-      _this.__setDraft(resp.data)
-      _this.__setLast(_this.content)
-      _this.editingStatus = resp.status
-    }).catch(function (err) {
+    }).then((resp) => {
+      this.__setDraft(resp.data)
+      this.__setLast(this.content)
+      this.editingStatus = resp.status
+    }).catch((err) => {
       // console.log(err);
-      _this.editingStatus = getStatus4Error(err)
+      this.editingStatus = getStatus4Error(err)
     })
 
     document.addEventListener("fullscreenchange", this.fullscreenEvent)
-    document.addEventListener("paste", (e) => {
-      let paste = (e.clipboardData || window.clipboardData).getData('text');
-
-      const selection = window.getSelection();
-      if (!selection.rangeCount) return false;
-      // selection.deleteFromDocument();
-      // selection.getRangeAt(0).insertNode(document.createTextNode(paste));
-      document.execCommand("insertText", false, paste)
-
-      e.stopPropagation()
-      e.preventDefault()
-    })
-    document.addEventListener('selectionchange', () => {
-      let selection = document.getSelection()
-      const editor = _this.$refs.editor
-
-      this.isEditor = isChildAt(editor, selection.focusNode)
-
-      if (!this.isEditor) return
-
-      var nodes = _this.$refs.editor.childNodes
-      var start = 0, end = 0
-      for (let index = 0; index < nodes.length; index++) {
-        const element = nodes[index];
-        if (isChildAt(element, selection.anchorNode)) {
-          start += selection.anchorOffset
-          break
-        } else {
-          start += calcElementLength(element)
-        }
-      }
-      for (let index = 0; index < nodes.length; index++) {
-        const element = nodes[index];
-        if (isChildAt(element, selection.focusNode)) {
-          end += selection.focusOffset
-          break
-        } else {
-          end += calcElementLength(element)
-        }
-      }
-      if (start == end) {
-        end = start + 1
-      }
-      // console.log(selection);
-      // console.log(start, end);
-      this.selectRange = {
-        start: start,
-        end: end,
-      }
-    });
+    document.addEventListener("paste", this.pasteEent)
+    document.addEventListener('selectionchange', this.selectionchangeEvent);
   },
 
   beforeDestroy() {
     document.removeEventListener("fullscreenchange", this.fullscreenEvent)
+    document.removeEventListener("paste", this.pasteEent)
+    document.removeEventListener("selectionchange", this.selectionchangeEvent)
   },
 
   template: fgm_new_article,
