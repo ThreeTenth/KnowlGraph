@@ -81,6 +81,11 @@ func publishArticle(c *Context) error {
 		_versionState = version.StateRelease
 	}
 
+	_voterIDs, err := queryVoters(db, _data.Keywords)
+	if err != nil {
+		return c.InternalServerError(err.Error())
+	}
+
 	fmt.Println("publishArticle 03: pre publish article")
 	err = WithTx(ctx, client, func(tx *ent.Tx) error {
 
@@ -129,14 +134,14 @@ func publishArticle(c *Context) error {
 
 		fmt.Println("publishArticle 07")
 		// Randomly select up to 10 users as voters
-		_voterIDs, err := tx.User.Query().
-			Order(random()).
-			Limit(10).
-			Select(user.FieldID).
-			Ints(ctx)
-		if err != nil {
-			return err
-		}
+		// _voterIDs, err := tx.User.Query().
+		// 	Order(random()).
+		// 	Limit(10).
+		// 	Select(user.FieldID).
+		// 	Ints(ctx)
+		// if err != nil {
+		// 	return err
+		// }
 
 		fmt.Println("publishArticle 08")
 		// Open a random anonymous space,
