@@ -5,11 +5,69 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"strings"
+	"time"
 
 	"github.com/pkg/errors"
 	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/asset"
 )
+
+// QueryVotersSQL is query voters
+const QueryVotersSQL = `
+SELECT "id" FROM (
+  SELECT 
+    DISTINCT "users"."id"
+  FROM "users"
+  INNER JOIN "analytics"
+	  ON "analytics"."analytics_user" = "users"."id" AND "analytics"."start_time" >= $1
+  INNER JOIN "user_words"
+		ON "user_words"."user_words" = "users"."id"
+  INNER JOIN "words"
+		ON "words"."id" = "user_words"."user_word_word" AND "words"."name" IN (%v)
+) as "tmp"
+ORDER BY random()
+LIMIT 10
+`
+
+// 查找 7 天内在线的符合内容专业度的用户
+func queryVoters(db *sql.DB, words []string) ([]int, error) {
+	_sql := QueryVotersSQL
+	_args := []interface{}{
+		time.Now().AddDate(0, 0, -7),
+	}
+	_wordsIn := make([]string, 0)
+
+	for i, v := range words {
+		_args = append(_args, v)
+		_wordsIn = append(_wordsIn, fmt.Sprintf("$%v", i+2))
+	}
+	_sql = fmt.Sprintf(_sql, strings.Join(_wordsIn, ","))
+
+	debug("sql:Query: query=%v args=%v", _sql, _args)
+
+	rows, err := db.Query(_sql, _args...)
+	if err != nil {
+		return nil, err
+	}
+
+	userIDs := make([]int, 0)
+
+	for rows.Next() {
+		var _userID int
+
+		err = rows.Scan(
+			&_userID,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		userIDs = append(userIDs, _userID)
+	}
+
+	return userIDs, err
+}
 
 // QueryNoPrivateArticlesSQL is query no private article
 const QueryNoPrivateArticlesSQL = `select 
