@@ -1,0 +1,33 @@
+<div>
+  <div class="container padding-x9" v-if="!showPromiseDialog">
+    <h4>表决开始</h4>
+    <div style="text-align: right;">
+      <div> {{ version.name }} </div>
+      <div> {{ version.comment }} </div>
+      <div> {{ version.title }} </div>
+      <div class="flex">
+        <div class="flex-1"></div>
+        <div class="maxw-480p"> {{ version.gist }} </div>
+      </div>
+      <div> {{ version.lang }} </div>
+    </div>
+    <article class="markdown" v-html="md2html(version.edges.content.body)"></article>
+    <div class="margin-y flex-h">
+      <button class="btn text padding-6-30">驳回</button>
+      <button class="btn text fill padding-6-30">允许发布</button>
+    </div>
+  </div>
+  <modal v-model="showPromiseDialog">
+    <h4 class="flex-h">开始表决</h4>
+    <div class="margin-y flex-h padding-x">
+      <div>
+        <p>我承诺</p>
+        <p>我将依社区公约行为准则进行表决，不会因任何外力而违背此决心。</p>
+      </div>
+    </div>
+    <div class="margin-y flex-h flex-wrap padding-x">
+      <button class="btn text padding-6-30" v-on:click="back">放弃本次表决</button>
+      <button class="btn text fill padding-6-30" v-on:click="onPromise">我承诺，开始表决</button>
+    </div>
+  </modal>
+</div>
