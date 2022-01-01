@@ -17,6 +17,14 @@ const i18n = Vue.observable({
   ...defaultLang,
 })
 
+var _voteSource = {
+  exist: false,
+  value: null,
+}
+const _voteObservable = Vue.observable({
+  ..._voteSource,
+})
+
 let i18ns = new Map();
 i18ns.set(defaultLang.language, defaultLang)
 
@@ -32,6 +40,7 @@ const plugin = {
     }
     Vue.prototype.languages = languages
     Vue.prototype.i18n = i18n
+    Vue.prototype.vote = _voteObservable
     Vue.prototype.getUserWords = function () {
       axios({
         method: "GET",
@@ -144,6 +153,7 @@ const router = new VueRouter({
     { path: '/g/:id', redirect: { name: 'getapp' } },
     { path: '/getapp', name: 'getapp', component: GetAPP },
     { path: '/dashboard', name: 'dashboard', component: Dashboard },
+    { path: '/vote', name: 'vote', component: Vote },
   ]
 })
 
@@ -168,25 +178,18 @@ router.beforeEach((to, from, next) => {
 })
 
 var app = new Vue({
-  data: {
-    vote: {
-      has: false,
-      ras: null,
-    },
-  },
+  data: {},
   router,
   // template: logined ? app_home : app_index,
 
   created() {
-    var _this = this
     if (logined) {
       axios({
         method: "GET",
         url: queryRestful("/v1/vote"),
-      }).then(function (resp) {
+      }).then((resp) => {
         if (200 == resp.status) {
-          _this.vote.ras = resp.data
-          _this.vote.has = true
+          Object.assign(_voteObservable, { exist: true, value: resp.data })
         }
       }).catch(function (resp) {
         console.log(resp)
@@ -195,35 +198,9 @@ var app = new Vue({
   },
 
   methods: {
-    onAllow() {
-      if (!this.vote.ras) return
-
-      this.__postVote("allowed")
-    },
-    onRejecte() {
-      if (!this.vote.ras) return
-
-      this.__postVote("rejected")
-    },
     onSignout: function () {
       const githubOAuthAPI = "/signout"
       window.open(githubOAuthAPI, "_self")
-    },
-    __postVote(status) {
-      var _this = this
-      axios({
-        method: "POST",
-        url: queryRestful("/v1/vote"),
-        data: {
-          id: this.vote.ras.id,
-          status: status,
-        },
-      }).then(function (resp) {
-        _this.vote.ras = null
-        _this.vote.has = false
-      }).catch(function (resp) {
-        console.log(resp)
-      })
     },
   }
 })
