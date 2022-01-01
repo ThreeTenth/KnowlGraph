@@ -30,6 +30,10 @@ Vue.component('main-nav', {
     onSearch() {
       this.showSearch = true
     },
+
+    onVote() {
+      router.push({ name: 'vote' })
+    },
   },
 
   created() {
