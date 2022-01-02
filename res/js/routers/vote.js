@@ -1,13 +1,13 @@
 // vote.js
 
 const Vote = {
-  data: function() {
+  data: function () {
     return {
       showPromiseDialog: true,
     }
   },
   computed: {
-    version: function() {
+    version: function () {
       var ver = this.vote.value.edges.version
       this.languages.forEach(element => {
         if (element.code == ver.lang) {
@@ -22,27 +22,27 @@ const Vote = {
       this.showPromiseDialog = false
     },
     onAllow() {
-      if (!this.vote.ras) return
-
       this.__postVote("allowed")
     },
     onRejecte() {
-      if (!this.vote.ras) return
-
       this.__postVote("rejected")
     },
+    onAbstained() {
+      this.__postVote("abstained")
+    },
     __postVote(status) {
-      var _this = this
+      if (!this.version.exist) return
+
       axios({
         method: "POST",
         url: queryRestful("/v1/vote"),
         data: {
-          id: this.vote.ras.id,
+          id: this.vote.value.id,
           status: status,
         },
-      }).then(function (resp) {
-        _this.vote.ras = null
-        _this.vote.has = false
+      }).then((resp) => {
+        Object.assign(_voteObservable, { exist: false, value: null })
+        this.back()
       }).catch(function (resp) {
         console.log(resp)
       })
