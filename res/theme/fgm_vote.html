@@ -1,6 +1,13 @@
 <div>
   <div class="container padding-x9" v-if="!showPromiseDialog">
-    <h4>表决开始</h4>
+    <div class="flex-v">
+      <div class="flex-auto flex-v">
+        <h2 class="flex-v btn" v-on:click="back">
+          <span class="ic-chevron-left wh-x30"></span>
+          表决
+        </h2>
+      </div>
+    </div>
     <div style="text-align: right;">
       <div> {{ version.name }} </div>
       <div> {{ version.comment }} </div>
@@ -11,10 +18,17 @@
       </div>
       <div> {{ version.lang }} </div>
     </div>
-    <article class="markdown" v-html="md2html(version.edges.content.body)"></article>
-    <div class="margin-y flex-h">
-      <button class="btn text padding-6-30">驳回</button>
-      <button class="btn text fill padding-6-30">允许发布</button>
+    <div class="flex-h">
+      <div class="maxw-720p">
+        <article class="markdown" v-html="md2html(version.edges.content.body)"></article>
+        <div class="margin-y flex-h">
+          <button class="btn text padding-6-30" v-on:click="onRejecte">驳回</button>
+          <button class="btn text fill padding-6-30" v-on:click="onAllow">允许发布</button>
+        </div>
+        <div class="margin-y flex-h">
+          <button class="btn text padding-6-30" v-on:click="onAbstained">弃权</button>
+        </div>
+      </div>
     </div>
   </div>
   <modal v-model="showPromiseDialog">
