@@ -1,26 +1,24 @@
 <div>
-  <div class="container padding-x9" v-if="!showPromiseDialog">
-    <div class="flex-v">
-      <div class="flex-auto flex-v">
-        <h2 class="flex-v btn" v-on:click="back">
-          <span class="ic-chevron-left wh-x30"></span>
-          表决
-        </h2>
+  <fullpage class="container padding-x9" v-if="!showPromiseDialog">
+    <div class="minh-100vh flex-c">
+      <h1>表决开始</h1>
+    </div>
+    <div class="minh-100vh flex-c">
+      <div class="maxw-720p">
+        <div class="margin-y"> {{ version.name }} </div>
+        <div class="margin-y"> {{ version.comment }} </div>
+        <div class="margin-y"> {{ version.title }} </div>
+        <div class="margin-y"> {{ version.gist }} </div>
+        <div class="margin-y"> {{ version.lang }} </div>
       </div>
     </div>
-    <div style="text-align: right;">
-      <div> {{ version.name }} </div>
-      <div> {{ version.comment }} </div>
-      <div> {{ version.title }} </div>
-      <div class="flex">
-        <div class="flex-1"></div>
-        <div class="maxw-480p"> {{ version.gist }} </div>
-      </div>
-      <div> {{ version.lang }} </div>
-    </div>
-    <div class="flex-h">
+    <div class="minh-100vh flex-h">
       <div class="maxw-720p">
         <article class="markdown" v-html="md2html(version.edges.content.body)"></article>
+      </div>
+    </div>
+    <div class="minh-100vh w-100 flex-c">
+      <div>
         <div class="margin-y flex-h">
           <button class="btn text padding-6-30" v-on:click="onRejecte">驳回</button>
           <button class="btn text fill padding-6-30" v-on:click="onAllow">允许发布</button>
@@ -30,8 +28,8 @@
         </div>
       </div>
     </div>
-  </div>
-  <modal v-model="showPromiseDialog">
+  </fullpage>
+  <modal v-model="showPromiseDialog" v-bind:seenClose="false">
     <h4 class="flex-h">开始表决</h4>
     <div class="margin-y flex-h padding-x">
       <div>
@@ -40,7 +38,7 @@
       </div>
     </div>
     <div class="margin-y flex-h flex-wrap padding-x">
-      <button class="btn text padding-6-30" v-on:click="back">放弃本次表决</button>
+      <button class="btn text padding-6-30" v-on:click="back">再想想</button>
       <button class="btn text fill padding-6-30" v-on:click="onPromise">我承诺，开始表决</button>
     </div>
   </modal>
