@@ -38,7 +38,9 @@ Vue.component('modal', {
 
   methods: {
     close() {
-      this.$emit('toggle', false)
+      if (this.seenClose) {
+        this.$emit('toggle', false)
+      }
     },
   },
 
