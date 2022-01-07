@@ -995,6 +995,10 @@ div[contenteditable]:empty:before {
 	height: 100vh;
 }
 
+.minh-100vh {
+	min-height: 100vh;
+}
+
 .wh-x30 {
 	width : var(--x30) !important;
 	height: var(--x30) !important;
