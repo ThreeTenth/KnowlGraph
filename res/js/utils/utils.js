@@ -1,5 +1,11 @@
 // utils.js
 
+function getValueInRange(value, min, max) {
+  if (value < min) return min
+  if (max <= value) return max - 1
+  return value
+}
+
 // 将光标移动至输入框或可编辑元素的末尾
 function moveCursorToEnd(el) {
   if (window.getSelection) { // ie11, 10, 9, safari
