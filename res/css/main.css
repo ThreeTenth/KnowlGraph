@@ -561,6 +561,10 @@ body {
 	position: absolute;
 }
 
+.top-0 {
+	top: 0;
+}
+
 .right-0 {
 	right: 0;
 }
@@ -875,6 +879,11 @@ div[contenteditable]:empty:before {
 	display: flex;
 }
 
+.flex-col {
+	display  : flex;
+	flex-flow: column;
+}
+
 .flex-wrap {
 	display  : flex;
 	flex-wrap: wrap;
@@ -967,30 +976,6 @@ div[contenteditable]:empty:before {
 	width: 90px;
 }
 
-.w-120p {
-	width: 120px;
-}
-
-.w-140p {
-	width: 140px;
-}
-
-.w-180p {
-	width: 180px;
-}
-
-.w-220p {
-	width: 220px;
-}
-
-.w-256p {
-	width: 256px;
-}
-
-.w-720p {
-	width: 720px;
-}
-
 .h-100vh {
 	height: 100vh;
 }
@@ -1054,6 +1039,10 @@ div[contenteditable]:empty:before {
 
 .margin-9 {
 	margin: var(--x9);
+}
+
+.margin {
+	margin: var(--md);
 }
 
 .margin-24 {
@@ -1183,6 +1172,11 @@ div[contenteditable]:empty:before {
 .padding-x36 {
 	padding-left : var(--x36);
 	padding-right: var(--x36);
+}
+
+.padding-x48 {
+	padding-left : var(--x48);
+	padding-right: var(--x48);
 }
 
 .padding-y {
@@ -1340,6 +1334,10 @@ div[contenteditable]:empty:before {
 	background-color: var(--error) !important;
 }
 
+.c-white {
+	color: white;
+}
+
 .c-success {
 	color: var(--green);
 }
@@ -1363,6 +1361,10 @@ div[contenteditable]:empty:before {
 .sticky {
 	position: sticky;
 	top     : 0;
+}
+
+.fixed {
+	position: fixed;
 }
 
 /*******************************************************************
