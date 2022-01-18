@@ -231,7 +231,6 @@ func finishRegOnlyOnce(c *Context) error {
 
 	id := 0
 	token := New64BitID()
-	d := ExpireTimeTokenOnce
 	terminalMap := make(map[int]string)
 	if err = GetV4Redis(RUser(t.UserID), &terminalMap); err != nil {
 		return c.InternalServerError(err.Error())
@@ -252,10 +251,10 @@ func finishRegOnlyOnce(c *Context) error {
 		terminalMap[id] = token
 
 		_, err1 = rdb.Pipelined(ctx, func(pipe redis.Pipeliner) error {
-			if err1 = SetV2RedisPipe(pipe, RUser(t.UserID), &terminalMap, d); err1 != nil {
+			if err1 = SetV2RedisPipe(pipe, RUser(t.UserID), &terminalMap, ExpireTimeToken); err1 != nil {
 				return err1
 			}
-			pipe.Set(ctx, RToken(token), t.UserID, d)
+			pipe.Set(ctx, RToken(token), t.UserID, ExpireTimeTokenOnce)
 			pipe.Del(ctx, RChallenge(challenge))
 			return nil
 		})
