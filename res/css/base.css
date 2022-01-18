@@ -1,0 +1,29 @@
+.w360p {
+  width: 360px;
+}
+
+.w480p {
+  width: 480px;
+}
+
+.w720p {
+  width: 720px;
+}
+
+@media (max-width: 360px) {
+  .w360p {
+    width: 100vw;
+  }
+}
+
+@media (max-width: 480px) {
+  .w480p {
+    width: 100vw;
+  }
+}
+
+@media (max-width: 720px) {
+  .w720p {
+    width: 100vw;
+  }
+}
