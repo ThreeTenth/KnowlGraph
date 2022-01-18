@@ -1,45 +1,104 @@
-<div>
-  <fullpage class="container padding-x9" v-if="!showPromiseDialog">
-    <div class="minh-100vh flex-c">
+<fullpage class="container padding-x9">
+  <div class="minh-100vh flex-c">
+    <div class="w720p">
+      <h1>表决空间</h1>
+      <p title="空间关闭后可见">空间编号：*******-****</p>
+      <p>空间主题：关于《{{ version.title }}》一文的初次表决</p>
+      <p title="如未表决，视为弃权">空间关闭时间：2022 年 01 月 17 日</p>
+      <p title="同意票超过 3/10，即视为表决通过">参与人数：10 人</p>
+      <p>空间规则：</p>
+      <ul>
+        <li>随机抽取表决者</li>
+        <li>匿名</li>
+        <li>公示结果</li>
+      </ul>
+    </div>
+  </div>
+  <div class="minh-100vh flex-c">
+    <div class="w720p">
       <h1>表决开始</h1>
+      <h3>请对 《{{ version.title }}》一文进行表决</h3>
+      <p>表决规则：</p>
+      <ul>
+        <li>独立完成</li>
+        <li>文章公示前，禁止泄漏文章内容</li>
+        <li>检查内容是否含有禁止项</li>
+      </ul>
+      <p>内容禁止项：</p>
+      <ul>
+        <li>禁止内容中出现任何的<b>行政主体单位</b>、<b>个人信息</b>，以及他们的代称。</li>
+        <li>禁止内容中出现任何的<b>与内容主题无关</b>的内容</li>
+        <li>禁止内容中出现任何可能造成<b>剧烈熵增</b>的语调和结论。</li>
+      </ul>
     </div>
-    <div class="minh-100vh flex-c">
-      <div class="maxw-720p">
-        <div class="margin-y"> {{ version.name }} </div>
-        <div class="margin-y"> {{ version.comment }} </div>
-        <div class="margin-y"> {{ version.title }} </div>
-        <div class="margin-y"> {{ version.gist }} </div>
-        <div class="margin-y"> {{ version.lang }} </div>
+  </div>
+  <div class="minh-100vh flex-h">
+    <div class="w720p">
+      <article class="markdown" v-html="md2html(version.edges.content.body)"></article>
+    </div>
+  </div>
+  <div class="minh-100vh flex-c">
+    <div class="w720p">
+      <h1>版本信息</h1>
+      <div class="margin-y"> 版本编号：{{ version.name }} </div>
+      <div class="margin-y"> 版本名称：{{ version.comment }} </div>
+      <div class="margin-y"> 版本标题：{{ version.title }} </div>
+      <div class="margin-y"> 版本概要：{{ version.gist }} </div>
+      <div class="margin-y"> 版本语言：{{ version.lang }} </div>
+    </div>
+  </div>
+  <div class="minh-100vh w720p margin-auto flex-col">
+    <div class="flex-1 flex-c">
+      <div class="w720p">
+        <h1>请表决</h1>
+        <p>如果你发现文章或版本信息里包含社区禁止发布的内容，请点击“驳回”并选择原因提交。</p>
+        <p>如果你认为文章及版本信息没有任何问题，请点击“允许发布”再评分提交。</p>
+        <p>如果你无法做出选择，请点击“弃权”。</p>
       </div>
     </div>
-    <div class="minh-100vh flex-h">
-      <div class="maxw-720p">
-        <article class="markdown" v-html="md2html(version.edges.content.body)"></article>
+    <div>
+      <div class="margin-y flex-h">
+        <dropdown class="left">
+          <button class="btn text sm bgc-error c-white padding-x48 padding-y5">驳回</button>
+          <div class="menu w480p">
+            <h3 class="margin-x9">请选择驳回原因</h3>
+            <div class="padding-9">
+              <input id="id00" type="checkbox" />
+              <label for="id00" class="padding-9">文章中含有<b>行政主体单位</b>、<b>个人信息</b>，以及他们的代称</label>
+            </div>
+            <div class="padding-9">
+              <input id="id01" type="checkbox" />
+              <label for="id01" class="padding-9">文章中含有<b>与内容主题无关</b>的内容</label>
+            </div>
+            <div class="padding-9">
+              <input id="id02" type="checkbox" />
+              <label for="id02" class="padding-9">文章中含有可能造成<b>剧烈熵增</b>的语调和结论</label>
+            </div>
+            <div class="flex padding-x9">
+              <div class="flex-1"></div>
+              <button class="margin-y9 btn text sm fill padding-6-9" v-on:click="onRejecte">提交</button>
+            </div>
+          </div>
+        </dropdown>
+        <div class="flex-1"></div>
+        <dropdown>
+          <button class="btn text sm bgc-success c-white padding-x48 padding-y5">允许发布</button>
+          <div class="menu w360p">
+            <h3 class="margin-x">请评分</h3>
+            <div class="flex-h padding-9">
+              <span class="font-lg">⭐ ⭐ ⭐ ⭐ ⭐</span>
+            </div>
+            <div class="flex padding-x9">
+              <div class="flex-1"></div>
+              <button class="margin-y9 btn text sm fill padding-6-9" v-on:click="onAllow">提交</button>
+            </div>
+          </div>
+        </dropdown>
+      </div>
+      <div class="margin-y flex">
+        <div class="flex-1"></div>
+        <button class="btn text sm padding-x48 padding-y5" v-on:click="onAbstained">弃权</button>
       </div>
     </div>
-    <div class="minh-100vh w-100 flex-c">
-      <div>
-        <div class="margin-y flex-h">
-          <button class="btn text padding-6-30" v-on:click="onRejecte">驳回</button>
-          <button class="btn text fill padding-6-30" v-on:click="onAllow">允许发布</button>
-        </div>
-        <div class="margin-y flex-h">
-          <button class="btn text padding-6-30" v-on:click="onAbstained">弃权</button>
-        </div>
-      </div>
-    </div>
-  </fullpage>
-  <modal v-model="showPromiseDialog" v-bind:seenClose="false">
-    <h4 class="flex-h">开始表决</h4>
-    <div class="margin-y flex-h padding-x">
-      <div>
-        <p>我承诺</p>
-        <p>我将依社区公约行为准则进行表决，不会因任何外力而违背此决心。</p>
-      </div>
-    </div>
-    <div class="margin-y flex-h flex-wrap padding-x">
-      <button class="btn text padding-6-30" v-on:click="back">再想想</button>
-      <button class="btn text fill padding-6-30" v-on:click="onPromise">我承诺，开始表决</button>
-    </div>
-  </modal>
-</div>
+  </div>
+</fullpage>
