@@ -1,9 +1,10 @@
 
 class ElementIndex {
-  constructor(index, overflow, offset) {
+  constructor(index, overflow, offset, start) {
     this.index = index
     this.overflow = overflow
     this.offset = offset
+    this.start = start
   }
 }
 
@@ -18,16 +19,17 @@ function indexStartAtWindow(elements) {
 
   index = elements.length <= index ? elements.length - 1 : index
   let offset = (elements[index].offsetTop + elements[index].offsetHeight - window.scrollY - window.getBodyHeight() - ScrollYOffset)
-  return new ElementIndex(index, 0 < offset, offset)
+  let start = (window.scrollY - elements[index].offsetTop)
+  return new ElementIndex(index, 0 < offset, offset, start)
 }
 
 function indexEndAtWindow(elements) {
   let index = elements.length - 1
   for (; 0 <= index; index--) {
-    if (elements[index].offsetTop < window.scrollY + window.getBodyHeight()) break
+    if (elements[index].offsetTop + ScrollYOffset < window.scrollY + window.getBodyHeight()) break
   }
 
   index = index < 0 ? 0 : index
-  let offset = (window.scrollY - elements[index].offsetTop)
-  return new ElementIndex(index, 0 < offset, offset)
+  let offset = (window.scrollY - elements[index].offsetTop - ScrollYOffset)
+  return new ElementIndex(index, 0 < offset, offset, offset + ScrollYOffset)
 }
