@@ -3,7 +3,6 @@
 const Vote = {
   data: function () {
     return {
-      showPromiseDialog: true,
     }
   },
   computed: {
@@ -18,9 +17,6 @@ const Vote = {
     },
   },
   methods: {
-    onPromise() {
-      this.showPromiseDialog = false
-    },
     onAllow() {
       this.__postVote("allowed")
     },
@@ -48,6 +44,13 @@ const Vote = {
       })
     },
   },
-  created() { },
+  created() {
+    document.title = "表决空间 -- KnowlGraph"
+    // document.body.style.overflow = 'hidden'
+  },
+
+  beforeDestroy() {
+    // document.body.style['overflow-y'] = 'scroll'
+  },
   template: fgm_vote,
 }
