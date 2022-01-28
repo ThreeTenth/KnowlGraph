@@ -1,7 +1,7 @@
 // vue_dropdown.js
 
 Vue.component('dropdown', {
-  props: ['ignore'],
+  props: ["trigger"],
 
   data: function () {
     return {
@@ -10,44 +10,38 @@ Vue.component('dropdown', {
     }
   },
 
+  watch: {
+    trigger: function (val, oldVal) {
+      if (val == oldVal) return
+      this.seen = !this.seen
+      if (!this.seen) {
+        document.removeEventListener('click', this.toggle);
+      }
+    },
+  },
+
   methods: {
     toggle() {
       if (this.seen) {
-        return this.__hide()
+        this.__hide()
+      } else {
+        this.__show()
       }
-      return this.__show()
     },
 
     __show() {
       this.__update()
       this.seen = true
-      setTimeout(() => document.addEventListener('click', this.__hide), 0);
+      setTimeout(() => document.addEventListener('click', this.toggle), 0);
     },
 
-    __hide(e) {
-      if (!e) return
-      if (this.ignore) {
-        var path = e.path
-        var hide = true
-        for (let index = 0; index < path.length; index++) {
-          const element = path[index];
-          if (element.className == "menu") {
-            hide = false
-            break
-          }
-        }
-        if (hide) {
-          this.seen = false
-          document.removeEventListener('click', this.__hide);
-        }
-      } else {
-        this.seen = false
-        document.removeEventListener('click', this.__hide);
-      }
+    __hide() {
+      this.seen = false
+      document.removeEventListener('click', this.toggle);
     },
 
     __update() {
-      let rect = this.$refs.dropdown.getBoundingClientRect()
+      let rect = this.$el.getBoundingClientRect()
       let top = rect.top
       let bottom = getBodyHeight() - rect.bottom
       if (top < 240 || 240 < bottom) {
