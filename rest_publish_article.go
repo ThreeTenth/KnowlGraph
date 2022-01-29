@@ -81,7 +81,7 @@ func publishArticle(c *Context) error {
 		_versionState = version.StateRelease
 	}
 
-	_voterIDs, err := queryVoters(db, _data.Keywords)
+	_voterIDs, err := queryVoters(db)
 	if err != nil {
 		return c.InternalServerError(err.Error())
 	}
@@ -248,7 +248,7 @@ func updateUserAsset(tx *ent.Tx, userID int, status asset.Status, vers *ent.Vers
 		Where(
 			userword.HasWordWith(word.IDIn(_wordIDs...)),
 			userword.HasUserWith(user.ID(userID))).
-		Select(userword.FieldID).
+		Select(userword.WordColumn).
 		Ints(ctx)
 	if err != nil {
 		return err
@@ -266,9 +266,9 @@ func updateUserAsset(tx *ent.Tx, userID int, status asset.Status, vers *ent.Vers
 				if keywordID == userwordID {
 					continue
 				}
+				_wordBulk[i] = tx.UserWord.Create().SetUserID(userID).SetWordID(keywordID)
+				i++
 			}
-			_wordBulk[i] = tx.UserWord.Create().SetUserID(userID).SetWordID(keywordID)
-			i++
 		}
 
 		fmt.Println("publishArticle 06.04.02")
