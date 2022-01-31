@@ -154,16 +154,41 @@ const EditDraft = {
     },
 
     pasteEent(e) {
-      let paste = (e.clipboardData || window.clipboardData).getData('text');
-
-      const selection = window.getSelection();
-      if (!selection.rangeCount) return false;
-      // selection.deleteFromDocument();
-      // selection.getRangeAt(0).insertNode(document.createTextNode(paste));
-      document.execCommand("insertText", false, paste)
-
       e.stopPropagation()
       e.preventDefault()
+
+      let clipboardData = (e.clipboardData || window.clipboardData)
+      let paste = ""
+      let dataMode = null
+
+      for (let index = 0; index < clipboardData.items.length; index++) {
+        const element = clipboardData.items[index]
+        if (element.kind == "file") continue
+
+        if (2 <= index) {
+          paste = clipboardData.getData("text/plain")
+          if (element.type == "vscode-editor-data") {
+            const vscodeEditorData = clipboardData.getData(element.type)
+            /* 
+             * {"version":1,"isFromEmptySelection":false,"multicursorText":null,"mode":"javascript"} 
+             */
+            dataMode = JSON.parse(vscodeEditorData).mode
+          }
+        } else {
+          paste = clipboardData.getData(element.type)
+        }
+      }
+
+      const selection = window.getSelection()
+      if (!selection.rangeCount) return false
+      // selection.deleteFromDocument();
+      // selection.getRangeAt(0).insertNode(document.createTextNode(paste));
+
+      paste = this.turndownService.turndown(paste)
+      if (dataMode) {
+        paste = "```" + dataMode + "\n" + paste + "\n```\n"
+      }
+      document.execCommand("insertText", false, paste)
     },
 
     selectionchangeEvent(e) {
