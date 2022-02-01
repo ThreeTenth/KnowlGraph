@@ -122,6 +122,17 @@ const plugin = {
     Vue.prototype.isAndroid = detectAndroid()
     Vue.prototype.isIOS = detectIOS()
 
+    const turndownService = new TurndownService({
+      codeBlockStyle: "fenced",
+      headingStyle: "atx"
+    })
+    turndownService.use([
+      turndownPluginGfm.gfm,
+      turndownPluginGfm.tables,
+      turndownPluginGfm.strikethrough
+    ])
+    Vue.prototype.turndownService = turndownService
+
     Vue.prototype.onGitHubOAuth = function () {
       const github_client_id = getMeta("github_client_id")
       const state = Math.random().toString(36).slice(2)
