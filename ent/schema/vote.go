@@ -16,9 +16,9 @@ type Vote struct {
 // Fields of the Vote.
 func (Vote) Fields() []ent.Field {
 	return []ent.Field{
-		field.Enum("status").Values("allowed", "rejected", "abstained"),
-		field.Enum("code").Values("uncertainty", "attack", "other").Optional(),
-		field.String("comment").Optional(),
+		field.Enum("status").Values("allowed", "overruled", "abstained"),
+		field.Strings("code").Optional(),   // 驳回原因代码
+		field.String("comment").Optional(), // 驳回原因详细说明
 		field.Time("created_at").Default(time.Now),
 	}
 }

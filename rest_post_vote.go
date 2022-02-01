@@ -23,13 +23,19 @@ func postVote(c *Context) error {
 	var _query struct {
 		ID     int         `json:"id" binding:"required"`
 		Status vote.Status `json:"status" binding:"required"`
-		// Code    vote.Code   `json:"code"`
+		Code   []string    `json:"code"`
 		// Comment string      `json:"comment"`
 	}
 
 	err := c.ShouldBindJSON(&_query)
 	if err != nil {
 		return c.BadRequest(err.Error())
+	}
+
+	if (_query.Status == vote.StatusAllowed || _query.Status == vote.StatusAbstained) && _query.Code != nil {
+		return c.BadRequest("Invalid code")
+	} else if _query.Status == vote.StatusOverruled && _query.Code == nil {
+		return c.BadRequest("Missing code")
 	}
 
 	_userID, _ := c.Get(GinKeyUserID)
@@ -54,7 +60,7 @@ func postVote(c *Context) error {
 		_, err = tx.Vote.Create().
 			SetRasID(_ras.ID).
 			SetStatus(_query.Status).
-			// SetCode(_query.Code).
+			SetCode(_query.Code).
 			// SetComment(_query.Comment).
 			Save(ctx)
 		if err != nil {
@@ -121,7 +127,7 @@ func votingSettlement(tx *ent.Tx, _ras *ent.RAS) error {
 		switch _vote.Status {
 		case vote.StatusAllowed:
 			_allowedCount++
-		case vote.StatusRejected:
+		case vote.StatusOverruled:
 			_rejectedCount++
 		case vote.StatusAbstained:
 			_abstainedCount++
