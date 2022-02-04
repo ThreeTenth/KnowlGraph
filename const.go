@@ -19,9 +19,9 @@ const (
 
 const (
 	// Version is current version number
-	Version = 15
+	Version = 20
 	// VersionName is current version name
-	VersionName = "0.0.15"
+	VersionName = "0.0.20"
 	// DBVersion is current database version number
 	DBVersion = 1
 )
