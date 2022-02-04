@@ -32,9 +32,11 @@ func postVote(c *Context) error {
 		return c.BadRequest(err.Error())
 	}
 
-	if (_query.Status == vote.StatusAllowed || _query.Status == vote.StatusAbstained) && _query.Code != nil {
-		return c.BadRequest("Invalid code")
-	} else if _query.Status == vote.StatusOverruled && _query.Code == nil {
+	if _query.Code != nil && 0 < len(_query.Code) {
+		if _query.Status != vote.StatusOverruled {
+			return c.BadRequest("Invalid code")
+		}
+	} else if _query.Status == vote.StatusOverruled {
 		return c.BadRequest("Missing code")
 	}
 
@@ -72,6 +74,7 @@ func postVote(c *Context) error {
 		// 匿名投票。
 		_, err = tx.Voter.Update().
 			Where(
+				voter.HasRasWith(ras.ID(_query.ID)),
 				voter.HasUserWith(user.ID(_userID.(int)))).
 			SetVoted(true).
 			Save(ctx)
