@@ -189,9 +189,9 @@ func openRandomAnonymousSpace(tx *ent.Tx, comment string, vers *ent.Version, vot
 
 	fmt.Println("publishArticle 08.02")
 	// 设置表决者初始投票状态：未投票
-	_newVoters := make([]*ent.VoterCreate, len(voterIDs))
-	for i, _voterID := range voterIDs {
-		_newVoters[i] = tx.Voter.Create().SetRas(_newRAS).SetUserID(_voterID)
+	_newVoters := make([]*ent.VoterCreate, 0)
+	for _, _voterID := range voterIDs {
+		_newVoters = append(_newVoters, tx.Voter.Create().SetRas(_newRAS).SetUserID(_voterID))
 	}
 	fmt.Println("publishArticle 08.03")
 	_, err = tx.Voter.CreateBulk(_newVoters...).Save(ctx)
@@ -259,15 +259,12 @@ func updateUserAsset(tx *ent.Tx, userID int, status asset.Status, vers *ent.Vers
 
 	if 0 < _insertCount {
 		fmt.Println("publishArticle 06.04.01")
-		_wordBulk := make([]*ent.UserWordCreate, _insertCount)
-		i := 0
+		_wordBulk := make([]*ent.UserWordCreate, 0)
 		for _, keywordID := range _wordIDs {
 			for _, userwordID := range _userwordIDs {
-				if keywordID == userwordID {
-					continue
+				if keywordID != userwordID {
+					_wordBulk = append(_wordBulk, tx.UserWord.Create().SetUserID(userID).SetWordID(keywordID))
 				}
-				_wordBulk[i] = tx.UserWord.Create().SetUserID(userID).SetWordID(keywordID)
-				i++
 			}
 		}
 
