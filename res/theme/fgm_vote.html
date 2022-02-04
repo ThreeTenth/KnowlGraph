@@ -4,8 +4,8 @@
       <h1>表决空间</h1>
       <p title="空间关闭后可见">空间编号：*******-****</p>
       <p>空间主题：关于《{{ version.title }}》一文的初次表决</p>
-      <p title="如未表决，视为弃权">空间关闭时间：2022 年 01 月 17 日</p>
-      <p title="同意票超过 3/10，即视为表决通过">参与人数：10 人</p>
+      <!-- <p title="如未表决，视为弃权">空间关闭时间：2022 年 01 月 17 日</p>
+      <p title="同意票超过 3/10，即视为表决通过">参与人数：10 人</p> -->
       <p>空间规则：</p>
       <ul>
         <li>随机抽取表决者</li>
@@ -24,11 +24,11 @@
         <li>文章公示前，禁止泄漏文章内容</li>
         <li>检查内容是否含有禁止项</li>
       </ul>
-      <p>内容禁止项：</p>
+      <h3>内容禁止项</h3>
       <ul>
-        <li>禁止内容中出现任何的<b>行政主体单位</b>、<b>个人信息</b>，以及他们的代称。</li>
-        <li>禁止内容中出现任何的<b>与内容主题无关</b>的内容</li>
-        <li>禁止内容中出现任何可能造成<b>剧烈熵增</b>的语调和结论。</li>
+        <li v-for="(item, i) in codeofConduct.ourStandards.bad.list">
+          {{ item.title }}
+        </li>
       </ul>
     </div>
   </div>
@@ -52,52 +52,45 @@
       <div class="w720p">
         <h1>请表决</h1>
         <p>如果你发现文章或版本信息里包含社区禁止发布的内容，请点击“驳回”并选择原因提交。</p>
-        <p>如果你认为文章及版本信息没有任何问题，请点击“允许发布”再评分提交。</p>
+        <p>如果你认为文章及版本信息没有任何问题，请点击“允许发布”并确认提交。</p>
         <p>如果你无法做出选择，请点击“弃权”。</p>
       </div>
     </div>
     <div>
       <div class="margin-y flex-h">
-        <dropdown class="left">
+        <dropdown class="left" v-bind:trigger="overruleDropdown">
           <button class="btn text sm bgc-error c-white padding-x48 padding-y5">驳回</button>
-          <div class="menu w480p">
+          <div class="menu w480p" v-on:click.stop="">
             <h3 class="margin-x9">请选择驳回原因</h3>
-            <div class="padding-9">
-              <input id="id00" type="checkbox" />
-              <label for="id00" class="padding-9">文章中含有<b>行政主体单位</b>、<b>个人信息</b>，以及他们的代称</label>
-            </div>
-            <div class="padding-9">
-              <input id="id01" type="checkbox" />
-              <label for="id01" class="padding-9">文章中含有<b>与内容主题无关</b>的内容</label>
-            </div>
-            <div class="padding-9">
-              <input id="id02" type="checkbox" />
-              <label for="id02" class="padding-9">文章中含有可能造成<b>剧烈熵增</b>的语调和结论</label>
+            <div class="padding-9" v-for="(item, i) in codeofConduct.ourStandards.bad.list">
+              <input v-bind:id="item.code" v-bind:value="item.code" type="checkbox" v-model="overruleSelected" />
+              <label v-bind:for="item.code" class="padding-9">{{ item.title }}</label>
             </div>
             <div class="flex padding-x9">
               <div class="flex-1"></div>
-              <button class="margin-y9 btn text sm fill padding-6-9" v-on:click="onRejecte">提交</button>
+              <button class="margin-y9 btn text sm fill padding-6-9"
+                v-bind:disable="0 == overruleSelected.length ? 'disable' : ''" v-on:click="onOverrule">提交</button>
             </div>
           </div>
         </dropdown>
         <div class="flex-1"></div>
-        <dropdown>
+        <dropdown v-bind:trigger="allowDropdown">
           <button class="btn text sm bgc-success c-white padding-x48 padding-y5">允许发布</button>
-          <div class="menu w360p">
-            <h3 class="margin-x">请评分</h3>
-            <div class="flex-h padding-9">
-              <span class="font-lg">⭐ ⭐ ⭐ ⭐ ⭐</span>
-            </div>
+          <div class="menu w480p padding-x9" v-on:click.stop="">
+            <h3>请确认无以下内容？</h3>
+            <ul>
+              <li class="padding-y5" v-for="item in codeofConduct.ourStandards.bad.list">{{ item.title }}</li>
+            </ul>
             <div class="flex padding-x9">
               <div class="flex-1"></div>
-              <button class="margin-y9 btn text sm fill padding-6-9" v-on:click="onAllow">提交</button>
+              <button class="margin-y9 btn text sm fill padding-6-9" v-on:click="onAllow">确认并提交</button>
             </div>
           </div>
         </dropdown>
       </div>
       <div class="margin-y flex">
         <div class="flex-1"></div>
-        <button class="btn text sm padding-x48 padding-y5" v-on:click="onAbstained">弃权</button>
+        <button class="btn text sm padding-x48 padding-y5" v-on:click="onAbstain">弃权</button>
       </div>
     </div>
   </div>

@@ -3,6 +3,10 @@
 const Vote = {
   data: function () {
     return {
+      codeofConduct: null,
+      overruleSelected: [],
+      allowDropdown: false,
+      overruleDropdown: false,
     }
   },
   computed: {
@@ -19,38 +23,31 @@ const Vote = {
   methods: {
     onAllow() {
       this.__postVote("allowed")
+      this.allowDropdown = !this.allowDropdown
     },
-    onRejecte() {
-      this.__postVote("rejected")
+    onOverrule() {
+      this.overruleDropdown = !this.overruleDropdown
+      this.__postVote("overruled", this.overruleSelected)
     },
-    onAbstained() {
+    onAbstain() {
       this.__postVote("abstained")
     },
-    __postVote(status) {
-      if (!this.version.exist) return
-
-      axios({
-        method: "POST",
-        url: queryRestful("/v1/vote"),
-        data: {
-          id: this.vote.value.id,
-          status: status,
-        },
-      }).then((resp) => {
+    __postVote(status, code = []) {
+      postVote(this.vote.value.id, status, code, () => {
         Object.assign(_voteObservable, { exist: false, value: null })
         this.back()
-      }).catch(function (resp) {
-        console.log(resp)
+      }, (err) => {
+        console.log(err)
       })
     },
   },
   created() {
     document.title = "表决空间 -- KnowlGraph"
-    // document.body.style.overflow = 'hidden'
+
+    getCovenant("zh", (resp) => { this.codeofConduct = resp.data }, (err) => { console.error(err) })
   },
 
   beforeDestroy() {
-    // document.body.style['overflow-y'] = 'scroll'
   },
   template: fgm_vote,
 }

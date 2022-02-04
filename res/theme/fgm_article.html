@@ -5,7 +5,7 @@
     <page class="flex-1" v-bind:status="pageStatus">
       <div class="layout-1 flex margin-t18b9">
         <div class="flex-1">
-          <dropdown class="left" v-bind:ignore="'true'" v-if="article.nodes.length">
+          <dropdown class="left" v-if="article.nodes.length">
             <button class="btn text flex-v padding-9">{{ bZticle.nodes[0].edges.word.name }}</button>
             <div class="menu">
               <div class="menu-item" v-for="(node, i) in article.nodes">{{ node.edges.word.name }}</div>

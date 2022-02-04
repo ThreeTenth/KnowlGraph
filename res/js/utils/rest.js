@@ -1,5 +1,39 @@
 // rest.js
 
+function getCovenant(langCode, success, failure) {
+  var coc = getCodeofConduct(langCode)
+  if (coc) {
+    success({ code: 200, data: coc })
+    return
+  }
+  var url = queryStatic("/code-of-conduct/covenant-" + langCode + ".json")
+  axios({
+    method: "GET",
+    url: url,
+  }).then((resp) => {
+    setCodeofConduct(langCode, resp.data)
+    success(resp)
+  }).catch(failure)
+}
+
+function postVote(id, status, code, success, failure) {
+  if (code && 0 < code.length) {
+    if (status != "overruled")
+      failure("Invalid code")
+  } else if (status == "overruled") {
+    failure("Missing code")
+  }
+  axios({
+    method: "POST",
+    url: queryRestful("/v1/vote"),
+    data: {
+      id: id,
+      status: status,
+      code: code,
+    },
+  }).then(success).catch(failure)
+}
+
 function postFinishRegOnlyOnce(challenge, state, success, failure) {
   axios({
     method: "POST",

@@ -1,5 +1,6 @@
 // utils.js
 
+// getValueInRange returns value, if the value is between min and max - 1
 function getValueInRange(value, min, max) {
   if (value < min) return min
   if (max <= value) return max - 1
@@ -417,6 +418,15 @@ function getLink(linkRel) {
   }
 
   return ''
+}
+
+function setCodeofConduct(lang, data) {
+  localStorage.setItem('covenant-' + lang, JSON.stringify(data));
+}
+
+function getCodeofConduct(lang) {
+  let data = localStorage.getItem('covenant-' + lang);
+  return JSON.parse(data)
 }
 
 function setI18nStrings(lang, strings) {
