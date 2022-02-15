@@ -2,7 +2,7 @@ package main
 
 func getKeywordArticles(c *Context) error {
 	var _query struct {
-		WordID int    `form:"nodeId" binding:"required"`
+		WordID int    `form:"wordId" binding:"required"`
 		Lang   string `form:"lang"`
 		Limit  int    `form:"limit,default=10"`
 		Offset int    `form:"Offset,default=0"`

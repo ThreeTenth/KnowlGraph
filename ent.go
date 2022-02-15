@@ -259,7 +259,7 @@ inner join "articles"
 where tmp.rownum < 2 order by tmp.created_at desc offset $2 limit $3;`
 
 func queryKeywordArticles(db *sql.DB, wordID int, lang string, offset, limit int) ([]*ent.Version, error) {
-	_sql := QueryUserAssetsSQL
+	_sql := QueryKeywordArticles
 	_args := []interface{}{
 		wordID, offset, limit,
 	}
