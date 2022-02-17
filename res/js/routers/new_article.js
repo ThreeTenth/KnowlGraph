@@ -154,41 +154,53 @@ const EditDraft = {
     },
 
     pasteEent(e) {
+      const selection = window.getSelection()
+      if (!selection.rangeCount) return
+      if (!isChildAt(this.$refs.editor, selection.anchorNode)) return
+
       e.stopPropagation()
       e.preventDefault()
 
       let clipboardData = (e.clipboardData || window.clipboardData)
       let paste = ""
       let dataMode = null
+      let codeLanguage = null
 
       for (let index = 0; index < clipboardData.items.length; index++) {
         const element = clipboardData.items[index]
         if (element.kind == "file") continue
 
         if (2 <= index) {
-          paste = clipboardData.getData("text/plain")
+          paste = clipboardData.getData("text/plain").toString()
+          dataMode = "text/plain"
           if (element.type == "vscode-editor-data") {
             const vscodeEditorData = clipboardData.getData(element.type)
             /* 
              * {"version":1,"isFromEmptySelection":false,"multicursorText":null,"mode":"javascript"} 
              */
-            dataMode = JSON.parse(vscodeEditorData).mode
+            codeLanguage = JSON.parse(vscodeEditorData).mode
           }
         } else {
           paste = clipboardData.getData(element.type)
+          dataMode = element.type
         }
       }
 
-      const selection = window.getSelection()
-      if (!selection.rangeCount) return false
-      // selection.deleteFromDocument();
-      // selection.getRangeAt(0).insertNode(document.createTextNode(paste));
+      if (codeLanguage) {
+        paste = "```" + codeLanguage + "\n" + paste + "\n```\n"
+      }
+      switch (dataMode) {
+        case "text/html":
+          paste = this.turndownService.turndown(paste)
+          break;
 
-      paste = this.turndownService.turndown(paste)
-      if (dataMode) {
-        paste = "```" + dataMode + "\n" + paste + "\n```\n"
+        default:
+          paste = paste.replaceAll("\r\n", "\n")
+          break;
       }
       document.execCommand("insertText", false, paste)
+      // selection.deleteFromDocument()
+      // selection.getRangeAt(0).insertNode(insertEl)
     },
 
     selectionchangeEvent(e) {
@@ -352,14 +364,13 @@ const EditDraft = {
 
     onChanged(e) {
       this.content = textContentOfDiv(e.target)
-      // console.log(this.content);
-      // this.content = e.target.innerText
       window.clearTimeout(postChangedTimeoutID)
       postChangedTimeoutID = window.setTimeout(() => { this.onSaveDraft() }, 2000)
     },
 
     onBlur() {
       window.clearTimeout(postChangedTimeoutID)
+      this.content = textContentOfDiv(this.$refs.editor)
       this.onSaveDraft()
     },
 
