@@ -2,7 +2,7 @@ name: Go
 
 on:
   push:
-    # branches: [ main ]
+    branches: [ main ]
     tags:
       - v[01].[0-9]+.[0-9]+
 
@@ -29,7 +29,6 @@ jobs:
     - name: Get service dependencies
       working-directory: ./
       run:  |
-        go get -u github.com/gobuffalo/packr/packr
         go get -v -t -d ./...
         if [ -f Gopkg.toml ]; then
             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
@@ -40,7 +39,8 @@ jobs:
       working-directory: ./
       run:  | 
         go generate ./ent
-        packr build -v --ldflags="-w -s" -o "./build/knowlgraph"
+        go build -v --ldflags="-w -s" -o "./build/knowlgraph"
+        upx -9 "./build/knowlgraph"
 
     - name: Deploy to Server
       # 服务地址: https://github.com/AEnterprise/rsync-deploy
