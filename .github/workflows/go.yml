@@ -52,7 +52,7 @@ jobs:
         FOLDER: ./build/
         SERVER_IP: ${{ secrets.SSH_HOST }}
         USERNAME: ${{ secrets.SSH_USERNAME }}
-        SERVER_DESTINATION: /usr/local/bin/knowlgraph
+        SERVER_DESTINATION: /usr/local/bin/
 
     - name: Restart Server
       uses: appleboy/ssh-action@master
