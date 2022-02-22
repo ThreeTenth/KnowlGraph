@@ -1,8 +1,6 @@
 // serviceWorker.js
 
-importScripts("")
-
-const serviceWorkerCacheName = "__ServiceWorkerCacheName_v3"
+const swCacheName = "__ServiceWorkerCacheName_v3"
 
 const appShellFiles = [
   "/",
@@ -13,7 +11,7 @@ const appShellFiles = [
 
 self.addEventListener('install', function (e) {
   e.waitUntil(
-    caches.open(serviceWorkerCacheName).then(function (cache) {
+    caches.open(swCacheName).then(function (cache) {
       console.log('[Service Worker] Caching all: app shell and content')
       return cache.addAll(appShellFiles);
     })
@@ -28,7 +26,7 @@ self.addEventListener('fetch', function (e) {
       console.log('[Service Worker] Fetched resource ' + e.request.url)
       return fetch(e.request).then(function (response) {
         if (e.request.method.toLowerCase() != "get") return response
-        return caches.open(serviceWorkerCacheName).then((cache) => {
+        return caches.open(swCacheName).then((cache) => {
           console.log('[Service Worker] Caching new resource: ' + e.request.url)
           cache.put(e.request, response.clone())
           return response
@@ -41,7 +39,7 @@ self.addEventListener('fetch', function (e) {
 })
 
 self.addEventListener('activate', function (event) {
-  var cacheWhitelist = [serviceWorkerCacheName];
+  var cacheWhitelist = [swCacheName];
 
   event.waitUntil(
     caches.keys().then(function (keyList) {
