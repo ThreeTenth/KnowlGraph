@@ -1,0 +1,12 @@
+<div>
+  <main-nav></main-nav>
+  <div class="container padding-x9">
+    <h2>字词</h2>
+    <div class="flex-wrap">
+      <router-link class="label-1" v-for="(keyword, i) in user.words" v-bind:key="keyword.id"
+        v-bind:to="{ name: 'word', params: { id: keyword.id, name: keyword.name }}">#{{keyword.name}}
+        <span v-if="keyword.status == 'private'" class="text flex-v padding-x9">🔒</span>
+      </router-link>
+    </div>
+  </div>
+</div>

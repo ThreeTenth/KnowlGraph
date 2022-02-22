@@ -170,6 +170,7 @@ const router = new VueRouter({
     { path: '/dashboard', name: 'dashboard', component: Dashboard },
     { path: '/vote', name: 'vote', component: Vote },
     { path: '/word/:id/:name?', name: 'word', component: Word, props: true },
+    { path: '/words', name: 'words', component: Words },
   ]
 })
 
