@@ -169,6 +169,7 @@ const router = new VueRouter({
     { path: '/getapp', name: 'getapp', component: GetAPP },
     { path: '/dashboard', name: 'dashboard', component: Dashboard },
     { path: '/vote', name: 'vote', component: Vote },
+    { path: '/word/:id/:name?', name: 'word', component: Word, props: true },
   ]
 })
 
