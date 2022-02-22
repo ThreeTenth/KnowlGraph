@@ -253,6 +253,10 @@ func router01() http.Handler {
 		router.Use(cors)
 	}
 
+	router.GET("/sw.js", getSWJs)
+	r(router.Group("/r"))
+	apiV1(router.Group("/api"))
+
 	router.GET("/favicon.ico", getFavicon)
 
 	router.GET("/", authentication, html(index))
@@ -290,8 +294,30 @@ func router02() http.Handler {
 
 	router.GET("/favicon.ico", getFavicon)
 
-	v1 := router.Group("/v1")
+	apiV1(router.Group("/"))
 
+	return router
+}
+
+func router03() http.Handler {
+	router := gin.Default()
+
+	// Debug 模式支持 cors 请求，非 Debug 模式不支持，
+	// Debug 模式每次请求静态资源时，刷新资源，
+	// 非 Debug 模式时，静态资源缓存 1 年。
+	if config.Debug {
+		router.Use(cors)
+	}
+
+	r(router.Group("/"))
+
+	router.GET("/favicon.ico", getFavicon)
+
+	return router
+}
+
+func apiV1(g *gin.RouterGroup) {
+	v1 := g.Group("/v1")
 	v1.PUT("/article", authorizeRequired, handle(putArticleNew))
 	v1.PUT("/article/content", authorizeRequired, handle(putArticleContent))
 	v1.PUT("/article/edit", authorizeRequired, handle(editArticle))
@@ -330,19 +356,6 @@ func router02() http.Handler {
 
 	account := v1.Group("account")
 
-	// account.GET("/challenge", handle((beginRegistration)))
-	// account.PUT("/create", handle(finishRegistration))
-	// account.GET("/request", authorizeRequired, handle(beginLogin))
-	// account.POST("/anthn", authorizeRequired, handle(finishLogin))
-	// account.GET("/sync", authentication, handle(getAccountChallenge))
-	// account.PUT("/create", checkChallenge(TokenStateIdle), handle(putAccountCreate))
-	// account.PUT("/terminal", checkChallenge(TokenStateIdle), handle(putAccountTerminal))
-	// account.GET("/terminals", authorizeRequired, handle(getAccountTerminals))
-	// account.PATCH("/authn", authorizeRequired, checkChallenge(TokenStateActivated), handle(postAccountAuthn))
-	// account.POST("/authn", authorizeRequired, checkChallenge(TokenStateActivated), handle(postAccountAuthn))
-	// account.DELETE("/authn", authorizeRequired, checkChallenge(TokenStateIdle+TokenStateActivated), handle(postAccountAuthn))
-	// account.GET("/check", handle(checkAccountChallenge))
-
 	account.GET("/terminals", authorizeRequired, handle(getAccountTerminals))
 	account.GET("/authorized", authorizeRequired, handle(isAuthorized))
 	account.DELETE("/terminal", authorizeRequired, handle(deleteTerminal))
@@ -363,31 +376,24 @@ func router02() http.Handler {
 	t.POST("/finishLogin", handle(finishLogin))
 	t.PUT("/beginValidate", authorizeRequired, handle(beginValidate))
 	t.POST("/finishValidate", authorizeRequired, handle(finishValidate))
-
-	return router
 }
 
-func router03() http.Handler {
-	router := gin.Default()
-
-	// Debug 模式支持 cors 请求，非 Debug 模式不支持，
-	// Debug 模式每次请求静态资源时，刷新资源，
-	// 非 Debug 模式时，静态资源缓存 1 年。
-	if config.Debug {
-		router.Use(cors)
-	} else {
-		router.Use(func(c *gin.Context) {
+func r(g *gin.RouterGroup) {
+	if !config.Debug {
+		g.Use(func(c *gin.Context) {
 			c.Header("Cache-Control", "public, max-age=31536000")
 		})
 	}
 
-	group := router.Group("/" + VersionName)
+	// g.GET("/js/:id/sw.js", getSWJs)
+
+	r := g.Group("/" + VersionName)
 
 	fsys, err := fs.Sub(resource, "res")
 	panicIfErrNotNil(err)
-	fileServer := http.StripPrefix(group.BasePath(), http.FileServer(http.FS(fsys)))
+	fileServer := http.StripPrefix(r.BasePath(), http.FileServer(http.FS(fsys)))
 
-	group.GET("/*filepath", func(c *gin.Context) {
+	r.GET("/*filepath", func(c *gin.Context) {
 		file := c.Param("filepath")
 		if "/__default_theme.js" == file {
 			getDefaultThemes(c)
@@ -404,8 +410,4 @@ func router03() http.Handler {
 
 		fileServer.ServeHTTP(c.Writer, c.Request)
 	})
-
-	router.GET("/favicon.ico", getFavicon)
-
-	return router
 }

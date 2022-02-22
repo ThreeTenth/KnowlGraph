@@ -75,7 +75,7 @@ func getAppJS(c *gin.Context) {
 			return
 		}
 
-		_, err = writeEmbedDir(ResourceReadDir, ResourceReadFile, "res/js", appJSBuffer, []string{"res/js/app.js"})
+		_, err = writeEmbedDir(ResourceReadDir, ResourceReadFile, "res/js", appJSBuffer, []string{"res/js/app.js", "res/js/sw.js"})
 		if err != nil {
 			c.AbortWithError(http.StatusInternalServerError, err)
 			return
@@ -117,6 +117,30 @@ func getDefaultThemes(c *gin.Context) {
 	c.Writer.Header().Set("Content-Type", "application/javascript; charset=utf-8")
 	c.Writer.Header().Set("Content-Length", strconv.Itoa(themeBuffer.Len()))
 	c.Writer.Write(themeBuffer.Bytes())
+	c.Abort()
+}
+
+var swJsBuffer *bytes.Buffer
+
+func getSWJs(c *gin.Context) {
+	if swJsBuffer == nil {
+		swJsBuffer = new(bytes.Buffer)
+	}
+	if 0 == swJsBuffer.Len() || config.Debug {
+		swJsBuffer.Reset()
+
+		var err error
+		_, err = writeEmbedFile(ResourceReadFile, "res/js/sw.js", swJsBuffer)
+		if err != nil {
+			c.AbortWithError(http.StatusInternalServerError, err)
+			return
+		}
+	}
+
+	c.Status(http.StatusOK)
+	c.Writer.Header().Set("Content-Type", "application/javascript; charset=utf-8")
+	c.Writer.Header().Set("Content-Length", strconv.Itoa(swJsBuffer.Len()))
+	c.Writer.Write(swJsBuffer.Bytes())
 	c.Abort()
 }
 

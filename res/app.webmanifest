@@ -1,0 +1,16 @@
+{
+  "name": "Knowledge Graph Web App",
+  "short_name": "KnowlGraph",
+  "description": "A publishing platform with user autonomy and shared community income where people can read and manage professional and in-depth knowledge on the graph.",
+  "icons": [
+    {
+      "src": "favicon/favicon-144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "display": "fullscreen",
+  "theme_color": "#262626",
+  "background_color": "#ffffff"
+}

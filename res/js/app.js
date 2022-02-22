@@ -1,6 +1,10 @@
 // app.js
 // Created at 03/09/2021
 
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register("/sw.js", { scope: '/' })
+}
+
 let userLang = {
   code: "en",
   name: "English",
