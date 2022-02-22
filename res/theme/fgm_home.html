@@ -5,13 +5,7 @@
       <main-menu class="layout-side-left"></main-menu>
       <main class="layout-main flex-1">
         <h4>{{ i18n.Home }}</h4>
-        <article class="list-1" v-for="(article, i) in articles">
-          <router-link class="list-1-link" :to="{ name: 'article', params: { id: article.id, code: article.code }}">
-            <h4 class="list-1-title" v-if="article.title">{{ article.title }}</h4>
-            <div class="list-1-text">{{ article.gist }}</div>
-          </router-link>
-          <the-time class="text sm flex-v padding-0" v-bind:datetime="article.created_at" />
-        </article>
+        <article-item v-for="(article, i) in articles" v-bind:key="article.id" v-bind:article="article"></article-item>
       </main>
       <div class="layout-side-right">
         <div>
