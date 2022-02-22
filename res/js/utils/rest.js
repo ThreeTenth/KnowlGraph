@@ -1,5 +1,13 @@
 // rest.js
 
+function getArticleByWord(wordId) {
+  var url = queryRestful("/v1/word/articles", { wordId: wordId })
+  return axios({
+    method: "GET",
+    url: url,
+  })
+}
+
 function getCovenant(langCode, success, failure) {
   var coc = getCodeofConduct(langCode)
   if (coc) {
@@ -225,5 +233,5 @@ function encodeQueryData(url, data = undefined) {
 }
 
 function getStatus4Error(err) {
-  return err.response ? err.response.status : 9999
+  return err.response ? err.response.status : (err.status ? err.status : 9999)
 }
