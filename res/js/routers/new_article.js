@@ -57,11 +57,12 @@ const EditDraft = {
     }
   },
 
-  // watch: {
-  //   content(value, oldVal) {
-  //     console.log(value);
-  //   },
-  // },
+  watch: {
+    id(value, oldVal) {
+      console.log(value);
+      this.reload()
+    },
+  },
 
   computed: {
     status: function () {
@@ -404,7 +405,10 @@ const EditDraft = {
         const editor = this.$refs.editor
         editor.focus()
 
-        if ('' == this.content) return
+        if ('' == this.content) {
+          editor.innerText = ''
+          return
+        }
         var parts = this.content.split('\n')
         parts.forEach(part => {
           var el = document.createElement('div')
@@ -417,7 +421,57 @@ const EditDraft = {
 
     __setLast(content) {
       this.__last = getString(content)
-    }
+    },
+
+    reset() {
+      this.showSnapshots = false
+      this.snapshots = []
+      this.snapdiff = []
+      this.snapshotIndex = 0
+
+      this.showPreview = false
+      this.showPublish = false
+
+      this.content = ''
+      this.draft = null
+      this.__last = ''
+
+      this.version = {
+        title: "",
+        gist: "",
+        lang: getUserLang(),
+        keywords: [],
+        name: "v1.0.0",
+        comment: "初次提交",
+        init: false,
+      }
+
+      this.editingStatus = 0
+      this.fullscreen = false
+
+      this.isEditor = true
+
+      this.scroller = document
+      this.selectRange = {
+        start: 0,
+        end: 0,
+      }
+    },
+
+    reload() {
+      axios({
+        method: "GET",
+        url: queryRestful("/v1/draft", { id: this.id }),
+      }).then((resp) => {
+        this.reset()
+        this.__setDraft(resp.data)
+        this.__setLast(this.content)
+        this.editingStatus = resp.status
+      }).catch((err) => {
+        console.error(err);
+        this.editingStatus = getStatus4Error(err)
+      })
+    },
   },
 
   beforeRouteEnter(to, from, next) {
@@ -431,18 +485,7 @@ const EditDraft = {
 
   created() {
     document.title = "编辑 -- KnowlGraph"
-
-    axios({
-      method: "GET",
-      url: queryRestful("/v1/draft", { id: this.id }),
-    }).then((resp) => {
-      this.__setDraft(resp.data)
-      this.__setLast(this.content)
-      this.editingStatus = resp.status
-    }).catch((err) => {
-      // console.log(err);
-      this.editingStatus = getStatus4Error(err)
-    })
+    this.reload()
 
     document.addEventListener("fullscreenchange", this.fullscreenEvent)
     document.addEventListener("paste", this.pasteEent)
