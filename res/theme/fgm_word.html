@@ -1,0 +1,15 @@
+<div>
+  <main-nav></main-nav>
+  <div class="container padding-x9">
+    <h2>{{ name }}</h2>
+    <div class="flex-start">
+      <page class="flex-1 spacing-9" v-bind:status="pageStatus">
+        <article-item v-for="article in articles" v-bind:key="article.id" v-bind:article="article"></article-item>
+      </page>
+      <div class="layout-side-right spacing-9">
+        <h4>暂无说明</h4>
+        <button class="btn text" v-on:click="todo">添加一个说明</button>
+      </div>
+    </div>
+  </div>
+</div>
