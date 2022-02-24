@@ -47,8 +47,7 @@
       </div> -->
       <article class="markdown" v-html="md2html(article.body)" ref="reader"></article>
       <div class="flex-wrap" v-if="article.keywords">
-        <router-link class="label-1" v-for="(keyword, i) in article.keywords" v-bind:key="keyword.id"
-          v-bind:to="{ name: 'word', params: { id: keyword.id, name: keyword.name }}">#{{keyword.name}}</router-link>
+        <word v-for="(keyword, i) in article.keywords" v-bind:key="keyword.id" v-bind:word="keyword"></word>
       </div>
       <div class="layout-3 flex">
         <div class="flex-1">

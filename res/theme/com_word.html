@@ -1,0 +1,4 @@
+<router-link class="label-1" v-bind:to="{ name: 'word', params: { id: word.id, name: word.name }}">
+  #{{word.name}}
+  <span v-if="word.status == 'private'" class="flex-v margin-l9">🔒</span>
+</router-link>

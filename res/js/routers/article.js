@@ -378,7 +378,7 @@ const Article = {
       this.selection.context = context
     })
 
-    document.onclick = this.__addQuote
+    // document.onclick = this.__addQuote
   },
 
   template: fgm_article,
