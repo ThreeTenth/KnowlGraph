@@ -2,11 +2,15 @@
   <main-nav></main-nav>
   <div class="container padding-x9">
     <h2>字词</h2>
+    <template v-if="yourPrivateWords">
+      <h3>你的非公开字词</h3>
+      <div class="flex-wrap">
+        <word v-for="(word, i) in yourPrivateWords" v-bind:key="word.id" v-bind:word="word"></word>
+      </div>
+    </template>
+    <h3>所有公开字词</h3>
     <div class="flex-wrap">
-      <router-link class="label-1" v-for="(keyword, i) in user.words" v-bind:key="keyword.id"
-        v-bind:to="{ name: 'word', params: { id: keyword.id, name: keyword.name }}">#{{keyword.name}}
-        <span v-if="keyword.status == 'private'" class="text flex-v padding-x9">🔒</span>
-      </router-link>
+      <word v-for="(word, i) in publicWords" v-bind:key="word.id" v-bind:word="word"></word>
     </div>
   </div>
 </div>
