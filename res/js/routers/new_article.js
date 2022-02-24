@@ -393,6 +393,11 @@ const EditDraft = {
       }).then((resp) => {
         this.__setLast(resp.data.body)
         // todo the new article have content and notify drafts page
+        // 编辑草稿时，所在草稿箱的草稿也会更新，不需要重新摘取请求了。
+        // 
+        // todo 保存状态
+        //
+        // todo 离线保存
       }).catch(() => {
         this.__setLast(temp)
       })
