@@ -16,7 +16,7 @@ const Word = {
       this.articles = response.data
     },
     loadError(err) {
-      this.qrcodeStatus = getStatus4Error(err)
+      this.pageStatus = getStatus4Error(err)
       console.log(err);
     },
   },
