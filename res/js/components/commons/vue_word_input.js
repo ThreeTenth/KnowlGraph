@@ -16,6 +16,8 @@ Vue.component('words-input', {
       items: [],
       deleteMark: null,
       __isDelProcess: false,
+      focus: true,
+      itemIndex: -1,
     }
   },
 
@@ -48,28 +50,6 @@ Vue.component('words-input', {
       }
       this.$emit("changed", this.values)
     },
-    onAdd: function () {
-      var word = this.input.replace(/[\,\， ]*$/g, '')
-      if ("" == word) {
-        this.input = ""
-        // todo Waring toast
-        return
-      }
-
-      var words = this.values
-      for (let index = 0; index < words.length; index++) {
-        const element = words[index];
-        if (element == word) {
-          this.input = ""
-          // todo Waring toast
-          return
-        }
-      }
-
-      this.values.push(word)
-      this.input = ""
-      this.$emit("changed", this.values)
-    },
     onDel: function () {
       if (this.$data.__isDelProcess) {
         this.$data.__isDelProcess = false
@@ -83,8 +63,71 @@ Vue.component('words-input', {
         this.values.splice(this.deleteMark, 1)
         window.clearTimeout(cancelDeleteWordTimeoutID)
         this.deleteMark = null
-      this.$emit("changed", this.values)
+        this.$emit("changed", this.values)
       }
+    },
+    onHiddenItems() {
+      this.items = []
+      this.itemIndex = -1
+    },
+    onMoveUp() {
+      if (this.itemIndex <= -1) {
+        this.itemIndex = this.items.length - 1
+      } else {
+        this.itemIndex -= 1
+      }
+    },
+    onMoveDown() {
+      if (this.itemIndex >= this.items.length) {
+        this.itemIndex = 0
+      } else {
+        this.itemIndex += 1
+      }
+    },
+    onAdd: function () {
+      if (this.itemIndex < 0 || this.items.length <= this.itemIndex) {
+        var word = this.input.replace(/[\,\， ]*$/g, '')
+        this.__addWord(word)
+      } else {
+        this.__addWord(this.items[this.itemIndex].name)
+      }
+    },
+    onSelectNearest() {
+      if (this.items.length) {
+        this.__addWord(this.items[0].name)
+      } else {
+        this.onAdd()
+      }
+    },
+    onSelect(item) {
+      this.__addWord(item.name)
+    },
+
+    __addWord(word) {
+      if ("" == word) {
+        this.input = ""
+        this.toast("关键字不能为空", "error")
+        return
+      }
+
+      var words = this.values
+      for (let index = 0; index < words.length; index++) {
+        const element = words[index];
+        if (element == word) {
+          this.input = ""
+          this.toast("不能重复添加关键字", "error")
+          return
+        }
+      }
+
+      this.values.push(word)
+      this.input = ""
+      this.focus = true
+      this.itemIndex = -1
+      this.$emit("changed", this.values)
+    },
+    isSelected(index) {
+      return this.itemIndex == index
     },
   },
 
@@ -101,11 +144,19 @@ Vue.component('words-input', {
             const regex = new RegExp('^' + val)
             this.words.forEach(word => {
               if (regex.test(word.name)) {
-                items.push(word)
+                let should = true
+                this.values.forEach(item => {
+                  if (item == word.name) {
+                    should = false
+                  }
+                });
+                if (should) {
+                  items.push(word)
+                }
               }
             });
             this.items = items
-         }
+          }
         }
       }
     },
