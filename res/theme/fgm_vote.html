@@ -45,6 +45,10 @@
       <div class="margin-y"> 版本标题：{{ version.title }} </div>
       <div class="margin-y"> 版本概要：{{ version.gist }} </div>
       <div class="margin-y"> 版本语言：{{ version.lang }} </div>
+      <div class="margin-y flex-wrap">
+        版本关键字：
+        <word v-for="(word, i) in version.edges.keywords" v-bind:key="word.id" v-bind:word="word"></word>
+      </div>
     </div>
   </div>
   <div class="minh-100vh w720p margin-auto flex-col">
