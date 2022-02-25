@@ -20,7 +20,7 @@ func getKeywords(c *Context) error {
 	if ok {
 		_privateCreate = client.User.Query().
 			Where(user.IDEQ(_userID.(int))).
-			QueryWords().
+			QueryDict().
 			QueryWord()
 	}
 

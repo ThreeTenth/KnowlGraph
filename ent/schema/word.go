@@ -15,6 +15,7 @@ type Word struct {
 func (Word) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name"),
+		field.Int("weight").Default(1),
 		field.Enum("status").
 			Values("private", "public").
 			Default("private").

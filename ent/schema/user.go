@@ -33,9 +33,9 @@ func (User) Edges() []ent.Edge {
 		edge.To("drafts", Draft.Type).
 			StorageKey(edge.Column("editor_id")).
 			StructTag(`json:"drafts,omitempty"`),
-		edge.To("words", UserWord.Type).
-			StorageKey(edge.Column("user_words")).
-			StructTag(`json:"words,omitempty"`),
+		edge.To("dict", Dict.Type).
+			StorageKey(edge.Column("user_dict")).
+			StructTag(`json:"dict,omitempty"`),
 		edge.To("languages", Language.Type).
 			StructTag(`json:"languages,omitempty"`),
 		edge.To("terminals", Terminal.Type).

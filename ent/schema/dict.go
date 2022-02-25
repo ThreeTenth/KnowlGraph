@@ -7,23 +7,23 @@ import (
 	"entgo.io/ent/schema/index"
 )
 
-// UserWord holds the schema definition for the UserWord entity.
-type UserWord struct {
+// Dict holds the schema definition for the Dict entity.
+type Dict struct {
 	ent.Schema
 }
 
-// Fields of the UserWord.
-func (UserWord) Fields() []ent.Field {
+// Fields of the Dict.
+func (Dict) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int("weight").Default(1),
 	}
 }
 
-// Edges of the UserWord.
-func (UserWord) Edges() []ent.Edge {
+// Edges of the Dict.
+func (Dict) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.From("user", User.Type).
-			Ref("words").
+			Ref("dict").
 			Unique().
 			Required().
 			StructTag(`json:"user,omitempty"`),
@@ -34,8 +34,8 @@ func (UserWord) Edges() []ent.Edge {
 	}
 }
 
-// Indexes of the UserWord.
-func (UserWord) Indexes() []ent.Index {
+// Indexes of the Dict.
+func (Dict) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Edges("user").
 			Edges("word").

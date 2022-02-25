@@ -11,9 +11,9 @@ import (
 	"knowlgraph.com/ent/article"
 	"knowlgraph.com/ent/asset"
 	"knowlgraph.com/ent/content"
+	"knowlgraph.com/ent/dict"
 	"knowlgraph.com/ent/draft"
 	"knowlgraph.com/ent/user"
-	"knowlgraph.com/ent/userword"
 	"knowlgraph.com/ent/version"
 	"knowlgraph.com/ent/word"
 
@@ -244,32 +244,32 @@ func updateUserAsset(tx *ent.Tx, userID int, status asset.Status, vers *ent.Vers
 	}
 
 	fmt.Println("publishArticle 06.03")
-	_userwordIDs, err := tx.UserWord.Query().
+	_dictIDs, err := tx.Dict.Query().
 		Where(
-			userword.HasWordWith(word.IDIn(_wordIDs...)),
-			userword.HasUserWith(user.ID(userID))).
-		Select(userword.WordColumn).
+			dict.HasWordWith(word.IDIn(_wordIDs...)),
+			dict.HasUserWith(user.ID(userID))).
+		Select(dict.WordColumn).
 		Ints(ctx)
 	if err != nil {
 		return err
 	}
 
 	fmt.Println("publishArticle 06.04")
-	_insertCount := len(_wordIDs) - len(_userwordIDs)
+	_insertCount := len(_wordIDs) - len(_dictIDs)
 
 	if 0 < _insertCount {
 		fmt.Println("publishArticle 06.04.01")
-		_wordBulk := make([]*ent.UserWordCreate, 0)
+		_wordBulk := make([]*ent.DictCreate, 0)
 		for _, keywordID := range _wordIDs {
-			for _, userwordID := range _userwordIDs {
-				if keywordID != userwordID {
-					_wordBulk = append(_wordBulk, tx.UserWord.Create().SetUserID(userID).SetWordID(keywordID))
+			for _, dictID := range _dictIDs {
+				if keywordID != dictID {
+					_wordBulk = append(_wordBulk, tx.Dict.Create().SetUserID(userID).SetWordID(keywordID))
 				}
 			}
 		}
 
 		fmt.Println("publishArticle 06.04.02")
-		_, err = tx.UserWord.CreateBulk(_wordBulk...).Save(ctx)
+		_, err = tx.Dict.CreateBulk(_wordBulk...).Save(ctx)
 
 		if err != nil {
 			return err
@@ -277,7 +277,7 @@ func updateUserAsset(tx *ent.Tx, userID int, status asset.Status, vers *ent.Vers
 	}
 
 	fmt.Println("publishArticle 06.05")
-	_, err = tx.UserWord.Update().Where(userword.IDIn(_userwordIDs...)).AddWeight(1).Save(ctx)
+	_, err = tx.Dict.Update().Where(dict.IDIn(_dictIDs...)).AddWeight(1).Save(ctx)
 
 	if err != nil {
 		return err

@@ -138,17 +138,6 @@ func loadTemplates(router *gin.Engine) {
 	router.SetHTMLTemplate(tmpl)
 }
 
-// var articleExist validator.Func = func(fl validator.FieldLevel) bool {
-// 	date, ok := fl.Field().Interface().(int)
-// 	if ok {
-// 		ok, err := client.Article.Query().Where(article.IDEQ(date)).Exist(ctx)
-// 		if !ok || err != nil {
-// 			return false
-// 		}
-// 	}
-// 	return true
-// }
-
 func main() {
 	goflag.Parse("config", "Configuration file path")
 	config.Ssd += "/" + VersionName

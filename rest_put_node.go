@@ -4,9 +4,9 @@ import (
 	"github.com/pkg/errors"
 	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/archive"
+	"knowlgraph.com/ent/dict"
 	"knowlgraph.com/ent/node"
 	"knowlgraph.com/ent/user"
-	"knowlgraph.com/ent/userword"
 	"knowlgraph.com/ent/word"
 )
 
@@ -43,11 +43,11 @@ func putNode(c *Context) error {
 		}
 
 		// 查询指定的私有关键字是否为用户所有
-		ok, err := client.UserWord.Query().
+		ok, err := client.Dict.Query().
 			Where(
-				userword.HasUserWith(
+				dict.HasUserWith(
 					user.ID(_userID.(int))),
-				userword.HasWordWith(
+				dict.HasWordWith(
 					word.ID(_query.WordID))).
 			Exist(ctx)
 
