@@ -19,7 +19,7 @@
                   }}</button>
                 <hr>
               </div>
-              <div class="menu-tip" v-else>无节点 😃</div>
+              <div v-on:click.stop="" class="menu-tip" v-else>无节点 😃</div>
               <button class="menu-item" v-on:click="onNewNode">新建一个节点并关注</button>
               <button class="menu-item">关注更多节点</button>
             </div>
@@ -56,7 +56,7 @@
         <dropdown>
           <button class="btn text flex-v lg">😃</button>
           <div class="menu">
-            <div class="menu-subheader">{{ i18n.PickYourReaction }}</div>
+            <div class="menu-subheader" v-on:click.stop="">{{ i18n.PickYourReaction }}</div>
             <div class="menu-flex" style="width: calc(var(--x96) * 2 + var(--x24));">
               <button class="menu-item" v-for="(reac, i) in reactions" v-on:click="onPickReaction(reac.value)"
                 v-bind:title="i18n[reac.name]">{{ reac.emoji}}</button>
