@@ -115,7 +115,10 @@ func GetArticle(isLogin bool, _userID interface{}, articleID int, needVersions b
 	if isLogin {
 		_assets, _ := _article.
 			QueryAssets().
-			Where(asset.HasUserWith(user.ID(_userID.(int)))).
+			Where(
+				asset.HasUserWith(user.ID(_userID.(int))),
+				asset.StatusNEQ(asset.StatusBrowse),
+			).
 			All(ctx)
 
 		_article.Edges.Assets = _assets
