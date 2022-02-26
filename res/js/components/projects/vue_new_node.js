@@ -22,32 +22,26 @@ Vue.component('new-node', {
     },
 
     onSubmit() {
-      const _this = this;
-      if (!this.selected || !this.selected.edges || !this.selected.edges.node) return;
       if (!this.value) return;
+
+      var body = {
+        wordId: this.value.id,
+      }
+
+      if (this.selected && this.selected.edges && this.selected.edges.node) {
+        body.nodeId = this.selected.edges.node.id
+      }
 
       axios({
         method: "PUT",
         url: queryRestful("/v1/node"),
-        data: {
-          wordId: this.value.id,
-          nodeId: this.selected.edges.node.id,
-        },
-      }).then(function (resp) {
-        _this.$vs.notification({
-          color: 'success',
-          position: 'bottom-right',
-          title: "Success",
-        })
-        _this.$emit('successed')
-      }).catch(function (resp) {
-        _this.$vs.notification({
-          color: 'danger',
-          position: 'bottom-right',
-          title: "Failure",
-          text: resp.data
-        })
-        _this.$emit('failured')
+        data: body,
+      }).then((resp) => {
+        this.toast("Successed")
+        this.$emit('successed')
+      }).catch((resp) => {
+        this.toast("Failured")
+        this.$emit('failured')
       })
     },
   },
