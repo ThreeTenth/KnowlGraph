@@ -6,7 +6,7 @@
       <div class="layout-1 flex margin-t18b9">
         <div class="flex-1">
           <dropdown class="left" v-if="article.nodes.length">
-            <button class="btn text flex-v padding-9">{{ bZticle.nodes[0].edges.word.name }}</button>
+            <button class="btn text flex-v padding-9">{{ article.nodes[0].edges.word.name }}</button>
             <div class="menu">
               <div class="menu-item" v-for="(node, i) in article.nodes">{{ node.edges.word.name }}</div>
             </div>
@@ -15,8 +15,8 @@
             <button class="btn text flex-v padding-9">💡 {{ i18n.Archive }}</button>
             <div class="menu" v-if="user.logined">
               <div v-if="user.archives.length">
-                <button class="menu-item" v-for="(archive, i) in user.archives">📁 {{ archive.edges.node.edges.word.name
-                  }}</button>
+                <button class="menu-item" v-for="(archive, i) in user.archives" v-on:click="onSelectArchive(archive)">
+                  📁 {{ archive.edges.node.edges.word.name }}</button>
                 <hr>
               </div>
               <div v-on:click.stop="" class="menu-tip" v-else>无节点 😃</div>
@@ -113,5 +113,18 @@
       <h4>回复</h4>
       <input class="w-100 padding-6-9 font-md box-border border-none outline-none" autofocus placeholder="请输入你的回复">
     </div>
+  </modal>
+  <modal v-model="isSelectArchive">
+    <template v-if="selectArchive">
+      <div class="margin-24">
+        <h4>是否归档到</h4>
+        <h2>{{ selectArchive.edges.node.edges.word.name }}</h2>
+        <div class="flex">
+          <span class="flex-1"></span>
+          <button class="btn text padding-6-30" v-on:click="isSelectArchive = false">否</button>
+          <button class="btn text fill padding-6-30" v-on:click="todo">是</button>
+        </div>
+      </div>
+    </template>
   </modal>
 </div>

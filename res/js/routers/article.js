@@ -22,6 +22,8 @@ const Article = {
       isNewNode: false,
       isNewQuote: false,
       isAddResponse: false,
+      isSelectArchive: false,
+      selectArchive: null,
       pageStatus: 0,
       selection: {
         text: '',
@@ -109,6 +111,11 @@ const Article = {
   },
 
   methods: {
+    onSelectArchive(archive) {
+      this.isSelectArchive = true
+      this.selectArchive = archive
+    },
+
     onEditArticle() {
       let article = this.$data.__original
       if (undefined == article.edges) return
