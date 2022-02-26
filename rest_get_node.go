@@ -68,6 +68,8 @@ func getNode(c *Context) error {
 	return c.Ok(_node)
 }
 
+// todo: bug: 此处节点非公开但是用户私有的，那么用户就拥有访问权限
+// 应对用户进行鉴权，而不非公开节点统一返回 405 。
 func getPublicNodeIfExist(id int) (*ent.Node, bool, error) {
 	// 获取指定节点的详细信息
 	_node, err := client.Node.Query().
@@ -80,7 +82,7 @@ func getPublicNodeIfExist(id int) (*ent.Node, bool, error) {
 
 	// 如果指定节点为私有节点，则返回 "MethodNotAllowed(405)"
 	if _node.Status == node.StatusPrivate {
-		return nil, false, nil
+		return _node, false, nil
 	}
 
 	return _node, true, nil

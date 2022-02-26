@@ -31,22 +31,17 @@ func putNode(c *Context) error {
 		return c.NotFound(err.Error())
 	}
 
-	_userID, ok := c.Get(GinKeyUserID)
+	_userID := c.GetInt(GinKeyUserID)
 	_nodeStatus := node.StatusPublic
 
 	if _word.Status == word.StatusPrivate {
 		// 关键字是私有的
 
-		if !ok {
-			// 未登录
-			return c.Unauthorized("Unlogin")
-		}
-
 		// 查询指定的私有关键字是否为用户所有
 		ok, err := client.Dict.Query().
 			Where(
 				dict.HasUserWith(
-					user.ID(_userID.(int))),
+					user.ID(_userID)),
 				dict.HasWordWith(
 					word.ID(_query.WordID))).
 			Exist(ctx)
@@ -86,7 +81,7 @@ func putNode(c *Context) error {
 					Query().
 					Where(
 						archive.HasNodeWith(node.ID(_prev.ID)),
-						archive.HasUserWith(user.ID(_userID.(int)))).
+						archive.HasUserWith(user.ID(_userID))).
 					Exist(ctx)
 				if err != nil {
 					return err
@@ -120,7 +115,7 @@ func putNode(c *Context) error {
 		_archive, err := tx.Archive.
 			Create().
 			SetNode(_node).
-			SetUserID(_userID.(int)).
+			SetUserID(_userID).
 			Save(ctx)
 
 		if err != nil {
