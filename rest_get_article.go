@@ -9,17 +9,15 @@ import (
 	"knowlgraph.com/ent/article"
 	"knowlgraph.com/ent/asset"
 	"knowlgraph.com/ent/node"
-	"knowlgraph.com/ent/quote"
 	"knowlgraph.com/ent/user"
 	"knowlgraph.com/ent/version"
 )
 
 func getArticle(c *Context) error {
 	var _query struct {
-		ID           int    `form:"id" binding:"required"`
-		Lang         string `form:"lang"`
-		NeedVersions bool   `form:"needVersions"`
-		VersionID    int    `form:"versionID"`
+		ID        int    `form:"id" binding:"required"`
+		Lang      string `form:"lang"`
+		VersionID int    `form:"versionID"`
 	}
 
 	err := c.ShouldBindQuery(&_query)
@@ -31,9 +29,8 @@ func getArticle(c *Context) error {
 
 	_article, status, err := GetArticle(
 		ok,
-		_userID,
+		_userID.(int),
 		_query.ID,
-		_query.NeedVersions,
 		_query.VersionID)
 
 	switch status {
@@ -49,7 +46,7 @@ func getArticle(c *Context) error {
 }
 
 // GetArticle is get article
-func GetArticle(isLogin bool, _userID interface{}, articleID int, needVersions bool, versionID int) (*ent.Article, int, error) {
+func GetArticle(isLogin bool, _userID int, articleID int, versionID int) (*ent.Article, int, error) {
 	_article, err := client.Article.
 		Query().
 		Where(article.ID(articleID)).
@@ -64,7 +61,7 @@ func GetArticle(isLogin bool, _userID interface{}, articleID int, needVersions b
 			return nil, http.StatusUnauthorized, errors.New("Unauthorized")
 		}
 
-		ok, _ := _article.QueryAssets().Where(asset.HasUserWith(user.ID(_userID.(int)))).Exist(ctx)
+		ok, _ := _article.QueryAssets().Where(asset.HasUserWith(user.ID(_userID))).Exist(ctx)
 		if !ok {
 			return nil, http.StatusUnauthorized, errors.New("Unauthorized")
 		}
@@ -74,10 +71,8 @@ func GetArticle(isLogin bool, _userID interface{}, articleID int, needVersions b
 
 	if 0 < versionID {
 		vq.Where(version.ID(versionID))
-	} else if needVersions {
-		vq.Order(ent.Desc(version.FieldCreatedAt))
 	} else {
-		vq.Order(ent.Desc(version.FieldCreatedAt)).Limit(1)
+		vq.Order(ent.Desc(version.FieldCreatedAt))
 	}
 	_version, err := vq.WithContent().WithKeywords().First(ctx)
 	if err != nil {
@@ -86,12 +81,6 @@ func GetArticle(isLogin bool, _userID interface{}, articleID int, needVersions b
 
 	_reactions, _ := _article.QueryReactions().All(ctx)
 
-	_quotes, _ := _article.
-		QueryQuotes().
-		Where(quote.HasArticleWith(article.StatusEQ(article.StatusPublic))).
-		WithArticle().
-		All(ctx)
-
 	_nodesWhere := node.StatusEQ(node.StatusPublic)
 	if isLogin {
 		// 已登录用户的私有节点查询
@@ -99,14 +88,14 @@ func GetArticle(isLogin bool, _userID interface{}, articleID int, needVersions b
 			_nodesWhere,
 			node.HasArchivesWith(
 				archive.HasUserWith(
-					user.ID(_userID.(int)))))
+					user.ID(_userID))))
 	}
 	_nodesQuery := _article.QueryNodes().Where(_nodesWhere).WithWord()
 
 	if isLogin {
 		// 已登录用户的归档查询
 		_nodesQuery.WithArchives(func(aq *ent.ArchiveQuery) {
-			aq.Where(archive.HasUserWith(user.ID(_userID.(int))))
+			aq.Where(archive.HasUserWith(user.ID(_userID)))
 		})
 	}
 
@@ -116,7 +105,7 @@ func GetArticle(isLogin bool, _userID interface{}, articleID int, needVersions b
 		_assets, _ := _article.
 			QueryAssets().
 			Where(
-				asset.HasUserWith(user.ID(_userID.(int))),
+				asset.HasUserWith(user.ID(_userID)),
 				asset.StatusNEQ(asset.StatusBrowse),
 			).
 			All(ctx)
@@ -127,7 +116,6 @@ func GetArticle(isLogin bool, _userID interface{}, articleID int, needVersions b
 	_article.Edges.Versions = []*ent.Version{_version}
 	_article.Edges.Reactions = _reactions
 	_article.Edges.Nodes = _nodes
-	_article.Edges.Quotes = _quotes
 
 	return _article, http.StatusOK, err
 }

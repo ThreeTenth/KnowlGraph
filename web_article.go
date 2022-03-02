@@ -19,7 +19,7 @@ func articleHTML(c *Context) (int, string, interface{}) {
 		return http.StatusNotFound, TplIndexHTML, _data
 	}
 
-	_article, status, err := GetArticle(ok, _userID, _query.ID, false, 0)
+	_article, status, err := GetArticle(ok, _userID.(int), _query.ID, 0)
 
 	if err != nil {
 		return status, TplIndexHTML, _data
