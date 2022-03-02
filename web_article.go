@@ -3,8 +3,6 @@ package main
 import "net/http"
 
 func articleHTML(c *Context) (int, string, interface{}) {
-	_userID, ok := c.Get(GinKeyUserID)
-
 	var _data struct {
 		Logined bool
 		User    interface{}
@@ -19,19 +17,21 @@ func articleHTML(c *Context) (int, string, interface{}) {
 		return http.StatusNotFound, TplIndexHTML, _data
 	}
 
-	_article, status, err := GetArticle(ok, _userID.(int), _query.ID, 0)
+	_userID := c.GetInt(GinKeyUserID)
+
+	_article, status, err := GetArticle(_userID, _query.ID, 0)
 
 	if err != nil {
 		return status, TplIndexHTML, _data
 	}
 
-	if ok {
-		_user, _ := client.User.Get(ctx, _userID.(int))
+	if _userID > 0 {
+		_user, _ := client.User.Get(ctx, _userID)
 
 		_data.User = _user
+		_data.Logined = true
 	}
 
-	_data.Logined = ok
 	_data.Article = _article.Edges.Versions[0]
 
 	return http.StatusOK, TplIndexHTML, _data

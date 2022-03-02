@@ -25,11 +25,10 @@ func getArticle(c *Context) error {
 		return c.BadRequest(err.Error())
 	}
 
-	_userID, ok := c.Get(GinKeyUserID)
+	_userID := c.GetInt(GinKeyUserID)
 
 	_article, status, err := GetArticle(
-		ok,
-		_userID.(int),
+		_userID,
 		_query.ID,
 		_query.VersionID)
 
@@ -46,7 +45,7 @@ func getArticle(c *Context) error {
 }
 
 // GetArticle is get article
-func GetArticle(isLogin bool, _userID int, articleID int, versionID int) (*ent.Article, int, error) {
+func GetArticle(_userID int, articleID int, versionID int) (*ent.Article, int, error) {
 	_article, err := client.Article.
 		Query().
 		Where(article.ID(articleID)).
@@ -55,6 +54,8 @@ func GetArticle(isLogin bool, _userID int, articleID int, versionID int) (*ent.A
 	if err != nil {
 		return nil, http.StatusNotFound, err
 	}
+
+	isLogin := 0 < _userID
 
 	if _article.Status == article.StatusPrivate {
 		if !isLogin {
