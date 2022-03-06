@@ -838,6 +838,12 @@ div[contenteditable]:empty:before {
 	color  : #aaa;
 }
 
+pre,
+code {
+	overflow-x: auto;
+	display   : inline-grid;
+}
+
 /*******************************************************************
  borad and box-shadow style
 *******************************************************************/
