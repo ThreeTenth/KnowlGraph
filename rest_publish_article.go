@@ -254,17 +254,22 @@ func updateUserAsset(tx *ent.Tx, userID int, status asset.Status, vers *ent.Vers
 		return err
 	}
 
-	fmt.Println("publishArticle 06.04")
+	fmt.Println("publishArticle 06.04", len(_wordIDs), len(_dictIDs))
 	_insertCount := len(_wordIDs) - len(_dictIDs)
 
 	if 0 < _insertCount {
 		fmt.Println("publishArticle 06.04.01")
 		_wordBulk := make([]*ent.DictCreate, 0)
+		hasCreate := true
 		for _, keywordID := range _wordIDs {
 			for _, dictID := range _dictIDs {
-				if keywordID != dictID {
-					_wordBulk = append(_wordBulk, tx.Dict.Create().SetUserID(userID).SetWordID(keywordID))
+				if keywordID == dictID {
+					hasCreate = false
+					break
 				}
+			}
+			if hasCreate {
+				_wordBulk = append(_wordBulk, tx.Dict.Create().SetUserID(userID).SetWordID(keywordID))
 			}
 		}
 
