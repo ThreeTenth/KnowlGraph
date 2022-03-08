@@ -15,6 +15,7 @@ type Node struct {
 func (Node) Fields() []ent.Field {
 	return []ent.Field{
 		field.Enum("status").Values("public", "private").Immutable(),
+		field.Int("weight").Default(1).Comment("Node weights, which can be used for recommendation, display, sorting, etc."),
 	}
 }
 
