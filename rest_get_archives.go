@@ -17,13 +17,13 @@ func getArchives(c *Context) error {
 		return c.BadRequest(err.Error())
 	}
 
-	_userID, _ := c.Get(GinKeyUserID)
+	_userID := c.GetInt(GinKeyUserID)
 
 	var _archiveWhere []predicate.Archive
 	_archiveWhere = append(
 		_archiveWhere,
 		archive.HasUserWith(
-			user.ID(_userID.(int))))
+			user.ID(_userID)))
 	if _query.Status.String() != "" {
 		_archiveWhere = append(_archiveWhere, archive.StatusEQ(_query.Status))
 	}
