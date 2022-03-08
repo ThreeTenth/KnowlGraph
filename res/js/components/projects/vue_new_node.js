@@ -38,10 +38,10 @@ Vue.component('new-node', {
         data: body,
       }).then((resp) => {
         this.toast("Successed")
-        this.$emit('successed')
+        this.$emit('successed', resp.data)
       }).catch((resp) => {
         this.toast("Failured")
-        this.$emit('failured')
+        this.$emit('failured', resp.code, resp.data)
       })
     },
   },
