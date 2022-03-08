@@ -85,22 +85,20 @@ func GetArticle(_userID int, articleID int, versionID int) (*ent.Article, int, e
 	_nodesWhere := node.StatusEQ(node.StatusPublic)
 	if isLogin {
 		// 已登录用户的私有节点查询
-		_nodesWhere = node.And(
+		_nodesWhere = node.Or(
 			_nodesWhere,
 			node.HasArchivesWith(
 				archive.HasUserWith(
 					user.ID(_userID))))
 	}
-	_nodesQuery := _article.QueryNodes().Where(_nodesWhere).WithWord()
-
-	if isLogin {
-		// 已登录用户的归档查询
-		_nodesQuery.WithArchives(func(aq *ent.ArchiveQuery) {
-			aq.Where(archive.HasUserWith(user.ID(_userID)))
-		})
-	}
-
-	_nodes, _ := _nodesQuery.All(ctx)
+	_nodes, _ := _article.
+		QueryNodes().
+		Where(_nodesWhere).
+		WithWord().
+		WithPath(func(nq *ent.NodeQuery) {
+			nq.WithWord()
+		}).
+		All(ctx)
 
 	if isLogin {
 		_assets, _ := _article.
@@ -112,6 +110,16 @@ func GetArticle(_userID int, articleID int, versionID int) (*ent.Article, int, e
 			All(ctx)
 
 		_article.Edges.Assets = _assets
+
+		_archives, _ := _article.
+			QueryArchives().
+			Where(archive.HasUserWith(user.ID(_userID))).
+			WithNode(func(nq *ent.NodeQuery) {
+				nq.WithWord()
+			}).
+			All(ctx)
+
+		_article.Edges.Archives = _archives
 	}
 
 	_article.Edges.Versions = []*ent.Version{_version}
