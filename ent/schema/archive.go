@@ -38,5 +38,7 @@ func (Archive) Edges() []ent.Edge {
 			Unique().
 			Required().
 			StructTag(`json:"node"`),
+		edge.To("articles", Article.Type).
+			StructTag(`json:"articles,omitempty"`),
 	}
 }

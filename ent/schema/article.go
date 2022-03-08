@@ -39,6 +39,9 @@ func (Article) Edges() []ent.Edge {
 		edge.From("nodes", Node.Type).
 			Ref("articles").
 			StructTag(`json:"nodes"`),
+		edge.From("archives", Archive.Type).
+			Ref("articles").
+			StructTag(`json:"archives"`),
 		edge.From("word", Word.Type).
 			Ref("definition").
 			Unique().StructTag(`json:"word,omitempty"`),
