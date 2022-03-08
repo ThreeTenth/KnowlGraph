@@ -3,7 +3,6 @@ package main
 import (
 	"knowlgraph.com/ent"
 	"knowlgraph.com/ent/node"
-	"knowlgraph.com/ent/word"
 )
 
 // 权限规则是当节点路径上有一个为私有节点时，其后所有节点均为私有。
@@ -22,15 +21,12 @@ func getNode(c *Context) error {
 	}
 
 	// 访问公共节点的查询条件
-	_nextsWhere := node.HasWordWith(
-		word.StatusEQ(word.StatusPublic))
+	_nextsWhere := node.StatusEQ(node.StatusPublic)
 
 	// 如果未指定节点，则返回所有根节点
 	if 0 == _query.ID {
 		_nexts, err := client.Node.Query().
-			Where(node.Not(node.HasPrevWith())).
-			QueryNexts().
-			Where(_nextsWhere).
+			Where(_nextsWhere, node.Not(node.HasPrev())).
 			WithWord().
 			All(ctx)
 		if err != nil {
@@ -57,6 +53,7 @@ func getNode(c *Context) error {
 	_nexts, err := _node.
 		QueryNexts().
 		Where(_nextsWhere).
+		WithWord().
 		All(ctx)
 
 	if err != nil {
