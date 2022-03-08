@@ -13,7 +13,7 @@
                   📁 {{ node.edges.word.name }}
                   <button class="btn icon padding-3" v-on:click.stop="todo" title="你已收藏" v-if="node.star">⭐</button>
                   <button class="btn icon padding-3" v-on:click.stop="todo" title="你已关注" v-if="node.watch">👀</button>
-                  <button class="btn icon padding-3" v-on:click.stop="todo" title="已有人归档" v-if="node.pub">📌</button>
+                  <button class="btn icon padding-3" v-on:click.stop="gotoNodeArticles(node)" title="已有人归档" v-if="node.pub">📌</button>
                   <button class="btn icon padding-3" v-on:click.stop="todo" title="你已归档" v-if="node.archive">💡</button>
                   <button class="btn icon padding-3" v-on:click.stop="todo" title="你的私有节点" v-if="node.private">🔒</button>
                 </div>

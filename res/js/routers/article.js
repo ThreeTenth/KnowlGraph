@@ -115,6 +115,9 @@ const Article = {
   },
 
   methods: {
+    gotoNodeArticles(node) {
+      router.push({ name: 'node', params: { id: node.id, name: node.edges.word.name } })
+    },
     onSelectNode(node) {
       this.isSelectNode = true
       this.selectNode = node

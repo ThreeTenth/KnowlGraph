@@ -189,6 +189,7 @@ const router = new VueRouter({
     { path: '/vote', name: 'vote', component: Vote },
     { path: '/word/:id/:name?', name: 'word', component: Word, props: true },
     { path: '/words', name: 'words', component: Words },
+    { path: '/node/:id/:name?', name: 'node', component: NodeArticles, props: true },
   ]
 })
 
