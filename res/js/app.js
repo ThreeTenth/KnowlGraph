@@ -56,6 +56,8 @@ const plugin = {
       })
     }
     Vue.prototype.getArchives = function () {
+      // todo 缓存，及归档转换为节点。
+      // 含 addArchives 函数
       axios({
         method: "GET",
         url: queryRestful("/v1/archives"),
@@ -64,6 +66,15 @@ const plugin = {
       }).catch(function (resp) {
         console.log(resp)
       })
+    }
+    Vue.prototype.addArchive = function(archive) {
+      var archives = Vue.prototype.user.archives
+      archives.forEach(element => {
+        if (element.id == archive.id) {
+          return
+        }
+      })
+      archives.push(archive)
     }
 
     Vue.prototype.md2html = function (md) {
