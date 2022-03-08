@@ -210,7 +210,7 @@ inner join "articles"
 where tmp.rownum < 2 order by tmp.created_at desc offset $2 limit $3`
 
 func queryNodeArticles(db *sql.DB, nodeID int, lang string, offset, limit int) ([]*ent.Version, error) {
-	_sql := QueryUserAssetsSQL
+	_sql := QueryNodeArticles
 	_args := []interface{}{
 		nodeID, offset, limit,
 	}
