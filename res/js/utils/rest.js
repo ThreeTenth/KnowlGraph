@@ -1,5 +1,17 @@
 // rest.js
 
+function putNodeArticle(nodeId, articleId) {
+  var url = queryRestful("/v1/node/article")
+  return axios({
+    method: "PUT",
+    url: url,
+    data: {
+      nodeId: nodeId,
+      articleId: articleId
+    }
+  })
+}
+
 function getArticleByWord(wordId) {
   var url = queryRestful("/v1/word/articles", { wordId: wordId })
   return axios({
