@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/excing/goflag"
+	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
 	"golang.org/x/sync/errgroup"
@@ -242,6 +243,7 @@ func router01() http.Handler {
 		router.Use(cors)
 	}
 
+	router.Use(gzip.Gzip(gzip.DefaultCompression))
 	router.GET("/sw.js", getSWJs)
 	r(router.Group("/r"))
 	apiV1(router.Group("/api"))
@@ -324,6 +326,7 @@ func apiV1(g *gin.RouterGroup) {
 
 	v1.GET("/node", handle(getNode))
 	v1.PUT("/node", authorizeRequired, handle(putNode))
+	v1.PUT("/node/article", authorizeRequired, handle(putNodeArticle))
 	v1.GET("/node/articles", handle(getNodeArticles))
 
 	v1.GET("/archives", authorizeRequired, handle(getArchives))
