@@ -22,8 +22,9 @@ const Article = {
       isNewNode: false,
       isNewQuote: false,
       isAddResponse: false,
-      isSelectArchive: false,
-      selectArchive: null,
+      isSelectNode: false,
+      selectNode: null,
+      archiveMenuStatus: 0,
       pageStatus: 0,
       selection: {
         text: '',
@@ -31,6 +32,7 @@ const Article = {
         left: 0,
         top: 0,
       },
+      nodes: null
     }
   },
 
@@ -65,6 +67,7 @@ const Article = {
       var reactions = article.edges.reactions
       var assets = article.edges.assets
       var nodes = article.edges.nodes
+      var archives = article.edges.archives
       var star = false
       var watch = false
       var private = false
@@ -106,14 +109,31 @@ const Article = {
         private: private,
         browseCount: browseCount,
         nodes: nodes,
+        archives: archives,
       }
     }
   },
 
   methods: {
-    onSelectArchive(archive) {
-      this.isSelectArchive = true
-      this.selectArchive = archive
+    onSelectNode(node) {
+      this.isSelectNode = true
+      this.selectNode = node
+    },
+
+    onPutNodeArticle() {
+      putNodeArticle(this.selectNode.id, this.article.id)
+        .then((resp) => {
+          this.toast("归档成功", "success")
+          this.selectNode.archive = true
+          this.isSelectNode = false
+          this.selectNode = null
+          this.updateNodes()
+        })
+        .catch((err) => {
+          this.toast(err, "error")
+          this.isSelectNode = false
+          this.selectNode = null
+        })
     },
 
     onEditArticle() {
@@ -161,6 +181,62 @@ const Article = {
 
     onNewNode() {
       this.isNewNode = !this.isNewNode
+    },
+
+    newNodeSuccessed(archive) {
+      this.isNewNode = false
+      this.$data.__original.edges.archives.push(archive)
+      this.selectNode = archive.edges.node
+      this.onPutNodeArticle()
+      this.addArchive(archive)
+      this.updateNodes()
+    },
+
+    newNodeFailured(httpStatus, data) {
+      this.isNewNode = false
+      this.toast(data + "(" + httpStatus + ")", "error")
+    },
+
+    updateNodes() {
+      var nodes = []
+      var articleNodes = this.article.nodes || []
+      var archives = this.article.archives || []
+      articleNodes.forEach(node => {
+        let archive = archives.find(item => {
+          return item.edges.node.id == node.id
+        })
+        if (node.status == "private") {
+          node.private = true
+        } else {
+          node.pub = true
+        }
+        if (archive) {
+          node.archive = true
+        }
+        nodes.push(node)
+      })
+      archives = this.user.archives || []
+      archives.forEach(archive => {
+        let node = nodes.find(item => {
+          return item.id == archive.edges.node.id
+        })
+        if (!node) {
+          node = archive.edges.node
+          nodes.push(node)
+        }
+        if (archive.status == "star") {
+          node.star = true
+        }
+        if (archive.status == "watch") {
+          node.watch = true
+        }
+      })
+
+      if (nodes.length == 0) {
+        return null
+      }
+
+      this.nodes = nodes
     },
 
     onStar() {
@@ -301,34 +377,34 @@ const Article = {
   },
 
   created() {
-    let _this = this
     axios({
       method: "GET",
       url: queryRestful("/v1/article", { id: this.id }),
-    }).then(function (resp) {
-      _this.$data.__original = resp.data
-      if (!_this.code) {
+    }).then((resp) => {
+      this.$data.__original = resp.data
+      if (!this.code) {
         router.replace({
           name: 'article', params: {
-            id: _this.id,
-            code: _this.article.code,
+            id: this.id,
+            code: this.article.code,
           }
         })
       }
-      if (_this.user.logined) {
-        _this.$nextTick(() => {
-          _this.__putAsset("browse")
+      if (this.user.logined) {
+        this.$nextTick(() => {
+          this.__putAsset("browse")
         })
       }
-      _this.pageStatus = resp.status
-      document.title = _this.article.title + " -- KnowlGraph"
+      this.pageStatus = resp.status
+      this.updateNodes()
+      document.title = this.article.title + " -- KnowlGraph"
     }).catch(function (err) {
       var status = getStatus4Error(err)
       if (401 == status && !logined) {
         router.push({ name: "login" })
         return
       }
-      _this.pageStatus = status
+      this.pageStatus = status
     })
 
     document.addEventListener('selectionchange', () => {
