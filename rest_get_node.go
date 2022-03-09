@@ -21,13 +21,14 @@ func getNode(c *Context) error {
 	}
 
 	// 访问公共节点的查询条件
-	_nextsWhere := node.StatusEQ(node.StatusPublic)
+	_nodeWhere := node.StatusEQ(node.StatusPublic)
 
 	// 如果未指定节点，则返回所有根节点
 	if 0 == _query.ID {
 		_nexts, err := client.Node.Query().
-			Where(_nextsWhere, node.Not(node.HasPrev())).
+			Where(_nodeWhere, node.Not(node.HasPrev())).
 			WithWord().
+			WithNexts().
 			All(ctx)
 		if err != nil {
 			return c.NotFound(err.Error())
@@ -52,7 +53,7 @@ func getNode(c *Context) error {
 	// 获取指定节点下，所有的下一节点（nexts）
 	_nexts, err := _node.
 		QueryNexts().
-		Where(_nextsWhere).
+		Where(_nodeWhere).
 		WithWord().
 		All(ctx)
 
@@ -60,6 +61,12 @@ func getNode(c *Context) error {
 		return c.NotFound(err.Error())
 	}
 
+	_path, err := _node.QueryPath().WithWord().All(ctx)
+	if err != nil && !ent.IsNotFound(err) {
+		return c.NotFound(err.Error())
+	}
+
+	_node.Edges.Path = _path
 	_node.Edges.Nexts = _nexts
 
 	return c.Ok(_node)
