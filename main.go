@@ -269,6 +269,7 @@ func router01() http.Handler {
 	router.GET("/word/:id/*path", authentication, html(index))
 	router.GET("/words", authentication, html(index))
 	router.GET("/node/:id/*path", authentication, html(index))
+	router.GET("/nodes/*id", authentication, html(index))
 
 	router.GET("/login", authentication, html(index))
 	router.GET("/signout", deauthorize, handle(signout))

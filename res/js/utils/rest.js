@@ -1,5 +1,15 @@
 // rest.js
 
+function getNodeNexts(nodeId) {
+  var url = queryRestful("/v1/node", {
+    id: nodeId,
+  })
+  return axios({
+    method: "GET",
+    url: url,
+  })
+}
+
 function getNodeArticles(nodeId) {
   var url = queryRestful("/v1/node/articles", {
     nodeId: nodeId,
