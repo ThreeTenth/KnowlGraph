@@ -127,6 +127,7 @@ const Article = {
       putNodeArticle(this.selectNode.id, this.article.id)
         .then((resp) => {
           this.toast("归档成功", "success")
+          this.selectNode.pub = true
           this.selectNode.archive = true
           this.isSelectNode = false
           this.selectNode = null
@@ -186,7 +187,8 @@ const Article = {
       this.isNewNode = !this.isNewNode
     },
 
-    newNodeSuccessed(archive) {
+    newNodeSuccessed(archive, word) {
+      archive.edges.node.edges.word = word
       this.isNewNode = false
       this.$data.__original.edges.archives.push(archive)
       this.selectNode = archive.edges.node
