@@ -3,7 +3,7 @@ module knowlgraph.com
 go 1.16
 
 require (
-	entgo.io/ent v0.10.0
+	entgo.io/ent v0.10.1
 	github.com/duo-labs/webauthn v0.0.0-20220223184316-4d1cf2d34051
 	github.com/excing/goflag v1.0.1
 	github.com/gin-contrib/gzip v0.0.5
