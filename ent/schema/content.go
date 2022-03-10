@@ -31,7 +31,6 @@ func (Content) Edges() []ent.Edge {
 		edge.From("branche", Draft.Type).
 			Ref("snapshots").
 			Unique().
-			Required().
 			Comment("Snapshot of a branch.").
 			StructTag(`json:"branche,omitempty"`),
 		edge.From("version", Version.Type).
