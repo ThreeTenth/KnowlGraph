@@ -35,8 +35,9 @@ func (Node) Edges() []ent.Edge {
 			Unique().
 			StructTag(`json:"prev,omitempty"`),
 		edge.To("path", Node.Type).
+			StructTag(`json:"path,omitempty"`).
 			From("end").
-			StructTag(`json:"path,omitempty"`),
+			StructTag(`json:"end,omitempty"`),
 		edge.To("archives", Archive.Type).
 			StructTag(`json:"archives,omitempty"`),
 		edge.To("articles", Article.Type).
