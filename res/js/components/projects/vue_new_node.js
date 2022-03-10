@@ -37,10 +37,8 @@ Vue.component('new-node', {
         url: queryRestful("/v1/node"),
         data: body,
       }).then((resp) => {
-        this.toast("Successed")
-        this.$emit('successed', resp.data)
+        this.$emit('successed', resp.data, this.value)
       }).catch((resp) => {
-        this.toast("Failured")
         this.$emit('failured', resp.code, resp.data)
       })
     },
