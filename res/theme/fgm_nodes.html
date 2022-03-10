@@ -1,7 +1,11 @@
 <div>
   <main-nav></main-nav>
   <div class="container padding-x9">
-    <h2>{{ node.edges.word ? node.edges.word.name : "所有根节点"}}</h2>
+    <h2 v-if="node.edges.word">
+      <span v-for="p in node.edges.path">{{ p.edges.word.name }} ＞</span>
+      <span>{{ node.edges.word.name }}</span>
+    </h2>
+    <h2 v-else>所有根节点</h2>
     <div class="flex-wrap" v-if="node">
       <template v-for="(next, i) in node.edges.nexts">
         <div v-bind:key="next.id" class="flex-v padding-9">
