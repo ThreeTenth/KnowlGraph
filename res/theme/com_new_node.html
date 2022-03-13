@@ -1,25 +1,55 @@
-<div class="padding-9">
-  <h3>创建新节点</h3>
-  <div class="layout-1 layout-5" style="padding: var(--x9);">
-    <span>></span>
-    <template v-if="selected">
-      <span> {{ selected.edges.node.edges.word.name }} > </span>
+<div class="padding-9 maxw-720p">
+  <h3>管理归档</h3>
+  <ul class="layout-label border-1">
+    <template v-for="(n, i) in (level + 1)">
+      <li class="margin-x5 flex">
+        <button class="btn text sm" v-on:click="onBackPrev(i)">{{ path[i].edges.word.name }}</button>
+        <dropdown class="left">
+          <button class="btn link">></button>
+          <div class="menu padding-9" style="margin-top: 1px;">
+            <template v-if="!path[i].edges.nexts">
+              <span class="text">无可选择节点</span>
+            </template>
+            <template v-else>
+              <div class="btn link sm" v-for="node in path[i].edges.nexts" v-on:click="onOpenNode(i, node)">
+                📁 {{node.edges.word.name}}
+              </div>
+            </template>
+          </div>
+        </dropdown>
+      </li>
     </template>
-  </div>
-  <div class="flex">
-    <button class="btn text flex-v" v-bind:class="{'fill': selected == archive}" v-for="(archive, i) in user.archives"
-      v-on:click="onSelectPrev(archive)">📁 {{ archive.edges.node.edges.word.name }}</button>
-  </div>
-  <div class="flex margin-y">
-    <label>新建节点名：</label>
-    <div class="flex-1">
-      <autocomplet v-on:item="getWordName" v-on:select="onSelectWord" v-bind:source="user.words"
-        v-bind:placeholder="i18n.AddAWord"></autocomplet>
-    </div>
+  </ul>
+  <div class="flex margin-y9 minh-180p maxh-360p">
+    <template v-if="path[level].loading">
+      <div class="w-100 flex-c">
+        <div class="loading"></div>
+      </div>
+    </template>
+    <template v-else-if="path[level].edges.nexts || isNewNode">
+      <div>
+        <button v-if="!isRoot" class="btn text md" v-on:click="onBackPrev(-1)">📁 ..</button>
+        <template v-for="(node, i) in path[level].edges.nexts">
+          <button class="margin-x5 btn text md padding-v1h4" v-on:click="onOpenNode(level, node)">
+            📁 {{ node.edges.word.name }}</button>
+        </template>
+        <div class="inflex margin-x5 padding-v1h4" v-if="isNewNode" v-on:click.stop>
+          📁
+          <autocomplet v-on:item="getWordName" v-on:select="onSelectWord" v-bind:source="user.words" placeholder="新建节点">
+          </autocomplet>
+          <button class="btn text fill padding-3-9" v-on:click="onSubmitNewNode">确定</button>
+        </div>
+      </div>
+    </template>
+    <template v-else>
+      <button v-if="!isRoot" class="abs btn text md" v-on:click="onBackPrev(-1)">📁 ..</button>
+      <div class="w-100 flex-c">无可选择节点</div>
+    </template>
   </div>
   <hr>
   <div class="flex">
+    <button class="btn text padding-3 flex-v margin-x18" v-on:click.stop="onNewNode">💡 新建节点</button>
     <div class="flex-1"></div>
-    <button class="btn text flex-v margin-x18" v-on:click="onSubmit">确定</button>
+    <button class="btn text fill padding-6-30 flex-v margin-x18" v-if="article" v-on:click="onArchive">归档</button>
   </div>
 </div>
