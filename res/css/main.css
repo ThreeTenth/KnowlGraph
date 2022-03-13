@@ -105,6 +105,10 @@ body {
 	display: block !important;
 }
 
+.inflex {
+	display: inline-flex !important;
+}
+
 .none {
 	display: none !important;
 }
@@ -405,6 +409,7 @@ body {
 	padding      : var(--x2) var(--x4);
 	margin       : 0;
 	border-bottom: var(--x1) solid var(--primary);
+	max-width    : 150px;
 }
 
 .input-2 {
@@ -525,6 +530,7 @@ body {
 .overlay {
 	position: relative;
 	display : inline-block;
+	z-index : 2000;
 }
 
 .overlay.layout-5 .menu {
@@ -769,11 +775,6 @@ body {
 	color      : var(--black);
 	font-weight: 500;
 	font-size  : var(--x14);
-	padding    : var(--x1) var(--x4);
-}
-
-.text+.text {
-	margin-left: var(--x8);
 }
 
 .link.sm,
@@ -885,6 +886,10 @@ code {
 	display: flex;
 }
 
+.flex-root {
+	display: flow-root;
+}
+
 .flex-col {
 	display  : flex;
 	flex-flow: column;
@@ -986,8 +991,20 @@ code {
 	height: 100vh;
 }
 
+.minh-180p {
+	min-height: 180px;
+}
+
+.maxh-360p {
+	max-height: 360px;
+}
+
 .minh-100vh {
 	min-height: 100vh;
+}
+
+.maxh-100vh {
+	max-height: 100vh;
 }
 
 .wh-x30 {
@@ -1008,10 +1025,6 @@ code {
 .wh-x120 {
 	width : var(--x120) !important;
 	height: var(--x120) !important;
-}
-
-.maxh-100vh {
-	max-height: 100vh;
 }
 
 .maxw-360p {
@@ -1218,6 +1231,14 @@ code {
 
 .padding-3 {
 	padding: var(--x3);
+}
+
+.padding-v1h4 {
+	padding: var(--x1) var(--x4);
+}
+
+.padding-3-9 {
+	padding: var(--x3) var(--x9);
 }
 
 .padding-6-9 {
