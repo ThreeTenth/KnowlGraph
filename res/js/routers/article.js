@@ -187,25 +187,29 @@ const Article = {
       this.isNewNode = !this.isNewNode
     },
 
-    newNodeSuccessed(archive, word) {
-      archive.edges.node.edges.word = word
+    newNodeSuccessed(node) {
       this.isNewNode = false
+      this.isSelectNode = false
+      this.selectNode = null
+
+      const archive = { status: node.status, edges: { node: node } }
+      this.$data.__original.edges.nodes.push(node)
       this.$data.__original.edges.archives.push(archive)
-      this.selectNode = archive.edges.node
-      this.onPutNodeArticle()
+
       this.addArchive(archive)
       this.updateNodes()
+      this.toast("归档成功", "success")
     },
 
-    newNodeFailured(httpStatus, data) {
+    newNodeFailured(err) {
       this.isNewNode = false
-      this.toast(data + "(" + httpStatus + ")", "error")
+      this.toast(err, "error")
     },
 
     updateNodes() {
       var nodes = []
       var articleNodes = this.article.nodes || []
-      var archives = this.article.archives || []
+      var archives = this.$data.__original.edges.archives || []
       articleNodes.forEach(node => {
         let archive = archives.find(item => {
           return item.edges.node.id == node.id

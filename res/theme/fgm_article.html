@@ -13,15 +13,17 @@
                   📁 {{ node.edges.word.name }}
                   <button class="btn icon padding-3" v-on:click.stop="todo" title="你已收藏" v-if="node.star">⭐</button>
                   <button class="btn icon padding-3" v-on:click.stop="todo" title="你已关注" v-if="node.watch">👀</button>
-                  <button class="btn icon padding-3" v-on:click.stop="gotoNodeArticles(node)" title="已有人归档" v-if="node.pub">📌</button>
+                  <button class="btn icon padding-3" v-on:click.stop="gotoNodeArticles(node)" title="已有人归档"
+                    v-if="node.pub">📌</button>
                   <button class="btn icon padding-3" v-on:click.stop="todo" title="你已归档" v-if="node.archive">💡</button>
-                  <button class="btn icon padding-3" v-on:click.stop="todo" title="你的私有节点" v-if="node.private">🔒</button>
+                  <button class="btn icon padding-3" v-on:click.stop="todo" title="你的私有节点"
+                    v-if="node.private">🔒</button>
                 </div>
               </template>
               <div v-on:click.stop="" class="menu-tip" v-else>无节点 😃</div>
               <template v-if="user.logined">
                 <hr>
-                <button class="menu-item" v-on:click="onNewNode">新建一个节点并关注</button>
+                <button class="menu-item" v-on:click="onNewNode">新建一个节点并归档</button>
                 <button class="menu-item" v-on:click="todo">关注更多节点</button>
               </template>
             </div>
@@ -83,7 +85,7 @@
     <div class="w-90p is-720"></div>
   </div>
   <modal v-model="isNewNode">
-    <new-node v-on:successed="newNodeSuccessed" v-on:failured="newNodeFailured"></new-node>
+    <new-node v-on:successed="newNodeSuccessed" v-on:failured="newNodeFailured" v-bind:article="article"></new-node>
   </modal>
   <div class="abs bgc white padding-6-9 shadow radius-30 flex-v"
     v-bind:style="'left: ' + selection.left + 'px; top: ' + selection.top + 'px'" v-if="isNewQuote && selection">
