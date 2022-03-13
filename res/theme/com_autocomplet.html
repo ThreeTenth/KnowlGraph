@@ -1,5 +1,5 @@
 <div class="overlay left" v-bind:class="pos">
-  <input autofocus type="text" v-model="input" class="input-1" v-on:keydown="onHotKey" v-on:keyup="onChanged"
+  <input v-focus="true" type="text" v-model="input" class="input-1" v-on:keydown="onHotKey" v-on:keyup="onChanged"
     v-bind:placeholder="placeholder" ref="input">
   <div class="menu" v-bind:class="{'block': items.length}" ref="selection">
     <div class="menu-item" v-for="(item, i) in items" v-bind:class="{'selected' : selected == i}"
