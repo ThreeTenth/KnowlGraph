@@ -28,7 +28,6 @@ func getNode(c *Context) error {
 		_nexts, err := client.Node.Query().
 			Where(_nodeWhere, node.Not(node.HasPrev())).
 			WithWord().
-			WithNexts().
 			All(ctx)
 		if err != nil {
 			return c.NotFound(err.Error())
